@@ -1,4 +1,4 @@
-# Blue Archive - Asset Downloader
+# Blue Archive - Asset Downloader (WIP)
 
 A small project that downloads all assets of the japan version of Blue Archive and extracts them while it's at it.
 
@@ -16,8 +16,8 @@ so all you have to do is execute the download_assets.py script after every updat
 
 # Scripts
 
-- ``download_assets.py``
-  - This script downloads and extracts the latest assets.
+- ``resource_downloader.py``
+  - This script downloads and extracts the latest assets. (Not working at the moment)
 - ``extract_tables.py``
   - Extracts and decrypts the tables from the zip files in ``Preload\TableBundles``
   - due to the way it works, this script can take ages, around 15 minutes
@@ -25,6 +25,8 @@ so all you have to do is execute the download_assets.py script after every updat
   - Generates the flatbuf schemas and python dump wrapper for ``extract_tables.py``
 
 ## TODO
+- implement the downloader using asyncio
+- add a way to get the catalog url automatically
 
 - fix the decoding of some tables (flatbuf_schema_generator, FlatData/dump.py)
   - AnimationBlendTable (decoder missing)
