@@ -1,4 +1,4 @@
-# Blue Archive asset downloader
+# Blue Archive - Asset Downloader
 
 A small project that downloads all assets of the global version of Blue Archive and extracts them while it's at it.
 
