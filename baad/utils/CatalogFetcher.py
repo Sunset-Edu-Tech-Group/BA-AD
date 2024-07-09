@@ -1,33 +1,11 @@
 import json
-import os
-import sys
 from base64 import b64encode
+from pathlib import Path
 
-from ApkParser import ApkParser
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from lib.TableEncryptionService import TableEncryptionService
+from ..lib.TableEncryptionService import TableEncryptionService
 
 
-def decrypt_game_main_config(data):
-    data = b64encode(data)
-    encryption_service = TableEncryptionService()
-
-    data = encryption_service.convert_string(
-        data, encryption_service.create_key('GameMainConfig')
-    )
-    data = json.loads(data)
-    crypted_key = encryption_service.new_encrypt_string(
-        'ServerInfoDataUrl', encryption_service.create_key('ServerInfoDataUrl')
-    )
-    crypted_value = data[crypted_key]
-    return encryption_service.convert_string(
-        crypted_value, encryption_service.create_key('ServerInfoDataUrl')
-    )
-
-
-def find_game_main_config() -> None | bytes:
+def find_game_config() -> None | bytes:
     pattern = bytes([
         0x47,
         0x61,
@@ -50,22 +28,33 @@ def find_game_main_config() -> None | bytes:
         0x00,
         0x00,
     ])
+    game_path = Path(__file__).parent.parent / 'public' / 'data' / 'assets' / 'bin' / 'Data'
 
-    folder_path = ApkParser().file_path / 'data' / 'assets' / 'bin' / 'Data'
-
-    for file_path in folder_path.rglob('*'):
-        if file_path.is_file():
-            content = file_path.read_bytes()
+    for config_file in game_path.rglob('*'):
+        if config_file.is_file():
+            content = config_file.read_bytes()
 
             if pattern in content:
                 start_index = content.index(pattern)
                 data = content[start_index + len(pattern) :]
                 return data[:-2]
-    return None
+        return None
 
 
-def catalog_url(update: bool = False) -> str:
-    if update:
-        ApkParser().download_apk(update)
+def decrypt_game_config(data: bytes) -> str:
+    encryption_service = TableEncryptionService()
+    encoded_data = b64encode(data)
 
-    return decrypt_game_main_config(find_game_main_config())
+    game_config = encryption_service.create_key('GameMainConfig')
+    server_data = encryption_service.create_key('ServerInfoDataUrl')
+
+    decrypted_data = encryption_service.convert_string(encoded_data, game_config)
+    loaded_data = json.loads(decrypted_data)
+
+    decrypted_key = encryption_service.convert_string('ServerInfoDataUrl', server_data)
+    decrypted_value = loaded_data[decrypted_key]
+    return encryption_service.convert_string(decrypted_value, server_data)
+
+
+def catalog_url():
+    return decrypt_game_config(find_game_config())

@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "BA-AD"
+description = "Blue Archive Asset Downloader"
+authors = [{name = "Deathemonic", email = "zinth.others@skiff.com"},]
+maintainers = [{name = "Deathemonic", email = "zinth.others@skiff.com"}]
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["unity", "asset", "downloader", "bluearchive"]
+classifiers = [
+        "Environment :: X11 Applications",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: Python :: 3.10"
+]
+[project.scripts]
+wal = "baad.__main__:main"
