@@ -1,41 +1,48 @@
 # Blue Archive - Asset Downloader (WIP)
 
-A small project that downloads all assets of the japan version of Blue Archive and extracts them while it's at it.
+A tool that downloads and extracts the **Blue Archive JP** `AssetBundles`, `TableBundles`, `MediaResources`.
 
-The script updates the assets and even its own parameters on its own,
-so all you have to do is execute the download_assets.py script after every update to get the latest files.
+It downloads them directly from the **Yostar Servers**.
 
 ## Requirements
 
-- Python 3.6+
-- UnityPy 1.7.21
+- Python 3.10+
 - requests
+- request-cache
+- aiohttp
 - xxhash
 - pycryptodome
 - flatbuffers
 
-# Scripts
+## ~~Installation~~ (WIP)
+~~Download and install [`python`](https://www.python.org/downloads/). After that clone this repository~~
 
-- ``resource_downloader.py``
-  - This script downloads and extracts the latest assets. (Not working at the moment)
-- ``extract_tables.py``
-  - Extracts and decrypts the tables from the zip files in ``Preload\TableBundles``
-  - due to the way it works, this script can take ages, around 15 minutes
-- ``flatbuf_schema_generator.py``
-  - Generates the flatbuf schemas and python dump wrapper for ``extract_tables.py``
+```
+git clone https://github.com/Deathemonic/BA-AD.git
+```
 
-## TODO
-- implement the downloader using asyncio
-- add a way to get the catalog url automatically
+~~or just download as a zip by clicking `Code` > `Download Zip`. Then open `BA-AD` folder in your `Terminal` or `CMD`~~
 
-- fix the decoding of some tables (flatbuf_schema_generator, FlatData/dump.py)
-  - AnimationBlendTable (decoder missing)
-  - AnimatorDataTable   (str decoding)
-  - FurnitureExcelTable ('Location' not found)
-  - GachaElementExcelTable ('EventContentId' not found)
-  - ItemExcelTable ('EventContentId' not found)
-  - MissionExcelTable ('EventContentId' not found)
-  - OperatorExceTable ('Key' not found)
-  - ShopExcel ('EventContentId' not found)
-  - ShopInfoExcel ('EventContentId' not found)
-  - ShopRefreshExcel ('EventContentId' not found)
+~~Then install it using pip~~
+
+```
+pip install .
+```
+
+## Usage
+
+```sh
+> baad --help
+
+Blue Archive Asset Downloader
+
+positional arguments:
+  {download,extract}
+    download          download game files
+    extract           extract game files
+
+options:
+  -h, --help          show this help message and exit
+  -u, --update        force update the apk
+  -g, --generate      generate the flatbuf schemas
+```
