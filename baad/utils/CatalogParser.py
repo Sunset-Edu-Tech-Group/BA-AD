@@ -26,14 +26,14 @@ class CatalogParser:
             return session.get(f'{catalog}{file}').content
 
     @staticmethod
-    def _save_json(file_path: Path, data: dict) -> None:
-        with open(file_path, 'w') as f:
-            json.dump(data, f, indent=4)
-
-    @staticmethod
     def _load_json(file_path: Path) -> dict:
         with open(file_path, 'r') as f:
             return json.load(f)
+
+    @staticmethod
+    def save_json(file_path: Path, data: dict) -> None:
+        with open(file_path, 'w') as f:
+            json.dump(data, f, indent=4)
 
     def _fetch_table_bytes(self, catalog: str) -> bytes:
         return self._fetch_bytes(catalog, '/TableBundles/TableCatalog.bytes', 'tablebytes')
@@ -63,7 +63,7 @@ class CatalogParser:
         # self.progress.update(fetch_task, completed=20, description='[cyan]Fetching catalog URL')
 
         bundle_data = self._fetch_data(f'{server_url}/Android/bundleDownloadInfo.json', 'catalogurl')
-        self._save_json(self.root / 'public' / 'bundleDownloadInfo.json', bundle_data)
+        self.save_json(self.root / 'public' / 'bundleDownloadInfo.json', bundle_data)
 
         # progress.update(fetch_task, completed=40, description='[cyan]Fetching bundle data')
 
