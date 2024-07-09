@@ -4,6 +4,8 @@ from zipfile import ZipFile
 import requests
 from rich.console import Console
 
+from .Progress import ProgressManager
+
 
 class ApkParser:
     def __init__(self, apk_url: str, apk_path: str) -> None:
@@ -13,6 +15,7 @@ class ApkParser:
         self.apk_path = Path(apk_path) or self.root / 'public' / 'BlueArchive.apk'
 
         self.console = Console()
+        self.progress = ProgressManager()
 
     @staticmethod
     def _get_files(zip: ZipFile) -> set:
@@ -27,15 +30,16 @@ class ApkParser:
             raise SystemExit(1) from e
 
     def _download_file(self, response: requests.Response) -> None:
-        # total_size = int(response.headers.get('content-length', 0))
-        # task = self.progress.add_task('[cyan]Downloading APK...', total=total_size)
+        total_size = int(response.headers.get('content-length', 0))
+        task = self.progress.add_download_task('APK', total_size)
 
         with open(self.apk_path, 'wb') as f:
             for chunk in response.iter_content(chunk_size=8192):
                 if chunk:
                     f.write(chunk)
 
-                    # self.progress.update(task, advance=len(chunk))
+                    self.progress.update(task, advance=len(chunk))
+        self.progress.remove_task(task)
         self.console.print('[green]APK downloaded.[/green]')
 
     def _force_download(self) -> None:
@@ -65,14 +69,15 @@ class ApkParser:
             self.console.print('[yellow]Local APK is larger than remote APK. Skipping download.[/yellow]')
 
     def _extract_files(self, zip: ZipFile, extract: set) -> None:
-        # task = self.progress.add_task('[cyan]Extracting APK...', total=len(extract))
+        task = self.progress.add_task('[cyan]Extracting APK...', total=len(extract))
 
         for file_info in extract:
             target_path = self.apk_path.parent / 'data' / Path(file_info.filename)
             target_path.parent.mkdir(parents=True, exist_ok=True)
             zip.extract(file_info, self.apk_path.parent / 'data')
 
-            # self.progress.update(task, advance=1)
+            self.progress.update(task, advance=1)
+        self.progress.remove_task(task)
         self.console.print('[green]APK extracted.[/green]')
 
     def compare_apk(self) -> bool:

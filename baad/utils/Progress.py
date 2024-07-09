@@ -1,31 +1,29 @@
-from rich.progress import (
-    BarColumn,
-    DownloadColumn,
-    Progress,
-    TextColumn,
-    TimeRemainingColumn,
-    TransferSpeedColumn,
-)
+from rich.progress import Progress, TaskID
 
 
-def create_progress_bar():
-    return Progress(
-        TextColumn('[progress.description]{task.description}'),
-        BarColumn(),
-        DownloadColumn(),
-        TransferSpeedColumn(),
-        TextColumn('[progress.percentage]{task.percentage:>3.0f}%'),
-        TimeRemainingColumn(),
-    )
+class ProgressManager:
+    def __init__(self) -> None:
+        self.progress = Progress()
+        self.tasks = {}
+
+    def start(self) -> None:
+        self.progress.start()
+
+    def stop(self) -> None:
+        self.progress.stop()
+
+    def add_task(self, description: str, total: float = 100) -> TaskID:
+        return self.progress.add_task(description, total=total)
+
+    def update(self, task_id: TaskID, advance: float = None, completed: float = None, description: str = None) -> None:
+        self.progress.update(task_id, advance=advance, completed=completed, description=description)
+
+    def remove_task(self, task_id: TaskID) -> None:
+        self.progress.remove_task(task_id)
+
+    def add_download_task(self, filename: str, total_size: int) -> TaskID:
+        return self.progress.add_task(f'Downloading {filename}', total=total_size, unit='B', unit_scale=True)
 
 
-def create_download_progress_bar():
-    return Progress(
-        TextColumn('[progress.description]{task.description}'),
-        BarColumn(),
-        DownloadColumn(),
-        TransferSpeedColumn(),
-        TextColumn('[progress.percentage]{task.percentage:>3.0f}%'),
-        TimeRemainingColumn(),
-        expand=True,
-    )
+def progress_manager():
+    return ProgressManager()

@@ -5,6 +5,7 @@ import aiohttp
 from rich.console import Console
 
 from .CatalogParser import CatalogParser
+from .Progress import ProgressManager
 
 
 class ResourceDownloader:
@@ -15,6 +16,7 @@ class ResourceDownloader:
 
         self.semaphore = None
         self.console = Console()
+        self.progress = ProgressManager()
         self.categories = {
             'asset': 'AssetBundles',
             'table': 'TableBundles',
@@ -31,15 +33,15 @@ class ResourceDownloader:
 
                     file_path.parent.mkdir(parents=True, exist_ok=True)
 
-                    # total_size = int(response.headers.get('content-length', 0))
-                    # task_id = progress.add_task(f'[cyan]Downloading {file_path.name}[/cyan]', total=total_size)
+                    total_size = int(response.headers.get('content-length', 0))
+                    task_id = self.progress.add_task(f'[cyan]Downloading {file_path.name}[/cyan]', total=total_size)
 
                     with open(file_path, 'wb') as f:
                         async for chunk in response.content.iter_chunked(8192):
                             size = f.write(chunk)
 
-                            # progress.update(task_id, advance=size)
-                    # progress.remove_task(task_id)
+                            self.progress.update(task_id, advance=size)
+                    self.progress.remove_task(task_id)
 
             except (ConnectionError, TimeoutError) as e:
                 self.console.print('[bold red]Error: Download failed.[/bold red]')
@@ -67,25 +69,34 @@ class ResourceDownloader:
         catalog_parser = CatalogParser()
         catalog_parser.fetch_catalogs()
 
-        # save_task = self.progress.add_task('[cyan]Saving game files...', total=100)
+        save_task = self.progress.add_task('[cyan]Saving game files...', total=100)
 
         result = catalog_parser.get_game_files()
         catalog_parser.save_json(self.root / 'public' / 'GameFiles.json', result)
 
-        # self.progress.update(save_task, completed=100, description='[green]Game files saved!')
+        self.progress.update(save_task, completed=100, description='[green]Game files saved!')
+        self.progress.remove_task(save_task)
 
         return result
 
     def download(self, assets: bool = True, tables: bool = True, media: bool = True, limit: int | None = None) -> None:
-        game_files = self._initialize_download()
+        self.progress.start()
 
-        categories = [
-            self.categories[cat] for cat, enabled in [('asset', assets), ('table', tables), ('media', media)] if enabled
-        ]
+        try:
+            game_files = self._initialize_download()
 
-        self.console.print(f'[cyan]Downloading files for categories: {", ".join(categories)}[/cyan]')
-        self.semaphore = asyncio.Semaphore(limit if limit is not None else float('inf'))
+            categories = [
+                self.categories[cat]
+                for cat, enabled in [('asset', assets), ('table', tables), ('media', media)]
+                if enabled
+            ]
 
-        asyncio.run(self._download_all_categories(game_files, categories))
+            self.console.print(f'[cyan]Downloading files for categories: {", ".join(categories)}[/cyan]')
+            self.semaphore = asyncio.Semaphore(limit if limit is not None else float('inf'))
 
-        self.console.print('[green]All specified files downloaded![/green]')
+            asyncio.run(self._download_all_categories(game_files, categories))
+
+            self.console.print('[green]All specified files downloaded![/green]')
+
+        finally:
+            self.progress.stop()
