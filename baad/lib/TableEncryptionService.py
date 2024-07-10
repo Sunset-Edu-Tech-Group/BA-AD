@@ -79,6 +79,7 @@ class TableEncryptionService:
         try:
             raw = b64decode(value)
             return self._xor(raw, key).decode('utf-16')
+
         except Exception:
             return value.decode('utf-8')
 
@@ -91,5 +92,6 @@ class TableEncryptionService:
     def decrypt_string(self, value: str, encoding: str, key: bytes) -> str | bytes:
         if not value or len(value) < 8:
             return value.encode() if value else b''
+
         raw = value.encode(encoding)
         return b64encode(self._xor(raw, key)).decode()

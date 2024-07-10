@@ -4,6 +4,7 @@ from rich.console import Console
 from rich.traceback import Traceback
 
 from . import __version__
+from .utils.FlatbufGenerator import FlatbufGenerator
 from .utils.ResourceDownloader import ResourceDownloader
 
 
@@ -42,7 +43,7 @@ def arguments():  # sourcery skip: extract-duplicate-method
     download.add_argument(
         '--output',
         type=str,
-        help='output directory for the downloaded files',
+        help='output directory for the downloaded files (default: ./output)',
     )
     download.add_argument(
         '--limit',
@@ -73,9 +74,9 @@ def arguments():  # sourcery skip: extract-duplicate-method
     )
 
     extract.add_argument(
-        '--output',
+        '--files',
         type=str,
-        help='output directory for the extracted files',
+        help='path of the files that will be extracted (default: ./output)',
     )
     extract.add_argument(
         '--assets',
@@ -141,6 +142,10 @@ def main() -> None:
 
     if args.update:
         ResourceDownloader(update=args.update).fetch_catalog_url()
+        return
+
+    if args.generate:
+        FlatbufGenerator().generate()
         return
 
     args.print_help()

@@ -46,3 +46,6 @@ options:
   -u, --update        force update the apk
   -g, --generate      generate the flatbuf schemas
 ```
+
+### Copyright
+**Blue Archive** is a registered trademark of NAT GAMES Co., Ltd. and Yostar Co., Ltd. This repository is not affiliated with NEXON Korea Corp., NEXON GAMES Co., Ltd., and Yostar Co., Ltd. All game resources are copyrighted to their respective owners.

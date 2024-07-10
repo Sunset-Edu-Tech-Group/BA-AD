@@ -108,4 +108,4 @@ assets/asset_list.txt
 ./ruff.toml
 
 # pycharm
-./.idea
+.idea/
