@@ -1,4 +1,7 @@
-# Blue Archive - Asset Downloader (WIP)
+<div align="center">
+  <img src="baad/public/archive.png" width="500px" alt="logo">
+  <h1>Blue Archive - Asset Downloader (WIP)</h1>
+</div>
 
 A tool that downloads and extracts the **Blue Archive JP** `AssetBundles`, `TableBundles`, `MediaResources`.
 

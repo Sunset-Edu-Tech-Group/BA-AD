@@ -105,7 +105,7 @@ venv.bak/
 assets/asset_list.txt
 
 # ruff
-./ruff.toml
+ruff.toml
 
 # pycharm
 .idea/
