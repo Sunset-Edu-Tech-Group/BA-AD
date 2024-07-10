@@ -50,5 +50,12 @@ options:
   -g, --generate      generate the flatbuf schemas
 ```
 
+### Acknowledgement
+ - [espectZ/blue-archive-viewer](https://github.com/respectZ/blue-archive-viewer)
+ - [fiseleo/Blue-Archive-JP-Downloader](https://github.com/fiseleo/Blue-Archive-JP-Downloader)
+ - [K0lb3/Blue-Archive---Asset-Downloader](https://github.com/K0lb3/Blue-Archive---Asset-Downloader)
+ - [lwd-temp/blue-archive-spine-production](https://github.com/lwd-temp/blue-archive-spine-production)
+
+
 ### Copyright
 **Blue Archive** is a registered trademark of NAT GAMES Co., Ltd. and Yostar Co., Ltd. This repository is not affiliated with NEXON Korea Corp., NEXON GAMES Co., Ltd., and Yostar Co., Ltd. All game resources are copyrighted to their respective owners.
