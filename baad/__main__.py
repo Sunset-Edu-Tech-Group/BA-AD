@@ -3,6 +3,7 @@ from argparse import ArgumentParser, ArgumentTypeError
 from rich.console import Console
 from rich.traceback import Traceback
 
+from . import __version__
 from .utils.ResourceDownloader import ResourceDownloader
 
 
@@ -10,6 +11,12 @@ def arguments():  # sourcery skip: extract-duplicate-method
     parser = ArgumentParser(description='Blue Archive Asset Downloader')
     sub_parser = parser.add_subparsers(dest='commands')
 
+    parser.add_argument(
+        '-v',
+        '--version',
+        action='version',
+        version=f'baad {__version__}',
+    )
     parser.add_argument(
         '-u',
         '--update',
@@ -35,12 +42,13 @@ def arguments():  # sourcery skip: extract-duplicate-method
     download.add_argument(
         '--output',
         type=str,
-        help='output directory for the downloaded files (default: public/data/output)',
+        help='output directory for the downloaded files',
     )
     download.add_argument(
         '--limit',
         type=int,
-        help='set a limit the download limit',
+        default=5,
+        help='set a limit the download limit (default: 5)',
     )
     download.add_argument(
         '--assets',
@@ -67,7 +75,7 @@ def arguments():  # sourcery skip: extract-duplicate-method
     extract.add_argument(
         '--output',
         type=str,
-        help='output directory for the extracted files (default: public/data/extracted)',
+        help='output directory for the extracted files',
     )
     extract.add_argument(
         '--assets',
@@ -87,7 +95,11 @@ def arguments():  # sourcery skip: extract-duplicate-method
     )
 
     args = parser.parse_args()
-    if hasattr(args, 'commands') and args.commands in ['download', 'extract'] and (args.all and (args.assets or args.tables or args.media)):
+    if (
+        hasattr(args, 'commands')
+        and args.commands in ['download', 'extract']
+        and (args.all and (args.assets or args.tables or args.media))
+    ):
         console = Console(stderr=True)
         console.print(
             Traceback.from_exception(
@@ -100,35 +112,38 @@ def arguments():  # sourcery skip: extract-duplicate-method
     return args
 
 
-def resource_downloader(args):
-    if args.update:
-        ResourceDownloader(update=args.update).fetch_catalogurl()
+def resource_downloader(args) -> ResourceDownloader:
+    downloader_args = {'update': args.update}
+    if args.output:
+        downloader_args['output'] = args.output
+    downloader = ResourceDownloader(**downloader_args)
 
     if hasattr(args, 'commands') and args.commands == 'download':
-        downloader_args = {'update': args.update}
-
-        if args.output:
-            downloader_args['output'] = args.output
-        downloader = ResourceDownloader(**downloader_args)
-
         if args.all:
             args.assets = args.tables = args.media = True
 
+        limit = None if args.limit == 0 else args.limit
         downloader.download(
             assets=args.assets,
             tables=args.tables,
             media=args.media,
-            limit=getattr(args, 'limit', None),
+            limit=limit,
         )
-
     return downloader
 
 
-def main():
+def main() -> None:
     args = arguments()
 
-    if args.update or (hasattr(args, 'commands') and args.commands == 'download'):
+    if hasattr(args, 'commands') and args.commands == 'download':
         resource_downloader(args)
+        return
+
+    if args.update:
+        ResourceDownloader(update=args.update).fetch_catalog_url()
+        return
+
+    args.print_help()
 
 
 if __name__ == '__main__':

@@ -18,5 +18,6 @@ classifiers = [
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3.10"
 ]
+
 [project.scripts]
-wal = "baad.__main__:main"
+baad = "baad.__main__:main"

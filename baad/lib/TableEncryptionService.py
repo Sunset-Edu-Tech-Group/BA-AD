@@ -73,7 +73,7 @@ class TableEncryptionService:
     def encrypt_double(self, value: float, key: bytes) -> float:
         return self.convert_long(int(value * 100000), key) if value else 0.0
 
-    def convert_string(self, value: str, key: bytes) -> str:
+    def convert_string(self, value: str | bytes, key: bytes) -> str:
         if not value:
             return ''
         try:
@@ -88,7 +88,7 @@ class TableEncryptionService:
     def new_encrypt_string(self, value: str, key: bytes) -> str:
         return self.decrypt_string(value, 'utf-16-le', key)
 
-    def decrypt_string(self, value: str, encoding: str, key: bytes) -> str:
+    def decrypt_string(self, value: str, encoding: str, key: bytes) -> str | bytes:
         if not value or len(value) < 8:
             return value.encode() if value else b''
         raw = value.encode(encoding)

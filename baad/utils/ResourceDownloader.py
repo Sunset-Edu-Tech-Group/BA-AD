@@ -4,24 +4,37 @@ from pathlib import Path
 import aiohttp
 from rich.console import Console
 
+from .ApkParser import ApkParser
 from .CatalogParser import CatalogParser
-from .Progress import ProgressManager
+from .Progress import create_live_display, create_progress_group
 
 
 class ResourceDownloader:
-    def __init__(self, output: None | str = None, update: bool = False) -> None:
+    def __init__(self, update: bool = False, output: str | None = None) -> None:
         self.root = Path(__file__).parent.parent
-        self.output = Path(output) or self.root.parent / 'output'
+        self.output = output or Path.cwd() / 'output'
         self.update = update
 
         self.semaphore = None
         self.console = Console()
-        self.progress = ProgressManager()
+        self.catalog_parser = CatalogParser()
         self.categories = {
             'asset': 'AssetBundles',
             'table': 'TableBundles',
             'media': 'MediaResources',
         }
+        self.live = create_live_display()
+        self.progress_group, self.download_progress, self.extract_progress = create_progress_group()
+
+    @staticmethod
+    def _get_file_path(file: dict) -> str | Path:
+        if 'path' in file:
+            return file['path']
+
+        elif isinstance(file['url'], str):
+            return Path(file['url']).name
+
+        return Path(file['url'])
 
     async def _download_file(self, session: aiohttp.ClientSession, url: str, file_path: Path) -> None:
         async with self.semaphore:
@@ -32,19 +45,21 @@ class ResourceDownloader:
                         return
 
                     file_path.parent.mkdir(parents=True, exist_ok=True)
-
                     total_size = int(response.headers.get('content-length', 0))
-                    task_id = self.progress.add_task(f'[cyan]Downloading {file_path.name}[/cyan]', total=total_size)
+                    download_task = self.download_progress.add_task(f'[cyan]{file_path.name}', total=total_size)
 
-                    with open(file_path, 'wb') as f:
-                        async for chunk in response.content.iter_chunked(8192):
-                            size = f.write(chunk)
+                    with self.live:
+                        with open(file_path, 'wb') as f:
+                            async for chunk in response.content.iter_chunked(8192):
+                                f.write(chunk)
+                                self.download_progress.update(download_task, advance=len(chunk))
+                                self.live.update(self.progress_group)
 
-                            self.progress.update(task_id, advance=size)
-                    self.progress.remove_task(task_id)
+                        self.download_progress.update(download_task, completed=total_size)
+                        self.live.update(self.progress_group)
 
             except (ConnectionError, TimeoutError) as e:
-                self.console.print('[bold red]Error: Download failed.[/bold red]')
+                self.console.print(f'[bold red]Error: Download failed. {str(e)}[/bold red]')
                 raise SystemExit(1) from e
 
     async def _download_category(self, files: list, base_path: Path) -> None:
@@ -53,7 +68,7 @@ class ResourceDownloader:
                 self._download_file(
                     session,
                     file['url'],
-                    base_path / (file['path'] or Path(file['url']).name),
+                    base_path / self._get_file_path(file),
                 )
                 for file in files
             }
@@ -66,22 +81,15 @@ class ResourceDownloader:
                 await self._download_category(files, Path(self.output) / category)
 
     def _initialize_download(self) -> dict:
-        catalog_parser = CatalogParser()
-        catalog_parser.fetch_catalogs()
+        self.fetch_catalog_url()
+        self.catalog_parser.fetch_catalogs()
 
-        save_task = self.progress.add_task('[cyan]Saving game files...', total=100)
-
-        result = catalog_parser.get_game_files()
-        catalog_parser.save_json(self.root / 'public' / 'GameFiles.json', result)
-
-        self.progress.update(save_task, completed=100, description='[green]Game files saved!')
-        self.progress.remove_task(save_task)
+        result = self.catalog_parser.get_game_files()
+        self.catalog_parser.save_json(self.root / 'public' / 'GameFiles.json', result)
 
         return result
 
-    def download(self, assets: bool = True, tables: bool = True, media: bool = True, limit: int | None = None) -> None:
-        self.progress.start()
-
+    def download(self, assets: bool = True, tables: bool = True, media: bool = True, limit: int | None = 5) -> None:
         try:
             game_files = self._initialize_download()
 
@@ -91,12 +99,19 @@ class ResourceDownloader:
                 if enabled
             ]
 
-            self.console.print(f'[cyan]Downloading files for categories: {", ".join(categories)}[/cyan]')
             self.semaphore = asyncio.Semaphore(limit if limit is not None else float('inf'))
-
             asyncio.run(self._download_all_categories(game_files, categories))
 
-            self.console.print('[green]All specified files downloaded![/green]')
-
         finally:
-            self.progress.stop()
+            if self.live:
+                self.live.stop()
+
+            if self.progress_group:
+                self.progress_group.stop()
+
+    def fetch_catalog_url(self):
+        ApkParser().download_apk(self.update)
+
+        self.console.print('[cyan]Fetching catalog URL...[/cyan]')
+        catalog_url = self.catalog_parser.fetch_catalog_url()
+        self.console.print(f'[green]Catalog URL fetched: {catalog_url}[/green]')

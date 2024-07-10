@@ -38,7 +38,7 @@ def find_game_config() -> None | bytes:
                 start_index = content.index(pattern)
                 data = content[start_index + len(pattern) :]
                 return data[:-2]
-        return None
+    return None
 
 
 def decrypt_game_config(data: bytes) -> str:
@@ -51,10 +51,10 @@ def decrypt_game_config(data: bytes) -> str:
     decrypted_data = encryption_service.convert_string(encoded_data, game_config)
     loaded_data = json.loads(decrypted_data)
 
-    decrypted_key = encryption_service.convert_string('ServerInfoDataUrl', server_data)
+    decrypted_key = encryption_service.new_encrypt_string('ServerInfoDataUrl', server_data)
     decrypted_value = loaded_data[decrypted_key]
     return encryption_service.convert_string(decrypted_value, server_data)
 
 
-def catalog_url():
+def catalog_url() -> str:
     return decrypt_game_config(find_game_config())

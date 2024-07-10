@@ -1,29 +1,35 @@
-from rich.progress import Progress, TaskID
+from rich.console import Group
+from rich.live import Live
+from rich.progress import BarColumn, DownloadColumn, Progress, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 
 
-class ProgressManager:
-    def __init__(self) -> None:
-        self.progress = Progress()
-        self.tasks = {}
+def create_progress_group():
+    download_progress = Progress(
+        TextColumn('[bold blue]{task.description}', justify='right'),
+        BarColumn(bar_width=None),
+        '[progress.percentage]{task.percentage:>3.1f}%',
+        '•',
+        DownloadColumn(),
+        '•',
+        TransferSpeedColumn(),
+        '•',
+        TimeRemainingColumn(),
+        expand=True,
+    )
 
-    def start(self) -> None:
-        self.progress.start()
+    extract_progress = Progress(
+        TextColumn('[bold green]{task.description}', justify='right'),
+        BarColumn(bar_width=None),
+        '[progress.percentage]{task.percentage:>3.1f}%',
+        '•',
+        TimeRemainingColumn(),
+        expand=True,
+    )
 
-    def stop(self) -> None:
-        self.progress.stop()
+    progress_group = Group(download_progress, extract_progress)
 
-    def add_task(self, description: str, total: float = 100) -> TaskID:
-        return self.progress.add_task(description, total=total)
-
-    def update(self, task_id: TaskID, advance: float = None, completed: float = None, description: str = None) -> None:
-        self.progress.update(task_id, advance=advance, completed=completed, description=description)
-
-    def remove_task(self, task_id: TaskID) -> None:
-        self.progress.remove_task(task_id)
-
-    def add_download_task(self, filename: str, total_size: int) -> TaskID:
-        return self.progress.add_task(f'Downloading {filename}', total=total_size, unit='B', unit_scale=True)
+    return progress_group, download_progress, extract_progress
 
 
-def progress_manager():
-    return ProgressManager()
+def create_live_display():
+    return Live(create_progress_group()[0], refresh_per_second=10)

@@ -8,14 +8,12 @@ from rich.console import Console
 from ..lib.MediaParser import MediaCatalog
 from ..lib.TableParser import TableCatalog
 from .CatalogFetcher import catalog_url
-from .Progress import ProgressManager
 
 
 class CatalogParser:
     def __init__(self):
         self.root = Path(__file__).parent.parent
         self.console = Console()
-        self.progress = ProgressManager()
 
     @staticmethod
     def _calculate_crc32(file_path: Path) -> int:
@@ -58,29 +56,20 @@ class CatalogParser:
         return server_data['ConnectionGroups'][0]['OverrideConnectionGroups'][-1]['AddressablesCatalogUrlRoot']
 
     def fetch_catalogs(self) -> None:
-        fetch_task = self.progress.add_task('[cyan]Fetching catalogs...', total=100)
-
         server_url = self.fetch_catalog_url()
 
-        self.progress.update(fetch_task, completed=20, description='[cyan]Fetching catalog URL')
+        self.console.print('[cyan]Fetching catalogs...[/cyan]')
 
         bundle_data = self._fetch_data(f'{server_url}/Android/bundleDownloadInfo.json', 'catalogurl')
         self.save_json(self.root / 'public' / 'bundleDownloadInfo.json', bundle_data)
-
-        self.progress.update(fetch_task, completed=40, description='[cyan]Fetching bundle data')
 
         table_data = self._fetch_table_bytes(catalog=server_url)
         table_catalog = TableCatalog.from_bytes(table_data, server_url)
         table_catalog.to_json(self.root / 'public' / 'TableCatalog.json')
 
-        self.progress.update(fetch_task, completed=60, description='[cyan]Fetching table data')
-
         media_data = self._fetch_media_bytes(catalog=server_url)
         media_catalog = MediaCatalog.from_bytes(media_data, server_url)
         media_catalog.to_json(self.root / 'public' / 'MediaCatalog.json')
-
-        self.progress.update(fetch_task, completed=80, description='[cyan]Fetching media data')
-        self.progress.remove_task(fetch_task)
 
     def get_game_files(self) -> dict:
         server_url = self.fetch_catalog_url()
