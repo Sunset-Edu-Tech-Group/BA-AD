@@ -1,9 +1,8 @@
 import json
 from pathlib import Path
 
-from ..FlatData import FlatData
+from .. import FlatData
 from ..FlatData.dump import dump_table
-
 from ..lib.StringCipher import decrypt
 from ..lib.TableEncryptionService import TableEncryptionService
 from ..lib.TableService import TableZipFile
@@ -53,6 +52,7 @@ class TableExtracter:
 
                     elif table_file.name == 'Excel.zip':
                         data, name = self._process_excel_file(name, data)
+
                 except Exception as e:
                     print(f'Error processing {name}: {e}')
                     continue
