@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-import FlatData
-from FlatData.dump import dump_table
+from ..FlatData import FlatData
+from ..FlatData.dump import dump_table
 
 from ..lib.StringCipher import decrypt
 from ..lib.TableEncryptionService import TableEncryptionService

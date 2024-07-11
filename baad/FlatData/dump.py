@@ -5,7 +5,7 @@ def dump_table(obj) -> list:
     table_encryption = TableEncryptionService()
 
     typ_name = obj.__class__.__name__[:-5]
-    dump_func = next(f for x,f in globals().items() if x.endswith('_' + typ_name))
+    dump_func = next(f for x, f in globals().items() if x.endswith('_' + typ_name))
     password = table_encryption.create_key(typ_name[:-5])
     return [
         dump_func(obj.DataList(j), password)

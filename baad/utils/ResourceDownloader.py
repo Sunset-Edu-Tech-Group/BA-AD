@@ -109,7 +109,7 @@ class ResourceDownloader:
             if self.progress_group:
                 self.progress_group.stop()
 
-    def fetch_catalog_url(self):
+    def fetch_catalog_url(self) -> None:
         ApkParser().download_apk(self.update)
 
         self.console.print('[cyan]Fetching catalog URL...[/cyan]')
