@@ -14,6 +14,7 @@ from .Progress import create_live_display, create_progress_group
 class TableExtracter:
     def __init__(self, output: str) -> None:
         self.table_path = output or Path.cwd() / 'output' / 'TableBundles'
+        self.extracted_path = self.table_path / 'extracted'
         self.lower_name_to_module_dict = self._get_lower_name_to_module_dict()
         self.console = Console()
         self.live = create_live_display()
@@ -43,8 +44,8 @@ class TableExtracter:
         return processed_data, new_name
 
     def extract_table(self, table_file: Path | str) -> None:
-        table_dir_fp = self.table_path / table_file.stem
-        table_dir_fp.mkdir(exist_ok=True)
+        table_dir_fp = self.extracted_path / table_file.stem
+        table_dir_fp.mkdir(parents=True, exist_ok=True)
 
         with TableZipFile(table_file) as tz:
             extract_task = self.extract_progress.add_task(
