@@ -32,7 +32,7 @@ class ApkParser:
 
     def _download_file(self, response: requests.Response) -> None:
         total_size = int(response.headers.get('content-length', 0))
-        download_task = self.download_progress.add_task('[red]Downloading', total=total_size)
+        download_task = self.download_progress.add_task('[red]Downloading APK...', total=total_size)
 
         with self.live:
             with open(Path(self.apk_path), 'wb') as f:
@@ -105,7 +105,7 @@ class ApkParser:
             self._force_download()
         self.extract_apk()
 
-    def extract_apk(self):
+    def extract_apk(self) -> None:
         with ZipFile(Path(self.apk_path), 'r') as zip:
             extract = self._get_files(zip)
             self._extract_files(zip, extract)

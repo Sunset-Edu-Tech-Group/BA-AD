@@ -5,6 +5,8 @@ from pathlib import Path
 
 from rich.console import Console
 
+from .Progress import create_live_display, create_progress_group
+
 
 class FlatbufGenerator:
     def __init__(self) -> None:
@@ -59,6 +61,9 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
 
         self.reStructProperty = re.compile(r"""public (.+) (.+?) { get; }""")
         self.reTableDataType = re.compile(r'public Nullable<(.+?)> DataList\(int j\) { }')
+
+        self.live = create_live_display()
+        self.progress_group, self.download_progress, self.extract_progress = create_progress_group()
 
     @staticmethod
     def _write_enums_to_fbs(enums: dict, f) -> None:
@@ -225,13 +230,34 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
 
         raise NotImplementedError(f'{ptype}')
 
-    def generate(self) -> None:
+    def _initialize_generate(self, task: int) -> None:
         structs, enums = self.dump_cs_to_structs_and_enums(self.root / 'lib' / 'flatbuf' / 'dump.cs')
+        self.extract_progress.update(task, advance=1)
+        self.live.update(self.progress_group)
+
         fbs_path = self.generate_fbs(structs, enums, self.root / 'lib' / 'flatbuf' / 'BlueArchive.fbs')
+        self.extract_progress.update(task, advance=1)
+        self.live.update(self.progress_group)
 
         self.compile_fbs_to_python(fbs_path)
+        self.extract_progress.update(task, advance=1)
+        self.live.update(self.progress_group)
+
         self.write_init_file()
         self.write_dump_helper(structs, enums)
+        self.extract_progress.update(task, advance=1)
+        self.live.update(self.progress_group)
+
+    def generate(self) -> None:
+        task = self.extract_progress.add_task('[cyan]Generating Flatbuffers...', total=4)
+
+        try:
+            with self.live:
+                self._initialize_generate(task)
+
+        finally:
+            if self.live:
+                self.live.stop()
 
     def dump_cs_to_structs_and_enums(self, dump_cs_filepath: Path) -> tuple:
         with open(dump_cs_filepath, 'rt', encoding='utf-8') as f:
@@ -265,7 +291,8 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         )
 
         if res.returncode != 0:
-            raise RuntimeError(f'Failed to compile FBS: {res.stderr.decode()}')
+            self.console.print('[red]Failed to compile FBS[/red]')
+            raise SystemExit(1)
 
     def write_init_file(self) -> None:
         init = self.root / 'FlatData' / '__init__.py'

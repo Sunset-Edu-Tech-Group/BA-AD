@@ -6,6 +6,7 @@ from rich.traceback import Traceback
 from . import __version__
 from .utils.FlatbufGenerator import FlatbufGenerator
 from .utils.ResourceDownloader import ResourceDownloader
+from .utils.TableExtracter import TableExtracter
 
 
 def arguments():  # sourcery skip: extract-duplicate-method
@@ -74,9 +75,9 @@ def arguments():  # sourcery skip: extract-duplicate-method
     )
 
     extract.add_argument(
-        '--files',
+        '--path',
         type=str,
-        help='path of the files that will be extracted (default: ./output)',
+        help='path of the files that will be extracted',
     )
     extract.add_argument(
         '--assets',
@@ -96,6 +97,7 @@ def arguments():  # sourcery skip: extract-duplicate-method
     )
 
     args = parser.parse_args()
+
     if (
         hasattr(args, 'commands')
         and args.commands in ['download', 'extract']
@@ -106,6 +108,17 @@ def arguments():  # sourcery skip: extract-duplicate-method
             Traceback.from_exception(
                 type(ArgumentTypeError),
                 ArgumentTypeError("'--all' cannot be used with other download options"),
+                None,
+            )
+        )
+        raise SystemExit(1)
+
+    if hasattr(args, 'commands') and args.commands == 'extract' and args.assets and args.tables:
+        console = Console(stderr=True)
+        console.print(
+            Traceback.from_exception(
+                type(ArgumentTypeError),
+                ArgumentTypeError("'--assets' cannot be used with '--tables'"),
                 None,
             )
         )
@@ -133,11 +146,23 @@ def resource_downloader(args) -> ResourceDownloader:
     return downloader
 
 
+def extracter(args) -> TableExtracter:
+    extracter = TableExtracter(args.path)
+
+    if args.tables:
+        extracter.extract_all_tables()
+    return extracter
+
+
 def main() -> None:
     args = arguments()
 
     if hasattr(args, 'commands') and args.commands == 'download':
         resource_downloader(args)
+        return
+
+    if hasattr(args, 'commands') and args.commands == 'extract':
+        extracter(args)
         return
 
     if args.update:

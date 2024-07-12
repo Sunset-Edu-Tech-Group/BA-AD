@@ -60,7 +60,6 @@ class ResourceDownloader:
 
             except (ConnectionError, TimeoutError) as e:
                 self.console.print(f'[bold red]Error: Download failed. {str(e)}[/bold red]')
-                raise SystemExit(1) from e
 
     async def _download_category(self, files: list, base_path: Path) -> None:
         async with aiohttp.ClientSession() as session:
