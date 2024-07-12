@@ -63,14 +63,14 @@ class ResourceDownloader:
 
     async def _download_category(self, files: list, base_path: Path) -> None:
         async with aiohttp.ClientSession() as session:
-            tasks = {
+            tasks = [
                 self._download_file(
                     session,
                     file['url'],
                     base_path / self._get_file_path(file),
                 )
                 for file in files
-            }
+            ]
 
             await asyncio.gather(*tasks)
 
@@ -104,9 +104,6 @@ class ResourceDownloader:
         finally:
             if self.live:
                 self.live.stop()
-
-            if self.progress_group:
-                self.progress_group.stop()
 
     def fetch_catalog_url(self) -> None:
         ApkParser().download_apk(self.update)

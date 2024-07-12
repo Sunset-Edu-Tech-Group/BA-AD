@@ -42,7 +42,7 @@ class TableExtracter:
 
         return processed_data, new_name
 
-    def extract_table(self, table_file: Path) -> None:
+    def extract_table(self, table_file: Path | str) -> None:
         table_dir_fp = self.table_path / table_file.stem
         table_dir_fp.mkdir(exist_ok=True)
 

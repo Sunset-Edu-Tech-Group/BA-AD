@@ -18,6 +18,15 @@ classifiers = [
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3.10"
 ]
+dependencies = [
+        'aiohttp>=3.9.5',
+        'requests>=2.32.3',
+        'requests-cache>=1.2.1',
+        'flatbuffers',
+        'pycryptodome',
+        'rich',
+        'xxhash'
+]
 
 [project.scripts]
 baad = "baad.__main__:main"
