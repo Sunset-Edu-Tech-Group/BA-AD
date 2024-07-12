@@ -1,3 +1,5 @@
+from enum import IntEnum
+
 from ..lib.TableEncryptionService import TableEncryptionService
 
 
@@ -5,7 +7,7 @@ def dump_table(obj) -> list:
     table_encryption = TableEncryptionService()
 
     typ_name = obj.__class__.__name__[:-5]
-    dump_func = next(f for x, f in globals().items() if x.endswith('_' + typ_name))
+    dump_func = next(f for x, f in globals().items() if x.endswith(f'_{typ_name}'))
     password = table_encryption.create_key(typ_name[:-5])
     return [
         dump_func(obj.DataList(j), password)
@@ -257,7 +259,7 @@ def dump_BlendData(obj, password) -> dict:
 
     return {
         'Type': table_encryption.convert_int(obj.Type(), password),
-        'InfoList': [None if obj.InfoList() is None else dump_BlendInfo(obj.InfoList(j), password) for j in range(obj.InfoListLength())],
+        'InfoList': [dump_BlendInfo(obj.InfoList(j), password) for j in range(obj.InfoListLength())],
     }
 
 
@@ -277,7 +279,7 @@ def dump_AnimatorData(obj, password) -> dict:
     return {
         'DefaultStateName': table_encryption.convert_string(obj.DefaultStateName(), password),
         'Name': table_encryption.convert_string(obj.Name(), password),
-        'DataList': [None if obj.DataList() is None else dump_AniStateData(obj.DataList(j), password) for j in range(obj.DataListLength())],
+        'DataList': [dump_AniStateData(obj.DataList(j), password) for j in range(obj.DataListLength())],
     }
 
 
@@ -296,7 +298,7 @@ def dump_AniStateData(obj, password) -> dict:
         'Length': table_encryption.convert_float(obj.Length(), password),
         'FrameRate': table_encryption.convert_float(obj.FrameRate(), password),
         'IsLooping': obj.IsLooping(),
-        'Events': [None if obj.Events() is None else dump_AniEventData(obj.Events(j), password) for j in range(obj.EventsLength())],
+        'Events': [dump_AniEventData(obj.Events(j), password) for j in range(obj.EventsLength())],
     }
 
 
@@ -2331,7 +2333,7 @@ def dump_GroundGridFlat(obj, password) -> dict:
         'StartX': table_encryption.convert_float(obj.StartX(), password),
         'StartY': table_encryption.convert_float(obj.StartY(), password),
         'Gap': table_encryption.convert_float(obj.Gap(), password),
-        'Nodes': [None if obj.Nodes() is None else dump_GroundNodeFlat(obj.Nodes(j), password) for j in range(obj.NodesLength())],
+        'Nodes': [dump_GroundNodeFlat(obj.Nodes(j), password) for j in range(obj.NodesLength())],
         'Version': table_encryption.convert_string(obj.Version(), password),
     }
 
@@ -3482,7 +3484,7 @@ def dump_Motion(obj, password) -> dict:
 
     return {
         'Name': table_encryption.convert_string(obj.Name(), password),
-        'Positions': [None if obj.Positions() is None else dump_Position(obj.Positions(j), password) for j in range(obj.PositionsLength())],
+        'Positions': [dump_Position(obj.Positions(j), password) for j in range(obj.PositionsLength())],
     }
 
 
@@ -3509,8 +3511,8 @@ def dump_RootMotionFlat(obj, password) -> dict:
     table_encryption = TableEncryptionService()
 
     return {
-        'Forms': [None if obj.Forms() is None else dump_Form(obj.Forms(j), password) for j in range(obj.FormsLength())],
-        'ExSkills': [None if obj.ExSkills() is None else dump_Motion(obj.ExSkills(j), password) for j in range(obj.ExSkillsLength())],
+        'Forms': [dump_Form(obj.Forms(j), password) for j in range(obj.FormsLength())],
+        'ExSkills': [dump_Motion(obj.ExSkills(j), password) for j in range(obj.ExSkillsLength())],
         'MoveLeft': dump_Motion(obj.MoveLeft(), password),
         'MoveRight': dump_Motion(obj.MoveRight(), password),
     }
@@ -4562,9 +4564,6 @@ def dump_WeekDungeonRewardExcel(obj, password) -> dict:
         'IsDisplayed': obj.IsDisplayed(),
         'DropItemModelPrefabPath': table_encryption.convert_string(obj.DropItemModelPrefabPath(), password),
     }
-
-
-from enum import IntEnum
 
 
 class BubbleType(IntEnum):

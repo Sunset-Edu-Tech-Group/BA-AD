@@ -64,6 +64,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
     def _write_enums_to_fbs(enums: dict, f) -> None:
         for name, enum in enums.items():
             enum_fields = ',\n    '.join(f'{key} = {value}' for value, key in enum['fields'].items())
+
             f.write(f'enum {name}: {enum["format"]}{{\n')
             f.write(f'    {enum_fields}\n')
             f.write('}\n\n')
@@ -79,6 +80,38 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
             f.write(f'    {key} = {value}\n')
         f.write('\n')
 
+    @staticmethod
+    def _is_list_property(name: str) -> bool:
+        return len(name) > 6 and name.endswith('Length')
+
+    @staticmethod
+    def _process_list_property(name: str, intern: str) -> tuple:
+        list_name = name[:-6]
+        pattern = f'public (.+?) {re.escape(list_name)}' + r'\(int j\) { }'
+
+        if match := re.search(pattern, intern):
+            return list_name, match[1], True
+        return name, '', False
+
+    @staticmethod
+    def _remove_nullable(typ: str) -> str:
+        return typ[9:-1] if typ.startswith('Nullable<') else typ
+
+    def _process_property(self, name: str, typ: str, intern: str) -> tuple | None:
+        if name == 'ByteBuffer':
+            return None
+
+        is_list = False
+        if self._is_list_property(name):
+            name, new_type, is_list = self._process_list_property(name, intern)
+            typ = new_type or typ
+
+        typ = self._remove_nullable(typ)
+        if is_list:
+            typ = f'[{typ}]'
+
+        return name, typ
+
     def _extract_enums(self, data: str) -> dict:
         return {
             name: {
@@ -90,36 +123,16 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         }
 
     def _extract_structs(self, data: str) -> dict:
-        def process_property(prop, intern) -> tuple | None:
-            name, typ = prop[2], prop[1]
-            if name == 'ByteBuffer':
-                return None
-
-            if len(name) > 6 and name.endswith('Length'):
-                list_name = name[:-6]
-                match = re.search(
-                    f'public (.+?) {re.escape(list_name)}' + r'\(int j\) { }',
-                    intern,
-                )
-                if match:
-                    typ = f'[{match[1]}]'
-                    name = list_name
-
-            if typ.startswith('Nullable<'):
-                typ = typ[9:-1]
-
-            return name, typ
-
         return {
             key: {
                 name: typ
                 for prop in self.reStructProperty.finditer(intern)
-                for name_typ in [process_property(prop, intern)]
-                if name_typ
-                for name, typ in [name_typ]
+                for result in [self._process_property(prop[2], prop[1], intern)]
+                if result is not None
+                for name, typ in [result]
             }
             for key, intern in self.reStruct.findall(data)
-            if any(process_property(prop, intern) for prop in self.reStructProperty.finditer(intern))
+            if any(self._process_property(prop[2], prop[1], intern) for prop in self.reStructProperty.finditer(intern))
         }
 
     def _write_structs_to_fbs(self, structs: dict, enums: dict, f) -> None:
@@ -146,11 +159,12 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
             f.write('}\n\n')
 
     def _create_dumper_wrappers(self, structs: dict, enums: dict, f) -> None:
+        f.write('from enum import IntEnum\n\n')
         f.write('from ..lib.TableEncryptionService import TableEncryptionService\n\n\n')
         f.write('def dump_table(obj) -> list:\n')
         f.write('    table_encryption = TableEncryptionService()\n\n')
         f.write('    typ_name = obj.__class__.__name__[:-5]\n')
-        f.write("    dump_func = next(f for x, f in globals().items() if x.endswith('_' + typ_name))\n")
+        f.write("    dump_func = next(f for x, f in globals().items() if x.endswith(f'_{typ_name}'))\n")
         f.write('    password = table_encryption.create_key(typ_name[:-5])\n')
         f.write(
             '    return [\n        dump_func(obj.DataList(j), password)\n        for j in range(obj.DataListLength())\n    ]\n\n\n'
@@ -160,7 +174,6 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
             if not name.endswith('Table'):
                 self._write_struct_dumper(name, struct, enums, structs, f)
 
-        f.write('from enum import IntEnum\n\n\n')
         for name, enum in enums.items():
             self._write_enum_class(name, enum, f)
 
@@ -242,7 +255,6 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
             [
                 str(self.flatc_path),
                 '--python',
-                '--python-typing',
                 '--no-warnings',
                 '--scoped-enums',
                 '-o',
