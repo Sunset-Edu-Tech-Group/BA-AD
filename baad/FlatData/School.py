@@ -15,4 +15,8 @@ class School(object):
     Valkyrie = 9
     WildHunt = 10
     SRT = 11
+    SCHALE = 12
+    ETC = 13
+    Tokiwadai = 14
+    Sakugawa = 15
 

@@ -32,134 +32,148 @@ class CharacterDialogExcel(object):
         return 0
 
     # CharacterDialogExcel
-    def ProductionStep_(self):
+    def CostumeUniqueId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterDialogExcel
-    def DialogCategory_(self):
+    def DisplayOrder(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterDialogExcel
-    def DialogCondition_(self):
+    def ProductionStep_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterDialogExcel
-    def Anniversary_(self):
+    def DialogCategory_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterDialogExcel
-    def StartDate(self):
+    def DialogCondition_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterDialogExcel
+    def Anniversary_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterDialogExcel
+    def StartDate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
     def EndDate(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
     def GroupId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterDialogExcel
     def DialogType_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterDialogExcel
     def ActionName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterDialogExcel
-    def Duration(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # CharacterDialogExcel
-    def AnimationName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def LocalizeKR(self):
+    def Duration(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
 
     # CharacterDialogExcel
-    def LocalizeJP(self):
+    def AnimationName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def LocalizeTH(self):
+    def LocalizeKR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def LocalizeTW(self):
+    def LocalizeJP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def LocalizeEN(self):
+    def LocalizeTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def LocalizeDE(self):
+    def LocalizeTW(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def LocalizeFR(self):
+    def LocalizeEN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterDialogExcel
-    def VoiceClipsKr(self, j):
+    def LocalizeDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CharacterDialogExcel
+    def LocalizeFR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CharacterDialogExcel
+    def VoiceClipsKr(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -167,19 +181,19 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsKrLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsKrIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
     # CharacterDialogExcel
     def VoiceClipsJp(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -187,19 +201,19 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsJpLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsJpIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
     # CharacterDialogExcel
     def VoiceClipsTh(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -207,19 +221,19 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsThLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsThIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         return o == 0
 
     # CharacterDialogExcel
     def VoiceClipsTw(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -227,19 +241,19 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsTwLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsTwIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         return o == 0
 
     # CharacterDialogExcel
     def VoiceClipsEn(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -247,19 +261,19 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsEnLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsEnIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         return o == 0
 
     # CharacterDialogExcel
     def VoiceClipsDe(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -267,19 +281,19 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsDeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsDeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         return o == 0
 
     # CharacterDialogExcel
     def VoiceClipsFr(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -287,17 +301,100 @@ class CharacterDialogExcel(object):
 
     # CharacterDialogExcel
     def VoiceClipsFrLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterDialogExcel
     def VoiceClipsFrIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         return o == 0
 
-def Start(builder): builder.StartObject(26)
+    # CharacterDialogExcel
+    def VoiceId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # CharacterDialogExcel
+    def VoiceIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
+        return 0
+
+    # CharacterDialogExcel
+    def VoiceIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CharacterDialogExcel
+    def VoiceIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
+    # CharacterDialogExcel
+    def ApplyPosition(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CharacterDialogExcel
+    def PosX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CharacterDialogExcel
+    def PosY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CharacterDialogExcel
+    def CollectionVisible(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CharacterDialogExcel
+    def CVCollectionType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterDialogExcel
+    def UnlockFavorRank(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterDialogExcel
+    def UnlockEquipWeapon(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CharacterDialogExcel
+    def LocalizeCVGroup(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(37)
 def CharacterDialogExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -305,79 +402,87 @@ def AddCharacterId(builder, CharacterId): builder.PrependInt64Slot(0, CharacterI
 def CharacterDialogExcelAddCharacterId(builder, CharacterId):
     """This method is deprecated. Please switch to AddCharacterId."""
     return AddCharacterId(builder, CharacterId)
-def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(1, ProductionStep_, 0)
+def AddCostumeUniqueId(builder, CostumeUniqueId): builder.PrependInt64Slot(1, CostumeUniqueId, 0)
+def CharacterDialogExcelAddCostumeUniqueId(builder, CostumeUniqueId):
+    """This method is deprecated. Please switch to AddCostumeUniqueId."""
+    return AddCostumeUniqueId(builder, CostumeUniqueId)
+def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(2, DisplayOrder, 0)
+def CharacterDialogExcelAddDisplayOrder(builder, DisplayOrder):
+    """This method is deprecated. Please switch to AddDisplayOrder."""
+    return AddDisplayOrder(builder, DisplayOrder)
+def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(3, ProductionStep_, 0)
 def CharacterDialogExcelAddProductionStep_(builder, ProductionStep_):
     """This method is deprecated. Please switch to AddProductionStep_."""
     return AddProductionStep_(builder, ProductionStep_)
-def AddDialogCategory_(builder, DialogCategory_): builder.PrependInt32Slot(2, DialogCategory_, 0)
+def AddDialogCategory_(builder, DialogCategory_): builder.PrependInt32Slot(4, DialogCategory_, 0)
 def CharacterDialogExcelAddDialogCategory_(builder, DialogCategory_):
     """This method is deprecated. Please switch to AddDialogCategory_."""
     return AddDialogCategory_(builder, DialogCategory_)
-def AddDialogCondition_(builder, DialogCondition_): builder.PrependInt32Slot(3, DialogCondition_, 0)
+def AddDialogCondition_(builder, DialogCondition_): builder.PrependInt32Slot(5, DialogCondition_, 0)
 def CharacterDialogExcelAddDialogCondition_(builder, DialogCondition_):
     """This method is deprecated. Please switch to AddDialogCondition_."""
     return AddDialogCondition_(builder, DialogCondition_)
-def AddAnniversary_(builder, Anniversary_): builder.PrependInt32Slot(4, Anniversary_, 0)
+def AddAnniversary_(builder, Anniversary_): builder.PrependInt32Slot(6, Anniversary_, 0)
 def CharacterDialogExcelAddAnniversary_(builder, Anniversary_):
     """This method is deprecated. Please switch to AddAnniversary_."""
     return AddAnniversary_(builder, Anniversary_)
-def AddStartDate(builder, StartDate): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(StartDate), 0)
+def AddStartDate(builder, StartDate): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(StartDate), 0)
 def CharacterDialogExcelAddStartDate(builder, StartDate):
     """This method is deprecated. Please switch to AddStartDate."""
     return AddStartDate(builder, StartDate)
-def AddEndDate(builder, EndDate): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EndDate), 0)
+def AddEndDate(builder, EndDate): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EndDate), 0)
 def CharacterDialogExcelAddEndDate(builder, EndDate):
     """This method is deprecated. Please switch to AddEndDate."""
     return AddEndDate(builder, EndDate)
-def AddGroupId(builder, GroupId): builder.PrependInt64Slot(7, GroupId, 0)
+def AddGroupId(builder, GroupId): builder.PrependInt64Slot(9, GroupId, 0)
 def CharacterDialogExcelAddGroupId(builder, GroupId):
     """This method is deprecated. Please switch to AddGroupId."""
     return AddGroupId(builder, GroupId)
-def AddDialogType_(builder, DialogType_): builder.PrependInt32Slot(8, DialogType_, 0)
+def AddDialogType_(builder, DialogType_): builder.PrependInt32Slot(10, DialogType_, 0)
 def CharacterDialogExcelAddDialogType_(builder, DialogType_):
     """This method is deprecated. Please switch to AddDialogType_."""
     return AddDialogType_(builder, DialogType_)
-def AddActionName(builder, ActionName): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ActionName), 0)
+def AddActionName(builder, ActionName): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ActionName), 0)
 def CharacterDialogExcelAddActionName(builder, ActionName):
     """This method is deprecated. Please switch to AddActionName."""
     return AddActionName(builder, ActionName)
-def AddDuration(builder, Duration): builder.PrependInt64Slot(10, Duration, 0)
+def AddDuration(builder, Duration): builder.PrependInt64Slot(12, Duration, 0)
 def CharacterDialogExcelAddDuration(builder, Duration):
     """This method is deprecated. Please switch to AddDuration."""
     return AddDuration(builder, Duration)
-def AddAnimationName(builder, AnimationName): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(AnimationName), 0)
+def AddAnimationName(builder, AnimationName): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(AnimationName), 0)
 def CharacterDialogExcelAddAnimationName(builder, AnimationName):
     """This method is deprecated. Please switch to AddAnimationName."""
     return AddAnimationName(builder, AnimationName)
-def AddLocalizeKR(builder, LocalizeKR): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeKR), 0)
+def AddLocalizeKR(builder, LocalizeKR): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeKR), 0)
 def CharacterDialogExcelAddLocalizeKR(builder, LocalizeKR):
     """This method is deprecated. Please switch to AddLocalizeKR."""
     return AddLocalizeKR(builder, LocalizeKR)
-def AddLocalizeJP(builder, LocalizeJP): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeJP), 0)
+def AddLocalizeJP(builder, LocalizeJP): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeJP), 0)
 def CharacterDialogExcelAddLocalizeJP(builder, LocalizeJP):
     """This method is deprecated. Please switch to AddLocalizeJP."""
     return AddLocalizeJP(builder, LocalizeJP)
-def AddLocalizeTH(builder, LocalizeTH): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeTH), 0)
+def AddLocalizeTH(builder, LocalizeTH): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeTH), 0)
 def CharacterDialogExcelAddLocalizeTH(builder, LocalizeTH):
     """This method is deprecated. Please switch to AddLocalizeTH."""
     return AddLocalizeTH(builder, LocalizeTH)
-def AddLocalizeTW(builder, LocalizeTW): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeTW), 0)
+def AddLocalizeTW(builder, LocalizeTW): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeTW), 0)
 def CharacterDialogExcelAddLocalizeTW(builder, LocalizeTW):
     """This method is deprecated. Please switch to AddLocalizeTW."""
     return AddLocalizeTW(builder, LocalizeTW)
-def AddLocalizeEN(builder, LocalizeEN): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeEN), 0)
+def AddLocalizeEN(builder, LocalizeEN): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeEN), 0)
 def CharacterDialogExcelAddLocalizeEN(builder, LocalizeEN):
     """This method is deprecated. Please switch to AddLocalizeEN."""
     return AddLocalizeEN(builder, LocalizeEN)
-def AddLocalizeDE(builder, LocalizeDE): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeDE), 0)
+def AddLocalizeDE(builder, LocalizeDE): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeDE), 0)
 def CharacterDialogExcelAddLocalizeDE(builder, LocalizeDE):
     """This method is deprecated. Please switch to AddLocalizeDE."""
     return AddLocalizeDE(builder, LocalizeDE)
-def AddLocalizeFR(builder, LocalizeFR): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeFR), 0)
+def AddLocalizeFR(builder, LocalizeFR): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeFR), 0)
 def CharacterDialogExcelAddLocalizeFR(builder, LocalizeFR):
     """This method is deprecated. Please switch to AddLocalizeFR."""
     return AddLocalizeFR(builder, LocalizeFR)
-def AddVoiceClipsKr(builder, VoiceClipsKr): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsKr), 0)
+def AddVoiceClipsKr(builder, VoiceClipsKr): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsKr), 0)
 def CharacterDialogExcelAddVoiceClipsKr(builder, VoiceClipsKr):
     """This method is deprecated. Please switch to AddVoiceClipsKr."""
     return AddVoiceClipsKr(builder, VoiceClipsKr)
@@ -385,7 +490,7 @@ def StartVoiceClipsKrVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsKrVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsKrVector(builder, numElems)
-def AddVoiceClipsJp(builder, VoiceClipsJp): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsJp), 0)
+def AddVoiceClipsJp(builder, VoiceClipsJp): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsJp), 0)
 def CharacterDialogExcelAddVoiceClipsJp(builder, VoiceClipsJp):
     """This method is deprecated. Please switch to AddVoiceClipsJp."""
     return AddVoiceClipsJp(builder, VoiceClipsJp)
@@ -393,7 +498,7 @@ def StartVoiceClipsJpVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsJpVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsJpVector(builder, numElems)
-def AddVoiceClipsTh(builder, VoiceClipsTh): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsTh), 0)
+def AddVoiceClipsTh(builder, VoiceClipsTh): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsTh), 0)
 def CharacterDialogExcelAddVoiceClipsTh(builder, VoiceClipsTh):
     """This method is deprecated. Please switch to AddVoiceClipsTh."""
     return AddVoiceClipsTh(builder, VoiceClipsTh)
@@ -401,7 +506,7 @@ def StartVoiceClipsThVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsThVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsThVector(builder, numElems)
-def AddVoiceClipsTw(builder, VoiceClipsTw): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsTw), 0)
+def AddVoiceClipsTw(builder, VoiceClipsTw): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsTw), 0)
 def CharacterDialogExcelAddVoiceClipsTw(builder, VoiceClipsTw):
     """This method is deprecated. Please switch to AddVoiceClipsTw."""
     return AddVoiceClipsTw(builder, VoiceClipsTw)
@@ -409,7 +514,7 @@ def StartVoiceClipsTwVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsTwVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsTwVector(builder, numElems)
-def AddVoiceClipsEn(builder, VoiceClipsEn): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsEn), 0)
+def AddVoiceClipsEn(builder, VoiceClipsEn): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsEn), 0)
 def CharacterDialogExcelAddVoiceClipsEn(builder, VoiceClipsEn):
     """This method is deprecated. Please switch to AddVoiceClipsEn."""
     return AddVoiceClipsEn(builder, VoiceClipsEn)
@@ -417,7 +522,7 @@ def StartVoiceClipsEnVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsEnVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsEnVector(builder, numElems)
-def AddVoiceClipsDe(builder, VoiceClipsDe): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsDe), 0)
+def AddVoiceClipsDe(builder, VoiceClipsDe): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsDe), 0)
 def CharacterDialogExcelAddVoiceClipsDe(builder, VoiceClipsDe):
     """This method is deprecated. Please switch to AddVoiceClipsDe."""
     return AddVoiceClipsDe(builder, VoiceClipsDe)
@@ -425,7 +530,7 @@ def StartVoiceClipsDeVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsDeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsDeVector(builder, numElems)
-def AddVoiceClipsFr(builder, VoiceClipsFr): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsFr), 0)
+def AddVoiceClipsFr(builder, VoiceClipsFr): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsFr), 0)
 def CharacterDialogExcelAddVoiceClipsFr(builder, VoiceClipsFr):
     """This method is deprecated. Please switch to AddVoiceClipsFr."""
     return AddVoiceClipsFr(builder, VoiceClipsFr)
@@ -433,6 +538,46 @@ def StartVoiceClipsFrVector(builder, numElems): return builder.StartVector(4, nu
 def CharacterDialogExcelStartVoiceClipsFrVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVoiceClipsFrVector(builder, numElems)
+def AddVoiceId(builder, VoiceId): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceId), 0)
+def CharacterDialogExcelAddVoiceId(builder, VoiceId):
+    """This method is deprecated. Please switch to AddVoiceId."""
+    return AddVoiceId(builder, VoiceId)
+def StartVoiceIdVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CharacterDialogExcelStartVoiceIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartVoiceIdVector(builder, numElems)
+def AddApplyPosition(builder, ApplyPosition): builder.PrependBoolSlot(29, ApplyPosition, 0)
+def CharacterDialogExcelAddApplyPosition(builder, ApplyPosition):
+    """This method is deprecated. Please switch to AddApplyPosition."""
+    return AddApplyPosition(builder, ApplyPosition)
+def AddPosX(builder, PosX): builder.PrependFloat32Slot(30, PosX, 0.0)
+def CharacterDialogExcelAddPosX(builder, PosX):
+    """This method is deprecated. Please switch to AddPosX."""
+    return AddPosX(builder, PosX)
+def AddPosY(builder, PosY): builder.PrependFloat32Slot(31, PosY, 0.0)
+def CharacterDialogExcelAddPosY(builder, PosY):
+    """This method is deprecated. Please switch to AddPosY."""
+    return AddPosY(builder, PosY)
+def AddCollectionVisible(builder, CollectionVisible): builder.PrependBoolSlot(32, CollectionVisible, 0)
+def CharacterDialogExcelAddCollectionVisible(builder, CollectionVisible):
+    """This method is deprecated. Please switch to AddCollectionVisible."""
+    return AddCollectionVisible(builder, CollectionVisible)
+def AddCVCollectionType_(builder, CVCollectionType_): builder.PrependInt32Slot(33, CVCollectionType_, 0)
+def CharacterDialogExcelAddCVCollectionType_(builder, CVCollectionType_):
+    """This method is deprecated. Please switch to AddCVCollectionType_."""
+    return AddCVCollectionType_(builder, CVCollectionType_)
+def AddUnlockFavorRank(builder, UnlockFavorRank): builder.PrependInt64Slot(34, UnlockFavorRank, 0)
+def CharacterDialogExcelAddUnlockFavorRank(builder, UnlockFavorRank):
+    """This method is deprecated. Please switch to AddUnlockFavorRank."""
+    return AddUnlockFavorRank(builder, UnlockFavorRank)
+def AddUnlockEquipWeapon(builder, UnlockEquipWeapon): builder.PrependBoolSlot(35, UnlockEquipWeapon, 0)
+def CharacterDialogExcelAddUnlockEquipWeapon(builder, UnlockEquipWeapon):
+    """This method is deprecated. Please switch to AddUnlockEquipWeapon."""
+    return AddUnlockEquipWeapon(builder, UnlockEquipWeapon)
+def AddLocalizeCVGroup(builder, LocalizeCVGroup): builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeCVGroup), 0)
+def CharacterDialogExcelAddLocalizeCVGroup(builder, LocalizeCVGroup):
+    """This method is deprecated. Please switch to AddLocalizeCVGroup."""
+    return AddLocalizeCVGroup(builder, LocalizeCVGroup)
 def End(builder): return builder.EndObject()
 def CharacterDialogExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

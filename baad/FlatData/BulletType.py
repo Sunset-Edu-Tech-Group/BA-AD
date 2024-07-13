@@ -9,4 +9,5 @@ class BulletType(object):
     Siege = 3
     Mystic = 4
     None_ = 5
+    Sonic = 6
 

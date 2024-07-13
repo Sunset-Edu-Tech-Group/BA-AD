@@ -21,5 +21,9 @@ class ParcelType(object):
     LocationExp = 15
     Recipe = 16
     CharacterWeapon = 17
-    ProductMonthly = 18
+    CharacterGear = 18
+    IdCardBackground = 19
+    Emblem = 20
+    Sticker = 21
+    Costume = 22
 

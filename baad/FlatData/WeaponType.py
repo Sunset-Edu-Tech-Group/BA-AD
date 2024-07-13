@@ -22,4 +22,5 @@ class WeaponType(object):
     Binah = 16
     MT = 17
     Relic = 18
+    FT = 19
 

@@ -88,6 +88,7 @@ __all__ = [
     'BulletArmorDamageFactorExcel',
     'BulletArmorDamageFactorExcelTable',
     'BulletType',
+    'CVCollectionType',
     'CafeCharacterState',
     'CafeInteractionExcel',
     'CafeInteractionExcelTable',
@@ -375,6 +376,7 @@ __all__ = [
     'LogicEffectCommonVisualExcelTable',
     'LogicEffectSound',
     'MailType',
+    'MemoryLobbyCategory',
     'MemoryLobbyExcel',
     'MemoryLobbyExcelTable',
     'MessagePopupButtonType',
@@ -741,6 +743,7 @@ from .BuffType import BuffType
 from .BulletArmorDamageFactorExcel import BulletArmorDamageFactorExcel
 from .BulletArmorDamageFactorExcelTable import BulletArmorDamageFactorExcelTable
 from .BulletType import BulletType
+from .CVCollectionType import CVCollectionType
 from .CafeCharacterState import CafeCharacterState
 from .CafeInteractionExcel import CafeInteractionExcel
 from .CafeInteractionExcelTable import CafeInteractionExcelTable
@@ -1028,6 +1031,7 @@ from .LogicEffectCommonVisualExcel import LogicEffectCommonVisualExcel
 from .LogicEffectCommonVisualExcelTable import LogicEffectCommonVisualExcelTable
 from .LogicEffectSound import LogicEffectSound
 from .MailType import MailType
+from .MemoryLobbyCategory import MemoryLobbyCategory
 from .MemoryLobbyExcel import MemoryLobbyExcel
 from .MemoryLobbyExcelTable import MemoryLobbyExcelTable
 from .MessagePopupButtonType import MessagePopupButtonType

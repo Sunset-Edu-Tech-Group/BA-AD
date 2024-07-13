@@ -13,4 +13,6 @@ class TacticEntityType(object):
     Servant = 64
     Vehicle = 128
     Summoned = 256
+    Hallucination = 512
+    DestructibleProjectile = 1024
 

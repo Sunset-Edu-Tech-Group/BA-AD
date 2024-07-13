@@ -3006,4 +3006,5 @@ class Tag(object):
     TagName2998 = 3000
     TagName2999 = 3001
     TagName3000 = 3002
+    TagName3001 = 3003
 

@@ -39,4 +39,17 @@ class Club(object):
     Endanbou = 33
     NinpoKenkyubu = 34
     Class227 = 35
+    EmptyClub = 36
+    Emergentology = 37
+    RabbitPlatoon = 38
+    PandemoniumSociety = 39
+    HotSpringsDepartment = 40
+    TeaParty = 41
+    PublicPeaceBureau = 42
+    Genryumon = 43
+    BlackTortoisePromenade = 44
+    LaborParty = 45
+    KnowledgeLiberationFront = 46
+    Hyakkayouran = 47
+    ShinySparkleSociety = 48
 
