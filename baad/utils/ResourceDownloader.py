@@ -24,7 +24,7 @@ class ResourceDownloader:
             'media': 'MediaResources',
         }
         self.live = create_live_display()
-        self.progress_group, self.download_progress, self.extract_progress = create_progress_group()
+        self.progress_group, self.download_progress, _ = create_progress_group()
 
     @staticmethod
     def _get_file_path(file: dict) -> str | Path:
@@ -36,30 +36,40 @@ class ResourceDownloader:
 
         return Path(file['url'])
 
-    async def _download_file(self, session: aiohttp.ClientSession, url: str, file_path: Path) -> None:
-        async with self.semaphore:
-            try:
-                async with session.get(url) as response:
-                    if response.status != 200:
-                        self.console.print(f'[red]Failed to download {url}[/red]')
+    async def _download_file(self, session: aiohttp.ClientSession, url: str, file_path: Path, retries: int = 3) -> None:
+        for attempt in range(retries):
+            async with self.semaphore:
+                try:
+                    async with session.get(url, timeout=60) as response:
+                        if response.status != 200:
+                            self.console.print(f'[red]Failed to download {url}[/red]')
+                            return
+
+                        file_path.parent.mkdir(parents=True, exist_ok=True)
+                        total_size = int(response.headers.get('content-length', 0))
+                        download_task = self.download_progress.add_task(f'[cyan]{file_path.name}', total=total_size)
+
+                        with self.live:
+                            with open(file_path, 'wb') as f:
+                                async for chunk in response.content.iter_chunked(8192):
+                                    f.write(chunk)
+                                    self.download_progress.update(download_task, advance=len(chunk))
+                                    self.live.update(self.progress_group)
+
+                            self.download_progress.update(download_task, completed=total_size)
+                            self.live.update(self.progress_group)
                         return
 
-                    file_path.parent.mkdir(parents=True, exist_ok=True)
-                    total_size = int(response.headers.get('content-length', 0))
-                    download_task = self.download_progress.add_task(f'[cyan]{file_path.name}', total=total_size)
+                except (aiohttp.ClientOSError, ConnectionError, TimeoutError) as e:
+                    self.console.print(f'[bold red]Error: Download failed. {str(e)}[/bold red]')
 
-                    with self.live:
-                        with open(file_path, 'wb') as f:
-                            async for chunk in response.content.iter_chunked(8192):
-                                f.write(chunk)
-                                self.download_progress.update(download_task, advance=len(chunk))
-                                self.live.update(self.progress_group)
+                    if attempt < retries - 1:
+                        self.console.print(f'[yellow]Retrying... ({attempt + 1}/{retries})[/yellow]')
+                        await asyncio.sleep(2**attempt)
+                        continue
 
-                        self.download_progress.update(download_task, completed=total_size)
-                        self.live.update(self.progress_group)
-
-            except (ConnectionError, TimeoutError) as e:
-                self.console.print(f'[bold red]Error: Download failed. {str(e)}[/bold red]')
+            self.console.print(f'[bold red]Failed to download {url} after {retries} attempts.[/bold red]')
+            return
 
     async def _download_category(self, files: list, base_path: Path) -> None:
         async with aiohttp.ClientSession() as session:

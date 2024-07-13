@@ -63,7 +63,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         self.reTableDataType = re.compile(r'public Nullable<(.+?)> DataList\(int j\) { }')
 
         self.live = create_live_display()
-        self.progress_group, self.download_progress, self.extract_progress = create_progress_group()
+        self.progress_group, _, self.extract_progress = create_progress_group()
 
     @staticmethod
     def _write_enums_to_fbs(enums: dict, f) -> None:
@@ -230,6 +230,20 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
 
         raise NotImplementedError(f'{ptype}')
 
+    def _post_process_generated_files(self) -> None:
+        flatdata_dir = self.root / 'FlatData'
+        for file in flatdata_dir.glob('*.py'):
+            if file.name in ['__init__.py', 'dump.py']:
+                continue
+
+            with open(file, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            content = re.sub(r'from FlatData\.(\w+) import \1', r'from ..FlatData.\1 import \1', content)
+
+            with open(file, 'w', encoding='utf-8') as f:
+                f.write(content)
+
     def _initialize_generate(self, task: int) -> None:
         structs, enums = self.dump_cs_to_structs_and_enums(self.root / 'lib' / 'flatbuf' / 'dump.cs')
         self.extract_progress.update(task, advance=1)
@@ -240,6 +254,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         self.live.update(self.progress_group)
 
         self.compile_fbs_to_python(fbs_path)
+        self._post_process_generated_files()
         self.extract_progress.update(task, advance=1)
         self.live.update(self.progress_group)
 
@@ -300,6 +315,11 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         with open(init, 'wt', encoding='utf-8') as f:
             file_names = [fn.stem for fn in init.parent.glob('*.py') if fn.name not in ['dump.py', '__init__.py']]
             file_names.sort()
+
+            f.write('__all__ = [\n')
+            for file_name in file_names:
+                f.write(f"    '{file_name}',\n")
+            f.write(']\n\n')
 
             for file_name in file_names:
                 f.write(f'from .{file_name} import {file_name}\n')

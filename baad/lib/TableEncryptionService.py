@@ -9,7 +9,7 @@ from .XXHashService import calculate_hash
 
 
 class TableEncryptionService:
-    def __init__(self):
+    def __init__(self) -> None:
         self._struct_formats = {
             'uint32': Struct('<I'),
             'uint64': Struct('<Q'),
@@ -36,16 +36,13 @@ class TableEncryptionService:
             return strxor(value, key[: len(value)])
 
         return b''.join(
-            strxor(value[i : i + len(key)], key)
-            for i in range(0, len(value) - len(key) + 1, len(key))
+            strxor(value[i : i + len(key)], key) for i in range(0, len(value) - len(key) + 1, len(key))
         ) + strxor(
             value[(len(value) - (len(value) % len(key))) :],
             key[: len(value) % len(key)],
         )
 
-    def _xor_struct(
-        self, value: Union[int, float], key: bytes, struct_format: str
-    ) -> Union[int, float]:
+    def _xor_struct(self, value: Union[int, float], key: bytes, struct_format: str) -> Union[int, float]:
         struct = self._struct_formats[struct_format]
         return struct.unpack(self._xor(struct.pack(value), key))[0]
 
@@ -76,6 +73,7 @@ class TableEncryptionService:
     def convert_string(self, value: str | bytes, key: bytes) -> str:
         if not value:
             return ''
+
         try:
             raw = b64decode(value)
             return self._xor(raw, key).decode('utf-16')

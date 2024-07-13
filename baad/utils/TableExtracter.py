@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from zipfile import BadZipFile
 
 from rich.console import Console
 
@@ -14,11 +15,11 @@ from .Progress import create_live_display, create_progress_group
 class TableExtracter:
     def __init__(self, output: str) -> None:
         self.table_path = output or Path.cwd() / 'output' / 'TableBundles'
-        self.extracted_path = self.table_path / 'extracted'
+        self.extracted_path = Path(self.table_path).parent / 'TableExtracted'
         self.lower_name_to_module_dict = self._get_lower_name_to_module_dict()
         self.console = Console()
         self.live = create_live_display()
-        self.progress_group, self.download_progress, self.extract_progress = create_progress_group()
+        self.progress_group, _, self.extract_progress = create_progress_group()
 
     @staticmethod
     def _get_lower_name_to_module_dict() -> dict:
@@ -43,45 +44,42 @@ class TableExtracter:
 
         return processed_data, new_name
 
-    def extract_table(self, table_file: Path | str) -> None:
+    def extract_table(self, table_file: Path | str, task: int) -> None:
         table_dir_fp = self.extracted_path / table_file.stem
         table_dir_fp.mkdir(parents=True, exist_ok=True)
 
-        with TableZipFile(table_file) as tz:
-            extract_task = self.extract_progress.add_task(
-                f'[green]Extracting {table_file.name}', total=len(tz.namelist())
-            )
+        try:
+            with TableZipFile(table_file) as tz:
+                for name in tz.namelist():
+                    data = tz.read(name)
 
-            for name in tz.namelist():
-                self.console.print(f'[cyan]Extracted {name}.[/cyan]')
-                data = tz.read(name)
+                    try:
+                        if name.endswith('.json'):
+                            data = self._process_json_file(name, data)
 
-                try:
-                    if name.endswith('.json'):
-                        data = self._process_json_file(name, data)
+                        elif table_file.name == 'Excel.zip':
+                            data, name = self._process_excel_file(name, data)
 
-                    elif table_file.name == 'Excel.zip':
-                        data, name = self._process_excel_file(name, data)
+                    except Exception as e:
+                        self.console.print(f'[red]Error processing {name}: {e}[/red]')
+                        continue
 
-                except Exception as e:
-                    self.console.print(f'[red]Error processing {name}: {e}[/red]')
-                    continue
+                    fp = table_dir_fp / name
+                    fp.write_bytes(data)
+                    self.extract_progress.update(task, advance=1)
+                    self.live.update(self.progress_group)
 
-                fp = table_dir_fp / name
-                fp.write_bytes(data)
-                self.extract_progress.update(extract_task, advance=1)
-                self.live.update(self.progress_group)
+        except BadZipFile:
+            self.console.print(f'[red]Error: {table_file} is not a valid zip file.[/red]')
 
     def extract_all_tables(self) -> None:
-        table_files = list(self.table_path.glob('*.zip'))
-        extract_all_task = self.extract_progress.add_task('[cyan]Extracting all tables...', total=len(table_files))
+        table_files = list(Path(self.table_path).glob('*.zip'))
+        extract_task = self.extract_progress.add_task('[green]Extracting...', total=len(table_files))
 
         try:
             with self.live:
                 for table_file in table_files:
-                    self.extract_table(table_file)
-                    self.extract_progress.update(extract_all_task, advance=1)
-                    self.live.update(self.progress_group)
+                    self.extract_table(table_file, extract_task)
 
         finally:
             if self.live:

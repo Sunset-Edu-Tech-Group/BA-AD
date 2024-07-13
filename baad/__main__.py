@@ -147,11 +147,11 @@ def resource_downloader(args) -> ResourceDownloader:
 
 
 def extracter(args) -> TableExtracter:
-    extracter = TableExtracter(args.path)
+    extract = TableExtracter(args.path)
 
     if args.tables:
-        extracter.extract_all_tables()
-    return extracter
+        extract.extract_all_tables()
+    return extract
 
 
 def main() -> None:
