@@ -68,6 +68,12 @@ enum CafeCharacterState: int{
     Max = 7
 }
 
+enum MemoryLobbyCategory: int{
+    None = 0,
+    UILobbySpecial = 1,
+    UILobbySpecial2 = 2
+}
+
 enum VoiceEvent: int{
     OnTSA = 0,
     FormationPickUp = 1,
@@ -176,7 +182,8 @@ enum BulletType: int{
     Explosion = 2,
     Siege = 3,
     Mystic = 4,
-    None = 5
+    None = 5,
+    Sonic = 6
 }
 
 enum ActionType: int{
@@ -203,7 +210,9 @@ enum ArmorType: int{
     LightArmor = 0,
     HeavyArmor = 1,
     Unarmed = 2,
-    Structure = 3
+    Structure = 3,
+    Normal = 4,
+    ElasticArmor = 5
 }
 
 enum WeaponType: int{
@@ -225,7 +234,8 @@ enum WeaponType: int{
     MG = 15,
     Binah = 16,
     MT = 17,
-    Relic = 18
+    Relic = 18,
+    FT = 19
 }
 
 enum EntityMaterialType: int{
@@ -319,7 +329,9 @@ enum TacticEntityType: int{
     Obstacle = 32,
     Servant = 64,
     Vehicle = 128,
-    Summoned = 256
+    Summoned = 256,
+    Hallucination = 512,
+    DestructibleProjectile = 1024
 }
 
 enum BuffIconType: int{
@@ -600,7 +612,9 @@ enum NexonBillingState: int{
 enum StatLevelUpType: int{
     Standard = 0,
     Premature = 1,
-    LateBloom = 2
+    LateBloom = 2,
+    Obstacle = 3,
+    TimeAttack = 4
 }
 
 enum GrowthCategory: int{
@@ -1307,7 +1321,11 @@ enum ParcelType: int{
     LocationExp = 15,
     Recipe = 16,
     CharacterWeapon = 17,
-    ProductMonthly = 18
+    CharacterGear = 18,
+    IdCardBackground = 19,
+    Emblem = 20,
+    Sticker = 21,
+    Costume = 22
 }
 
 enum Rarity: int{
@@ -1576,7 +1594,44 @@ enum DialogCategory: int{
     UIAttendanceEvent02 = 29,
     UIAttendanceEvent03 = 30,
     UIEventCardShop = 31,
-    UISchoolDungeon = 32
+    UISchoolDungeon = 32,
+    UIAttendanceEvent = 33,
+    UISpecialOperationLobby = 34,
+    WeaponGet = 35,
+    UIAttendanceEvent04 = 36,
+    UIEventFortuneGachaShop = 37,
+    UIAttendanceEvent05 = 38,
+    UIAttendanceEvent06 = 39,
+    UIMission = 40,
+    UIEventMission = 41,
+    UIAttendanceEvent08 = 42,
+    UIAttendanceEvent07 = 43,
+    UIEventMiniGameMission = 44,
+    UIAttendanceEvent09 = 45,
+    UIAttendanceEvent10 = 46,
+    UIAttendanceEvent11 = 47,
+    UIWorkPlanaSit = 48,
+    UIWorkPlanaUmbrella = 49,
+    UIWorkPlanaCabinet = 50,
+    UIWorkCoexist_AronaSleepSit = 51,
+    UIWorkCoexist_PlanaWatchSky = 52,
+    UIWorkCoexist_PlanaSitPeek = 53,
+    UIWorkCoexist_AronaSleepPeek = 54,
+    UIEventArchive = 55,
+    UIAttendanceEvent12 = 56,
+    UIAttendanceEvent13 = 57,
+    UIAttendanceEvent14 = 58,
+    Temp_1 = 59,
+    Temp_2 = 60,
+    Temp_3 = 61,
+    Temp_4 = 62,
+    Temp_5 = 63,
+    UIAttendanceEvent15 = 64,
+    UILobbySpecial2 = 65,
+    UIAttendanceEvent16 = 66,
+    UIEventTreasure = 67,
+    UIMultiFloorRaid = 68,
+    UIEventMiniGameDreamMaker = 69
 }
 
 enum DialogCondition: int{
@@ -1590,7 +1645,25 @@ enum DialogCondition: int{
     Prize0 = 7,
     Prize1 = 8,
     Prize2 = 9,
-    Prize3 = 10
+    Prize3 =  10,
+    Interaction = 11,
+    Luck0 = 12,
+    Luck1 = 13,
+    Luck2 = 14,
+    Luck3 = 15,
+    Luck4 = 16,
+    Luck5 = 17,
+    StoryOpen = 18,
+    CollectionOpen = 19,
+    BoxGachaFinish = 20,
+    FindTreasure = 21,
+    GetTreasure = 22,
+    RoundRenewal = 23,
+    MiniGameDreamMakerEnough01 = 24,
+    MiniGameDreamMakerEnough02 = 25,
+    MiniGameDreamMakerEnough03 = 26,
+    MiniGameDreamMakerEnough04 = 27,
+    MiniGameDreamMakerDefault = 28
 }
 
 enum DialogConditionDetail: int{
@@ -1603,6 +1676,12 @@ enum DialogType: int{
     Talk = 0,
     Think = 1,
     UITalk = 2
+}
+
+enum CVCollectionType: int{
+    CVNormal = 0,
+    CVEvent = 1,
+    CVEtc = 2
 }
 
 enum Anniversary: int{
@@ -1623,7 +1702,11 @@ enum School: int{
     Shanhaijing = 8,
     Valkyrie = 9,
     WildHunt = 10,
-    SRT = 11
+    SRT = 11,
+    SCHALE = 12,
+    ETC = 13,
+    Tokiwadai = 14,
+    Sakugawa = 15
 }
 
 enum StoryCondition: int{
@@ -4912,7 +4995,8 @@ enum Tag: int{
     TagName2997 = 2999,
     TagName2998 = 3000,
     TagName2999 = 3001,
-    TagName3000 = 3002
+    TagName3000 = 3002,
+    TagName3001 = 3003
 }
 
 enum Club: int{
@@ -4951,7 +5035,20 @@ enum Club: int{
     Shugyobu = 32,
     Endanbou = 33,
     NinpoKenkyubu = 34,
-    Class227 = 35
+    Class227 = 35,
+    EmptyClub = 36,
+    Emergentology = 37,
+    RabbitPlatoon = 38,
+    PandemoniumSociety = 39,
+    HotSpringsDepartment = 40,
+    TeaParty = 41,
+    PublicPeaceBureau = 42,
+    Genryumon = 43,
+    BlackTortoisePromenade = 44,
+    LaborParty = 45,
+    KnowledgeLiberationFront = 46,
+    Hyakkayouran = 47,
+    ShinySparkleSociety = 48
 }
 
 enum GroundNodeType: int{
@@ -5735,6 +5832,8 @@ table CharacterDialogExcelTable{
 
 table CharacterDialogExcel{
     CharacterId: long;
+    CostumeUniqueId: long;
+    DisplayOrder: long;
     ProductionStep_: ProductionStep;
     DialogCategory_: DialogCategory;
     DialogCondition_: DialogCondition;
@@ -5760,6 +5859,15 @@ table CharacterDialogExcel{
     VoiceClipsEn: [string];
     VoiceClipsDe: [string];
     VoiceClipsFr: [string];
+    VoiceId: [uint];
+    ApplyPosition: bool;
+    PosX: float;
+    PosY: float;
+    CollectionVisible: bool;
+    CVCollectionType_: CVCollectionType;
+    UnlockFavorRank: long;
+    UnlockEquipWeapon: bool;
+    LocalizeCVGroup: string;
 }
 
 table CharacterExcelTable{
@@ -5769,9 +5877,15 @@ table CharacterExcelTable{
 table CharacterExcel{
     Id: long;
     DevName: string;
+    CostumeGroupId: long;
     ProductionStep_: ProductionStep;
     CollectionVisible: bool;
+    CollectionVisibleStartDate: string;
+    CollectionVisibleEndDate: string;
+    ReleaseDate: string;
+    IsPlayable: bool;
     IsPlayableCharacter: bool;
+    IsNPC: bool;
     LocalizeEtcId: uint;
     Rarity_: Rarity;
     TacticEntityType_: TacticEntityType;
@@ -5793,6 +5907,9 @@ table CharacterExcel{
     Jumpable: bool;
     PersonalityId: long;
     CharacterAIId: long;
+    ExternalBtId: long;
+    MainCombatStyleId: long;
+    CombatStyleIndex: int;
     ScenarioCharacter: string;
     SpawnTemplateId: uint;
     FavorLevelupType: int;
@@ -5812,8 +5929,11 @@ table CharacterExcel{
     DisplayEnemyInfo: bool;
     BodyRadius: long;
     RandomEffectRadius: long;
+    HpBarHide: bool;
     HpBarHeight: float;
     HighlightFloaterHeight: float;
+    EmojiOffsetX: float;
+    EmojiOffsetY: float;
     MoveStartFrame: int;
     MoveEndFrame: int;
     JumpMotionFrame: int;
@@ -6503,6 +6623,7 @@ table EmoticonSpecialExcel{
 }
 
 table EnumExcelTable{
+    DataList: [EnumExcel];
 }
 
 table EquipmentExcelTable{
@@ -7855,6 +7976,7 @@ table MemoryLobbyExcel{
     LocalizeEtcId: uint;
     CharacterId: long;
     PrefabName: string;
+    MemoryLobbyCategory: MemoryLobbyCategory;
     SlotTextureName: string;
     RewardTextureName: string;
     BGMId: long;
