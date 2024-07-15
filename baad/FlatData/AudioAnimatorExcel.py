@@ -81,15 +81,29 @@ class AudioAnimatorExcel(object):
         return 0.0
 
     # AudioAnimatorExcel
-    def AudioPriority(self):
+    def RandomPitchMin(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # AudioAnimatorExcel
-    def AudioClipPath(self, j):
+    def RandomPitchMax(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # AudioAnimatorExcel
+    def AudioPriority(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # AudioAnimatorExcel
+    def AudioClipPath(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -97,19 +111,19 @@ class AudioAnimatorExcel(object):
 
     # AudioAnimatorExcel
     def AudioClipPathLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # AudioAnimatorExcel
     def AudioClipPathIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # AudioAnimatorExcel
     def VoiceHash(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -117,24 +131,24 @@ class AudioAnimatorExcel(object):
 
     # AudioAnimatorExcel
     def VoiceHashAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
         return 0
 
     # AudioAnimatorExcel
     def VoiceHashLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # AudioAnimatorExcel
     def VoiceHashIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
-def Start(builder): builder.StartObject(11)
+def Start(builder): builder.StartObject(13)
 def AudioAnimatorExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -170,11 +184,19 @@ def AddDelay(builder, Delay): builder.PrependFloat32Slot(7, Delay, 0.0)
 def AudioAnimatorExcelAddDelay(builder, Delay):
     """This method is deprecated. Please switch to AddDelay."""
     return AddDelay(builder, Delay)
-def AddAudioPriority(builder, AudioPriority): builder.PrependInt32Slot(8, AudioPriority, 0)
+def AddRandomPitchMin(builder, RandomPitchMin): builder.PrependInt32Slot(8, RandomPitchMin, 0)
+def AudioAnimatorExcelAddRandomPitchMin(builder, RandomPitchMin):
+    """This method is deprecated. Please switch to AddRandomPitchMin."""
+    return AddRandomPitchMin(builder, RandomPitchMin)
+def AddRandomPitchMax(builder, RandomPitchMax): builder.PrependInt32Slot(9, RandomPitchMax, 0)
+def AudioAnimatorExcelAddRandomPitchMax(builder, RandomPitchMax):
+    """This method is deprecated. Please switch to AddRandomPitchMax."""
+    return AddRandomPitchMax(builder, RandomPitchMax)
+def AddAudioPriority(builder, AudioPriority): builder.PrependInt32Slot(10, AudioPriority, 0)
 def AudioAnimatorExcelAddAudioPriority(builder, AudioPriority):
     """This method is deprecated. Please switch to AddAudioPriority."""
     return AddAudioPriority(builder, AudioPriority)
-def AddAudioClipPath(builder, AudioClipPath): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipPath), 0)
+def AddAudioClipPath(builder, AudioClipPath): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipPath), 0)
 def AudioAnimatorExcelAddAudioClipPath(builder, AudioClipPath):
     """This method is deprecated. Please switch to AddAudioClipPath."""
     return AddAudioClipPath(builder, AudioClipPath)
@@ -182,7 +204,7 @@ def StartAudioClipPathVector(builder, numElems): return builder.StartVector(4, n
 def AudioAnimatorExcelStartAudioClipPathVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartAudioClipPathVector(builder, numElems)
-def AddVoiceHash(builder, VoiceHash): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceHash), 0)
+def AddVoiceHash(builder, VoiceHash): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceHash), 0)
 def AudioAnimatorExcelAddVoiceHash(builder, VoiceHash):
     """This method is deprecated. Please switch to AddVoiceHash."""
     return AddVoiceHash(builder, VoiceHash)

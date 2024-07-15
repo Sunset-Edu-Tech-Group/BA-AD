@@ -67,13 +67,20 @@ class ObstacleStatExcel(object):
         return 0
 
     # ObstacleStatExcel
-    def HighlightFloaterHeight(self):
+    def CanNotStandRange(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ObstacleStatExcel
+    def HighlightFloaterHeight(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def Start(builder): builder.StartObject(7)
+def Start(builder): builder.StartObject(8)
 def ObstacleStatExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -101,7 +108,11 @@ def AddDodge(builder, Dodge): builder.PrependInt64Slot(5, Dodge, 0)
 def ObstacleStatExcelAddDodge(builder, Dodge):
     """This method is deprecated. Please switch to AddDodge."""
     return AddDodge(builder, Dodge)
-def AddHighlightFloaterHeight(builder, HighlightFloaterHeight): builder.PrependFloat32Slot(6, HighlightFloaterHeight, 0.0)
+def AddCanNotStandRange(builder, CanNotStandRange): builder.PrependInt64Slot(6, CanNotStandRange, 0)
+def ObstacleStatExcelAddCanNotStandRange(builder, CanNotStandRange):
+    """This method is deprecated. Please switch to AddCanNotStandRange."""
+    return AddCanNotStandRange(builder, CanNotStandRange)
+def AddHighlightFloaterHeight(builder, HighlightFloaterHeight): builder.PrependFloat32Slot(7, HighlightFloaterHeight, 0.0)
 def ObstacleStatExcelAddHighlightFloaterHeight(builder, HighlightFloaterHeight):
     """This method is deprecated. Please switch to AddHighlightFloaterHeight."""
     return AddHighlightFloaterHeight(builder, HighlightFloaterHeight)

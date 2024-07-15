@@ -25,125 +25,86 @@ class ScenarioModeRewardExcel(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # ScenarioModeRewardExcel
-    def ModeId(self):
+    def ScenarioModeRewardId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioModeRewardExcel
-    def RewardParcelType(self, j):
+    def RewardTag_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioModeRewardExcel
-    def RewardParcelTypeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
-        return 0
-
-    # ScenarioModeRewardExcel
-    def RewardParcelTypeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # ScenarioModeRewardExcel
-    def RewardParcelTypeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        return o == 0
-
-    # ScenarioModeRewardExcel
-    def RewardParcelId(self, j):
+    def RewardProb(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioModeRewardExcel
-    def RewardParcelIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
-        return 0
-
-    # ScenarioModeRewardExcel
-    def RewardParcelIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # ScenarioModeRewardExcel
-    def RewardParcelIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        return o == 0
-
-    # ScenarioModeRewardExcel
-    def RewardParcelAmount(self, j):
+    def RewardParcelType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioModeRewardExcel
-    def RewardParcelAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+    def RewardParcelId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioModeRewardExcel
-    def RewardParcelAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+    def RewardParcelAmount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.VectorLen(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioModeRewardExcel
-    def RewardParcelAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        return o == 0
+    def IsDisplayed(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
-def Start(builder): builder.StartObject(4)
+def Start(builder): builder.StartObject(7)
 def ScenarioModeRewardExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
-def AddModeId(builder, ModeId): builder.PrependInt64Slot(0, ModeId, 0)
-def ScenarioModeRewardExcelAddModeId(builder, ModeId):
-    """This method is deprecated. Please switch to AddModeId."""
-    return AddModeId(builder, ModeId)
-def AddRewardParcelType(builder, RewardParcelType): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelType), 0)
+def AddScenarioModeRewardId(builder, ScenarioModeRewardId): builder.PrependInt64Slot(0, ScenarioModeRewardId, 0)
+def ScenarioModeRewardExcelAddScenarioModeRewardId(builder, ScenarioModeRewardId):
+    """This method is deprecated. Please switch to AddScenarioModeRewardId."""
+    return AddScenarioModeRewardId(builder, ScenarioModeRewardId)
+def AddRewardTag_(builder, RewardTag_): builder.PrependInt32Slot(1, RewardTag_, 0)
+def ScenarioModeRewardExcelAddRewardTag_(builder, RewardTag_):
+    """This method is deprecated. Please switch to AddRewardTag_."""
+    return AddRewardTag_(builder, RewardTag_)
+def AddRewardProb(builder, RewardProb): builder.PrependInt32Slot(2, RewardProb, 0)
+def ScenarioModeRewardExcelAddRewardProb(builder, RewardProb):
+    """This method is deprecated. Please switch to AddRewardProb."""
+    return AddRewardProb(builder, RewardProb)
+def AddRewardParcelType(builder, RewardParcelType): builder.PrependInt32Slot(3, RewardParcelType, 0)
 def ScenarioModeRewardExcelAddRewardParcelType(builder, RewardParcelType):
     """This method is deprecated. Please switch to AddRewardParcelType."""
     return AddRewardParcelType(builder, RewardParcelType)
-def StartRewardParcelTypeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def ScenarioModeRewardExcelStartRewardParcelTypeVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartRewardParcelTypeVector(builder, numElems)
-def AddRewardParcelId(builder, RewardParcelId): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelId), 0)
+def AddRewardParcelId(builder, RewardParcelId): builder.PrependInt64Slot(4, RewardParcelId, 0)
 def ScenarioModeRewardExcelAddRewardParcelId(builder, RewardParcelId):
     """This method is deprecated. Please switch to AddRewardParcelId."""
     return AddRewardParcelId(builder, RewardParcelId)
-def StartRewardParcelIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
-def ScenarioModeRewardExcelStartRewardParcelIdVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartRewardParcelIdVector(builder, numElems)
-def AddRewardParcelAmount(builder, RewardParcelAmount): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelAmount), 0)
+def AddRewardParcelAmount(builder, RewardParcelAmount): builder.PrependInt32Slot(5, RewardParcelAmount, 0)
 def ScenarioModeRewardExcelAddRewardParcelAmount(builder, RewardParcelAmount):
     """This method is deprecated. Please switch to AddRewardParcelAmount."""
     return AddRewardParcelAmount(builder, RewardParcelAmount)
-def StartRewardParcelAmountVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def ScenarioModeRewardExcelStartRewardParcelAmountVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartRewardParcelAmountVector(builder, numElems)
+def AddIsDisplayed(builder, IsDisplayed): builder.PrependBoolSlot(6, IsDisplayed, 0)
+def ScenarioModeRewardExcelAddIsDisplayed(builder, IsDisplayed):
+    """This method is deprecated. Please switch to AddIsDisplayed."""
+    return AddIsDisplayed(builder, IsDisplayed)
 def End(builder): return builder.EndObject()
 def ScenarioModeRewardExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

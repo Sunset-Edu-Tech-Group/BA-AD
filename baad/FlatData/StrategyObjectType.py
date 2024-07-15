@@ -20,4 +20,8 @@ class StrategyObjectType(object):
     SwitchToggle = 14
     SwitchMovableWhenToggleOff = 15
     SwitchMovableWhenToggleOn = 16
+    FixedStart01 = 17
+    FixedStart02 = 18
+    FixedStart03 = 19
+    FixedStart04 = 20
 

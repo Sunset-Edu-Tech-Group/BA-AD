@@ -19,4 +19,24 @@ class EmojiEvent(object):
     TerrainAdaptionC = 13
     TerrainAdaptionD = 14
     TerrainAdaptionSS = 15
+    Dot = 16
+    Angry = 17
+    Bulb = 18
+    Exclaim = 19
+    Surprise = 20
+    Sad = 21
+    Sigh = 22
+    Steam = 23
+    Upset = 24
+    Respond = 25
+    Question = 26
+    Sweat = 27
+    Music = 28
+    Chat = 29
+    Twinkle = 30
+    Zzz = 31
+    Tear = 32
+    Heart = 33
+    Shy = 34
+    Think = 35
 

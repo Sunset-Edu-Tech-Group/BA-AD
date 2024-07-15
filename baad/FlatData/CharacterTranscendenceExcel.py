@@ -167,7 +167,7 @@ class CharacterTranscendenceExcel(object):
         return o == 0
 
     # CharacterTranscendenceExcel
-    def SkillGroupIdA(self, j):
+    def SkillSlotA(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             a = self._tab.Vector(o)
@@ -175,19 +175,19 @@ class CharacterTranscendenceExcel(object):
         return ""
 
     # CharacterTranscendenceExcel
-    def SkillGroupIdALength(self):
+    def SkillSlotALength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterTranscendenceExcel
-    def SkillGroupIdAIsNone(self):
+    def SkillSlotAIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
     # CharacterTranscendenceExcel
-    def SkillGroupIdB(self, j):
+    def SkillSlotB(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             a = self._tab.Vector(o)
@@ -195,14 +195,14 @@ class CharacterTranscendenceExcel(object):
         return ""
 
     # CharacterTranscendenceExcel
-    def SkillGroupIdBLength(self):
+    def SkillSlotBLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterTranscendenceExcel
-    def SkillGroupIdBIsNone(self):
+    def SkillSlotBIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
@@ -281,22 +281,22 @@ def StartRecipeIdVector(builder, numElems): return builder.StartVector(8, numEle
 def CharacterTranscendenceExcelStartRecipeIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartRecipeIdVector(builder, numElems)
-def AddSkillGroupIdA(builder, SkillGroupIdA): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SkillGroupIdA), 0)
-def CharacterTranscendenceExcelAddSkillGroupIdA(builder, SkillGroupIdA):
-    """This method is deprecated. Please switch to AddSkillGroupIdA."""
-    return AddSkillGroupIdA(builder, SkillGroupIdA)
-def StartSkillGroupIdAVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def CharacterTranscendenceExcelStartSkillGroupIdAVector(builder, numElems):
+def AddSkillSlotA(builder, SkillSlotA): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SkillSlotA), 0)
+def CharacterTranscendenceExcelAddSkillSlotA(builder, SkillSlotA):
+    """This method is deprecated. Please switch to AddSkillSlotA."""
+    return AddSkillSlotA(builder, SkillSlotA)
+def StartSkillSlotAVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CharacterTranscendenceExcelStartSkillSlotAVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartSkillGroupIdAVector(builder, numElems)
-def AddSkillGroupIdB(builder, SkillGroupIdB): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SkillGroupIdB), 0)
-def CharacterTranscendenceExcelAddSkillGroupIdB(builder, SkillGroupIdB):
-    """This method is deprecated. Please switch to AddSkillGroupIdB."""
-    return AddSkillGroupIdB(builder, SkillGroupIdB)
-def StartSkillGroupIdBVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def CharacterTranscendenceExcelStartSkillGroupIdBVector(builder, numElems):
+    return StartSkillSlotAVector(builder, numElems)
+def AddSkillSlotB(builder, SkillSlotB): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SkillSlotB), 0)
+def CharacterTranscendenceExcelAddSkillSlotB(builder, SkillSlotB):
+    """This method is deprecated. Please switch to AddSkillSlotB."""
+    return AddSkillSlotB(builder, SkillSlotB)
+def StartSkillSlotBVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CharacterTranscendenceExcelStartSkillSlotBVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartSkillGroupIdBVector(builder, numElems)
+    return StartSkillSlotBVector(builder, numElems)
 def AddMaxlevelStar(builder, MaxlevelStar): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(MaxlevelStar), 0)
 def CharacterTranscendenceExcelAddMaxlevelStar(builder, MaxlevelStar):
     """This method is deprecated. Please switch to AddMaxlevelStar."""

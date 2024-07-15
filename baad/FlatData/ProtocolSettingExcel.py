@@ -32,41 +32,34 @@ class ProtocolSettingExcel(object):
         return None
 
     # ProtocolSettingExcel
-    def ContentLockType_(self):
+    def OpenConditionContent_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ProtocolSettingExcel
-    def OpenConditionContent_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # ProtocolSettingExcel
     def Currency(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ProtocolSettingExcel
     def Inventory(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ProtocolSettingExcel
     def Mail(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def Start(builder): builder.StartObject(6)
+def Start(builder): builder.StartObject(5)
 def ProtocolSettingExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -74,23 +67,19 @@ def AddProtocol(builder, Protocol): builder.PrependUOffsetTRelativeSlot(0, flatb
 def ProtocolSettingExcelAddProtocol(builder, Protocol):
     """This method is deprecated. Please switch to AddProtocol."""
     return AddProtocol(builder, Protocol)
-def AddContentLockType_(builder, ContentLockType_): builder.PrependInt32Slot(1, ContentLockType_, 0)
-def ProtocolSettingExcelAddContentLockType_(builder, ContentLockType_):
-    """This method is deprecated. Please switch to AddContentLockType_."""
-    return AddContentLockType_(builder, ContentLockType_)
-def AddOpenConditionContent_(builder, OpenConditionContent_): builder.PrependInt32Slot(2, OpenConditionContent_, 0)
+def AddOpenConditionContent_(builder, OpenConditionContent_): builder.PrependInt32Slot(1, OpenConditionContent_, 0)
 def ProtocolSettingExcelAddOpenConditionContent_(builder, OpenConditionContent_):
     """This method is deprecated. Please switch to AddOpenConditionContent_."""
     return AddOpenConditionContent_(builder, OpenConditionContent_)
-def AddCurrency(builder, Currency): builder.PrependBoolSlot(3, Currency, 0)
+def AddCurrency(builder, Currency): builder.PrependBoolSlot(2, Currency, 0)
 def ProtocolSettingExcelAddCurrency(builder, Currency):
     """This method is deprecated. Please switch to AddCurrency."""
     return AddCurrency(builder, Currency)
-def AddInventory(builder, Inventory): builder.PrependBoolSlot(4, Inventory, 0)
+def AddInventory(builder, Inventory): builder.PrependBoolSlot(3, Inventory, 0)
 def ProtocolSettingExcelAddInventory(builder, Inventory):
     """This method is deprecated. Please switch to AddInventory."""
     return AddInventory(builder, Inventory)
-def AddMail(builder, Mail): builder.PrependBoolSlot(5, Mail, 0)
+def AddMail(builder, Mail): builder.PrependBoolSlot(4, Mail, 0)
 def ProtocolSettingExcelAddMail(builder, Mail):
     """This method is deprecated. Please switch to AddMail."""
     return AddMail(builder, Mail)

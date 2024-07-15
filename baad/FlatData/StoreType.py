@@ -7,4 +7,6 @@ class StoreType(object):
     GooglePlay = 1
     AppStore = 2
     OneStore = 3
+    MicrosoftStore = 4
+    GalaxyStore = 5
 

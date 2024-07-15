@@ -18,4 +18,7 @@ class ExternalBTTrigger(object):
     OnSpawned = 12
     CheckActiveGaugeBetween = 13
     DestroyParts = 14
+    CheckHallucinationCountOver = 15
+    CheckHallucinationCountUnder = 16
+    UseSkillEndGroupId = 17
 

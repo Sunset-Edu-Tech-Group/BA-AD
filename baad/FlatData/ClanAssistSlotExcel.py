@@ -73,7 +73,14 @@ class ClanAssistSlotExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(7)
+    # ClanAssistSlotExcel
+    def AssistRentalFeeAmountStranger(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(8)
 def ClanAssistSlotExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -105,6 +112,10 @@ def AddAssistRentalFeeAmount(builder, AssistRentalFeeAmount): builder.PrependInt
 def ClanAssistSlotExcelAddAssistRentalFeeAmount(builder, AssistRentalFeeAmount):
     """This method is deprecated. Please switch to AddAssistRentalFeeAmount."""
     return AddAssistRentalFeeAmount(builder, AssistRentalFeeAmount)
+def AddAssistRentalFeeAmountStranger(builder, AssistRentalFeeAmountStranger): builder.PrependInt64Slot(7, AssistRentalFeeAmountStranger, 0)
+def ClanAssistSlotExcelAddAssistRentalFeeAmountStranger(builder, AssistRentalFeeAmountStranger):
+    """This method is deprecated. Please switch to AddAssistRentalFeeAmountStranger."""
+    return AddAssistRentalFeeAmountStranger(builder, AssistRentalFeeAmountStranger)
 def End(builder): return builder.EndObject()
 def ClanAssistSlotExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

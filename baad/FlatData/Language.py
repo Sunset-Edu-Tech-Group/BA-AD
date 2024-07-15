@@ -8,6 +8,4 @@ class Language(object):
     Th = 2
     Tw = 3
     En = 4
-    De = 5
-    Fr = 6
 

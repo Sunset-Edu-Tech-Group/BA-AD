@@ -39,36 +39,43 @@ class RaidStageExcel(object):
         return False
 
     # RaidStageExcel
-    def RaidBossGroup(self):
+    def UseBossAIPhaseSync(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # RaidStageExcel
-    def PortraitPath(self):
+    def RaidBossGroup(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidStageExcel
-    def BGPath(self):
+    def PortraitPath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidStageExcel
-    def RaidCharacterId(self):
+    def BGPath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RaidStageExcel
+    def RaidCharacterId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def BossCharacterId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -76,166 +83,138 @@ class RaidStageExcel(object):
 
     # RaidStageExcel
     def BossCharacterIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # RaidStageExcel
     def BossCharacterIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidStageExcel
     def BossCharacterIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
     # RaidStageExcel
     def Difficulty_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def DifficultyOpenCondition(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # RaidStageExcel
     def MaxPlayerCount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
-    def StageCreateCostType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def StageCreateCostAmount(self):
+    def RaidRoomLifeTime(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
-    def StageEnterCostType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def StageEnterCostAmount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def RaidRoomLifeTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
     def BattleDuration(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def GroundId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def GroundDevName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidStageExcel
     def EnterTimeLine(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidStageExcel
     def TacticEnvironment_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def SeasonDamageRatio(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def DefaultClearScore(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def MaximumScore(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def PerSecondMinusScore(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def HPPercentScore(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # RaidStageExcel
+    def MinimumAcquisitionScore(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # RaidStageExcel
+    def MaximumAcquisitionScore(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def RaidRewardGroupId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
-    def RaidRewardDevName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # RaidStageExcel
     def BattleReadyTimelinePath(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -243,19 +222,19 @@ class RaidStageExcel(object):
 
     # RaidStageExcel
     def BattleReadyTimelinePathLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidStageExcel
     def BattleReadyTimelinePathIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         return o == 0
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseStart(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -263,26 +242,26 @@ class RaidStageExcel(object):
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseStartAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseStartLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseStartIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         return o == 0
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseEnd(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -290,108 +269,80 @@ class RaidStageExcel(object):
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseEndAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseEndLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidStageExcel
     def BattleReadyTimelinePhaseEndIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         return o == 0
 
     # RaidStageExcel
     def VictoryTimelinePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidStageExcel
     def PhaseChangeTimelinePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidStageExcel
     def TimeLinePhase(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def EnterScenarioKey(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
     def ClearScenarioKey(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # RaidStageExcel
-    def ReviveParcelType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def ReviveParcelId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def ReviveParcelDevName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # RaidStageExcel
-    def ReviveParcelAmount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
-    def InitSupplyCount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # RaidStageExcel
     def ShowSkillCard(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # RaidStageExcel
     def BossBGInfoKey(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(42)
+    # RaidStageExcel
+    def EchelonExtensionType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(35)
 def RaidStageExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -403,23 +354,27 @@ def AddUseBossIndex(builder, UseBossIndex): builder.PrependBoolSlot(1, UseBossIn
 def RaidStageExcelAddUseBossIndex(builder, UseBossIndex):
     """This method is deprecated. Please switch to AddUseBossIndex."""
     return AddUseBossIndex(builder, UseBossIndex)
-def AddRaidBossGroup(builder, RaidBossGroup): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RaidBossGroup), 0)
+def AddUseBossAIPhaseSync(builder, UseBossAIPhaseSync): builder.PrependBoolSlot(2, UseBossAIPhaseSync, 0)
+def RaidStageExcelAddUseBossAIPhaseSync(builder, UseBossAIPhaseSync):
+    """This method is deprecated. Please switch to AddUseBossAIPhaseSync."""
+    return AddUseBossAIPhaseSync(builder, UseBossAIPhaseSync)
+def AddRaidBossGroup(builder, RaidBossGroup): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(RaidBossGroup), 0)
 def RaidStageExcelAddRaidBossGroup(builder, RaidBossGroup):
     """This method is deprecated. Please switch to AddRaidBossGroup."""
     return AddRaidBossGroup(builder, RaidBossGroup)
-def AddPortraitPath(builder, PortraitPath): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(PortraitPath), 0)
+def AddPortraitPath(builder, PortraitPath): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(PortraitPath), 0)
 def RaidStageExcelAddPortraitPath(builder, PortraitPath):
     """This method is deprecated. Please switch to AddPortraitPath."""
     return AddPortraitPath(builder, PortraitPath)
-def AddBGPath(builder, BGPath): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(BGPath), 0)
+def AddBGPath(builder, BGPath): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BGPath), 0)
 def RaidStageExcelAddBGPath(builder, BGPath):
     """This method is deprecated. Please switch to AddBGPath."""
     return AddBGPath(builder, BGPath)
-def AddRaidCharacterId(builder, RaidCharacterId): builder.PrependInt64Slot(5, RaidCharacterId, 0)
+def AddRaidCharacterId(builder, RaidCharacterId): builder.PrependInt64Slot(6, RaidCharacterId, 0)
 def RaidStageExcelAddRaidCharacterId(builder, RaidCharacterId):
     """This method is deprecated. Please switch to AddRaidCharacterId."""
     return AddRaidCharacterId(builder, RaidCharacterId)
-def AddBossCharacterId(builder, BossCharacterId): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BossCharacterId), 0)
+def AddBossCharacterId(builder, BossCharacterId): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(BossCharacterId), 0)
 def RaidStageExcelAddBossCharacterId(builder, BossCharacterId):
     """This method is deprecated. Please switch to AddBossCharacterId."""
     return AddBossCharacterId(builder, BossCharacterId)
@@ -427,87 +382,71 @@ def StartBossCharacterIdVector(builder, numElems): return builder.StartVector(8,
 def RaidStageExcelStartBossCharacterIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBossCharacterIdVector(builder, numElems)
-def AddDifficulty_(builder, Difficulty_): builder.PrependInt32Slot(7, Difficulty_, 0)
+def AddDifficulty_(builder, Difficulty_): builder.PrependInt32Slot(8, Difficulty_, 0)
 def RaidStageExcelAddDifficulty_(builder, Difficulty_):
     """This method is deprecated. Please switch to AddDifficulty_."""
     return AddDifficulty_(builder, Difficulty_)
-def AddDifficultyOpenCondition(builder, DifficultyOpenCondition): builder.PrependBoolSlot(8, DifficultyOpenCondition, 0)
+def AddDifficultyOpenCondition(builder, DifficultyOpenCondition): builder.PrependBoolSlot(9, DifficultyOpenCondition, 0)
 def RaidStageExcelAddDifficultyOpenCondition(builder, DifficultyOpenCondition):
     """This method is deprecated. Please switch to AddDifficultyOpenCondition."""
     return AddDifficultyOpenCondition(builder, DifficultyOpenCondition)
-def AddMaxPlayerCount(builder, MaxPlayerCount): builder.PrependInt64Slot(9, MaxPlayerCount, 0)
+def AddMaxPlayerCount(builder, MaxPlayerCount): builder.PrependInt64Slot(10, MaxPlayerCount, 0)
 def RaidStageExcelAddMaxPlayerCount(builder, MaxPlayerCount):
     """This method is deprecated. Please switch to AddMaxPlayerCount."""
     return AddMaxPlayerCount(builder, MaxPlayerCount)
-def AddStageCreateCostType(builder, StageCreateCostType): builder.PrependInt32Slot(10, StageCreateCostType, 0)
-def RaidStageExcelAddStageCreateCostType(builder, StageCreateCostType):
-    """This method is deprecated. Please switch to AddStageCreateCostType."""
-    return AddStageCreateCostType(builder, StageCreateCostType)
-def AddStageCreateCostAmount(builder, StageCreateCostAmount): builder.PrependInt32Slot(11, StageCreateCostAmount, 0)
-def RaidStageExcelAddStageCreateCostAmount(builder, StageCreateCostAmount):
-    """This method is deprecated. Please switch to AddStageCreateCostAmount."""
-    return AddStageCreateCostAmount(builder, StageCreateCostAmount)
-def AddStageEnterCostType(builder, StageEnterCostType): builder.PrependInt32Slot(12, StageEnterCostType, 0)
-def RaidStageExcelAddStageEnterCostType(builder, StageEnterCostType):
-    """This method is deprecated. Please switch to AddStageEnterCostType."""
-    return AddStageEnterCostType(builder, StageEnterCostType)
-def AddStageEnterCostAmount(builder, StageEnterCostAmount): builder.PrependInt32Slot(13, StageEnterCostAmount, 0)
-def RaidStageExcelAddStageEnterCostAmount(builder, StageEnterCostAmount):
-    """This method is deprecated. Please switch to AddStageEnterCostAmount."""
-    return AddStageEnterCostAmount(builder, StageEnterCostAmount)
-def AddRaidRoomLifeTime(builder, RaidRoomLifeTime): builder.PrependInt32Slot(14, RaidRoomLifeTime, 0)
+def AddRaidRoomLifeTime(builder, RaidRoomLifeTime): builder.PrependInt32Slot(11, RaidRoomLifeTime, 0)
 def RaidStageExcelAddRaidRoomLifeTime(builder, RaidRoomLifeTime):
     """This method is deprecated. Please switch to AddRaidRoomLifeTime."""
     return AddRaidRoomLifeTime(builder, RaidRoomLifeTime)
-def AddBattleDuration(builder, BattleDuration): builder.PrependInt64Slot(15, BattleDuration, 0)
+def AddBattleDuration(builder, BattleDuration): builder.PrependInt64Slot(12, BattleDuration, 0)
 def RaidStageExcelAddBattleDuration(builder, BattleDuration):
     """This method is deprecated. Please switch to AddBattleDuration."""
     return AddBattleDuration(builder, BattleDuration)
-def AddGroundId(builder, GroundId): builder.PrependInt64Slot(16, GroundId, 0)
+def AddGroundId(builder, GroundId): builder.PrependInt64Slot(13, GroundId, 0)
 def RaidStageExcelAddGroundId(builder, GroundId):
     """This method is deprecated. Please switch to AddGroundId."""
     return AddGroundId(builder, GroundId)
-def AddGroundDevName(builder, GroundDevName): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(GroundDevName), 0)
+def AddGroundDevName(builder, GroundDevName): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(GroundDevName), 0)
 def RaidStageExcelAddGroundDevName(builder, GroundDevName):
     """This method is deprecated. Please switch to AddGroundDevName."""
     return AddGroundDevName(builder, GroundDevName)
-def AddEnterTimeLine(builder, EnterTimeLine): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(EnterTimeLine), 0)
+def AddEnterTimeLine(builder, EnterTimeLine): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EnterTimeLine), 0)
 def RaidStageExcelAddEnterTimeLine(builder, EnterTimeLine):
     """This method is deprecated. Please switch to AddEnterTimeLine."""
     return AddEnterTimeLine(builder, EnterTimeLine)
-def AddTacticEnvironment_(builder, TacticEnvironment_): builder.PrependInt32Slot(19, TacticEnvironment_, 0)
+def AddTacticEnvironment_(builder, TacticEnvironment_): builder.PrependInt32Slot(16, TacticEnvironment_, 0)
 def RaidStageExcelAddTacticEnvironment_(builder, TacticEnvironment_):
     """This method is deprecated. Please switch to AddTacticEnvironment_."""
     return AddTacticEnvironment_(builder, TacticEnvironment_)
-def AddSeasonDamageRatio(builder, SeasonDamageRatio): builder.PrependInt32Slot(20, SeasonDamageRatio, 0)
-def RaidStageExcelAddSeasonDamageRatio(builder, SeasonDamageRatio):
-    """This method is deprecated. Please switch to AddSeasonDamageRatio."""
-    return AddSeasonDamageRatio(builder, SeasonDamageRatio)
-def AddDefaultClearScore(builder, DefaultClearScore): builder.PrependInt64Slot(21, DefaultClearScore, 0)
+def AddDefaultClearScore(builder, DefaultClearScore): builder.PrependInt64Slot(17, DefaultClearScore, 0)
 def RaidStageExcelAddDefaultClearScore(builder, DefaultClearScore):
     """This method is deprecated. Please switch to AddDefaultClearScore."""
     return AddDefaultClearScore(builder, DefaultClearScore)
-def AddMaximumScore(builder, MaximumScore): builder.PrependInt64Slot(22, MaximumScore, 0)
+def AddMaximumScore(builder, MaximumScore): builder.PrependInt64Slot(18, MaximumScore, 0)
 def RaidStageExcelAddMaximumScore(builder, MaximumScore):
     """This method is deprecated. Please switch to AddMaximumScore."""
     return AddMaximumScore(builder, MaximumScore)
-def AddPerSecondMinusScore(builder, PerSecondMinusScore): builder.PrependInt64Slot(23, PerSecondMinusScore, 0)
+def AddPerSecondMinusScore(builder, PerSecondMinusScore): builder.PrependInt64Slot(19, PerSecondMinusScore, 0)
 def RaidStageExcelAddPerSecondMinusScore(builder, PerSecondMinusScore):
     """This method is deprecated. Please switch to AddPerSecondMinusScore."""
     return AddPerSecondMinusScore(builder, PerSecondMinusScore)
-def AddHPPercentScore(builder, HPPercentScore): builder.PrependInt64Slot(24, HPPercentScore, 0)
+def AddHPPercentScore(builder, HPPercentScore): builder.PrependInt64Slot(20, HPPercentScore, 0)
 def RaidStageExcelAddHPPercentScore(builder, HPPercentScore):
     """This method is deprecated. Please switch to AddHPPercentScore."""
     return AddHPPercentScore(builder, HPPercentScore)
-def AddRaidRewardGroupId(builder, RaidRewardGroupId): builder.PrependInt64Slot(25, RaidRewardGroupId, 0)
+def AddMinimumAcquisitionScore(builder, MinimumAcquisitionScore): builder.PrependInt64Slot(21, MinimumAcquisitionScore, 0)
+def RaidStageExcelAddMinimumAcquisitionScore(builder, MinimumAcquisitionScore):
+    """This method is deprecated. Please switch to AddMinimumAcquisitionScore."""
+    return AddMinimumAcquisitionScore(builder, MinimumAcquisitionScore)
+def AddMaximumAcquisitionScore(builder, MaximumAcquisitionScore): builder.PrependInt64Slot(22, MaximumAcquisitionScore, 0)
+def RaidStageExcelAddMaximumAcquisitionScore(builder, MaximumAcquisitionScore):
+    """This method is deprecated. Please switch to AddMaximumAcquisitionScore."""
+    return AddMaximumAcquisitionScore(builder, MaximumAcquisitionScore)
+def AddRaidRewardGroupId(builder, RaidRewardGroupId): builder.PrependInt64Slot(23, RaidRewardGroupId, 0)
 def RaidStageExcelAddRaidRewardGroupId(builder, RaidRewardGroupId):
     """This method is deprecated. Please switch to AddRaidRewardGroupId."""
     return AddRaidRewardGroupId(builder, RaidRewardGroupId)
-def AddRaidRewardDevName(builder, RaidRewardDevName): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(RaidRewardDevName), 0)
-def RaidStageExcelAddRaidRewardDevName(builder, RaidRewardDevName):
-    """This method is deprecated. Please switch to AddRaidRewardDevName."""
-    return AddRaidRewardDevName(builder, RaidRewardDevName)
-def AddBattleReadyTimelinePath(builder, BattleReadyTimelinePath): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePath), 0)
+def AddBattleReadyTimelinePath(builder, BattleReadyTimelinePath): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePath), 0)
 def RaidStageExcelAddBattleReadyTimelinePath(builder, BattleReadyTimelinePath):
     """This method is deprecated. Please switch to AddBattleReadyTimelinePath."""
     return AddBattleReadyTimelinePath(builder, BattleReadyTimelinePath)
@@ -515,7 +454,7 @@ def StartBattleReadyTimelinePathVector(builder, numElems): return builder.StartV
 def RaidStageExcelStartBattleReadyTimelinePathVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBattleReadyTimelinePathVector(builder, numElems)
-def AddBattleReadyTimelinePhaseStart(builder, BattleReadyTimelinePhaseStart): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePhaseStart), 0)
+def AddBattleReadyTimelinePhaseStart(builder, BattleReadyTimelinePhaseStart): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePhaseStart), 0)
 def RaidStageExcelAddBattleReadyTimelinePhaseStart(builder, BattleReadyTimelinePhaseStart):
     """This method is deprecated. Please switch to AddBattleReadyTimelinePhaseStart."""
     return AddBattleReadyTimelinePhaseStart(builder, BattleReadyTimelinePhaseStart)
@@ -523,7 +462,7 @@ def StartBattleReadyTimelinePhaseStartVector(builder, numElems): return builder.
 def RaidStageExcelStartBattleReadyTimelinePhaseStartVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBattleReadyTimelinePhaseStartVector(builder, numElems)
-def AddBattleReadyTimelinePhaseEnd(builder, BattleReadyTimelinePhaseEnd): builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePhaseEnd), 0)
+def AddBattleReadyTimelinePhaseEnd(builder, BattleReadyTimelinePhaseEnd): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePhaseEnd), 0)
 def RaidStageExcelAddBattleReadyTimelinePhaseEnd(builder, BattleReadyTimelinePhaseEnd):
     """This method is deprecated. Please switch to AddBattleReadyTimelinePhaseEnd."""
     return AddBattleReadyTimelinePhaseEnd(builder, BattleReadyTimelinePhaseEnd)
@@ -531,54 +470,38 @@ def StartBattleReadyTimelinePhaseEndVector(builder, numElems): return builder.St
 def RaidStageExcelStartBattleReadyTimelinePhaseEndVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBattleReadyTimelinePhaseEndVector(builder, numElems)
-def AddVictoryTimelinePath(builder, VictoryTimelinePath): builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(VictoryTimelinePath), 0)
+def AddVictoryTimelinePath(builder, VictoryTimelinePath): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(VictoryTimelinePath), 0)
 def RaidStageExcelAddVictoryTimelinePath(builder, VictoryTimelinePath):
     """This method is deprecated. Please switch to AddVictoryTimelinePath."""
     return AddVictoryTimelinePath(builder, VictoryTimelinePath)
-def AddPhaseChangeTimelinePath(builder, PhaseChangeTimelinePath): builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(PhaseChangeTimelinePath), 0)
+def AddPhaseChangeTimelinePath(builder, PhaseChangeTimelinePath): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(PhaseChangeTimelinePath), 0)
 def RaidStageExcelAddPhaseChangeTimelinePath(builder, PhaseChangeTimelinePath):
     """This method is deprecated. Please switch to AddPhaseChangeTimelinePath."""
     return AddPhaseChangeTimelinePath(builder, PhaseChangeTimelinePath)
-def AddTimeLinePhase(builder, TimeLinePhase): builder.PrependInt64Slot(32, TimeLinePhase, 0)
+def AddTimeLinePhase(builder, TimeLinePhase): builder.PrependInt64Slot(29, TimeLinePhase, 0)
 def RaidStageExcelAddTimeLinePhase(builder, TimeLinePhase):
     """This method is deprecated. Please switch to AddTimeLinePhase."""
     return AddTimeLinePhase(builder, TimeLinePhase)
-def AddEnterScenarioKey(builder, EnterScenarioKey): builder.PrependUint32Slot(33, EnterScenarioKey, 0)
+def AddEnterScenarioKey(builder, EnterScenarioKey): builder.PrependUint32Slot(30, EnterScenarioKey, 0)
 def RaidStageExcelAddEnterScenarioKey(builder, EnterScenarioKey):
     """This method is deprecated. Please switch to AddEnterScenarioKey."""
     return AddEnterScenarioKey(builder, EnterScenarioKey)
-def AddClearScenarioKey(builder, ClearScenarioKey): builder.PrependUint32Slot(34, ClearScenarioKey, 0)
+def AddClearScenarioKey(builder, ClearScenarioKey): builder.PrependUint32Slot(31, ClearScenarioKey, 0)
 def RaidStageExcelAddClearScenarioKey(builder, ClearScenarioKey):
     """This method is deprecated. Please switch to AddClearScenarioKey."""
     return AddClearScenarioKey(builder, ClearScenarioKey)
-def AddReviveParcelType(builder, ReviveParcelType): builder.PrependInt32Slot(35, ReviveParcelType, 0)
-def RaidStageExcelAddReviveParcelType(builder, ReviveParcelType):
-    """This method is deprecated. Please switch to AddReviveParcelType."""
-    return AddReviveParcelType(builder, ReviveParcelType)
-def AddReviveParcelId(builder, ReviveParcelId): builder.PrependInt64Slot(36, ReviveParcelId, 0)
-def RaidStageExcelAddReviveParcelId(builder, ReviveParcelId):
-    """This method is deprecated. Please switch to AddReviveParcelId."""
-    return AddReviveParcelId(builder, ReviveParcelId)
-def AddReviveParcelDevName(builder, ReviveParcelDevName): builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(ReviveParcelDevName), 0)
-def RaidStageExcelAddReviveParcelDevName(builder, ReviveParcelDevName):
-    """This method is deprecated. Please switch to AddReviveParcelDevName."""
-    return AddReviveParcelDevName(builder, ReviveParcelDevName)
-def AddReviveParcelAmount(builder, ReviveParcelAmount): builder.PrependInt64Slot(38, ReviveParcelAmount, 0)
-def RaidStageExcelAddReviveParcelAmount(builder, ReviveParcelAmount):
-    """This method is deprecated. Please switch to AddReviveParcelAmount."""
-    return AddReviveParcelAmount(builder, ReviveParcelAmount)
-def AddInitSupplyCount(builder, InitSupplyCount): builder.PrependInt32Slot(39, InitSupplyCount, 0)
-def RaidStageExcelAddInitSupplyCount(builder, InitSupplyCount):
-    """This method is deprecated. Please switch to AddInitSupplyCount."""
-    return AddInitSupplyCount(builder, InitSupplyCount)
-def AddShowSkillCard(builder, ShowSkillCard): builder.PrependBoolSlot(40, ShowSkillCard, 0)
+def AddShowSkillCard(builder, ShowSkillCard): builder.PrependBoolSlot(32, ShowSkillCard, 0)
 def RaidStageExcelAddShowSkillCard(builder, ShowSkillCard):
     """This method is deprecated. Please switch to AddShowSkillCard."""
     return AddShowSkillCard(builder, ShowSkillCard)
-def AddBossBGInfoKey(builder, BossBGInfoKey): builder.PrependUint32Slot(41, BossBGInfoKey, 0)
+def AddBossBGInfoKey(builder, BossBGInfoKey): builder.PrependUint32Slot(33, BossBGInfoKey, 0)
 def RaidStageExcelAddBossBGInfoKey(builder, BossBGInfoKey):
     """This method is deprecated. Please switch to AddBossBGInfoKey."""
     return AddBossBGInfoKey(builder, BossBGInfoKey)
+def AddEchelonExtensionType_(builder, EchelonExtensionType_): builder.PrependInt32Slot(34, EchelonExtensionType_, 0)
+def RaidStageExcelAddEchelonExtensionType_(builder, EchelonExtensionType_):
+    """This method is deprecated. Please switch to AddEchelonExtensionType_."""
+    return AddEchelonExtensionType_(builder, EchelonExtensionType_)
 def End(builder): return builder.EndObject()
 def RaidStageExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -67,20 +67,34 @@ class MiniGameRhythmBgmExcel(object):
         return None
 
     # MiniGameRhythmBgmExcel
-    def BgmComposerText(self):
+    def BgmArtistText(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # MiniGameRhythmBgmExcel
-    def BgmLength(self):
+    def HasLyricist(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # MiniGameRhythmBgmExcel
+    def BgmComposerText(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MiniGameRhythmBgmExcel
+    def BgmLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(8)
+def Start(builder): builder.StartObject(10)
 def MiniGameRhythmBgmExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -108,11 +122,19 @@ def AddBgmNameText(builder, BgmNameText): builder.PrependUOffsetTRelativeSlot(5,
 def MiniGameRhythmBgmExcelAddBgmNameText(builder, BgmNameText):
     """This method is deprecated. Please switch to AddBgmNameText."""
     return AddBgmNameText(builder, BgmNameText)
-def AddBgmComposerText(builder, BgmComposerText): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BgmComposerText), 0)
+def AddBgmArtistText(builder, BgmArtistText): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BgmArtistText), 0)
+def MiniGameRhythmBgmExcelAddBgmArtistText(builder, BgmArtistText):
+    """This method is deprecated. Please switch to AddBgmArtistText."""
+    return AddBgmArtistText(builder, BgmArtistText)
+def AddHasLyricist(builder, HasLyricist): builder.PrependBoolSlot(7, HasLyricist, 0)
+def MiniGameRhythmBgmExcelAddHasLyricist(builder, HasLyricist):
+    """This method is deprecated. Please switch to AddHasLyricist."""
+    return AddHasLyricist(builder, HasLyricist)
+def AddBgmComposerText(builder, BgmComposerText): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BgmComposerText), 0)
 def MiniGameRhythmBgmExcelAddBgmComposerText(builder, BgmComposerText):
     """This method is deprecated. Please switch to AddBgmComposerText."""
     return AddBgmComposerText(builder, BgmComposerText)
-def AddBgmLength(builder, BgmLength): builder.PrependInt32Slot(7, BgmLength, 0)
+def AddBgmLength(builder, BgmLength): builder.PrependInt32Slot(9, BgmLength, 0)
 def MiniGameRhythmBgmExcelAddBgmLength(builder, BgmLength):
     """This method is deprecated. Please switch to AddBgmLength."""
     return AddBgmLength(builder, BgmLength)

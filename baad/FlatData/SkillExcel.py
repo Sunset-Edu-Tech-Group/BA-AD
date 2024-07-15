@@ -46,97 +46,188 @@ class SkillExcel(object):
         return None
 
     # SkillExcel
-    def Level(self):
+    def SkillDataKey(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # SkillExcel
-    def SkillCost(self):
+    def VisualDataKey(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # SkillExcel
-    def EnemySkillCost(self):
+    def Level(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def BulletType_(self):
+    def SkillCost(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def StartCoolTime(self):
+    def ExtraSkillCost(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def CoolTime(self):
+    def EnemySkillCost(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def EnemyStartCoolTime(self):
+    def ExtraEnemySkillCost(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def EnemyCoolTime(self):
+    def NPCSkillCost(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def UseAtg(self):
+    def ExtraNPCSkillCost(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def RequireCharacterLevel(self):
+    def BulletType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
-    def RequireLevelUpMaterial(self):
+    def StartCoolTime(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def CoolTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def EnemyStartCoolTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def EnemyCoolTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def NPCStartCoolTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def NPCCoolTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def UseAtg(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def RequireCharacterLevel(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def RequireLevelUpMaterial(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # SkillExcel
     def IconName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # SkillExcel
     def IsShowInfo(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def Start(builder): builder.StartObject(16)
+    # SkillExcel
+    def IsShowSpeechbubble(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # SkillExcel
+    def PublicSpeechDuration(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def AdditionalToolTipId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # SkillExcel
+    def TextureSkillCardForFormConversion(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # SkillExcel
+    def SkillCardLabelPath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(29)
 def SkillExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -152,58 +243,110 @@ def AddGroupId(builder, GroupId): builder.PrependUOffsetTRelativeSlot(2, flatbuf
 def SkillExcelAddGroupId(builder, GroupId):
     """This method is deprecated. Please switch to AddGroupId."""
     return AddGroupId(builder, GroupId)
-def AddLevel(builder, Level): builder.PrependInt32Slot(3, Level, 0)
+def AddSkillDataKey(builder, SkillDataKey): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SkillDataKey), 0)
+def SkillExcelAddSkillDataKey(builder, SkillDataKey):
+    """This method is deprecated. Please switch to AddSkillDataKey."""
+    return AddSkillDataKey(builder, SkillDataKey)
+def AddVisualDataKey(builder, VisualDataKey): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(VisualDataKey), 0)
+def SkillExcelAddVisualDataKey(builder, VisualDataKey):
+    """This method is deprecated. Please switch to AddVisualDataKey."""
+    return AddVisualDataKey(builder, VisualDataKey)
+def AddLevel(builder, Level): builder.PrependInt32Slot(5, Level, 0)
 def SkillExcelAddLevel(builder, Level):
     """This method is deprecated. Please switch to AddLevel."""
     return AddLevel(builder, Level)
-def AddSkillCost(builder, SkillCost): builder.PrependInt32Slot(4, SkillCost, 0)
+def AddSkillCost(builder, SkillCost): builder.PrependInt32Slot(6, SkillCost, 0)
 def SkillExcelAddSkillCost(builder, SkillCost):
     """This method is deprecated. Please switch to AddSkillCost."""
     return AddSkillCost(builder, SkillCost)
-def AddEnemySkillCost(builder, EnemySkillCost): builder.PrependInt32Slot(5, EnemySkillCost, 0)
+def AddExtraSkillCost(builder, ExtraSkillCost): builder.PrependInt32Slot(7, ExtraSkillCost, 0)
+def SkillExcelAddExtraSkillCost(builder, ExtraSkillCost):
+    """This method is deprecated. Please switch to AddExtraSkillCost."""
+    return AddExtraSkillCost(builder, ExtraSkillCost)
+def AddEnemySkillCost(builder, EnemySkillCost): builder.PrependInt32Slot(8, EnemySkillCost, 0)
 def SkillExcelAddEnemySkillCost(builder, EnemySkillCost):
     """This method is deprecated. Please switch to AddEnemySkillCost."""
     return AddEnemySkillCost(builder, EnemySkillCost)
-def AddBulletType_(builder, BulletType_): builder.PrependInt32Slot(6, BulletType_, 0)
+def AddExtraEnemySkillCost(builder, ExtraEnemySkillCost): builder.PrependInt32Slot(9, ExtraEnemySkillCost, 0)
+def SkillExcelAddExtraEnemySkillCost(builder, ExtraEnemySkillCost):
+    """This method is deprecated. Please switch to AddExtraEnemySkillCost."""
+    return AddExtraEnemySkillCost(builder, ExtraEnemySkillCost)
+def AddNPCSkillCost(builder, NPCSkillCost): builder.PrependInt32Slot(10, NPCSkillCost, 0)
+def SkillExcelAddNPCSkillCost(builder, NPCSkillCost):
+    """This method is deprecated. Please switch to AddNPCSkillCost."""
+    return AddNPCSkillCost(builder, NPCSkillCost)
+def AddExtraNPCSkillCost(builder, ExtraNPCSkillCost): builder.PrependInt32Slot(11, ExtraNPCSkillCost, 0)
+def SkillExcelAddExtraNPCSkillCost(builder, ExtraNPCSkillCost):
+    """This method is deprecated. Please switch to AddExtraNPCSkillCost."""
+    return AddExtraNPCSkillCost(builder, ExtraNPCSkillCost)
+def AddBulletType_(builder, BulletType_): builder.PrependInt32Slot(12, BulletType_, 0)
 def SkillExcelAddBulletType_(builder, BulletType_):
     """This method is deprecated. Please switch to AddBulletType_."""
     return AddBulletType_(builder, BulletType_)
-def AddStartCoolTime(builder, StartCoolTime): builder.PrependInt32Slot(7, StartCoolTime, 0)
+def AddStartCoolTime(builder, StartCoolTime): builder.PrependInt32Slot(13, StartCoolTime, 0)
 def SkillExcelAddStartCoolTime(builder, StartCoolTime):
     """This method is deprecated. Please switch to AddStartCoolTime."""
     return AddStartCoolTime(builder, StartCoolTime)
-def AddCoolTime(builder, CoolTime): builder.PrependInt32Slot(8, CoolTime, 0)
+def AddCoolTime(builder, CoolTime): builder.PrependInt32Slot(14, CoolTime, 0)
 def SkillExcelAddCoolTime(builder, CoolTime):
     """This method is deprecated. Please switch to AddCoolTime."""
     return AddCoolTime(builder, CoolTime)
-def AddEnemyStartCoolTime(builder, EnemyStartCoolTime): builder.PrependInt32Slot(9, EnemyStartCoolTime, 0)
+def AddEnemyStartCoolTime(builder, EnemyStartCoolTime): builder.PrependInt32Slot(15, EnemyStartCoolTime, 0)
 def SkillExcelAddEnemyStartCoolTime(builder, EnemyStartCoolTime):
     """This method is deprecated. Please switch to AddEnemyStartCoolTime."""
     return AddEnemyStartCoolTime(builder, EnemyStartCoolTime)
-def AddEnemyCoolTime(builder, EnemyCoolTime): builder.PrependInt32Slot(10, EnemyCoolTime, 0)
+def AddEnemyCoolTime(builder, EnemyCoolTime): builder.PrependInt32Slot(16, EnemyCoolTime, 0)
 def SkillExcelAddEnemyCoolTime(builder, EnemyCoolTime):
     """This method is deprecated. Please switch to AddEnemyCoolTime."""
     return AddEnemyCoolTime(builder, EnemyCoolTime)
-def AddUseAtg(builder, UseAtg): builder.PrependInt32Slot(11, UseAtg, 0)
+def AddNPCStartCoolTime(builder, NPCStartCoolTime): builder.PrependInt32Slot(17, NPCStartCoolTime, 0)
+def SkillExcelAddNPCStartCoolTime(builder, NPCStartCoolTime):
+    """This method is deprecated. Please switch to AddNPCStartCoolTime."""
+    return AddNPCStartCoolTime(builder, NPCStartCoolTime)
+def AddNPCCoolTime(builder, NPCCoolTime): builder.PrependInt32Slot(18, NPCCoolTime, 0)
+def SkillExcelAddNPCCoolTime(builder, NPCCoolTime):
+    """This method is deprecated. Please switch to AddNPCCoolTime."""
+    return AddNPCCoolTime(builder, NPCCoolTime)
+def AddUseAtg(builder, UseAtg): builder.PrependInt32Slot(19, UseAtg, 0)
 def SkillExcelAddUseAtg(builder, UseAtg):
     """This method is deprecated. Please switch to AddUseAtg."""
     return AddUseAtg(builder, UseAtg)
-def AddRequireCharacterLevel(builder, RequireCharacterLevel): builder.PrependInt32Slot(12, RequireCharacterLevel, 0)
+def AddRequireCharacterLevel(builder, RequireCharacterLevel): builder.PrependInt32Slot(20, RequireCharacterLevel, 0)
 def SkillExcelAddRequireCharacterLevel(builder, RequireCharacterLevel):
     """This method is deprecated. Please switch to AddRequireCharacterLevel."""
     return AddRequireCharacterLevel(builder, RequireCharacterLevel)
-def AddRequireLevelUpMaterial(builder, RequireLevelUpMaterial): builder.PrependInt64Slot(13, RequireLevelUpMaterial, 0)
+def AddRequireLevelUpMaterial(builder, RequireLevelUpMaterial): builder.PrependInt64Slot(21, RequireLevelUpMaterial, 0)
 def SkillExcelAddRequireLevelUpMaterial(builder, RequireLevelUpMaterial):
     """This method is deprecated. Please switch to AddRequireLevelUpMaterial."""
     return AddRequireLevelUpMaterial(builder, RequireLevelUpMaterial)
-def AddIconName(builder, IconName): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(IconName), 0)
+def AddIconName(builder, IconName): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(IconName), 0)
 def SkillExcelAddIconName(builder, IconName):
     """This method is deprecated. Please switch to AddIconName."""
     return AddIconName(builder, IconName)
-def AddIsShowInfo(builder, IsShowInfo): builder.PrependBoolSlot(15, IsShowInfo, 0)
+def AddIsShowInfo(builder, IsShowInfo): builder.PrependBoolSlot(23, IsShowInfo, 0)
 def SkillExcelAddIsShowInfo(builder, IsShowInfo):
     """This method is deprecated. Please switch to AddIsShowInfo."""
     return AddIsShowInfo(builder, IsShowInfo)
+def AddIsShowSpeechbubble(builder, IsShowSpeechbubble): builder.PrependBoolSlot(24, IsShowSpeechbubble, 0)
+def SkillExcelAddIsShowSpeechbubble(builder, IsShowSpeechbubble):
+    """This method is deprecated. Please switch to AddIsShowSpeechbubble."""
+    return AddIsShowSpeechbubble(builder, IsShowSpeechbubble)
+def AddPublicSpeechDuration(builder, PublicSpeechDuration): builder.PrependInt32Slot(25, PublicSpeechDuration, 0)
+def SkillExcelAddPublicSpeechDuration(builder, PublicSpeechDuration):
+    """This method is deprecated. Please switch to AddPublicSpeechDuration."""
+    return AddPublicSpeechDuration(builder, PublicSpeechDuration)
+def AddAdditionalToolTipId(builder, AdditionalToolTipId): builder.PrependInt64Slot(26, AdditionalToolTipId, 0)
+def SkillExcelAddAdditionalToolTipId(builder, AdditionalToolTipId):
+    """This method is deprecated. Please switch to AddAdditionalToolTipId."""
+    return AddAdditionalToolTipId(builder, AdditionalToolTipId)
+def AddTextureSkillCardForFormConversion(builder, TextureSkillCardForFormConversion): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(TextureSkillCardForFormConversion), 0)
+def SkillExcelAddTextureSkillCardForFormConversion(builder, TextureSkillCardForFormConversion):
+    """This method is deprecated. Please switch to AddTextureSkillCardForFormConversion."""
+    return AddTextureSkillCardForFormConversion(builder, TextureSkillCardForFormConversion)
+def AddSkillCardLabelPath(builder, SkillCardLabelPath): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SkillCardLabelPath), 0)
+def SkillExcelAddSkillCardLabelPath(builder, SkillCardLabelPath):
+    """This method is deprecated. Please switch to AddSkillCardLabelPath."""
+    return AddSkillCardLabelPath(builder, SkillCardLabelPath)
 def End(builder): return builder.EndObject()
 def SkillExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

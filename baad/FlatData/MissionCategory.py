@@ -12,4 +12,7 @@ class MissionCategory(object):
     MiniGameScore = 6
     MiniGameEvent = 7
     EventAchievement = 8
+    DailySudden = 9
+    DailyFixed = 10
+    EventFixed = 11
 

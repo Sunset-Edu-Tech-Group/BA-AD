@@ -18,6 +18,12 @@ class MailType(object):
     AccountLink = 12
     NewUserBonus = 13
     LeftClanAssistReward = 14
-    CashShopBuy = 15
-    MonthlyProductPackage = 16
+    AttendanceImmediately = 15
+    WeeklyProductReward = 16
+    BiweeklyProductReward = 17
+    Temp_1 = 18
+    Temp_2 = 19
+    Temp_3 = 20
+    CouponCompleteReward = 21
+    BirthdayMail = 22
 

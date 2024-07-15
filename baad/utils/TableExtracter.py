@@ -1,5 +1,7 @@
 import json
+from itertools import chain
 from pathlib import Path
+from typing import Generator
 from zipfile import BadZipFile
 
 from rich.console import Console
@@ -44,42 +46,56 @@ class TableExtracter:
 
         return processed_data, new_name
 
-    def extract_table(self, table_file: Path | str, task: int) -> None:
-        table_dir_fp = self.extracted_path / table_file.stem
-        table_dir_fp.mkdir(parents=True, exist_ok=True)
+    def _process_file(self, name: str, data: bytes, table_file: Path | str) -> tuple:
+        if name.endswith('.json'):
+            return self._process_json_file(name, data), name
 
+        elif table_file.name == 'Excel.zip':
+            return self._process_excel_file(name, data)
+        return data, name
+
+    def _process_zip(self, table_file: str | Path) -> Generator | None:
         try:
             with TableZipFile(table_file) as tz:
-                for name in tz.namelist():
-                    data = tz.read(name)
-
-                    try:
-                        if name.endswith('.json'):
-                            data = self._process_json_file(name, data)
-
-                        elif table_file.name == 'Excel.zip':
-                            data, name = self._process_excel_file(name, data)
-
-                    except Exception as e:
-                        self.console.print(f'[red]Error processing {name}: {e}[/red]')
-                        continue
-
-                    fp = table_dir_fp / name
-                    fp.write_bytes(data)
-                    self.extract_progress.update(task, advance=1)
-                    self.live.update(self.progress_group)
+                contents = [(name, tz.read(name)) for name in tz.namelist()]
+            return ((table_file, name, data) for name, data in contents)
 
         except BadZipFile:
             self.console.print(f'[red]Error: {table_file} is not a valid zip file.[/red]')
+            return
+
+    def extract_tables(self) -> Generator:
+        table_files = list(Path(self.table_path).glob('*.zip'))
+        total_files = sum(len(TableZipFile(tf).namelist()) for tf in table_files)
+        extract_task = self.extract_progress.add_task('[green]Extracting...', total=total_files)
+
+        for table_file, name, data in chain.from_iterable(map(self._process_zip, table_files)):
+            if name is None:
+                yield f'Error: {table_file} is not a valid zip file.'
+                continue
+
+            table_dir_fp = self.extracted_path / table_file.stem
+            table_dir_fp.mkdir(parents=True, exist_ok=True)
+
+            try:
+                processed_data, new_name = self._process_file(name, data, table_file)
+                fp = table_dir_fp / new_name
+                fp.write_bytes(processed_data)
+
+            except Exception as e:
+                yield f'Error processing {name}: {e}'
+
+            finally:
+                self.extract_progress.update(extract_task, advance=1)
+                self.live.update(self.progress_group)
 
     def extract_all_tables(self) -> None:
-        table_files = list(Path(self.table_path).glob('*.zip'))
-        extract_task = self.extract_progress.add_task('[green]Extracting...', total=len(table_files))
-
         try:
             with self.live:
-                for table_file in table_files:
-                    self.extract_table(table_file, extract_task)
+                errors = list(self.extract_tables())
+
+                for error in errors:
+                    self.console.print(error)
 
         finally:
             if self.live:

@@ -67,15 +67,8 @@ class ArenaNPCExcel(object):
         return 0
 
     # ArenaNPCExcel
-    def UseTSS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # ArenaNPCExcel
     def ExceptionCharacterRarities(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -83,26 +76,26 @@ class ArenaNPCExcel(object):
 
     # ArenaNPCExcel
     def ExceptionCharacterRaritiesAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionCharacterRaritiesLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionCharacterRaritiesIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
     # ArenaNPCExcel
     def ExceptionMainCharacterIds(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -110,26 +103,26 @@ class ArenaNPCExcel(object):
 
     # ArenaNPCExcel
     def ExceptionMainCharacterIdsAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionMainCharacterIdsLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionMainCharacterIdsIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
     # ArenaNPCExcel
     def ExceptionSupportCharacterIds(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -137,26 +130,26 @@ class ArenaNPCExcel(object):
 
     # ArenaNPCExcel
     def ExceptionSupportCharacterIdsAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionSupportCharacterIdsLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionSupportCharacterIdsIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
     # ArenaNPCExcel
     def ExceptionTSSIds(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -164,24 +157,24 @@ class ArenaNPCExcel(object):
 
     # ArenaNPCExcel
     def ExceptionTSSIdsAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionTSSIdsLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ArenaNPCExcel
     def ExceptionTSSIdsIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
-def Start(builder): builder.StartObject(11)
+def Start(builder): builder.StartObject(10)
 def ArenaNPCExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -209,11 +202,7 @@ def AddNPCStarGrade(builder, NPCStarGrade): builder.PrependInt64Slot(5, NPCStarG
 def ArenaNPCExcelAddNPCStarGrade(builder, NPCStarGrade):
     """This method is deprecated. Please switch to AddNPCStarGrade."""
     return AddNPCStarGrade(builder, NPCStarGrade)
-def AddUseTSS(builder, UseTSS): builder.PrependBoolSlot(6, UseTSS, 0)
-def ArenaNPCExcelAddUseTSS(builder, UseTSS):
-    """This method is deprecated. Please switch to AddUseTSS."""
-    return AddUseTSS(builder, UseTSS)
-def AddExceptionCharacterRarities(builder, ExceptionCharacterRarities): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionCharacterRarities), 0)
+def AddExceptionCharacterRarities(builder, ExceptionCharacterRarities): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionCharacterRarities), 0)
 def ArenaNPCExcelAddExceptionCharacterRarities(builder, ExceptionCharacterRarities):
     """This method is deprecated. Please switch to AddExceptionCharacterRarities."""
     return AddExceptionCharacterRarities(builder, ExceptionCharacterRarities)
@@ -221,7 +210,7 @@ def StartExceptionCharacterRaritiesVector(builder, numElems): return builder.Sta
 def ArenaNPCExcelStartExceptionCharacterRaritiesVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartExceptionCharacterRaritiesVector(builder, numElems)
-def AddExceptionMainCharacterIds(builder, ExceptionMainCharacterIds): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionMainCharacterIds), 0)
+def AddExceptionMainCharacterIds(builder, ExceptionMainCharacterIds): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionMainCharacterIds), 0)
 def ArenaNPCExcelAddExceptionMainCharacterIds(builder, ExceptionMainCharacterIds):
     """This method is deprecated. Please switch to AddExceptionMainCharacterIds."""
     return AddExceptionMainCharacterIds(builder, ExceptionMainCharacterIds)
@@ -229,7 +218,7 @@ def StartExceptionMainCharacterIdsVector(builder, numElems): return builder.Star
 def ArenaNPCExcelStartExceptionMainCharacterIdsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartExceptionMainCharacterIdsVector(builder, numElems)
-def AddExceptionSupportCharacterIds(builder, ExceptionSupportCharacterIds): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionSupportCharacterIds), 0)
+def AddExceptionSupportCharacterIds(builder, ExceptionSupportCharacterIds): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionSupportCharacterIds), 0)
 def ArenaNPCExcelAddExceptionSupportCharacterIds(builder, ExceptionSupportCharacterIds):
     """This method is deprecated. Please switch to AddExceptionSupportCharacterIds."""
     return AddExceptionSupportCharacterIds(builder, ExceptionSupportCharacterIds)
@@ -237,7 +226,7 @@ def StartExceptionSupportCharacterIdsVector(builder, numElems): return builder.S
 def ArenaNPCExcelStartExceptionSupportCharacterIdsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartExceptionSupportCharacterIdsVector(builder, numElems)
-def AddExceptionTSSIds(builder, ExceptionTSSIds): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionTSSIds), 0)
+def AddExceptionTSSIds(builder, ExceptionTSSIds): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ExceptionTSSIds), 0)
 def ArenaNPCExcelAddExceptionTSSIds(builder, ExceptionTSSIds):
     """This method is deprecated. Please switch to AddExceptionTSSIds."""
     return AddExceptionTSSIds(builder, ExceptionTSSIds)

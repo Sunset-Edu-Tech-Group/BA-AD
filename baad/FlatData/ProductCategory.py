@@ -7,4 +7,6 @@ class ProductCategory(object):
     Gem = 1
     Monthly = 2
     Package = 3
+    GachaDirect = 4
+    TimeLimit = 5
 

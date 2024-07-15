@@ -8,4 +8,5 @@ class ScenarioCharacterShapes(object):
     BlackSilhouette = 2
     Closeup = 4
     Highlight = 8
+    WhiteSilhouette = 16
 

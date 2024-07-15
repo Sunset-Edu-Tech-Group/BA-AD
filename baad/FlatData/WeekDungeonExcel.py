@@ -60,29 +60,96 @@ class WeekDungeonExcel(object):
         return 0
 
     # WeekDungeonExcel
-    def StageActionPointCostAmount(self):
+    def StageEnterCostType(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
         return 0
 
     # WeekDungeonExcel
-    def ConsumeTicket(self):
+    def StageEnterCostTypeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostTypeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostTypeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # WeekDungeonExcel
+    def StageEnterCostId(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # WeekDungeonExcel
+    def StageEnterCostAmount(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostAmountAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostAmountLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # WeekDungeonExcel
+    def StageEnterCostAmountIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
 
     # WeekDungeonExcel
     def GroundId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # WeekDungeonExcel
     def StarGoal(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -90,26 +157,26 @@ class WeekDungeonExcel(object):
 
     # WeekDungeonExcel
     def StarGoalAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # WeekDungeonExcel
     def StarGoalLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WeekDungeonExcel
     def StarGoalIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
     # WeekDungeonExcel
     def StarGoalAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -117,68 +184,68 @@ class WeekDungeonExcel(object):
 
     # WeekDungeonExcel
     def StarGoalAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # WeekDungeonExcel
     def StarGoalAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WeekDungeonExcel
     def StarGoalAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # WeekDungeonExcel
     def StageTopography_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # WeekDungeonExcel
     def RecommandLevel(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # WeekDungeonExcel
-    def StageRewardId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # WeekDungeonExcel
-    def PlayTimeLimitInSeconds(self):
+    def StageRewardId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # WeekDungeonExcel
-    def BattleRewardExp(self):
+    def PlayTimeLimitInSeconds(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # WeekDungeonExcel
-    def BattleRewardPlayerExp(self):
+    def BattleRewardExp(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # WeekDungeonExcel
-    def GroupBuffID(self, j):
+    def BattleRewardPlayerExp(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # WeekDungeonExcel
+    def GroupBuffID(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -186,24 +253,31 @@ class WeekDungeonExcel(object):
 
     # WeekDungeonExcel
     def GroupBuffIDAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # WeekDungeonExcel
     def GroupBuffIDLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WeekDungeonExcel
     def GroupBuffIDIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
-def Start(builder): builder.StartObject(17)
+    # WeekDungeonExcel
+    def EchelonExtensionType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(19)
 def WeekDungeonExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -227,19 +301,35 @@ def AddPrevStageId(builder, PrevStageId): builder.PrependInt64Slot(4, PrevStageI
 def WeekDungeonExcelAddPrevStageId(builder, PrevStageId):
     """This method is deprecated. Please switch to AddPrevStageId."""
     return AddPrevStageId(builder, PrevStageId)
-def AddStageActionPointCostAmount(builder, StageActionPointCostAmount): builder.PrependInt64Slot(5, StageActionPointCostAmount, 0)
-def WeekDungeonExcelAddStageActionPointCostAmount(builder, StageActionPointCostAmount):
-    """This method is deprecated. Please switch to AddStageActionPointCostAmount."""
-    return AddStageActionPointCostAmount(builder, StageActionPointCostAmount)
-def AddConsumeTicket(builder, ConsumeTicket): builder.PrependBoolSlot(6, ConsumeTicket, 0)
-def WeekDungeonExcelAddConsumeTicket(builder, ConsumeTicket):
-    """This method is deprecated. Please switch to AddConsumeTicket."""
-    return AddConsumeTicket(builder, ConsumeTicket)
-def AddGroundId(builder, GroundId): builder.PrependInt32Slot(7, GroundId, 0)
+def AddStageEnterCostType(builder, StageEnterCostType): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostType), 0)
+def WeekDungeonExcelAddStageEnterCostType(builder, StageEnterCostType):
+    """This method is deprecated. Please switch to AddStageEnterCostType."""
+    return AddStageEnterCostType(builder, StageEnterCostType)
+def StartStageEnterCostTypeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def WeekDungeonExcelStartStageEnterCostTypeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostTypeVector(builder, numElems)
+def AddStageEnterCostId(builder, StageEnterCostId): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostId), 0)
+def WeekDungeonExcelAddStageEnterCostId(builder, StageEnterCostId):
+    """This method is deprecated. Please switch to AddStageEnterCostId."""
+    return AddStageEnterCostId(builder, StageEnterCostId)
+def StartStageEnterCostIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def WeekDungeonExcelStartStageEnterCostIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostIdVector(builder, numElems)
+def AddStageEnterCostAmount(builder, StageEnterCostAmount): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostAmount), 0)
+def WeekDungeonExcelAddStageEnterCostAmount(builder, StageEnterCostAmount):
+    """This method is deprecated. Please switch to AddStageEnterCostAmount."""
+    return AddStageEnterCostAmount(builder, StageEnterCostAmount)
+def StartStageEnterCostAmountVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def WeekDungeonExcelStartStageEnterCostAmountVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostAmountVector(builder, numElems)
+def AddGroundId(builder, GroundId): builder.PrependInt32Slot(8, GroundId, 0)
 def WeekDungeonExcelAddGroundId(builder, GroundId):
     """This method is deprecated. Please switch to AddGroundId."""
     return AddGroundId(builder, GroundId)
-def AddStarGoal(builder, StarGoal): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoal), 0)
+def AddStarGoal(builder, StarGoal): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoal), 0)
 def WeekDungeonExcelAddStarGoal(builder, StarGoal):
     """This method is deprecated. Please switch to AddStarGoal."""
     return AddStarGoal(builder, StarGoal)
@@ -247,7 +337,7 @@ def StartStarGoalVector(builder, numElems): return builder.StartVector(4, numEle
 def WeekDungeonExcelStartStarGoalVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStarGoalVector(builder, numElems)
-def AddStarGoalAmount(builder, StarGoalAmount): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoalAmount), 0)
+def AddStarGoalAmount(builder, StarGoalAmount): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoalAmount), 0)
 def WeekDungeonExcelAddStarGoalAmount(builder, StarGoalAmount):
     """This method is deprecated. Please switch to AddStarGoalAmount."""
     return AddStarGoalAmount(builder, StarGoalAmount)
@@ -255,31 +345,31 @@ def StartStarGoalAmountVector(builder, numElems): return builder.StartVector(4, 
 def WeekDungeonExcelStartStarGoalAmountVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStarGoalAmountVector(builder, numElems)
-def AddStageTopography_(builder, StageTopography_): builder.PrependInt32Slot(10, StageTopography_, 0)
+def AddStageTopography_(builder, StageTopography_): builder.PrependInt32Slot(11, StageTopography_, 0)
 def WeekDungeonExcelAddStageTopography_(builder, StageTopography_):
     """This method is deprecated. Please switch to AddStageTopography_."""
     return AddStageTopography_(builder, StageTopography_)
-def AddRecommandLevel(builder, RecommandLevel): builder.PrependInt64Slot(11, RecommandLevel, 0)
+def AddRecommandLevel(builder, RecommandLevel): builder.PrependInt64Slot(12, RecommandLevel, 0)
 def WeekDungeonExcelAddRecommandLevel(builder, RecommandLevel):
     """This method is deprecated. Please switch to AddRecommandLevel."""
     return AddRecommandLevel(builder, RecommandLevel)
-def AddStageRewardId(builder, StageRewardId): builder.PrependInt64Slot(12, StageRewardId, 0)
+def AddStageRewardId(builder, StageRewardId): builder.PrependInt64Slot(13, StageRewardId, 0)
 def WeekDungeonExcelAddStageRewardId(builder, StageRewardId):
     """This method is deprecated. Please switch to AddStageRewardId."""
     return AddStageRewardId(builder, StageRewardId)
-def AddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds): builder.PrependInt64Slot(13, PlayTimeLimitInSeconds, 0)
+def AddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds): builder.PrependInt64Slot(14, PlayTimeLimitInSeconds, 0)
 def WeekDungeonExcelAddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds):
     """This method is deprecated. Please switch to AddPlayTimeLimitInSeconds."""
     return AddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds)
-def AddBattleRewardExp(builder, BattleRewardExp): builder.PrependInt64Slot(14, BattleRewardExp, 0)
+def AddBattleRewardExp(builder, BattleRewardExp): builder.PrependInt64Slot(15, BattleRewardExp, 0)
 def WeekDungeonExcelAddBattleRewardExp(builder, BattleRewardExp):
     """This method is deprecated. Please switch to AddBattleRewardExp."""
     return AddBattleRewardExp(builder, BattleRewardExp)
-def AddBattleRewardPlayerExp(builder, BattleRewardPlayerExp): builder.PrependInt64Slot(15, BattleRewardPlayerExp, 0)
+def AddBattleRewardPlayerExp(builder, BattleRewardPlayerExp): builder.PrependInt64Slot(16, BattleRewardPlayerExp, 0)
 def WeekDungeonExcelAddBattleRewardPlayerExp(builder, BattleRewardPlayerExp):
     """This method is deprecated. Please switch to AddBattleRewardPlayerExp."""
     return AddBattleRewardPlayerExp(builder, BattleRewardPlayerExp)
-def AddGroupBuffID(builder, GroupBuffID): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(GroupBuffID), 0)
+def AddGroupBuffID(builder, GroupBuffID): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(GroupBuffID), 0)
 def WeekDungeonExcelAddGroupBuffID(builder, GroupBuffID):
     """This method is deprecated. Please switch to AddGroupBuffID."""
     return AddGroupBuffID(builder, GroupBuffID)
@@ -287,6 +377,10 @@ def StartGroupBuffIDVector(builder, numElems): return builder.StartVector(8, num
 def WeekDungeonExcelStartGroupBuffIDVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartGroupBuffIDVector(builder, numElems)
+def AddEchelonExtensionType_(builder, EchelonExtensionType_): builder.PrependInt32Slot(18, EchelonExtensionType_, 0)
+def WeekDungeonExcelAddEchelonExtensionType_(builder, EchelonExtensionType_):
+    """This method is deprecated. Please switch to AddEchelonExtensionType_."""
+    return AddEchelonExtensionType_(builder, EchelonExtensionType_)
 def End(builder): return builder.EndObject()
 def WeekDungeonExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

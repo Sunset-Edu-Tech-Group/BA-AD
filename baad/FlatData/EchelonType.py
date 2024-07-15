@@ -18,4 +18,15 @@ class EchelonType(object):
     SchoolDungeonA = 12
     SchoolDungeonB = 13
     SchoolDungeonC = 14
+    TimeAttack = 15
+    WorldRaid = 16
+    Conquest = 17
+    ConquestManage = 18
+    StoryStrategyStage = 19
+    EliminateRaid01 = 20
+    EliminateRaid02 = 21
+    EliminateRaid03 = 22
+    Field = 23
+    MultiFloorRaid = 24
+    Temp = 25
 

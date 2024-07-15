@@ -122,42 +122,7 @@ class AcademyMessangerExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # AcademyMessangerExcel
-    def MessageTH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # AcademyMessangerExcel
-    def MessageTW(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # AcademyMessangerExcel
-    def MessageEN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # AcademyMessangerExcel
-    def MessageDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # AcademyMessangerExcel
-    def MessageFR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(19)
+def Start(builder): builder.StartObject(14)
 def AcademyMessangerExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -217,26 +182,6 @@ def AddMessageJP(builder, MessageJP): builder.PrependUOffsetTRelativeSlot(13, fl
 def AcademyMessangerExcelAddMessageJP(builder, MessageJP):
     """This method is deprecated. Please switch to AddMessageJP."""
     return AddMessageJP(builder, MessageJP)
-def AddMessageTH(builder, MessageTH): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(MessageTH), 0)
-def AcademyMessangerExcelAddMessageTH(builder, MessageTH):
-    """This method is deprecated. Please switch to AddMessageTH."""
-    return AddMessageTH(builder, MessageTH)
-def AddMessageTW(builder, MessageTW): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(MessageTW), 0)
-def AcademyMessangerExcelAddMessageTW(builder, MessageTW):
-    """This method is deprecated. Please switch to AddMessageTW."""
-    return AddMessageTW(builder, MessageTW)
-def AddMessageEN(builder, MessageEN): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(MessageEN), 0)
-def AcademyMessangerExcelAddMessageEN(builder, MessageEN):
-    """This method is deprecated. Please switch to AddMessageEN."""
-    return AddMessageEN(builder, MessageEN)
-def AddMessageDE(builder, MessageDE): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(MessageDE), 0)
-def AcademyMessangerExcelAddMessageDE(builder, MessageDE):
-    """This method is deprecated. Please switch to AddMessageDE."""
-    return AddMessageDE(builder, MessageDE)
-def AddMessageFR(builder, MessageFR): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MessageFR), 0)
-def AcademyMessangerExcelAddMessageFR(builder, MessageFR):
-    """This method is deprecated. Please switch to AddMessageFR."""
-    return AddMessageFR(builder, MessageFR)
 def End(builder): return builder.EndObject()
 def AcademyMessangerExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

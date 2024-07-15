@@ -12,4 +12,18 @@ class ContentType(object):
     CampaignTutorialStage = 6
     EventContentMainGroundStage = 7
     SchoolDungeon = 8
+    TimeAttackDungeon = 9
+    Raid = 10
+    Conquest = 11
+    EventContentStoryStage = 12
+    CampaignExtraStage = 13
+    StoryStrategyStage = 14
+    ScenarioMode = 15
+    EventContent = 16
+    WorldRaid = 17
+    EliminateRaid = 18
+    Chaser = 19
+    FieldContentStage = 20
+    MultiFloorRaid = 21
+    Temp = 22
 

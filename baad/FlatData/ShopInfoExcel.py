@@ -39,36 +39,83 @@ class ShopInfoExcel(object):
         return False
 
     # ShopInfoExcel
-    def ParcelType_(self):
+    def IsSoldOutDimmed(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ShopInfoExcel
+    def CostParcelType(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
         return 0
 
     # ShopInfoExcel
-    def ParcelId(self):
+    def CostParcelTypeAsNumpy(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
+
+    # ShopInfoExcel
+    def CostParcelTypeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ShopInfoExcel
+    def CostParcelTypeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # ShopInfoExcel
+    def CostParcelId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # ShopInfoExcel
+    def CostParcelIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # ShopInfoExcel
+    def CostParcelIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ShopInfoExcel
+    def CostParcelIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
 
     # ShopInfoExcel
     def AutoRefreshCoolTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # ShopInfoExcel
-    def RefreshAbleCount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ShopInfoExcel
-    def GoodsId(self, j):
+    def RefreshAbleCount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def GoodsId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -76,38 +123,164 @@ class ShopInfoExcel(object):
 
     # ShopInfoExcel
     def GoodsIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # ShopInfoExcel
     def GoodsIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ShopInfoExcel
     def GoodsIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
     # ShopInfoExcel
     def OpenPeriodFrom(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ShopInfoExcel
     def OpenPeriodTo(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(9)
+    # ShopInfoExcel
+    def ShopProductUpdateTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ShopInfoExcel
+    def DisplayParcelType(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def DisplayParcelId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def IsShopVisible(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ShopInfoExcel
+    def DisplayOrder(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateDate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId3(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId4(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId5(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId6(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId7(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId8(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId9(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId10(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId11(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopInfoExcel
+    def ShopUpdateGroupId12(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(28)
 def ShopInfoExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -119,23 +292,35 @@ def AddIsRefresh(builder, IsRefresh): builder.PrependBoolSlot(1, IsRefresh, 0)
 def ShopInfoExcelAddIsRefresh(builder, IsRefresh):
     """This method is deprecated. Please switch to AddIsRefresh."""
     return AddIsRefresh(builder, IsRefresh)
-def AddParcelType_(builder, ParcelType_): builder.PrependInt32Slot(2, ParcelType_, 0)
-def ShopInfoExcelAddParcelType_(builder, ParcelType_):
-    """This method is deprecated. Please switch to AddParcelType_."""
-    return AddParcelType_(builder, ParcelType_)
-def AddParcelId(builder, ParcelId): builder.PrependInt64Slot(3, ParcelId, 0)
-def ShopInfoExcelAddParcelId(builder, ParcelId):
-    """This method is deprecated. Please switch to AddParcelId."""
-    return AddParcelId(builder, ParcelId)
-def AddAutoRefreshCoolTime(builder, AutoRefreshCoolTime): builder.PrependInt64Slot(4, AutoRefreshCoolTime, 0)
+def AddIsSoldOutDimmed(builder, IsSoldOutDimmed): builder.PrependBoolSlot(2, IsSoldOutDimmed, 0)
+def ShopInfoExcelAddIsSoldOutDimmed(builder, IsSoldOutDimmed):
+    """This method is deprecated. Please switch to AddIsSoldOutDimmed."""
+    return AddIsSoldOutDimmed(builder, IsSoldOutDimmed)
+def AddCostParcelType(builder, CostParcelType): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CostParcelType), 0)
+def ShopInfoExcelAddCostParcelType(builder, CostParcelType):
+    """This method is deprecated. Please switch to AddCostParcelType."""
+    return AddCostParcelType(builder, CostParcelType)
+def StartCostParcelTypeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def ShopInfoExcelStartCostParcelTypeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCostParcelTypeVector(builder, numElems)
+def AddCostParcelId(builder, CostParcelId): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CostParcelId), 0)
+def ShopInfoExcelAddCostParcelId(builder, CostParcelId):
+    """This method is deprecated. Please switch to AddCostParcelId."""
+    return AddCostParcelId(builder, CostParcelId)
+def StartCostParcelIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def ShopInfoExcelStartCostParcelIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCostParcelIdVector(builder, numElems)
+def AddAutoRefreshCoolTime(builder, AutoRefreshCoolTime): builder.PrependInt64Slot(5, AutoRefreshCoolTime, 0)
 def ShopInfoExcelAddAutoRefreshCoolTime(builder, AutoRefreshCoolTime):
     """This method is deprecated. Please switch to AddAutoRefreshCoolTime."""
     return AddAutoRefreshCoolTime(builder, AutoRefreshCoolTime)
-def AddRefreshAbleCount(builder, RefreshAbleCount): builder.PrependInt64Slot(5, RefreshAbleCount, 0)
+def AddRefreshAbleCount(builder, RefreshAbleCount): builder.PrependInt64Slot(6, RefreshAbleCount, 0)
 def ShopInfoExcelAddRefreshAbleCount(builder, RefreshAbleCount):
     """This method is deprecated. Please switch to AddRefreshAbleCount."""
     return AddRefreshAbleCount(builder, RefreshAbleCount)
-def AddGoodsId(builder, GoodsId): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(GoodsId), 0)
+def AddGoodsId(builder, GoodsId): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GoodsId), 0)
 def ShopInfoExcelAddGoodsId(builder, GoodsId):
     """This method is deprecated. Please switch to AddGoodsId."""
     return AddGoodsId(builder, GoodsId)
@@ -143,14 +328,86 @@ def StartGoodsIdVector(builder, numElems): return builder.StartVector(8, numElem
 def ShopInfoExcelStartGoodsIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartGoodsIdVector(builder, numElems)
-def AddOpenPeriodFrom(builder, OpenPeriodFrom): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(OpenPeriodFrom), 0)
+def AddOpenPeriodFrom(builder, OpenPeriodFrom): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OpenPeriodFrom), 0)
 def ShopInfoExcelAddOpenPeriodFrom(builder, OpenPeriodFrom):
     """This method is deprecated. Please switch to AddOpenPeriodFrom."""
     return AddOpenPeriodFrom(builder, OpenPeriodFrom)
-def AddOpenPeriodTo(builder, OpenPeriodTo): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OpenPeriodTo), 0)
+def AddOpenPeriodTo(builder, OpenPeriodTo): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(OpenPeriodTo), 0)
 def ShopInfoExcelAddOpenPeriodTo(builder, OpenPeriodTo):
     """This method is deprecated. Please switch to AddOpenPeriodTo."""
     return AddOpenPeriodTo(builder, OpenPeriodTo)
+def AddShopProductUpdateTime(builder, ShopProductUpdateTime): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ShopProductUpdateTime), 0)
+def ShopInfoExcelAddShopProductUpdateTime(builder, ShopProductUpdateTime):
+    """This method is deprecated. Please switch to AddShopProductUpdateTime."""
+    return AddShopProductUpdateTime(builder, ShopProductUpdateTime)
+def AddDisplayParcelType(builder, DisplayParcelType): builder.PrependInt32Slot(11, DisplayParcelType, 0)
+def ShopInfoExcelAddDisplayParcelType(builder, DisplayParcelType):
+    """This method is deprecated. Please switch to AddDisplayParcelType."""
+    return AddDisplayParcelType(builder, DisplayParcelType)
+def AddDisplayParcelId(builder, DisplayParcelId): builder.PrependInt64Slot(12, DisplayParcelId, 0)
+def ShopInfoExcelAddDisplayParcelId(builder, DisplayParcelId):
+    """This method is deprecated. Please switch to AddDisplayParcelId."""
+    return AddDisplayParcelId(builder, DisplayParcelId)
+def AddIsShopVisible(builder, IsShopVisible): builder.PrependBoolSlot(13, IsShopVisible, 0)
+def ShopInfoExcelAddIsShopVisible(builder, IsShopVisible):
+    """This method is deprecated. Please switch to AddIsShopVisible."""
+    return AddIsShopVisible(builder, IsShopVisible)
+def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt32Slot(14, DisplayOrder, 0)
+def ShopInfoExcelAddDisplayOrder(builder, DisplayOrder):
+    """This method is deprecated. Please switch to AddDisplayOrder."""
+    return AddDisplayOrder(builder, DisplayOrder)
+def AddShopUpdateDate(builder, ShopUpdateDate): builder.PrependInt32Slot(15, ShopUpdateDate, 0)
+def ShopInfoExcelAddShopUpdateDate(builder, ShopUpdateDate):
+    """This method is deprecated. Please switch to AddShopUpdateDate."""
+    return AddShopUpdateDate(builder, ShopUpdateDate)
+def AddShopUpdateGroupId1(builder, ShopUpdateGroupId1): builder.PrependInt32Slot(16, ShopUpdateGroupId1, 0)
+def ShopInfoExcelAddShopUpdateGroupId1(builder, ShopUpdateGroupId1):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId1."""
+    return AddShopUpdateGroupId1(builder, ShopUpdateGroupId1)
+def AddShopUpdateGroupId2(builder, ShopUpdateGroupId2): builder.PrependInt32Slot(17, ShopUpdateGroupId2, 0)
+def ShopInfoExcelAddShopUpdateGroupId2(builder, ShopUpdateGroupId2):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId2."""
+    return AddShopUpdateGroupId2(builder, ShopUpdateGroupId2)
+def AddShopUpdateGroupId3(builder, ShopUpdateGroupId3): builder.PrependInt32Slot(18, ShopUpdateGroupId3, 0)
+def ShopInfoExcelAddShopUpdateGroupId3(builder, ShopUpdateGroupId3):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId3."""
+    return AddShopUpdateGroupId3(builder, ShopUpdateGroupId3)
+def AddShopUpdateGroupId4(builder, ShopUpdateGroupId4): builder.PrependInt32Slot(19, ShopUpdateGroupId4, 0)
+def ShopInfoExcelAddShopUpdateGroupId4(builder, ShopUpdateGroupId4):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId4."""
+    return AddShopUpdateGroupId4(builder, ShopUpdateGroupId4)
+def AddShopUpdateGroupId5(builder, ShopUpdateGroupId5): builder.PrependInt32Slot(20, ShopUpdateGroupId5, 0)
+def ShopInfoExcelAddShopUpdateGroupId5(builder, ShopUpdateGroupId5):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId5."""
+    return AddShopUpdateGroupId5(builder, ShopUpdateGroupId5)
+def AddShopUpdateGroupId6(builder, ShopUpdateGroupId6): builder.PrependInt32Slot(21, ShopUpdateGroupId6, 0)
+def ShopInfoExcelAddShopUpdateGroupId6(builder, ShopUpdateGroupId6):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId6."""
+    return AddShopUpdateGroupId6(builder, ShopUpdateGroupId6)
+def AddShopUpdateGroupId7(builder, ShopUpdateGroupId7): builder.PrependInt32Slot(22, ShopUpdateGroupId7, 0)
+def ShopInfoExcelAddShopUpdateGroupId7(builder, ShopUpdateGroupId7):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId7."""
+    return AddShopUpdateGroupId7(builder, ShopUpdateGroupId7)
+def AddShopUpdateGroupId8(builder, ShopUpdateGroupId8): builder.PrependInt32Slot(23, ShopUpdateGroupId8, 0)
+def ShopInfoExcelAddShopUpdateGroupId8(builder, ShopUpdateGroupId8):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId8."""
+    return AddShopUpdateGroupId8(builder, ShopUpdateGroupId8)
+def AddShopUpdateGroupId9(builder, ShopUpdateGroupId9): builder.PrependInt32Slot(24, ShopUpdateGroupId9, 0)
+def ShopInfoExcelAddShopUpdateGroupId9(builder, ShopUpdateGroupId9):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId9."""
+    return AddShopUpdateGroupId9(builder, ShopUpdateGroupId9)
+def AddShopUpdateGroupId10(builder, ShopUpdateGroupId10): builder.PrependInt32Slot(25, ShopUpdateGroupId10, 0)
+def ShopInfoExcelAddShopUpdateGroupId10(builder, ShopUpdateGroupId10):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId10."""
+    return AddShopUpdateGroupId10(builder, ShopUpdateGroupId10)
+def AddShopUpdateGroupId11(builder, ShopUpdateGroupId11): builder.PrependInt32Slot(26, ShopUpdateGroupId11, 0)
+def ShopInfoExcelAddShopUpdateGroupId11(builder, ShopUpdateGroupId11):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId11."""
+    return AddShopUpdateGroupId11(builder, ShopUpdateGroupId11)
+def AddShopUpdateGroupId12(builder, ShopUpdateGroupId12): builder.PrependInt32Slot(27, ShopUpdateGroupId12, 0)
+def ShopInfoExcelAddShopUpdateGroupId12(builder, ShopUpdateGroupId12):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId12."""
+    return AddShopUpdateGroupId12(builder, ShopUpdateGroupId12)
 def End(builder): return builder.EndObject()
 def ShopInfoExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

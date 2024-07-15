@@ -60,22 +60,56 @@ class MessagePopupExcel(object):
         return 0
 
     # MessagePopupExcel
-    def MessageText(self):
+    def SubTitleText(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # MessagePopupExcel
-    def DisplayXButton(self):
+    def MessageText(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # MessagePopupExcel
+    def ConditionText(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # MessagePopupExcel
+    def ConditionTextAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
+        return 0
+
+    # MessagePopupExcel
+    def ConditionTextLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MessagePopupExcel
+    def ConditionTextIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # MessagePopupExcel
+    def DisplayXButton(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # MessagePopupExcel
     def Button(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -83,26 +117,26 @@ class MessagePopupExcel(object):
 
     # MessagePopupExcel
     def ButtonAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # MessagePopupExcel
     def ButtonLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MessagePopupExcel
     def ButtonIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
     # MessagePopupExcel
     def ButtonText(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -110,26 +144,26 @@ class MessagePopupExcel(object):
 
     # MessagePopupExcel
     def ButtonTextAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
         return 0
 
     # MessagePopupExcel
     def ButtonTextLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MessagePopupExcel
     def ButtonTextIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # MessagePopupExcel
     def ButtonCommand(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -137,19 +171,19 @@ class MessagePopupExcel(object):
 
     # MessagePopupExcel
     def ButtonCommandLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MessagePopupExcel
     def ButtonCommandIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # MessagePopupExcel
     def ButtonParameter(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -157,17 +191,17 @@ class MessagePopupExcel(object):
 
     # MessagePopupExcel
     def ButtonParameterLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MessagePopupExcel
     def ButtonParameterIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
-def Start(builder): builder.StartObject(11)
+def Start(builder): builder.StartObject(13)
 def MessagePopupExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -191,15 +225,27 @@ def AddTitleText(builder, TitleText): builder.PrependUint32Slot(4, TitleText, 0)
 def MessagePopupExcelAddTitleText(builder, TitleText):
     """This method is deprecated. Please switch to AddTitleText."""
     return AddTitleText(builder, TitleText)
-def AddMessageText(builder, MessageText): builder.PrependUint32Slot(5, MessageText, 0)
+def AddSubTitleText(builder, SubTitleText): builder.PrependUint32Slot(5, SubTitleText, 0)
+def MessagePopupExcelAddSubTitleText(builder, SubTitleText):
+    """This method is deprecated. Please switch to AddSubTitleText."""
+    return AddSubTitleText(builder, SubTitleText)
+def AddMessageText(builder, MessageText): builder.PrependUint32Slot(6, MessageText, 0)
 def MessagePopupExcelAddMessageText(builder, MessageText):
     """This method is deprecated. Please switch to AddMessageText."""
     return AddMessageText(builder, MessageText)
-def AddDisplayXButton(builder, DisplayXButton): builder.PrependBoolSlot(6, DisplayXButton, 0)
+def AddConditionText(builder, ConditionText): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ConditionText), 0)
+def MessagePopupExcelAddConditionText(builder, ConditionText):
+    """This method is deprecated. Please switch to AddConditionText."""
+    return AddConditionText(builder, ConditionText)
+def StartConditionTextVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def MessagePopupExcelStartConditionTextVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartConditionTextVector(builder, numElems)
+def AddDisplayXButton(builder, DisplayXButton): builder.PrependBoolSlot(8, DisplayXButton, 0)
 def MessagePopupExcelAddDisplayXButton(builder, DisplayXButton):
     """This method is deprecated. Please switch to AddDisplayXButton."""
     return AddDisplayXButton(builder, DisplayXButton)
-def AddButton(builder, Button): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(Button), 0)
+def AddButton(builder, Button): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(Button), 0)
 def MessagePopupExcelAddButton(builder, Button):
     """This method is deprecated. Please switch to AddButton."""
     return AddButton(builder, Button)
@@ -207,7 +253,7 @@ def StartButtonVector(builder, numElems): return builder.StartVector(4, numElems
 def MessagePopupExcelStartButtonVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartButtonVector(builder, numElems)
-def AddButtonText(builder, ButtonText): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ButtonText), 0)
+def AddButtonText(builder, ButtonText): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ButtonText), 0)
 def MessagePopupExcelAddButtonText(builder, ButtonText):
     """This method is deprecated. Please switch to AddButtonText."""
     return AddButtonText(builder, ButtonText)
@@ -215,7 +261,7 @@ def StartButtonTextVector(builder, numElems): return builder.StartVector(4, numE
 def MessagePopupExcelStartButtonTextVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartButtonTextVector(builder, numElems)
-def AddButtonCommand(builder, ButtonCommand): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ButtonCommand), 0)
+def AddButtonCommand(builder, ButtonCommand): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ButtonCommand), 0)
 def MessagePopupExcelAddButtonCommand(builder, ButtonCommand):
     """This method is deprecated. Please switch to AddButtonCommand."""
     return AddButtonCommand(builder, ButtonCommand)
@@ -223,7 +269,7 @@ def StartButtonCommandVector(builder, numElems): return builder.StartVector(4, n
 def MessagePopupExcelStartButtonCommandVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartButtonCommandVector(builder, numElems)
-def AddButtonParameter(builder, ButtonParameter): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ButtonParameter), 0)
+def AddButtonParameter(builder, ButtonParameter): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ButtonParameter), 0)
 def MessagePopupExcelAddButtonParameter(builder, ButtonParameter):
     """This method is deprecated. Please switch to AddButtonParameter."""
     return AddButtonParameter(builder, ButtonParameter)

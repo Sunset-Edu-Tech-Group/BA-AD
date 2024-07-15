@@ -52,7 +52,14 @@ class AccountLevelExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(4)
+    # AccountLevelExcel
+    def NeedReportEvent(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def Start(builder): builder.StartObject(5)
 def AccountLevelExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -72,6 +79,10 @@ def AddAPAutoChargeMax(builder, APAutoChargeMax): builder.PrependInt64Slot(3, AP
 def AccountLevelExcelAddAPAutoChargeMax(builder, APAutoChargeMax):
     """This method is deprecated. Please switch to AddAPAutoChargeMax."""
     return AddAPAutoChargeMax(builder, APAutoChargeMax)
+def AddNeedReportEvent(builder, NeedReportEvent): builder.PrependBoolSlot(4, NeedReportEvent, 0)
+def AccountLevelExcelAddNeedReportEvent(builder, NeedReportEvent):
+    """This method is deprecated. Please switch to AddNeedReportEvent."""
+    return AddNeedReportEvent(builder, NeedReportEvent)
 def End(builder): return builder.EndObject()
 def AccountLevelExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

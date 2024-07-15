@@ -73,195 +73,422 @@ class GroundExcel(object):
         return 0
 
     # GroundExcel
-    def EnemyArmorType(self):
+    def EnemyBulletType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def LevelMinion(self):
+    def EnemyArmorType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def LevelElite(self):
+    def LevelNPC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def LevelChampion(self):
+    def LevelMinion(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def LevelBoss(self):
+    def LevelElite(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def ObstacleLevel(self):
+    def LevelChampion(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def GradeMinion(self):
+    def LevelBoss(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def GradeElite(self):
+    def ObstacleLevel(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def GradeChampion(self):
+    def GradeNPC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def GradeBoss(self):
+    def GradeMinion(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def PlayerSightPointAdd(self):
+    def GradeElite(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def PlayerSightPointRate(self):
+    def GradeChampion(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def PlayerAttackRangeAdd(self):
+    def GradeBoss(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def PlayerAttackRangeRate(self):
+    def PlayerSightPointAdd(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def EnemySightPointAdd(self):
+    def PlayerSightPointRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def EnemySightPointRate(self):
+    def PlayerAttackRangeAdd(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def EnemyAttackRangeAdd(self):
+    def PlayerAttackRangeRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def EnemyAttackRangeRate(self):
+    def EnemySightPointAdd(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def PlayerSkillRangeAdd(self):
+    def EnemySightPointRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def PlayerSkillRangeRate(self):
+    def EnemyAttackRangeAdd(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def EnemySkillRangeAdd(self):
+    def EnemyAttackRangeRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def EnemySkillRangeRate(self):
+    def PlayerSkillRangeAdd(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def TSSAirUnitHeight(self):
+    def PlayerSkillRangeRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def IsRaid(self):
+    def EnemySkillRangeAdd(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
 
     # GroundExcel
-    def BGMId(self):
+    def EnemySkillRangeRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # GroundExcel
-    def WarningUI(self):
+    def PlayerMinimumPositionGapRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def EnemyMinimumPositionGapRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def PlayerSightRangeMax(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def EnemySightRangeMax(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def TSSAirUnitHeight(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def IsPhaseBGM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def BGMId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def WarningUI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # GroundExcel
     def TSSHatchOpen(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def Start(builder): builder.StartObject(32)
+    # GroundExcel
+    def ForcedTacticSpeed(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def ForcedSkillUse(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def ShowNPCSkillCutIn(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # GroundExcel
+    def ImmuneHitBeforeTimeOutEnd(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def UIBattleHideFromScratch(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def BattleReadyTimelinePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GroundExcel
+    def BeforeVictoryTimelinePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # GroundExcel
+    def SkipBattleEnd(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def HideNPCWhenBattleEnd(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # GroundExcel
+    def UIHpScale(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GroundExcel
+    def UIEmojiScale(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GroundExcel
+    def UISkillMainLogScale(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # GroundExcel
+    def AllyPassiveSkillId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # GroundExcel
+    def AllyPassiveSkillIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GroundExcel
+    def AllyPassiveSkillIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        return o == 0
+
+    # GroundExcel
+    def AllyPassiveSkillLevel(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # GroundExcel
+    def AllyPassiveSkillLevelAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # GroundExcel
+    def AllyPassiveSkillLevelLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GroundExcel
+    def AllyPassiveSkillLevelIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        return o == 0
+
+    # GroundExcel
+    def EnemyPassiveSkillId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # GroundExcel
+    def EnemyPassiveSkillIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GroundExcel
+    def EnemyPassiveSkillIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        return o == 0
+
+    # GroundExcel
+    def EnemyPassiveSkillLevel(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # GroundExcel
+    def EnemyPassiveSkillLevelAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # GroundExcel
+    def EnemyPassiveSkillLevelLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GroundExcel
+    def EnemyPassiveSkillLevelIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        return o == 0
+
+def Start(builder): builder.StartObject(55)
 def GroundExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -289,114 +516,222 @@ def AddStageTopography_(builder, StageTopography_): builder.PrependInt32Slot(4, 
 def GroundExcelAddStageTopography_(builder, StageTopography_):
     """This method is deprecated. Please switch to AddStageTopography_."""
     return AddStageTopography_(builder, StageTopography_)
-def AddEnemyArmorType(builder, EnemyArmorType): builder.PrependInt32Slot(5, EnemyArmorType, 0)
+def AddEnemyBulletType(builder, EnemyBulletType): builder.PrependInt32Slot(5, EnemyBulletType, 0)
+def GroundExcelAddEnemyBulletType(builder, EnemyBulletType):
+    """This method is deprecated. Please switch to AddEnemyBulletType."""
+    return AddEnemyBulletType(builder, EnemyBulletType)
+def AddEnemyArmorType(builder, EnemyArmorType): builder.PrependInt32Slot(6, EnemyArmorType, 0)
 def GroundExcelAddEnemyArmorType(builder, EnemyArmorType):
     """This method is deprecated. Please switch to AddEnemyArmorType."""
     return AddEnemyArmorType(builder, EnemyArmorType)
-def AddLevelMinion(builder, LevelMinion): builder.PrependInt64Slot(6, LevelMinion, 0)
+def AddLevelNPC(builder, LevelNPC): builder.PrependInt64Slot(7, LevelNPC, 0)
+def GroundExcelAddLevelNPC(builder, LevelNPC):
+    """This method is deprecated. Please switch to AddLevelNPC."""
+    return AddLevelNPC(builder, LevelNPC)
+def AddLevelMinion(builder, LevelMinion): builder.PrependInt64Slot(8, LevelMinion, 0)
 def GroundExcelAddLevelMinion(builder, LevelMinion):
     """This method is deprecated. Please switch to AddLevelMinion."""
     return AddLevelMinion(builder, LevelMinion)
-def AddLevelElite(builder, LevelElite): builder.PrependInt64Slot(7, LevelElite, 0)
+def AddLevelElite(builder, LevelElite): builder.PrependInt64Slot(9, LevelElite, 0)
 def GroundExcelAddLevelElite(builder, LevelElite):
     """This method is deprecated. Please switch to AddLevelElite."""
     return AddLevelElite(builder, LevelElite)
-def AddLevelChampion(builder, LevelChampion): builder.PrependInt64Slot(8, LevelChampion, 0)
+def AddLevelChampion(builder, LevelChampion): builder.PrependInt64Slot(10, LevelChampion, 0)
 def GroundExcelAddLevelChampion(builder, LevelChampion):
     """This method is deprecated. Please switch to AddLevelChampion."""
     return AddLevelChampion(builder, LevelChampion)
-def AddLevelBoss(builder, LevelBoss): builder.PrependInt64Slot(9, LevelBoss, 0)
+def AddLevelBoss(builder, LevelBoss): builder.PrependInt64Slot(11, LevelBoss, 0)
 def GroundExcelAddLevelBoss(builder, LevelBoss):
     """This method is deprecated. Please switch to AddLevelBoss."""
     return AddLevelBoss(builder, LevelBoss)
-def AddObstacleLevel(builder, ObstacleLevel): builder.PrependInt64Slot(10, ObstacleLevel, 0)
+def AddObstacleLevel(builder, ObstacleLevel): builder.PrependInt64Slot(12, ObstacleLevel, 0)
 def GroundExcelAddObstacleLevel(builder, ObstacleLevel):
     """This method is deprecated. Please switch to AddObstacleLevel."""
     return AddObstacleLevel(builder, ObstacleLevel)
-def AddGradeMinion(builder, GradeMinion): builder.PrependInt64Slot(11, GradeMinion, 0)
+def AddGradeNPC(builder, GradeNPC): builder.PrependInt64Slot(13, GradeNPC, 0)
+def GroundExcelAddGradeNPC(builder, GradeNPC):
+    """This method is deprecated. Please switch to AddGradeNPC."""
+    return AddGradeNPC(builder, GradeNPC)
+def AddGradeMinion(builder, GradeMinion): builder.PrependInt64Slot(14, GradeMinion, 0)
 def GroundExcelAddGradeMinion(builder, GradeMinion):
     """This method is deprecated. Please switch to AddGradeMinion."""
     return AddGradeMinion(builder, GradeMinion)
-def AddGradeElite(builder, GradeElite): builder.PrependInt64Slot(12, GradeElite, 0)
+def AddGradeElite(builder, GradeElite): builder.PrependInt64Slot(15, GradeElite, 0)
 def GroundExcelAddGradeElite(builder, GradeElite):
     """This method is deprecated. Please switch to AddGradeElite."""
     return AddGradeElite(builder, GradeElite)
-def AddGradeChampion(builder, GradeChampion): builder.PrependInt64Slot(13, GradeChampion, 0)
+def AddGradeChampion(builder, GradeChampion): builder.PrependInt64Slot(16, GradeChampion, 0)
 def GroundExcelAddGradeChampion(builder, GradeChampion):
     """This method is deprecated. Please switch to AddGradeChampion."""
     return AddGradeChampion(builder, GradeChampion)
-def AddGradeBoss(builder, GradeBoss): builder.PrependInt64Slot(14, GradeBoss, 0)
+def AddGradeBoss(builder, GradeBoss): builder.PrependInt64Slot(17, GradeBoss, 0)
 def GroundExcelAddGradeBoss(builder, GradeBoss):
     """This method is deprecated. Please switch to AddGradeBoss."""
     return AddGradeBoss(builder, GradeBoss)
-def AddPlayerSightPointAdd(builder, PlayerSightPointAdd): builder.PrependInt64Slot(15, PlayerSightPointAdd, 0)
+def AddPlayerSightPointAdd(builder, PlayerSightPointAdd): builder.PrependInt64Slot(18, PlayerSightPointAdd, 0)
 def GroundExcelAddPlayerSightPointAdd(builder, PlayerSightPointAdd):
     """This method is deprecated. Please switch to AddPlayerSightPointAdd."""
     return AddPlayerSightPointAdd(builder, PlayerSightPointAdd)
-def AddPlayerSightPointRate(builder, PlayerSightPointRate): builder.PrependInt64Slot(16, PlayerSightPointRate, 0)
+def AddPlayerSightPointRate(builder, PlayerSightPointRate): builder.PrependInt64Slot(19, PlayerSightPointRate, 0)
 def GroundExcelAddPlayerSightPointRate(builder, PlayerSightPointRate):
     """This method is deprecated. Please switch to AddPlayerSightPointRate."""
     return AddPlayerSightPointRate(builder, PlayerSightPointRate)
-def AddPlayerAttackRangeAdd(builder, PlayerAttackRangeAdd): builder.PrependInt64Slot(17, PlayerAttackRangeAdd, 0)
+def AddPlayerAttackRangeAdd(builder, PlayerAttackRangeAdd): builder.PrependInt64Slot(20, PlayerAttackRangeAdd, 0)
 def GroundExcelAddPlayerAttackRangeAdd(builder, PlayerAttackRangeAdd):
     """This method is deprecated. Please switch to AddPlayerAttackRangeAdd."""
     return AddPlayerAttackRangeAdd(builder, PlayerAttackRangeAdd)
-def AddPlayerAttackRangeRate(builder, PlayerAttackRangeRate): builder.PrependInt64Slot(18, PlayerAttackRangeRate, 0)
+def AddPlayerAttackRangeRate(builder, PlayerAttackRangeRate): builder.PrependInt64Slot(21, PlayerAttackRangeRate, 0)
 def GroundExcelAddPlayerAttackRangeRate(builder, PlayerAttackRangeRate):
     """This method is deprecated. Please switch to AddPlayerAttackRangeRate."""
     return AddPlayerAttackRangeRate(builder, PlayerAttackRangeRate)
-def AddEnemySightPointAdd(builder, EnemySightPointAdd): builder.PrependInt64Slot(19, EnemySightPointAdd, 0)
+def AddEnemySightPointAdd(builder, EnemySightPointAdd): builder.PrependInt64Slot(22, EnemySightPointAdd, 0)
 def GroundExcelAddEnemySightPointAdd(builder, EnemySightPointAdd):
     """This method is deprecated. Please switch to AddEnemySightPointAdd."""
     return AddEnemySightPointAdd(builder, EnemySightPointAdd)
-def AddEnemySightPointRate(builder, EnemySightPointRate): builder.PrependInt64Slot(20, EnemySightPointRate, 0)
+def AddEnemySightPointRate(builder, EnemySightPointRate): builder.PrependInt64Slot(23, EnemySightPointRate, 0)
 def GroundExcelAddEnemySightPointRate(builder, EnemySightPointRate):
     """This method is deprecated. Please switch to AddEnemySightPointRate."""
     return AddEnemySightPointRate(builder, EnemySightPointRate)
-def AddEnemyAttackRangeAdd(builder, EnemyAttackRangeAdd): builder.PrependInt64Slot(21, EnemyAttackRangeAdd, 0)
+def AddEnemyAttackRangeAdd(builder, EnemyAttackRangeAdd): builder.PrependInt64Slot(24, EnemyAttackRangeAdd, 0)
 def GroundExcelAddEnemyAttackRangeAdd(builder, EnemyAttackRangeAdd):
     """This method is deprecated. Please switch to AddEnemyAttackRangeAdd."""
     return AddEnemyAttackRangeAdd(builder, EnemyAttackRangeAdd)
-def AddEnemyAttackRangeRate(builder, EnemyAttackRangeRate): builder.PrependInt64Slot(22, EnemyAttackRangeRate, 0)
+def AddEnemyAttackRangeRate(builder, EnemyAttackRangeRate): builder.PrependInt64Slot(25, EnemyAttackRangeRate, 0)
 def GroundExcelAddEnemyAttackRangeRate(builder, EnemyAttackRangeRate):
     """This method is deprecated. Please switch to AddEnemyAttackRangeRate."""
     return AddEnemyAttackRangeRate(builder, EnemyAttackRangeRate)
-def AddPlayerSkillRangeAdd(builder, PlayerSkillRangeAdd): builder.PrependInt64Slot(23, PlayerSkillRangeAdd, 0)
+def AddPlayerSkillRangeAdd(builder, PlayerSkillRangeAdd): builder.PrependInt64Slot(26, PlayerSkillRangeAdd, 0)
 def GroundExcelAddPlayerSkillRangeAdd(builder, PlayerSkillRangeAdd):
     """This method is deprecated. Please switch to AddPlayerSkillRangeAdd."""
     return AddPlayerSkillRangeAdd(builder, PlayerSkillRangeAdd)
-def AddPlayerSkillRangeRate(builder, PlayerSkillRangeRate): builder.PrependInt64Slot(24, PlayerSkillRangeRate, 0)
+def AddPlayerSkillRangeRate(builder, PlayerSkillRangeRate): builder.PrependInt64Slot(27, PlayerSkillRangeRate, 0)
 def GroundExcelAddPlayerSkillRangeRate(builder, PlayerSkillRangeRate):
     """This method is deprecated. Please switch to AddPlayerSkillRangeRate."""
     return AddPlayerSkillRangeRate(builder, PlayerSkillRangeRate)
-def AddEnemySkillRangeAdd(builder, EnemySkillRangeAdd): builder.PrependInt64Slot(25, EnemySkillRangeAdd, 0)
+def AddEnemySkillRangeAdd(builder, EnemySkillRangeAdd): builder.PrependInt64Slot(28, EnemySkillRangeAdd, 0)
 def GroundExcelAddEnemySkillRangeAdd(builder, EnemySkillRangeAdd):
     """This method is deprecated. Please switch to AddEnemySkillRangeAdd."""
     return AddEnemySkillRangeAdd(builder, EnemySkillRangeAdd)
-def AddEnemySkillRangeRate(builder, EnemySkillRangeRate): builder.PrependInt64Slot(26, EnemySkillRangeRate, 0)
+def AddEnemySkillRangeRate(builder, EnemySkillRangeRate): builder.PrependInt64Slot(29, EnemySkillRangeRate, 0)
 def GroundExcelAddEnemySkillRangeRate(builder, EnemySkillRangeRate):
     """This method is deprecated. Please switch to AddEnemySkillRangeRate."""
     return AddEnemySkillRangeRate(builder, EnemySkillRangeRate)
-def AddTSSAirUnitHeight(builder, TSSAirUnitHeight): builder.PrependInt64Slot(27, TSSAirUnitHeight, 0)
+def AddPlayerMinimumPositionGapRate(builder, PlayerMinimumPositionGapRate): builder.PrependInt64Slot(30, PlayerMinimumPositionGapRate, 0)
+def GroundExcelAddPlayerMinimumPositionGapRate(builder, PlayerMinimumPositionGapRate):
+    """This method is deprecated. Please switch to AddPlayerMinimumPositionGapRate."""
+    return AddPlayerMinimumPositionGapRate(builder, PlayerMinimumPositionGapRate)
+def AddEnemyMinimumPositionGapRate(builder, EnemyMinimumPositionGapRate): builder.PrependInt64Slot(31, EnemyMinimumPositionGapRate, 0)
+def GroundExcelAddEnemyMinimumPositionGapRate(builder, EnemyMinimumPositionGapRate):
+    """This method is deprecated. Please switch to AddEnemyMinimumPositionGapRate."""
+    return AddEnemyMinimumPositionGapRate(builder, EnemyMinimumPositionGapRate)
+def AddPlayerSightRangeMax(builder, PlayerSightRangeMax): builder.PrependBoolSlot(32, PlayerSightRangeMax, 0)
+def GroundExcelAddPlayerSightRangeMax(builder, PlayerSightRangeMax):
+    """This method is deprecated. Please switch to AddPlayerSightRangeMax."""
+    return AddPlayerSightRangeMax(builder, PlayerSightRangeMax)
+def AddEnemySightRangeMax(builder, EnemySightRangeMax): builder.PrependBoolSlot(33, EnemySightRangeMax, 0)
+def GroundExcelAddEnemySightRangeMax(builder, EnemySightRangeMax):
+    """This method is deprecated. Please switch to AddEnemySightRangeMax."""
+    return AddEnemySightRangeMax(builder, EnemySightRangeMax)
+def AddTSSAirUnitHeight(builder, TSSAirUnitHeight): builder.PrependInt64Slot(34, TSSAirUnitHeight, 0)
 def GroundExcelAddTSSAirUnitHeight(builder, TSSAirUnitHeight):
     """This method is deprecated. Please switch to AddTSSAirUnitHeight."""
     return AddTSSAirUnitHeight(builder, TSSAirUnitHeight)
-def AddIsRaid(builder, IsRaid): builder.PrependBoolSlot(28, IsRaid, 0)
-def GroundExcelAddIsRaid(builder, IsRaid):
-    """This method is deprecated. Please switch to AddIsRaid."""
-    return AddIsRaid(builder, IsRaid)
-def AddBGMId(builder, BGMId): builder.PrependInt64Slot(29, BGMId, 0)
+def AddIsPhaseBGM(builder, IsPhaseBGM): builder.PrependBoolSlot(35, IsPhaseBGM, 0)
+def GroundExcelAddIsPhaseBGM(builder, IsPhaseBGM):
+    """This method is deprecated. Please switch to AddIsPhaseBGM."""
+    return AddIsPhaseBGM(builder, IsPhaseBGM)
+def AddBGMId(builder, BGMId): builder.PrependInt64Slot(36, BGMId, 0)
 def GroundExcelAddBGMId(builder, BGMId):
     """This method is deprecated. Please switch to AddBGMId."""
     return AddBGMId(builder, BGMId)
-def AddWarningUI(builder, WarningUI): builder.PrependBoolSlot(30, WarningUI, 0)
+def AddWarningUI(builder, WarningUI): builder.PrependBoolSlot(37, WarningUI, 0)
 def GroundExcelAddWarningUI(builder, WarningUI):
     """This method is deprecated. Please switch to AddWarningUI."""
     return AddWarningUI(builder, WarningUI)
-def AddTSSHatchOpen(builder, TSSHatchOpen): builder.PrependBoolSlot(31, TSSHatchOpen, 0)
+def AddTSSHatchOpen(builder, TSSHatchOpen): builder.PrependBoolSlot(38, TSSHatchOpen, 0)
 def GroundExcelAddTSSHatchOpen(builder, TSSHatchOpen):
     """This method is deprecated. Please switch to AddTSSHatchOpen."""
     return AddTSSHatchOpen(builder, TSSHatchOpen)
+def AddForcedTacticSpeed(builder, ForcedTacticSpeed): builder.PrependInt32Slot(39, ForcedTacticSpeed, 0)
+def GroundExcelAddForcedTacticSpeed(builder, ForcedTacticSpeed):
+    """This method is deprecated. Please switch to AddForcedTacticSpeed."""
+    return AddForcedTacticSpeed(builder, ForcedTacticSpeed)
+def AddForcedSkillUse(builder, ForcedSkillUse): builder.PrependInt32Slot(40, ForcedSkillUse, 0)
+def GroundExcelAddForcedSkillUse(builder, ForcedSkillUse):
+    """This method is deprecated. Please switch to AddForcedSkillUse."""
+    return AddForcedSkillUse(builder, ForcedSkillUse)
+def AddShowNPCSkillCutIn(builder, ShowNPCSkillCutIn): builder.PrependInt32Slot(41, ShowNPCSkillCutIn, 0)
+def GroundExcelAddShowNPCSkillCutIn(builder, ShowNPCSkillCutIn):
+    """This method is deprecated. Please switch to AddShowNPCSkillCutIn."""
+    return AddShowNPCSkillCutIn(builder, ShowNPCSkillCutIn)
+def AddImmuneHitBeforeTimeOutEnd(builder, ImmuneHitBeforeTimeOutEnd): builder.PrependBoolSlot(42, ImmuneHitBeforeTimeOutEnd, 0)
+def GroundExcelAddImmuneHitBeforeTimeOutEnd(builder, ImmuneHitBeforeTimeOutEnd):
+    """This method is deprecated. Please switch to AddImmuneHitBeforeTimeOutEnd."""
+    return AddImmuneHitBeforeTimeOutEnd(builder, ImmuneHitBeforeTimeOutEnd)
+def AddUIBattleHideFromScratch(builder, UIBattleHideFromScratch): builder.PrependBoolSlot(43, UIBattleHideFromScratch, 0)
+def GroundExcelAddUIBattleHideFromScratch(builder, UIBattleHideFromScratch):
+    """This method is deprecated. Please switch to AddUIBattleHideFromScratch."""
+    return AddUIBattleHideFromScratch(builder, UIBattleHideFromScratch)
+def AddBattleReadyTimelinePath(builder, BattleReadyTimelinePath): builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(BattleReadyTimelinePath), 0)
+def GroundExcelAddBattleReadyTimelinePath(builder, BattleReadyTimelinePath):
+    """This method is deprecated. Please switch to AddBattleReadyTimelinePath."""
+    return AddBattleReadyTimelinePath(builder, BattleReadyTimelinePath)
+def AddBeforeVictoryTimelinePath(builder, BeforeVictoryTimelinePath): builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(BeforeVictoryTimelinePath), 0)
+def GroundExcelAddBeforeVictoryTimelinePath(builder, BeforeVictoryTimelinePath):
+    """This method is deprecated. Please switch to AddBeforeVictoryTimelinePath."""
+    return AddBeforeVictoryTimelinePath(builder, BeforeVictoryTimelinePath)
+def AddSkipBattleEnd(builder, SkipBattleEnd): builder.PrependBoolSlot(46, SkipBattleEnd, 0)
+def GroundExcelAddSkipBattleEnd(builder, SkipBattleEnd):
+    """This method is deprecated. Please switch to AddSkipBattleEnd."""
+    return AddSkipBattleEnd(builder, SkipBattleEnd)
+def AddHideNPCWhenBattleEnd(builder, HideNPCWhenBattleEnd): builder.PrependBoolSlot(47, HideNPCWhenBattleEnd, 0)
+def GroundExcelAddHideNPCWhenBattleEnd(builder, HideNPCWhenBattleEnd):
+    """This method is deprecated. Please switch to AddHideNPCWhenBattleEnd."""
+    return AddHideNPCWhenBattleEnd(builder, HideNPCWhenBattleEnd)
+def AddUIHpScale(builder, UIHpScale): builder.PrependFloat32Slot(48, UIHpScale, 0.0)
+def GroundExcelAddUIHpScale(builder, UIHpScale):
+    """This method is deprecated. Please switch to AddUIHpScale."""
+    return AddUIHpScale(builder, UIHpScale)
+def AddUIEmojiScale(builder, UIEmojiScale): builder.PrependFloat32Slot(49, UIEmojiScale, 0.0)
+def GroundExcelAddUIEmojiScale(builder, UIEmojiScale):
+    """This method is deprecated. Please switch to AddUIEmojiScale."""
+    return AddUIEmojiScale(builder, UIEmojiScale)
+def AddUISkillMainLogScale(builder, UISkillMainLogScale): builder.PrependFloat32Slot(50, UISkillMainLogScale, 0.0)
+def GroundExcelAddUISkillMainLogScale(builder, UISkillMainLogScale):
+    """This method is deprecated. Please switch to AddUISkillMainLogScale."""
+    return AddUISkillMainLogScale(builder, UISkillMainLogScale)
+def AddAllyPassiveSkillId(builder, AllyPassiveSkillId): builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(AllyPassiveSkillId), 0)
+def GroundExcelAddAllyPassiveSkillId(builder, AllyPassiveSkillId):
+    """This method is deprecated. Please switch to AddAllyPassiveSkillId."""
+    return AddAllyPassiveSkillId(builder, AllyPassiveSkillId)
+def StartAllyPassiveSkillIdVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def GroundExcelStartAllyPassiveSkillIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartAllyPassiveSkillIdVector(builder, numElems)
+def AddAllyPassiveSkillLevel(builder, AllyPassiveSkillLevel): builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(AllyPassiveSkillLevel), 0)
+def GroundExcelAddAllyPassiveSkillLevel(builder, AllyPassiveSkillLevel):
+    """This method is deprecated. Please switch to AddAllyPassiveSkillLevel."""
+    return AddAllyPassiveSkillLevel(builder, AllyPassiveSkillLevel)
+def StartAllyPassiveSkillLevelVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def GroundExcelStartAllyPassiveSkillLevelVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartAllyPassiveSkillLevelVector(builder, numElems)
+def AddEnemyPassiveSkillId(builder, EnemyPassiveSkillId): builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(EnemyPassiveSkillId), 0)
+def GroundExcelAddEnemyPassiveSkillId(builder, EnemyPassiveSkillId):
+    """This method is deprecated. Please switch to AddEnemyPassiveSkillId."""
+    return AddEnemyPassiveSkillId(builder, EnemyPassiveSkillId)
+def StartEnemyPassiveSkillIdVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def GroundExcelStartEnemyPassiveSkillIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartEnemyPassiveSkillIdVector(builder, numElems)
+def AddEnemyPassiveSkillLevel(builder, EnemyPassiveSkillLevel): builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(EnemyPassiveSkillLevel), 0)
+def GroundExcelAddEnemyPassiveSkillLevel(builder, EnemyPassiveSkillLevel):
+    """This method is deprecated. Please switch to AddEnemyPassiveSkillLevel."""
+    return AddEnemyPassiveSkillLevel(builder, EnemyPassiveSkillLevel)
+def StartEnemyPassiveSkillLevelVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def GroundExcelStartEnemyPassiveSkillLevelVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartEnemyPassiveSkillLevelVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def GroundExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

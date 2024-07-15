@@ -134,28 +134,63 @@ class GoodsExcel(object):
         return o == 0
 
     # GoodsExcel
-    def ConsumeCondition(self, j):
+    def ConsumeCondition_(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # GoodsExcel
-    def ConsumeConditionLength(self):
+    def ConsumeCondition_AsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # GoodsExcel
+    def ConsumeCondition_Length(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GoodsExcel
-    def ConsumeConditionIsNone(self):
+    def ConsumeCondition_IsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
     # GoodsExcel
-    def ConsumeExtraStep(self, j):
+    def ConsumeGachaTicketType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # GoodsExcel
+    def ConsumeGachaTicketTypeAmount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GoodsExcel
+    def ProductIdAOS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GoodsExcel
+    def ProductIdiOS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # GoodsExcel
+    def ConsumeExtraStep(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -163,26 +198,26 @@ class GoodsExcel(object):
 
     # GoodsExcel
     def ConsumeExtraStepAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # GoodsExcel
     def ConsumeExtraStepLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GoodsExcel
     def ConsumeExtraStepIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
     # GoodsExcel
     def ConsumeExtraAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -190,33 +225,33 @@ class GoodsExcel(object):
 
     # GoodsExcel
     def ConsumeExtraAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # GoodsExcel
     def ConsumeExtraAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GoodsExcel
     def ConsumeExtraAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
     # GoodsExcel
     def State(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # GoodsExcel
     def ParcelType_(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -224,26 +259,26 @@ class GoodsExcel(object):
 
     # GoodsExcel
     def ParcelType_AsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # GoodsExcel
     def ParcelType_Length(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GoodsExcel
     def ParcelType_IsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
     # GoodsExcel
     def ParcelId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -251,26 +286,26 @@ class GoodsExcel(object):
 
     # GoodsExcel
     def ParcelIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # GoodsExcel
     def ParcelIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GoodsExcel
     def ParcelIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         return o == 0
 
     # GoodsExcel
     def ParcelAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -278,24 +313,24 @@ class GoodsExcel(object):
 
     # GoodsExcel
     def ParcelAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # GoodsExcel
     def ParcelAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GoodsExcel
     def ParcelAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
-def Start(builder): builder.StartObject(14)
+def Start(builder): builder.StartObject(18)
 def GoodsExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -339,15 +374,31 @@ def StartConsumeParcelAmountVector(builder, numElems): return builder.StartVecto
 def GoodsExcelStartConsumeParcelAmountVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartConsumeParcelAmountVector(builder, numElems)
-def AddConsumeCondition(builder, ConsumeCondition): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ConsumeCondition), 0)
-def GoodsExcelAddConsumeCondition(builder, ConsumeCondition):
-    """This method is deprecated. Please switch to AddConsumeCondition."""
-    return AddConsumeCondition(builder, ConsumeCondition)
-def StartConsumeConditionVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def GoodsExcelStartConsumeConditionVector(builder, numElems):
+def AddConsumeCondition_(builder, ConsumeCondition_): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ConsumeCondition_), 0)
+def GoodsExcelAddConsumeCondition_(builder, ConsumeCondition_):
+    """This method is deprecated. Please switch to AddConsumeCondition_."""
+    return AddConsumeCondition_(builder, ConsumeCondition_)
+def StartConsumeCondition_Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def GoodsExcelStartConsumeCondition_Vector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartConsumeConditionVector(builder, numElems)
-def AddConsumeExtraStep(builder, ConsumeExtraStep): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ConsumeExtraStep), 0)
+    return StartConsumeCondition_Vector(builder, numElems)
+def AddConsumeGachaTicketType(builder, ConsumeGachaTicketType): builder.PrependInt32Slot(8, ConsumeGachaTicketType, 0)
+def GoodsExcelAddConsumeGachaTicketType(builder, ConsumeGachaTicketType):
+    """This method is deprecated. Please switch to AddConsumeGachaTicketType."""
+    return AddConsumeGachaTicketType(builder, ConsumeGachaTicketType)
+def AddConsumeGachaTicketTypeAmount(builder, ConsumeGachaTicketTypeAmount): builder.PrependInt64Slot(9, ConsumeGachaTicketTypeAmount, 0)
+def GoodsExcelAddConsumeGachaTicketTypeAmount(builder, ConsumeGachaTicketTypeAmount):
+    """This method is deprecated. Please switch to AddConsumeGachaTicketTypeAmount."""
+    return AddConsumeGachaTicketTypeAmount(builder, ConsumeGachaTicketTypeAmount)
+def AddProductIdAOS(builder, ProductIdAOS): builder.PrependInt64Slot(10, ProductIdAOS, 0)
+def GoodsExcelAddProductIdAOS(builder, ProductIdAOS):
+    """This method is deprecated. Please switch to AddProductIdAOS."""
+    return AddProductIdAOS(builder, ProductIdAOS)
+def AddProductIdiOS(builder, ProductIdiOS): builder.PrependInt64Slot(11, ProductIdiOS, 0)
+def GoodsExcelAddProductIdiOS(builder, ProductIdiOS):
+    """This method is deprecated. Please switch to AddProductIdiOS."""
+    return AddProductIdiOS(builder, ProductIdiOS)
+def AddConsumeExtraStep(builder, ConsumeExtraStep): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ConsumeExtraStep), 0)
 def GoodsExcelAddConsumeExtraStep(builder, ConsumeExtraStep):
     """This method is deprecated. Please switch to AddConsumeExtraStep."""
     return AddConsumeExtraStep(builder, ConsumeExtraStep)
@@ -355,7 +406,7 @@ def StartConsumeExtraStepVector(builder, numElems): return builder.StartVector(8
 def GoodsExcelStartConsumeExtraStepVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartConsumeExtraStepVector(builder, numElems)
-def AddConsumeExtraAmount(builder, ConsumeExtraAmount): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ConsumeExtraAmount), 0)
+def AddConsumeExtraAmount(builder, ConsumeExtraAmount): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ConsumeExtraAmount), 0)
 def GoodsExcelAddConsumeExtraAmount(builder, ConsumeExtraAmount):
     """This method is deprecated. Please switch to AddConsumeExtraAmount."""
     return AddConsumeExtraAmount(builder, ConsumeExtraAmount)
@@ -363,11 +414,11 @@ def StartConsumeExtraAmountVector(builder, numElems): return builder.StartVector
 def GoodsExcelStartConsumeExtraAmountVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartConsumeExtraAmountVector(builder, numElems)
-def AddState(builder, State): builder.PrependInt32Slot(10, State, 0)
+def AddState(builder, State): builder.PrependInt32Slot(14, State, 0)
 def GoodsExcelAddState(builder, State):
     """This method is deprecated. Please switch to AddState."""
     return AddState(builder, State)
-def AddParcelType_(builder, ParcelType_): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ParcelType_), 0)
+def AddParcelType_(builder, ParcelType_): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ParcelType_), 0)
 def GoodsExcelAddParcelType_(builder, ParcelType_):
     """This method is deprecated. Please switch to AddParcelType_."""
     return AddParcelType_(builder, ParcelType_)
@@ -375,7 +426,7 @@ def StartParcelType_Vector(builder, numElems): return builder.StartVector(4, num
 def GoodsExcelStartParcelType_Vector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartParcelType_Vector(builder, numElems)
-def AddParcelId(builder, ParcelId): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ParcelId), 0)
+def AddParcelId(builder, ParcelId): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ParcelId), 0)
 def GoodsExcelAddParcelId(builder, ParcelId):
     """This method is deprecated. Please switch to AddParcelId."""
     return AddParcelId(builder, ParcelId)
@@ -383,7 +434,7 @@ def StartParcelIdVector(builder, numElems): return builder.StartVector(8, numEle
 def GoodsExcelStartParcelIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartParcelIdVector(builder, numElems)
-def AddParcelAmount(builder, ParcelAmount): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ParcelAmount), 0)
+def AddParcelAmount(builder, ParcelAmount): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ParcelAmount), 0)
 def GoodsExcelAddParcelAmount(builder, ParcelAmount):
     """This method is deprecated. Please switch to AddParcelAmount."""
     return AddParcelAmount(builder, ParcelAmount)

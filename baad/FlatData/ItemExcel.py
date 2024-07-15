@@ -32,141 +32,148 @@ class ItemExcel(object):
         return 0
 
     # ItemExcel
-    def Rarity_(self):
+    def GroupId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def ProductionStep_(self):
+    def Rarity_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def LocalizeEtcId(self):
+    def ProductionStep_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
+    def LocalizeEtcId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
     def ItemCategory_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
     def Quality(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
     def Icon(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ItemExcel
-    def SpriteName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ItemExcel
-    def StackableMax(self):
+    def SpriteName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # ItemExcel
-    def StackableFunction(self):
+    def StackableMax(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def ImmediateUse(self):
+    def StackableFunction(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
+    def ImmediateUse(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ItemExcel
     def UsingResultParcelType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
     def UsingResultId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # ItemExcel
-    def UsingResultAmount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def MailType_(self):
+    def UsingResultAmount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def ExpiryChangeParcelType(self):
+    def MailType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def ExpiryChangeId(self):
+    def ExpiryChangeParcelType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def ExpiryChangeAmount(self):
+    def ExpiryChangeId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def CanTierUpgrade(self):
+    def ExpiryChangeAmount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
+    def CanTierUpgrade(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ItemExcel
     def TierUpgradeRecipeCraftId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
     def Tags(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -174,33 +181,61 @@ class ItemExcel(object):
 
     # ItemExcel
     def TagsAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # ItemExcel
     def TagsLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ItemExcel
     def TagsIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
     # ItemExcel
-    def CraftQuality(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+    def CraftQualityTier0(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
+    def CraftQualityTier1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
+    def CraftQualityTier2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
+    def ShiftingCraftQuality(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
+    def MaxGiftTags(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
     def ShopCategory(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -208,45 +243,52 @@ class ItemExcel(object):
 
     # ItemExcel
     def ShopCategoryAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # ItemExcel
     def ShopCategoryLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ItemExcel
     def ShopCategoryIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         return o == 0
 
     # ItemExcel
     def ExpirationDateTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ItemExcel
+    def ExpirationNotifyDateIn(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ItemExcel
     def ShortcutTypeId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ItemExcel
-    def IsThreeGachaItem(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+    def GachaTicket(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
-def Start(builder): builder.StartObject(26)
+def Start(builder): builder.StartObject(32)
 def ItemExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -254,83 +296,87 @@ def AddId(builder, Id): builder.PrependInt64Slot(0, Id, 0)
 def ItemExcelAddId(builder, Id):
     """This method is deprecated. Please switch to AddId."""
     return AddId(builder, Id)
-def AddRarity_(builder, Rarity_): builder.PrependInt32Slot(1, Rarity_, 0)
+def AddGroupId(builder, GroupId): builder.PrependInt64Slot(1, GroupId, 0)
+def ItemExcelAddGroupId(builder, GroupId):
+    """This method is deprecated. Please switch to AddGroupId."""
+    return AddGroupId(builder, GroupId)
+def AddRarity_(builder, Rarity_): builder.PrependInt32Slot(2, Rarity_, 0)
 def ItemExcelAddRarity_(builder, Rarity_):
     """This method is deprecated. Please switch to AddRarity_."""
     return AddRarity_(builder, Rarity_)
-def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(2, ProductionStep_, 0)
+def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(3, ProductionStep_, 0)
 def ItemExcelAddProductionStep_(builder, ProductionStep_):
     """This method is deprecated. Please switch to AddProductionStep_."""
     return AddProductionStep_(builder, ProductionStep_)
-def AddLocalizeEtcId(builder, LocalizeEtcId): builder.PrependUint32Slot(3, LocalizeEtcId, 0)
+def AddLocalizeEtcId(builder, LocalizeEtcId): builder.PrependUint32Slot(4, LocalizeEtcId, 0)
 def ItemExcelAddLocalizeEtcId(builder, LocalizeEtcId):
     """This method is deprecated. Please switch to AddLocalizeEtcId."""
     return AddLocalizeEtcId(builder, LocalizeEtcId)
-def AddItemCategory_(builder, ItemCategory_): builder.PrependInt32Slot(4, ItemCategory_, 0)
+def AddItemCategory_(builder, ItemCategory_): builder.PrependInt32Slot(5, ItemCategory_, 0)
 def ItemExcelAddItemCategory_(builder, ItemCategory_):
     """This method is deprecated. Please switch to AddItemCategory_."""
     return AddItemCategory_(builder, ItemCategory_)
-def AddQuality(builder, Quality): builder.PrependInt64Slot(5, Quality, 0)
+def AddQuality(builder, Quality): builder.PrependInt64Slot(6, Quality, 0)
 def ItemExcelAddQuality(builder, Quality):
     """This method is deprecated. Please switch to AddQuality."""
     return AddQuality(builder, Quality)
-def AddIcon(builder, Icon): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(Icon), 0)
+def AddIcon(builder, Icon): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(Icon), 0)
 def ItemExcelAddIcon(builder, Icon):
     """This method is deprecated. Please switch to AddIcon."""
     return AddIcon(builder, Icon)
-def AddSpriteName(builder, SpriteName): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SpriteName), 0)
+def AddSpriteName(builder, SpriteName): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SpriteName), 0)
 def ItemExcelAddSpriteName(builder, SpriteName):
     """This method is deprecated. Please switch to AddSpriteName."""
     return AddSpriteName(builder, SpriteName)
-def AddStackableMax(builder, StackableMax): builder.PrependInt32Slot(8, StackableMax, 0)
+def AddStackableMax(builder, StackableMax): builder.PrependInt32Slot(9, StackableMax, 0)
 def ItemExcelAddStackableMax(builder, StackableMax):
     """This method is deprecated. Please switch to AddStackableMax."""
     return AddStackableMax(builder, StackableMax)
-def AddStackableFunction(builder, StackableFunction): builder.PrependInt32Slot(9, StackableFunction, 0)
+def AddStackableFunction(builder, StackableFunction): builder.PrependInt32Slot(10, StackableFunction, 0)
 def ItemExcelAddStackableFunction(builder, StackableFunction):
     """This method is deprecated. Please switch to AddStackableFunction."""
     return AddStackableFunction(builder, StackableFunction)
-def AddImmediateUse(builder, ImmediateUse): builder.PrependBoolSlot(10, ImmediateUse, 0)
+def AddImmediateUse(builder, ImmediateUse): builder.PrependBoolSlot(11, ImmediateUse, 0)
 def ItemExcelAddImmediateUse(builder, ImmediateUse):
     """This method is deprecated. Please switch to AddImmediateUse."""
     return AddImmediateUse(builder, ImmediateUse)
-def AddUsingResultParcelType(builder, UsingResultParcelType): builder.PrependInt32Slot(11, UsingResultParcelType, 0)
+def AddUsingResultParcelType(builder, UsingResultParcelType): builder.PrependInt32Slot(12, UsingResultParcelType, 0)
 def ItemExcelAddUsingResultParcelType(builder, UsingResultParcelType):
     """This method is deprecated. Please switch to AddUsingResultParcelType."""
     return AddUsingResultParcelType(builder, UsingResultParcelType)
-def AddUsingResultId(builder, UsingResultId): builder.PrependInt64Slot(12, UsingResultId, 0)
+def AddUsingResultId(builder, UsingResultId): builder.PrependInt64Slot(13, UsingResultId, 0)
 def ItemExcelAddUsingResultId(builder, UsingResultId):
     """This method is deprecated. Please switch to AddUsingResultId."""
     return AddUsingResultId(builder, UsingResultId)
-def AddUsingResultAmount(builder, UsingResultAmount): builder.PrependInt64Slot(13, UsingResultAmount, 0)
+def AddUsingResultAmount(builder, UsingResultAmount): builder.PrependInt64Slot(14, UsingResultAmount, 0)
 def ItemExcelAddUsingResultAmount(builder, UsingResultAmount):
     """This method is deprecated. Please switch to AddUsingResultAmount."""
     return AddUsingResultAmount(builder, UsingResultAmount)
-def AddMailType_(builder, MailType_): builder.PrependInt32Slot(14, MailType_, 0)
+def AddMailType_(builder, MailType_): builder.PrependInt32Slot(15, MailType_, 0)
 def ItemExcelAddMailType_(builder, MailType_):
     """This method is deprecated. Please switch to AddMailType_."""
     return AddMailType_(builder, MailType_)
-def AddExpiryChangeParcelType(builder, ExpiryChangeParcelType): builder.PrependInt32Slot(15, ExpiryChangeParcelType, 0)
+def AddExpiryChangeParcelType(builder, ExpiryChangeParcelType): builder.PrependInt32Slot(16, ExpiryChangeParcelType, 0)
 def ItemExcelAddExpiryChangeParcelType(builder, ExpiryChangeParcelType):
     """This method is deprecated. Please switch to AddExpiryChangeParcelType."""
     return AddExpiryChangeParcelType(builder, ExpiryChangeParcelType)
-def AddExpiryChangeId(builder, ExpiryChangeId): builder.PrependInt64Slot(16, ExpiryChangeId, 0)
+def AddExpiryChangeId(builder, ExpiryChangeId): builder.PrependInt64Slot(17, ExpiryChangeId, 0)
 def ItemExcelAddExpiryChangeId(builder, ExpiryChangeId):
     """This method is deprecated. Please switch to AddExpiryChangeId."""
     return AddExpiryChangeId(builder, ExpiryChangeId)
-def AddExpiryChangeAmount(builder, ExpiryChangeAmount): builder.PrependInt64Slot(17, ExpiryChangeAmount, 0)
+def AddExpiryChangeAmount(builder, ExpiryChangeAmount): builder.PrependInt64Slot(18, ExpiryChangeAmount, 0)
 def ItemExcelAddExpiryChangeAmount(builder, ExpiryChangeAmount):
     """This method is deprecated. Please switch to AddExpiryChangeAmount."""
     return AddExpiryChangeAmount(builder, ExpiryChangeAmount)
-def AddCanTierUpgrade(builder, CanTierUpgrade): builder.PrependBoolSlot(18, CanTierUpgrade, 0)
+def AddCanTierUpgrade(builder, CanTierUpgrade): builder.PrependBoolSlot(19, CanTierUpgrade, 0)
 def ItemExcelAddCanTierUpgrade(builder, CanTierUpgrade):
     """This method is deprecated. Please switch to AddCanTierUpgrade."""
     return AddCanTierUpgrade(builder, CanTierUpgrade)
-def AddTierUpgradeRecipeCraftId(builder, TierUpgradeRecipeCraftId): builder.PrependInt64Slot(19, TierUpgradeRecipeCraftId, 0)
+def AddTierUpgradeRecipeCraftId(builder, TierUpgradeRecipeCraftId): builder.PrependInt64Slot(20, TierUpgradeRecipeCraftId, 0)
 def ItemExcelAddTierUpgradeRecipeCraftId(builder, TierUpgradeRecipeCraftId):
     """This method is deprecated. Please switch to AddTierUpgradeRecipeCraftId."""
     return AddTierUpgradeRecipeCraftId(builder, TierUpgradeRecipeCraftId)
-def AddTags(builder, Tags): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(Tags), 0)
+def AddTags(builder, Tags): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(Tags), 0)
 def ItemExcelAddTags(builder, Tags):
     """This method is deprecated. Please switch to AddTags."""
     return AddTags(builder, Tags)
@@ -338,11 +384,27 @@ def StartTagsVector(builder, numElems): return builder.StartVector(4, numElems, 
 def ItemExcelStartTagsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartTagsVector(builder, numElems)
-def AddCraftQuality(builder, CraftQuality): builder.PrependInt64Slot(21, CraftQuality, 0)
-def ItemExcelAddCraftQuality(builder, CraftQuality):
-    """This method is deprecated. Please switch to AddCraftQuality."""
-    return AddCraftQuality(builder, CraftQuality)
-def AddShopCategory(builder, ShopCategory): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(ShopCategory), 0)
+def AddCraftQualityTier0(builder, CraftQualityTier0): builder.PrependInt64Slot(22, CraftQualityTier0, 0)
+def ItemExcelAddCraftQualityTier0(builder, CraftQualityTier0):
+    """This method is deprecated. Please switch to AddCraftQualityTier0."""
+    return AddCraftQualityTier0(builder, CraftQualityTier0)
+def AddCraftQualityTier1(builder, CraftQualityTier1): builder.PrependInt64Slot(23, CraftQualityTier1, 0)
+def ItemExcelAddCraftQualityTier1(builder, CraftQualityTier1):
+    """This method is deprecated. Please switch to AddCraftQualityTier1."""
+    return AddCraftQualityTier1(builder, CraftQualityTier1)
+def AddCraftQualityTier2(builder, CraftQualityTier2): builder.PrependInt64Slot(24, CraftQualityTier2, 0)
+def ItemExcelAddCraftQualityTier2(builder, CraftQualityTier2):
+    """This method is deprecated. Please switch to AddCraftQualityTier2."""
+    return AddCraftQualityTier2(builder, CraftQualityTier2)
+def AddShiftingCraftQuality(builder, ShiftingCraftQuality): builder.PrependInt64Slot(25, ShiftingCraftQuality, 0)
+def ItemExcelAddShiftingCraftQuality(builder, ShiftingCraftQuality):
+    """This method is deprecated. Please switch to AddShiftingCraftQuality."""
+    return AddShiftingCraftQuality(builder, ShiftingCraftQuality)
+def AddMaxGiftTags(builder, MaxGiftTags): builder.PrependInt32Slot(26, MaxGiftTags, 0)
+def ItemExcelAddMaxGiftTags(builder, MaxGiftTags):
+    """This method is deprecated. Please switch to AddMaxGiftTags."""
+    return AddMaxGiftTags(builder, MaxGiftTags)
+def AddShopCategory(builder, ShopCategory): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(ShopCategory), 0)
 def ItemExcelAddShopCategory(builder, ShopCategory):
     """This method is deprecated. Please switch to AddShopCategory."""
     return AddShopCategory(builder, ShopCategory)
@@ -350,18 +412,22 @@ def StartShopCategoryVector(builder, numElems): return builder.StartVector(4, nu
 def ItemExcelStartShopCategoryVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartShopCategoryVector(builder, numElems)
-def AddExpirationDateTime(builder, ExpirationDateTime): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(ExpirationDateTime), 0)
+def AddExpirationDateTime(builder, ExpirationDateTime): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(ExpirationDateTime), 0)
 def ItemExcelAddExpirationDateTime(builder, ExpirationDateTime):
     """This method is deprecated. Please switch to AddExpirationDateTime."""
     return AddExpirationDateTime(builder, ExpirationDateTime)
-def AddShortcutTypeId(builder, ShortcutTypeId): builder.PrependInt64Slot(24, ShortcutTypeId, 0)
+def AddExpirationNotifyDateIn(builder, ExpirationNotifyDateIn): builder.PrependInt32Slot(29, ExpirationNotifyDateIn, 0)
+def ItemExcelAddExpirationNotifyDateIn(builder, ExpirationNotifyDateIn):
+    """This method is deprecated. Please switch to AddExpirationNotifyDateIn."""
+    return AddExpirationNotifyDateIn(builder, ExpirationNotifyDateIn)
+def AddShortcutTypeId(builder, ShortcutTypeId): builder.PrependInt64Slot(30, ShortcutTypeId, 0)
 def ItemExcelAddShortcutTypeId(builder, ShortcutTypeId):
     """This method is deprecated. Please switch to AddShortcutTypeId."""
     return AddShortcutTypeId(builder, ShortcutTypeId)
-def AddIsThreeGachaItem(builder, IsThreeGachaItem): builder.PrependBoolSlot(25, IsThreeGachaItem, 0)
-def ItemExcelAddIsThreeGachaItem(builder, IsThreeGachaItem):
-    """This method is deprecated. Please switch to AddIsThreeGachaItem."""
-    return AddIsThreeGachaItem(builder, IsThreeGachaItem)
+def AddGachaTicket(builder, GachaTicket): builder.PrependInt32Slot(31, GachaTicket, 0)
+def ItemExcelAddGachaTicket(builder, GachaTicket):
+    """This method is deprecated. Please switch to AddGachaTicket."""
+    return AddGachaTicket(builder, GachaTicket)
 def End(builder): return builder.EndObject()
 def ItemExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

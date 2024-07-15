@@ -80,31 +80,11 @@ class AcademyZoneExcel(object):
         return o == 0
 
     # AcademyZoneExcel
-    def RewardGroupId(self, j):
+    def RewardGroupId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
-
-    # AcademyZoneExcel
-    def RewardGroupIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
-        return 0
-
-    # AcademyZoneExcel
-    def RewardGroupIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # AcademyZoneExcel
-    def RewardGroupIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        return o == 0
 
     # AcademyZoneExcel
     def Tags(self, j):
@@ -161,14 +141,10 @@ def StartStudentVisitProbVector(builder, numElems): return builder.StartVector(8
 def AcademyZoneExcelStartStudentVisitProbVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStudentVisitProbVector(builder, numElems)
-def AddRewardGroupId(builder, RewardGroupId): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(RewardGroupId), 0)
+def AddRewardGroupId(builder, RewardGroupId): builder.PrependInt64Slot(5, RewardGroupId, 0)
 def AcademyZoneExcelAddRewardGroupId(builder, RewardGroupId):
     """This method is deprecated. Please switch to AddRewardGroupId."""
     return AddRewardGroupId(builder, RewardGroupId)
-def StartRewardGroupIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
-def AcademyZoneExcelStartRewardGroupIdVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartRewardGroupIdVector(builder, numElems)
 def AddTags(builder, Tags): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(Tags), 0)
 def AcademyZoneExcelAddTags(builder, Tags):
     """This method is deprecated. Please switch to AddTags."""

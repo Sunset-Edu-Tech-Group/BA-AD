@@ -52,42 +52,7 @@ class LocalizeErrorExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # LocalizeErrorExcel
-    def Th(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeErrorExcel
-    def Tw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeErrorExcel
-    def En(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeErrorExcel
-    def De(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeErrorExcel
-    def Fr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(9)
+def Start(builder): builder.StartObject(4)
 def LocalizeErrorExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -107,26 +72,6 @@ def AddJp(builder, Jp): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.numbe
 def LocalizeErrorExcelAddJp(builder, Jp):
     """This method is deprecated. Please switch to AddJp."""
     return AddJp(builder, Jp)
-def AddTh(builder, Th): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(Th), 0)
-def LocalizeErrorExcelAddTh(builder, Th):
-    """This method is deprecated. Please switch to AddTh."""
-    return AddTh(builder, Th)
-def AddTw(builder, Tw): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(Tw), 0)
-def LocalizeErrorExcelAddTw(builder, Tw):
-    """This method is deprecated. Please switch to AddTw."""
-    return AddTw(builder, Tw)
-def AddEn(builder, En): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(En), 0)
-def LocalizeErrorExcelAddEn(builder, En):
-    """This method is deprecated. Please switch to AddEn."""
-    return AddEn(builder, En)
-def AddDe(builder, De): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(De), 0)
-def LocalizeErrorExcelAddDe(builder, De):
-    """This method is deprecated. Please switch to AddDe."""
-    return AddDe(builder, De)
-def AddFr(builder, Fr): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(Fr), 0)
-def LocalizeErrorExcelAddFr(builder, Fr):
-    """This method is deprecated. Please switch to AddFr."""
-    return AddFr(builder, Fr)
 def End(builder): return builder.EndObject()
 def LocalizeErrorExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

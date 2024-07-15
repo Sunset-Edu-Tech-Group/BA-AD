@@ -53,48 +53,96 @@ class EventContentCollectionExcel(object):
         return 0
 
     # EventContentCollectionExcel
-    def UnlockConditionParameter(self):
+    def UnlockConditionParameter(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # EventContentCollectionExcel
+    def UnlockConditionParameterAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # EventContentCollectionExcel
+    def UnlockConditionParameterLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EventContentCollectionExcel
+    def UnlockConditionParameterIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # EventContentCollectionExcel
+    def MultipleConditionCheckType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # EventContentCollectionExcel
     def UnlockConditionCount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # EventContentCollectionExcel
     def IsObject(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # EventContentCollectionExcel
-    def IsHorizon(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # EventContentCollectionExcel
-    def ThumbResource(self):
+    def IsHorizon(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # EventContentCollectionExcel
+    def EmblemResource(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentCollectionExcel
+    def ThumbResource(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentCollectionExcel
     def FullResource(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(10)
+    # EventContentCollectionExcel
+    def LocalizeEtcId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentCollectionExcel
+    def SubNameLocalizeCodeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(14)
 def EventContentCollectionExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -114,30 +162,50 @@ def AddUnlockConditionType(builder, UnlockConditionType): builder.PrependInt32Sl
 def EventContentCollectionExcelAddUnlockConditionType(builder, UnlockConditionType):
     """This method is deprecated. Please switch to AddUnlockConditionType."""
     return AddUnlockConditionType(builder, UnlockConditionType)
-def AddUnlockConditionParameter(builder, UnlockConditionParameter): builder.PrependInt64Slot(4, UnlockConditionParameter, 0)
+def AddUnlockConditionParameter(builder, UnlockConditionParameter): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(UnlockConditionParameter), 0)
 def EventContentCollectionExcelAddUnlockConditionParameter(builder, UnlockConditionParameter):
     """This method is deprecated. Please switch to AddUnlockConditionParameter."""
     return AddUnlockConditionParameter(builder, UnlockConditionParameter)
-def AddUnlockConditionCount(builder, UnlockConditionCount): builder.PrependInt64Slot(5, UnlockConditionCount, 0)
+def StartUnlockConditionParameterVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def EventContentCollectionExcelStartUnlockConditionParameterVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartUnlockConditionParameterVector(builder, numElems)
+def AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_): builder.PrependInt32Slot(5, MultipleConditionCheckType_, 0)
+def EventContentCollectionExcelAddMultipleConditionCheckType_(builder, MultipleConditionCheckType_):
+    """This method is deprecated. Please switch to AddMultipleConditionCheckType_."""
+    return AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_)
+def AddUnlockConditionCount(builder, UnlockConditionCount): builder.PrependInt64Slot(6, UnlockConditionCount, 0)
 def EventContentCollectionExcelAddUnlockConditionCount(builder, UnlockConditionCount):
     """This method is deprecated. Please switch to AddUnlockConditionCount."""
     return AddUnlockConditionCount(builder, UnlockConditionCount)
-def AddIsObject(builder, IsObject): builder.PrependBoolSlot(6, IsObject, 0)
+def AddIsObject(builder, IsObject): builder.PrependBoolSlot(7, IsObject, 0)
 def EventContentCollectionExcelAddIsObject(builder, IsObject):
     """This method is deprecated. Please switch to AddIsObject."""
     return AddIsObject(builder, IsObject)
-def AddIsHorizon(builder, IsHorizon): builder.PrependBoolSlot(7, IsHorizon, 0)
+def AddIsHorizon(builder, IsHorizon): builder.PrependBoolSlot(8, IsHorizon, 0)
 def EventContentCollectionExcelAddIsHorizon(builder, IsHorizon):
     """This method is deprecated. Please switch to AddIsHorizon."""
     return AddIsHorizon(builder, IsHorizon)
-def AddThumbResource(builder, ThumbResource): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ThumbResource), 0)
+def AddEmblemResource(builder, EmblemResource): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EmblemResource), 0)
+def EventContentCollectionExcelAddEmblemResource(builder, EmblemResource):
+    """This method is deprecated. Please switch to AddEmblemResource."""
+    return AddEmblemResource(builder, EmblemResource)
+def AddThumbResource(builder, ThumbResource): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ThumbResource), 0)
 def EventContentCollectionExcelAddThumbResource(builder, ThumbResource):
     """This method is deprecated. Please switch to AddThumbResource."""
     return AddThumbResource(builder, ThumbResource)
-def AddFullResource(builder, FullResource): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(FullResource), 0)
+def AddFullResource(builder, FullResource): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(FullResource), 0)
 def EventContentCollectionExcelAddFullResource(builder, FullResource):
     """This method is deprecated. Please switch to AddFullResource."""
     return AddFullResource(builder, FullResource)
+def AddLocalizeEtcId(builder, LocalizeEtcId): builder.PrependUint32Slot(12, LocalizeEtcId, 0)
+def EventContentCollectionExcelAddLocalizeEtcId(builder, LocalizeEtcId):
+    """This method is deprecated. Please switch to AddLocalizeEtcId."""
+    return AddLocalizeEtcId(builder, LocalizeEtcId)
+def AddSubNameLocalizeCodeId(builder, SubNameLocalizeCodeId): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SubNameLocalizeCodeId), 0)
+def EventContentCollectionExcelAddSubNameLocalizeCodeId(builder, SubNameLocalizeCodeId):
+    """This method is deprecated. Please switch to AddSubNameLocalizeCodeId."""
+    return AddSubNameLocalizeCodeId(builder, SubNameLocalizeCodeId)
 def End(builder): return builder.EndObject()
 def EventContentCollectionExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

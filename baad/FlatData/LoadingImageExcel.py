@@ -46,48 +46,13 @@ class LoadingImageExcel(object):
         return None
 
     # LoadingImageExcel
-    def ImagePathTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LoadingImageExcel
-    def ImagePathTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LoadingImageExcel
-    def ImagePathEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LoadingImageExcel
-    def ImagePathDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LoadingImageExcel
-    def ImagePathFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LoadingImageExcel
     def DisplayWeight(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(9)
+def Start(builder): builder.StartObject(4)
 def LoadingImageExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -103,27 +68,7 @@ def AddImagePathJp(builder, ImagePathJp): builder.PrependUOffsetTRelativeSlot(2,
 def LoadingImageExcelAddImagePathJp(builder, ImagePathJp):
     """This method is deprecated. Please switch to AddImagePathJp."""
     return AddImagePathJp(builder, ImagePathJp)
-def AddImagePathTh(builder, ImagePathTh): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathTh), 0)
-def LoadingImageExcelAddImagePathTh(builder, ImagePathTh):
-    """This method is deprecated. Please switch to AddImagePathTh."""
-    return AddImagePathTh(builder, ImagePathTh)
-def AddImagePathTw(builder, ImagePathTw): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathTw), 0)
-def LoadingImageExcelAddImagePathTw(builder, ImagePathTw):
-    """This method is deprecated. Please switch to AddImagePathTw."""
-    return AddImagePathTw(builder, ImagePathTw)
-def AddImagePathEn(builder, ImagePathEn): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathEn), 0)
-def LoadingImageExcelAddImagePathEn(builder, ImagePathEn):
-    """This method is deprecated. Please switch to AddImagePathEn."""
-    return AddImagePathEn(builder, ImagePathEn)
-def AddImagePathDe(builder, ImagePathDe): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathDe), 0)
-def LoadingImageExcelAddImagePathDe(builder, ImagePathDe):
-    """This method is deprecated. Please switch to AddImagePathDe."""
-    return AddImagePathDe(builder, ImagePathDe)
-def AddImagePathFr(builder, ImagePathFr): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathFr), 0)
-def LoadingImageExcelAddImagePathFr(builder, ImagePathFr):
-    """This method is deprecated. Please switch to AddImagePathFr."""
-    return AddImagePathFr(builder, ImagePathFr)
-def AddDisplayWeight(builder, DisplayWeight): builder.PrependInt32Slot(8, DisplayWeight, 0)
+def AddDisplayWeight(builder, DisplayWeight): builder.PrependInt32Slot(3, DisplayWeight, 0)
 def LoadingImageExcelAddDisplayWeight(builder, DisplayWeight):
     """This method is deprecated. Please switch to AddDisplayWeight."""
     return AddDisplayWeight(builder, DisplayWeight)

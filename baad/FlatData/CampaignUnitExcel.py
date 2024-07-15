@@ -53,55 +53,116 @@ class CampaignUnitExcel(object):
         return None
 
     # CampaignUnitExcel
-    def GroundId(self):
+    def StrategyPrefabName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CampaignUnitExcel
+    def EnterScenarioGroupId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CampaignUnitExcel
+    def EnterScenarioGroupIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # CampaignUnitExcel
+    def EnterScenarioGroupIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CampaignUnitExcel
+    def EnterScenarioGroupIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # CampaignUnitExcel
+    def ClearScenarioGroupId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CampaignUnitExcel
+    def ClearScenarioGroupIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # CampaignUnitExcel
+    def ClearScenarioGroupIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CampaignUnitExcel
+    def ClearScenarioGroupIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # CampaignUnitExcel
+    def GroundId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CampaignUnitExcel
-    def IsBoss(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # CampaignUnitExcel
     def MoveRange(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # CampaignUnitExcel
-    def AIMoveType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # CampaignUnitExcel
-    def Grade(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CampaignUnitExcel
-    def EnvironmentType(self):
+    def AIMoveType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CampaignUnitExcel
-    def Scale(self):
+    def Grade(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CampaignUnitExcel
+    def EnvironmentType(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CampaignUnitExcel
+    def Scale(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def Start(builder): builder.StartObject(11)
+    # CampaignUnitExcel
+    def IsTacticSkip(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def Start(builder): builder.StartObject(14)
 def CampaignUnitExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -121,34 +182,54 @@ def AddPrefabName(builder, PrefabName): builder.PrependUOffsetTRelativeSlot(3, f
 def CampaignUnitExcelAddPrefabName(builder, PrefabName):
     """This method is deprecated. Please switch to AddPrefabName."""
     return AddPrefabName(builder, PrefabName)
-def AddGroundId(builder, GroundId): builder.PrependInt64Slot(4, GroundId, 0)
+def AddStrategyPrefabName(builder, StrategyPrefabName): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(StrategyPrefabName), 0)
+def CampaignUnitExcelAddStrategyPrefabName(builder, StrategyPrefabName):
+    """This method is deprecated. Please switch to AddStrategyPrefabName."""
+    return AddStrategyPrefabName(builder, StrategyPrefabName)
+def AddEnterScenarioGroupId(builder, EnterScenarioGroupId): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EnterScenarioGroupId), 0)
+def CampaignUnitExcelAddEnterScenarioGroupId(builder, EnterScenarioGroupId):
+    """This method is deprecated. Please switch to AddEnterScenarioGroupId."""
+    return AddEnterScenarioGroupId(builder, EnterScenarioGroupId)
+def StartEnterScenarioGroupIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def CampaignUnitExcelStartEnterScenarioGroupIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartEnterScenarioGroupIdVector(builder, numElems)
+def AddClearScenarioGroupId(builder, ClearScenarioGroupId): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ClearScenarioGroupId), 0)
+def CampaignUnitExcelAddClearScenarioGroupId(builder, ClearScenarioGroupId):
+    """This method is deprecated. Please switch to AddClearScenarioGroupId."""
+    return AddClearScenarioGroupId(builder, ClearScenarioGroupId)
+def StartClearScenarioGroupIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def CampaignUnitExcelStartClearScenarioGroupIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartClearScenarioGroupIdVector(builder, numElems)
+def AddGroundId(builder, GroundId): builder.PrependInt64Slot(7, GroundId, 0)
 def CampaignUnitExcelAddGroundId(builder, GroundId):
     """This method is deprecated. Please switch to AddGroundId."""
     return AddGroundId(builder, GroundId)
-def AddIsBoss(builder, IsBoss): builder.PrependBoolSlot(5, IsBoss, 0)
-def CampaignUnitExcelAddIsBoss(builder, IsBoss):
-    """This method is deprecated. Please switch to AddIsBoss."""
-    return AddIsBoss(builder, IsBoss)
-def AddMoveRange(builder, MoveRange): builder.PrependInt32Slot(6, MoveRange, 0)
+def AddMoveRange(builder, MoveRange): builder.PrependInt32Slot(8, MoveRange, 0)
 def CampaignUnitExcelAddMoveRange(builder, MoveRange):
     """This method is deprecated. Please switch to AddMoveRange."""
     return AddMoveRange(builder, MoveRange)
-def AddAIMoveType(builder, AIMoveType): builder.PrependInt32Slot(7, AIMoveType, 0)
+def AddAIMoveType(builder, AIMoveType): builder.PrependInt32Slot(9, AIMoveType, 0)
 def CampaignUnitExcelAddAIMoveType(builder, AIMoveType):
     """This method is deprecated. Please switch to AddAIMoveType."""
     return AddAIMoveType(builder, AIMoveType)
-def AddGrade(builder, Grade): builder.PrependInt32Slot(8, Grade, 0)
+def AddGrade(builder, Grade): builder.PrependInt32Slot(10, Grade, 0)
 def CampaignUnitExcelAddGrade(builder, Grade):
     """This method is deprecated. Please switch to AddGrade."""
     return AddGrade(builder, Grade)
-def AddEnvironmentType(builder, EnvironmentType): builder.PrependInt32Slot(9, EnvironmentType, 0)
+def AddEnvironmentType(builder, EnvironmentType): builder.PrependInt32Slot(11, EnvironmentType, 0)
 def CampaignUnitExcelAddEnvironmentType(builder, EnvironmentType):
     """This method is deprecated. Please switch to AddEnvironmentType."""
     return AddEnvironmentType(builder, EnvironmentType)
-def AddScale(builder, Scale): builder.PrependFloat32Slot(10, Scale, 0.0)
+def AddScale(builder, Scale): builder.PrependFloat32Slot(12, Scale, 0.0)
 def CampaignUnitExcelAddScale(builder, Scale):
     """This method is deprecated. Please switch to AddScale."""
     return AddScale(builder, Scale)
+def AddIsTacticSkip(builder, IsTacticSkip): builder.PrependBoolSlot(13, IsTacticSkip, 0)
+def CampaignUnitExcelAddIsTacticSkip(builder, IsTacticSkip):
+    """This method is deprecated. Please switch to AddIsTacticSkip."""
+    return AddIsTacticSkip(builder, IsTacticSkip)
 def End(builder): return builder.EndObject()
 def CampaignUnitExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

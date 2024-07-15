@@ -135,8 +135,35 @@ class CampaignChapterExcel(object):
         return o == 0
 
     # CampaignChapterExcel
-    def HardCampaignStageId(self, j):
+    def NormalExtraStageId(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # CampaignChapterExcel
+    def NormalExtraStageIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # CampaignChapterExcel
+    def NormalExtraStageIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CampaignChapterExcel
+    def NormalExtraStageIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # CampaignChapterExcel
+    def HardCampaignStageId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -144,26 +171,26 @@ class CampaignChapterExcel(object):
 
     # CampaignChapterExcel
     def HardCampaignStageIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # CampaignChapterExcel
     def HardCampaignStageIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CampaignChapterExcel
     def HardCampaignStageIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # CampaignChapterExcel
     def VeryHardCampaignStageId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -171,24 +198,31 @@ class CampaignChapterExcel(object):
 
     # CampaignChapterExcel
     def VeryHardCampaignStageIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # CampaignChapterExcel
     def VeryHardCampaignStageIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CampaignChapterExcel
     def VeryHardCampaignStageIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
-def Start(builder): builder.StartObject(12)
+    # CampaignChapterExcel
+    def IsTacticSkip(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def Start(builder): builder.StartObject(14)
 def CampaignChapterExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -240,7 +274,15 @@ def StartNormalCampaignStageIdVector(builder, numElems): return builder.StartVec
 def CampaignChapterExcelStartNormalCampaignStageIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartNormalCampaignStageIdVector(builder, numElems)
-def AddHardCampaignStageId(builder, HardCampaignStageId): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(HardCampaignStageId), 0)
+def AddNormalExtraStageId(builder, NormalExtraStageId): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(NormalExtraStageId), 0)
+def CampaignChapterExcelAddNormalExtraStageId(builder, NormalExtraStageId):
+    """This method is deprecated. Please switch to AddNormalExtraStageId."""
+    return AddNormalExtraStageId(builder, NormalExtraStageId)
+def StartNormalExtraStageIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def CampaignChapterExcelStartNormalExtraStageIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartNormalExtraStageIdVector(builder, numElems)
+def AddHardCampaignStageId(builder, HardCampaignStageId): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(HardCampaignStageId), 0)
 def CampaignChapterExcelAddHardCampaignStageId(builder, HardCampaignStageId):
     """This method is deprecated. Please switch to AddHardCampaignStageId."""
     return AddHardCampaignStageId(builder, HardCampaignStageId)
@@ -248,7 +290,7 @@ def StartHardCampaignStageIdVector(builder, numElems): return builder.StartVecto
 def CampaignChapterExcelStartHardCampaignStageIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartHardCampaignStageIdVector(builder, numElems)
-def AddVeryHardCampaignStageId(builder, VeryHardCampaignStageId): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(VeryHardCampaignStageId), 0)
+def AddVeryHardCampaignStageId(builder, VeryHardCampaignStageId): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(VeryHardCampaignStageId), 0)
 def CampaignChapterExcelAddVeryHardCampaignStageId(builder, VeryHardCampaignStageId):
     """This method is deprecated. Please switch to AddVeryHardCampaignStageId."""
     return AddVeryHardCampaignStageId(builder, VeryHardCampaignStageId)
@@ -256,6 +298,10 @@ def StartVeryHardCampaignStageIdVector(builder, numElems): return builder.StartV
 def CampaignChapterExcelStartVeryHardCampaignStageIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartVeryHardCampaignStageIdVector(builder, numElems)
+def AddIsTacticSkip(builder, IsTacticSkip): builder.PrependBoolSlot(13, IsTacticSkip, 0)
+def CampaignChapterExcelAddIsTacticSkip(builder, IsTacticSkip):
+    """This method is deprecated. Please switch to AddIsTacticSkip."""
+    return AddIsTacticSkip(builder, IsTacticSkip)
 def End(builder): return builder.EndObject()
 def CampaignChapterExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

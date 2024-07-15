@@ -25,141 +25,167 @@ class CafeRankExcel(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # CafeRankExcel
-    def Rank(self):
+    def CafeId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeRankExcel
-    def RecipeId(self):
+    def Rank(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeRankExcel
-    def ComfortMax(self):
+    def RecipeId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeRankExcel
-    def ActionPointProductionCoefficient(self):
+    def ComfortMax(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeRankExcel
-    def ActionPointProductionCorrectionValue(self):
+    def TagCountMax(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeRankExcel
-    def ActionPointStorageMax(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # CafeRankExcel
-    def GoldProductionCoefficient(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # CafeRankExcel
-    def GoldProductionCorrectionValue(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # CafeRankExcel
-    def GoldStorageMax(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # CafeRankExcel
-    def TagCountMax(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # CafeRankExcel
     def CharacterVisitMin(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CafeRankExcel
     def CharacterVisitMax(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(12)
+    # CafeRankExcel
+    def CafeVisitWeightBase(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusStep(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusStepAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusStepLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusStepIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonus(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CafeRankExcel
+    def CafeVisitWeightTagBonusIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        return o == 0
+
+def Start(builder): builder.StartObject(10)
 def CafeRankExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
-def AddRank(builder, Rank): builder.PrependInt64Slot(0, Rank, 0)
+def AddCafeId(builder, CafeId): builder.PrependInt64Slot(0, CafeId, 0)
+def CafeRankExcelAddCafeId(builder, CafeId):
+    """This method is deprecated. Please switch to AddCafeId."""
+    return AddCafeId(builder, CafeId)
+def AddRank(builder, Rank): builder.PrependInt64Slot(1, Rank, 0)
 def CafeRankExcelAddRank(builder, Rank):
     """This method is deprecated. Please switch to AddRank."""
     return AddRank(builder, Rank)
-def AddRecipeId(builder, RecipeId): builder.PrependInt64Slot(1, RecipeId, 0)
+def AddRecipeId(builder, RecipeId): builder.PrependInt64Slot(2, RecipeId, 0)
 def CafeRankExcelAddRecipeId(builder, RecipeId):
     """This method is deprecated. Please switch to AddRecipeId."""
     return AddRecipeId(builder, RecipeId)
-def AddComfortMax(builder, ComfortMax): builder.PrependInt64Slot(2, ComfortMax, 0)
+def AddComfortMax(builder, ComfortMax): builder.PrependInt64Slot(3, ComfortMax, 0)
 def CafeRankExcelAddComfortMax(builder, ComfortMax):
     """This method is deprecated. Please switch to AddComfortMax."""
     return AddComfortMax(builder, ComfortMax)
-def AddActionPointProductionCoefficient(builder, ActionPointProductionCoefficient): builder.PrependInt64Slot(3, ActionPointProductionCoefficient, 0)
-def CafeRankExcelAddActionPointProductionCoefficient(builder, ActionPointProductionCoefficient):
-    """This method is deprecated. Please switch to AddActionPointProductionCoefficient."""
-    return AddActionPointProductionCoefficient(builder, ActionPointProductionCoefficient)
-def AddActionPointProductionCorrectionValue(builder, ActionPointProductionCorrectionValue): builder.PrependInt64Slot(4, ActionPointProductionCorrectionValue, 0)
-def CafeRankExcelAddActionPointProductionCorrectionValue(builder, ActionPointProductionCorrectionValue):
-    """This method is deprecated. Please switch to AddActionPointProductionCorrectionValue."""
-    return AddActionPointProductionCorrectionValue(builder, ActionPointProductionCorrectionValue)
-def AddActionPointStorageMax(builder, ActionPointStorageMax): builder.PrependInt64Slot(5, ActionPointStorageMax, 0)
-def CafeRankExcelAddActionPointStorageMax(builder, ActionPointStorageMax):
-    """This method is deprecated. Please switch to AddActionPointStorageMax."""
-    return AddActionPointStorageMax(builder, ActionPointStorageMax)
-def AddGoldProductionCoefficient(builder, GoldProductionCoefficient): builder.PrependInt64Slot(6, GoldProductionCoefficient, 0)
-def CafeRankExcelAddGoldProductionCoefficient(builder, GoldProductionCoefficient):
-    """This method is deprecated. Please switch to AddGoldProductionCoefficient."""
-    return AddGoldProductionCoefficient(builder, GoldProductionCoefficient)
-def AddGoldProductionCorrectionValue(builder, GoldProductionCorrectionValue): builder.PrependInt64Slot(7, GoldProductionCorrectionValue, 0)
-def CafeRankExcelAddGoldProductionCorrectionValue(builder, GoldProductionCorrectionValue):
-    """This method is deprecated. Please switch to AddGoldProductionCorrectionValue."""
-    return AddGoldProductionCorrectionValue(builder, GoldProductionCorrectionValue)
-def AddGoldStorageMax(builder, GoldStorageMax): builder.PrependInt64Slot(8, GoldStorageMax, 0)
-def CafeRankExcelAddGoldStorageMax(builder, GoldStorageMax):
-    """This method is deprecated. Please switch to AddGoldStorageMax."""
-    return AddGoldStorageMax(builder, GoldStorageMax)
-def AddTagCountMax(builder, TagCountMax): builder.PrependInt64Slot(9, TagCountMax, 0)
+def AddTagCountMax(builder, TagCountMax): builder.PrependInt64Slot(4, TagCountMax, 0)
 def CafeRankExcelAddTagCountMax(builder, TagCountMax):
     """This method is deprecated. Please switch to AddTagCountMax."""
     return AddTagCountMax(builder, TagCountMax)
-def AddCharacterVisitMin(builder, CharacterVisitMin): builder.PrependInt32Slot(10, CharacterVisitMin, 0)
+def AddCharacterVisitMin(builder, CharacterVisitMin): builder.PrependInt32Slot(5, CharacterVisitMin, 0)
 def CafeRankExcelAddCharacterVisitMin(builder, CharacterVisitMin):
     """This method is deprecated. Please switch to AddCharacterVisitMin."""
     return AddCharacterVisitMin(builder, CharacterVisitMin)
-def AddCharacterVisitMax(builder, CharacterVisitMax): builder.PrependInt32Slot(11, CharacterVisitMax, 0)
+def AddCharacterVisitMax(builder, CharacterVisitMax): builder.PrependInt32Slot(6, CharacterVisitMax, 0)
 def CafeRankExcelAddCharacterVisitMax(builder, CharacterVisitMax):
     """This method is deprecated. Please switch to AddCharacterVisitMax."""
     return AddCharacterVisitMax(builder, CharacterVisitMax)
+def AddCafeVisitWeightBase(builder, CafeVisitWeightBase): builder.PrependInt32Slot(7, CafeVisitWeightBase, 0)
+def CafeRankExcelAddCafeVisitWeightBase(builder, CafeVisitWeightBase):
+    """This method is deprecated. Please switch to AddCafeVisitWeightBase."""
+    return AddCafeVisitWeightBase(builder, CafeVisitWeightBase)
+def AddCafeVisitWeightTagBonusStep(builder, CafeVisitWeightTagBonusStep): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CafeVisitWeightTagBonusStep), 0)
+def CafeRankExcelAddCafeVisitWeightTagBonusStep(builder, CafeVisitWeightTagBonusStep):
+    """This method is deprecated. Please switch to AddCafeVisitWeightTagBonusStep."""
+    return AddCafeVisitWeightTagBonusStep(builder, CafeVisitWeightTagBonusStep)
+def StartCafeVisitWeightTagBonusStepVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CafeRankExcelStartCafeVisitWeightTagBonusStepVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCafeVisitWeightTagBonusStepVector(builder, numElems)
+def AddCafeVisitWeightTagBonus(builder, CafeVisitWeightTagBonus): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CafeVisitWeightTagBonus), 0)
+def CafeRankExcelAddCafeVisitWeightTagBonus(builder, CafeVisitWeightTagBonus):
+    """This method is deprecated. Please switch to AddCafeVisitWeightTagBonus."""
+    return AddCafeVisitWeightTagBonus(builder, CafeVisitWeightTagBonus)
+def StartCafeVisitWeightTagBonusVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CafeRankExcelStartCafeVisitWeightTagBonusVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCafeVisitWeightTagBonusVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def CafeRankExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

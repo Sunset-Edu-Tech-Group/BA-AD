@@ -135,7 +135,14 @@ class EventContentShopExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(13)
+    # EventContentShopExcel
+    def RestrictBuyWhenInventoryFull(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def Start(builder): builder.StartObject(14)
 def EventContentShopExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -195,6 +202,10 @@ def AddBuyReportEventName(builder, BuyReportEventName): builder.PrependUOffsetTR
 def EventContentShopExcelAddBuyReportEventName(builder, BuyReportEventName):
     """This method is deprecated. Please switch to AddBuyReportEventName."""
     return AddBuyReportEventName(builder, BuyReportEventName)
+def AddRestrictBuyWhenInventoryFull(builder, RestrictBuyWhenInventoryFull): builder.PrependBoolSlot(13, RestrictBuyWhenInventoryFull, 0)
+def EventContentShopExcelAddRestrictBuyWhenInventoryFull(builder, RestrictBuyWhenInventoryFull):
+    """This method is deprecated. Please switch to AddRestrictBuyWhenInventoryFull."""
+    return AddRestrictBuyWhenInventoryFull(builder, RestrictBuyWhenInventoryFull)
 def End(builder): return builder.EndObject()
 def EventContentShopExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

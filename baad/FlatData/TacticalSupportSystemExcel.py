@@ -130,31 +130,11 @@ class TacticalSupportSystemExcel(object):
         return 0.0
 
     # TacticalSupportSystemExcel
-    def InteractionChar(self, j):
+    def InteractionChar(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
-
-    # TacticalSupportSystemExcel
-    def InteractionCharAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
-        return 0
-
-    # TacticalSupportSystemExcel
-    def InteractionCharLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # TacticalSupportSystemExcel
-    def InteractionCharIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        return o == 0
 
     # TacticalSupportSystemExcel
     def CharacterInteractionStartDelay(self):
@@ -177,7 +157,63 @@ class TacticalSupportSystemExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(19)
+    # TacticalSupportSystemExcel
+    def SummonerCharacterId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # TacticalSupportSystemExcel
+    def InteractionFrame(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # TacticalSupportSystemExcel
+    def TSAInteractionAddDuration(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # TacticalSupportSystemExcel
+    def InteractionStudentExSkillGroupId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TacticalSupportSystemExcel
+    def InteractionSkillCardTexture(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TacticalSupportSystemExcel
+    def InteractionSkillSpine(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # TacticalSupportSystemExcel
+    def RetreatFrame(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # TacticalSupportSystemExcel
+    def DestroyFrame(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(27)
 def TacticalSupportSystemExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -241,14 +277,10 @@ def AddInventoryOffsetZ(builder, InventoryOffsetZ): builder.PrependFloat32Slot(1
 def TacticalSupportSystemExcelAddInventoryOffsetZ(builder, InventoryOffsetZ):
     """This method is deprecated. Please switch to AddInventoryOffsetZ."""
     return AddInventoryOffsetZ(builder, InventoryOffsetZ)
-def AddInteractionChar(builder, InteractionChar): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(InteractionChar), 0)
+def AddInteractionChar(builder, InteractionChar): builder.PrependInt64Slot(15, InteractionChar, 0)
 def TacticalSupportSystemExcelAddInteractionChar(builder, InteractionChar):
     """This method is deprecated. Please switch to AddInteractionChar."""
     return AddInteractionChar(builder, InteractionChar)
-def StartInteractionCharVector(builder, numElems): return builder.StartVector(8, numElems, 8)
-def TacticalSupportSystemExcelStartInteractionCharVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartInteractionCharVector(builder, numElems)
 def AddCharacterInteractionStartDelay(builder, CharacterInteractionStartDelay): builder.PrependInt64Slot(16, CharacterInteractionStartDelay, 0)
 def TacticalSupportSystemExcelAddCharacterInteractionStartDelay(builder, CharacterInteractionStartDelay):
     """This method is deprecated. Please switch to AddCharacterInteractionStartDelay."""
@@ -261,6 +293,38 @@ def AddGetOnEndEffectPath(builder, GetOnEndEffectPath): builder.PrependUOffsetTR
 def TacticalSupportSystemExcelAddGetOnEndEffectPath(builder, GetOnEndEffectPath):
     """This method is deprecated. Please switch to AddGetOnEndEffectPath."""
     return AddGetOnEndEffectPath(builder, GetOnEndEffectPath)
+def AddSummonerCharacterId(builder, SummonerCharacterId): builder.PrependInt64Slot(19, SummonerCharacterId, 0)
+def TacticalSupportSystemExcelAddSummonerCharacterId(builder, SummonerCharacterId):
+    """This method is deprecated. Please switch to AddSummonerCharacterId."""
+    return AddSummonerCharacterId(builder, SummonerCharacterId)
+def AddInteractionFrame(builder, InteractionFrame): builder.PrependInt32Slot(20, InteractionFrame, 0)
+def TacticalSupportSystemExcelAddInteractionFrame(builder, InteractionFrame):
+    """This method is deprecated. Please switch to AddInteractionFrame."""
+    return AddInteractionFrame(builder, InteractionFrame)
+def AddTSAInteractionAddDuration(builder, TSAInteractionAddDuration): builder.PrependInt64Slot(21, TSAInteractionAddDuration, 0)
+def TacticalSupportSystemExcelAddTSAInteractionAddDuration(builder, TSAInteractionAddDuration):
+    """This method is deprecated. Please switch to AddTSAInteractionAddDuration."""
+    return AddTSAInteractionAddDuration(builder, TSAInteractionAddDuration)
+def AddInteractionStudentExSkillGroupId(builder, InteractionStudentExSkillGroupId): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(InteractionStudentExSkillGroupId), 0)
+def TacticalSupportSystemExcelAddInteractionStudentExSkillGroupId(builder, InteractionStudentExSkillGroupId):
+    """This method is deprecated. Please switch to AddInteractionStudentExSkillGroupId."""
+    return AddInteractionStudentExSkillGroupId(builder, InteractionStudentExSkillGroupId)
+def AddInteractionSkillCardTexture(builder, InteractionSkillCardTexture): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(InteractionSkillCardTexture), 0)
+def TacticalSupportSystemExcelAddInteractionSkillCardTexture(builder, InteractionSkillCardTexture):
+    """This method is deprecated. Please switch to AddInteractionSkillCardTexture."""
+    return AddInteractionSkillCardTexture(builder, InteractionSkillCardTexture)
+def AddInteractionSkillSpine(builder, InteractionSkillSpine): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(InteractionSkillSpine), 0)
+def TacticalSupportSystemExcelAddInteractionSkillSpine(builder, InteractionSkillSpine):
+    """This method is deprecated. Please switch to AddInteractionSkillSpine."""
+    return AddInteractionSkillSpine(builder, InteractionSkillSpine)
+def AddRetreatFrame(builder, RetreatFrame): builder.PrependInt32Slot(25, RetreatFrame, 0)
+def TacticalSupportSystemExcelAddRetreatFrame(builder, RetreatFrame):
+    """This method is deprecated. Please switch to AddRetreatFrame."""
+    return AddRetreatFrame(builder, RetreatFrame)
+def AddDestroyFrame(builder, DestroyFrame): builder.PrependInt32Slot(26, DestroyFrame, 0)
+def TacticalSupportSystemExcelAddDestroyFrame(builder, DestroyFrame):
+    """This method is deprecated. Please switch to AddDestroyFrame."""
+    return AddDestroyFrame(builder, DestroyFrame)
 def End(builder): return builder.EndObject()
 def TacticalSupportSystemExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

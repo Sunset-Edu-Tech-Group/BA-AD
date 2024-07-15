@@ -7,11 +7,11 @@ class PurchaseServerTag(object):
     PreAudit = 1
     Production = 2
     Hotfix = 3
-    Temp1 = 4
-    Temp2 = 5
-    Temp3 = 6
-    Temp4 = 7
-    Temp5 = 8
+    Standby2 = 4
+    Standby1 = 5
+    Major = 6
+    Minor = 7
+    Temp = 8
     Test = 9
     TestIn = 10
 

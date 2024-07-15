@@ -45,7 +45,14 @@ class InformationStrategyObjectExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(3)
+    # InformationStrategyObjectExcel
+    def LocalizeCodeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(4)
 def InformationStrategyObjectExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -61,6 +68,10 @@ def AddPageName(builder, PageName): builder.PrependUOffsetTRelativeSlot(2, flatb
 def InformationStrategyObjectExcelAddPageName(builder, PageName):
     """This method is deprecated. Please switch to AddPageName."""
     return AddPageName(builder, PageName)
+def AddLocalizeCodeId(builder, LocalizeCodeId): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeCodeId), 0)
+def InformationStrategyObjectExcelAddLocalizeCodeId(builder, LocalizeCodeId):
+    """This method is deprecated. Please switch to AddLocalizeCodeId."""
+    return AddLocalizeCodeId(builder, LocalizeCodeId)
 def End(builder): return builder.EndObject()
 def InformationStrategyObjectExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

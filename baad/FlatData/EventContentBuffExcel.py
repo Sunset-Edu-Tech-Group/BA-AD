@@ -46,41 +46,61 @@ class EventContentBuffExcel(object):
         return 0
 
     # EventContentBuffExcel
-    def SkillGroupId(self):
+    def EnumType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
     # EventContentBuffExcel
-    def IconPath(self):
+    def EnumTypeValue(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
 
     # EventContentBuffExcel
-    def SpriteName(self):
+    def EnumTypeValueLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # EventContentBuffExcel
+    def EnumTypeValueIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # EventContentBuffExcel
+    def SkillGroupId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentBuffExcel
-    def BuffDescriptionLocalizeCodeId(self):
+    def IconPath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentBuffExcel
-    def BuffDescriptionIconPath(self):
+    def SpriteName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(8)
+    # EventContentBuffExcel
+    def BuffDescriptionLocalizeCodeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(9)
 def EventContentBuffExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -96,26 +116,34 @@ def AddCharacterTag(builder, CharacterTag): builder.PrependInt32Slot(2, Characte
 def EventContentBuffExcelAddCharacterTag(builder, CharacterTag):
     """This method is deprecated. Please switch to AddCharacterTag."""
     return AddCharacterTag(builder, CharacterTag)
-def AddSkillGroupId(builder, SkillGroupId): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SkillGroupId), 0)
+def AddEnumType(builder, EnumType): builder.PrependInt32Slot(3, EnumType, 0)
+def EventContentBuffExcelAddEnumType(builder, EnumType):
+    """This method is deprecated. Please switch to AddEnumType."""
+    return AddEnumType(builder, EnumType)
+def AddEnumTypeValue(builder, EnumTypeValue): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EnumTypeValue), 0)
+def EventContentBuffExcelAddEnumTypeValue(builder, EnumTypeValue):
+    """This method is deprecated. Please switch to AddEnumTypeValue."""
+    return AddEnumTypeValue(builder, EnumTypeValue)
+def StartEnumTypeValueVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def EventContentBuffExcelStartEnumTypeValueVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartEnumTypeValueVector(builder, numElems)
+def AddSkillGroupId(builder, SkillGroupId): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SkillGroupId), 0)
 def EventContentBuffExcelAddSkillGroupId(builder, SkillGroupId):
     """This method is deprecated. Please switch to AddSkillGroupId."""
     return AddSkillGroupId(builder, SkillGroupId)
-def AddIconPath(builder, IconPath): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(IconPath), 0)
+def AddIconPath(builder, IconPath): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(IconPath), 0)
 def EventContentBuffExcelAddIconPath(builder, IconPath):
     """This method is deprecated. Please switch to AddIconPath."""
     return AddIconPath(builder, IconPath)
-def AddSpriteName(builder, SpriteName): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(SpriteName), 0)
+def AddSpriteName(builder, SpriteName): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SpriteName), 0)
 def EventContentBuffExcelAddSpriteName(builder, SpriteName):
     """This method is deprecated. Please switch to AddSpriteName."""
     return AddSpriteName(builder, SpriteName)
-def AddBuffDescriptionLocalizeCodeId(builder, BuffDescriptionLocalizeCodeId): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BuffDescriptionLocalizeCodeId), 0)
+def AddBuffDescriptionLocalizeCodeId(builder, BuffDescriptionLocalizeCodeId): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BuffDescriptionLocalizeCodeId), 0)
 def EventContentBuffExcelAddBuffDescriptionLocalizeCodeId(builder, BuffDescriptionLocalizeCodeId):
     """This method is deprecated. Please switch to AddBuffDescriptionLocalizeCodeId."""
     return AddBuffDescriptionLocalizeCodeId(builder, BuffDescriptionLocalizeCodeId)
-def AddBuffDescriptionIconPath(builder, BuffDescriptionIconPath): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(BuffDescriptionIconPath), 0)
-def EventContentBuffExcelAddBuffDescriptionIconPath(builder, BuffDescriptionIconPath):
-    """This method is deprecated. Please switch to AddBuffDescriptionIconPath."""
-    return AddBuffDescriptionIconPath(builder, BuffDescriptionIconPath)
 def End(builder): return builder.EndObject()
 def EventContentBuffExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

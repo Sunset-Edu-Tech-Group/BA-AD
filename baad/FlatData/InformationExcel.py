@@ -39,8 +39,15 @@ class InformationExcel(object):
         return None
 
     # InformationExcel
-    def TutorialParentName(self, j):
+    def LocalizeCodeId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # InformationExcel
+    def TutorialParentName(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -48,19 +55,19 @@ class InformationExcel(object):
 
     # InformationExcel
     def TutorialParentNameLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # InformationExcel
     def TutorialParentNameIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
     # InformationExcel
     def UIName(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -68,17 +75,17 @@ class InformationExcel(object):
 
     # InformationExcel
     def UINameLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # InformationExcel
     def UINameIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
-def Start(builder): builder.StartObject(4)
+def Start(builder): builder.StartObject(5)
 def InformationExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -90,7 +97,11 @@ def AddPageName(builder, PageName): builder.PrependUOffsetTRelativeSlot(1, flatb
 def InformationExcelAddPageName(builder, PageName):
     """This method is deprecated. Please switch to AddPageName."""
     return AddPageName(builder, PageName)
-def AddTutorialParentName(builder, TutorialParentName): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(TutorialParentName), 0)
+def AddLocalizeCodeId(builder, LocalizeCodeId): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(LocalizeCodeId), 0)
+def InformationExcelAddLocalizeCodeId(builder, LocalizeCodeId):
+    """This method is deprecated. Please switch to AddLocalizeCodeId."""
+    return AddLocalizeCodeId(builder, LocalizeCodeId)
+def AddTutorialParentName(builder, TutorialParentName): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TutorialParentName), 0)
 def InformationExcelAddTutorialParentName(builder, TutorialParentName):
     """This method is deprecated. Please switch to AddTutorialParentName."""
     return AddTutorialParentName(builder, TutorialParentName)
@@ -98,7 +109,7 @@ def StartTutorialParentNameVector(builder, numElems): return builder.StartVector
 def InformationExcelStartTutorialParentNameVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartTutorialParentNameVector(builder, numElems)
-def AddUIName(builder, UIName): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(UIName), 0)
+def AddUIName(builder, UIName): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(UIName), 0)
 def InformationExcelAddUIName(builder, UIName):
     """This method is deprecated. Please switch to AddUIName."""
     return AddUIName(builder, UIName)

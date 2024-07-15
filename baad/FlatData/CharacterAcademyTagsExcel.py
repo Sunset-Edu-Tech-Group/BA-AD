@@ -86,7 +86,7 @@ class CharacterAcademyTagsExcel(object):
         return o == 0
 
     # CharacterAcademyTagsExcel
-    def ForbiddenTags(self, j):
+    def FavorItemUniqueTags(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             a = self._tab.Vector(o)
@@ -94,25 +94,79 @@ class CharacterAcademyTagsExcel(object):
         return 0
 
     # CharacterAcademyTagsExcel
-    def ForbiddenTagsAsNumpy(self):
+    def FavorItemUniqueTagsAsNumpy(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # CharacterAcademyTagsExcel
-    def ForbiddenTagsLength(self):
+    def FavorItemUniqueTagsLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterAcademyTagsExcel
-    def ForbiddenTagsIsNone(self):
+    def FavorItemUniqueTagsIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         return o == 0
 
-def Start(builder): builder.StartObject(4)
+    # CharacterAcademyTagsExcel
+    def ForbiddenTags(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # CharacterAcademyTagsExcel
+    def ForbiddenTagsAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # CharacterAcademyTagsExcel
+    def ForbiddenTagsLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CharacterAcademyTagsExcel
+    def ForbiddenTagsIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # CharacterAcademyTagsExcel
+    def ZoneWhiteListTags(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # CharacterAcademyTagsExcel
+    def ZoneWhiteListTagsAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # CharacterAcademyTagsExcel
+    def ZoneWhiteListTagsLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # CharacterAcademyTagsExcel
+    def ZoneWhiteListTagsIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+def Start(builder): builder.StartObject(6)
 def CharacterAcademyTagsExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -136,7 +190,15 @@ def StartFavorItemTagsVector(builder, numElems): return builder.StartVector(4, n
 def CharacterAcademyTagsExcelStartFavorItemTagsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartFavorItemTagsVector(builder, numElems)
-def AddForbiddenTags(builder, ForbiddenTags): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ForbiddenTags), 0)
+def AddFavorItemUniqueTags(builder, FavorItemUniqueTags): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FavorItemUniqueTags), 0)
+def CharacterAcademyTagsExcelAddFavorItemUniqueTags(builder, FavorItemUniqueTags):
+    """This method is deprecated. Please switch to AddFavorItemUniqueTags."""
+    return AddFavorItemUniqueTags(builder, FavorItemUniqueTags)
+def StartFavorItemUniqueTagsVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CharacterAcademyTagsExcelStartFavorItemUniqueTagsVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartFavorItemUniqueTagsVector(builder, numElems)
+def AddForbiddenTags(builder, ForbiddenTags): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ForbiddenTags), 0)
 def CharacterAcademyTagsExcelAddForbiddenTags(builder, ForbiddenTags):
     """This method is deprecated. Please switch to AddForbiddenTags."""
     return AddForbiddenTags(builder, ForbiddenTags)
@@ -144,6 +206,14 @@ def StartForbiddenTagsVector(builder, numElems): return builder.StartVector(4, n
 def CharacterAcademyTagsExcelStartForbiddenTagsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartForbiddenTagsVector(builder, numElems)
+def AddZoneWhiteListTags(builder, ZoneWhiteListTags): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ZoneWhiteListTags), 0)
+def CharacterAcademyTagsExcelAddZoneWhiteListTags(builder, ZoneWhiteListTags):
+    """This method is deprecated. Please switch to AddZoneWhiteListTags."""
+    return AddZoneWhiteListTags(builder, ZoneWhiteListTags)
+def StartZoneWhiteListTagsVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CharacterAcademyTagsExcelStartZoneWhiteListTagsVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartZoneWhiteListTagsVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def CharacterAcademyTagsExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

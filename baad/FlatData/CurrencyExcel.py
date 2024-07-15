@@ -116,15 +116,22 @@ class CurrencyExcel(object):
         return None
 
     # CurrencyExcel
-    def DailyRefillAmount(self):
+    def DailyRefillType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CurrencyExcel
+    def DailyRefillAmount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CurrencyExcel
     def DailyRefillTime(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -132,24 +139,24 @@ class CurrencyExcel(object):
 
     # CurrencyExcel
     def DailyRefillTimeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # CurrencyExcel
     def DailyRefillTimeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CurrencyExcel
     def DailyRefillTimeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
-def Start(builder): builder.StartObject(15)
+def Start(builder): builder.StartObject(16)
 def CurrencyExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -205,11 +212,15 @@ def AddSpriteName(builder, SpriteName): builder.PrependUOffsetTRelativeSlot(12, 
 def CurrencyExcelAddSpriteName(builder, SpriteName):
     """This method is deprecated. Please switch to AddSpriteName."""
     return AddSpriteName(builder, SpriteName)
-def AddDailyRefillAmount(builder, DailyRefillAmount): builder.PrependInt64Slot(13, DailyRefillAmount, 0)
+def AddDailyRefillType_(builder, DailyRefillType_): builder.PrependInt32Slot(13, DailyRefillType_, 0)
+def CurrencyExcelAddDailyRefillType_(builder, DailyRefillType_):
+    """This method is deprecated. Please switch to AddDailyRefillType_."""
+    return AddDailyRefillType_(builder, DailyRefillType_)
+def AddDailyRefillAmount(builder, DailyRefillAmount): builder.PrependInt64Slot(14, DailyRefillAmount, 0)
 def CurrencyExcelAddDailyRefillAmount(builder, DailyRefillAmount):
     """This method is deprecated. Please switch to AddDailyRefillAmount."""
     return AddDailyRefillAmount(builder, DailyRefillAmount)
-def AddDailyRefillTime(builder, DailyRefillTime): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(DailyRefillTime), 0)
+def AddDailyRefillTime(builder, DailyRefillTime): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(DailyRefillTime), 0)
 def CurrencyExcelAddDailyRefillTime(builder, DailyRefillTime):
     """This method is deprecated. Please switch to AddDailyRefillTime."""
     return AddDailyRefillTime(builder, DailyRefillTime)

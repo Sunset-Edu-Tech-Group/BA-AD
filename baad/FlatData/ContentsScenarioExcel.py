@@ -39,15 +39,22 @@ class ContentsScenarioExcel(object):
         return 0
 
     # ContentsScenarioExcel
-    def ScenarioContentType_(self):
+    def DisplayOrder(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ContentsScenarioExcel
-    def ScenarioGroupId(self, j):
+    def ScenarioContentType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ContentsScenarioExcel
+    def ScenarioGroupId(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -55,24 +62,24 @@ class ContentsScenarioExcel(object):
 
     # ContentsScenarioExcel
     def ScenarioGroupIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # ContentsScenarioExcel
     def ScenarioGroupIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # ContentsScenarioExcel
     def ScenarioGroupIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
-def Start(builder): builder.StartObject(4)
+def Start(builder): builder.StartObject(5)
 def ContentsScenarioExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -84,11 +91,15 @@ def AddLocalizeId(builder, LocalizeId): builder.PrependUint32Slot(1, LocalizeId,
 def ContentsScenarioExcelAddLocalizeId(builder, LocalizeId):
     """This method is deprecated. Please switch to AddLocalizeId."""
     return AddLocalizeId(builder, LocalizeId)
-def AddScenarioContentType_(builder, ScenarioContentType_): builder.PrependInt32Slot(2, ScenarioContentType_, 0)
+def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt32Slot(2, DisplayOrder, 0)
+def ContentsScenarioExcelAddDisplayOrder(builder, DisplayOrder):
+    """This method is deprecated. Please switch to AddDisplayOrder."""
+    return AddDisplayOrder(builder, DisplayOrder)
+def AddScenarioContentType_(builder, ScenarioContentType_): builder.PrependInt32Slot(3, ScenarioContentType_, 0)
 def ContentsScenarioExcelAddScenarioContentType_(builder, ScenarioContentType_):
     """This method is deprecated. Please switch to AddScenarioContentType_."""
     return AddScenarioContentType_(builder, ScenarioContentType_)
-def AddScenarioGroupId(builder, ScenarioGroupId): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ScenarioGroupId), 0)
+def AddScenarioGroupId(builder, ScenarioGroupId): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ScenarioGroupId), 0)
 def ContentsScenarioExcelAddScenarioGroupId(builder, ScenarioGroupId):
     """This method is deprecated. Please switch to AddScenarioGroupId."""
     return AddScenarioGroupId(builder, ScenarioGroupId)

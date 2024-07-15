@@ -11,5 +11,5 @@ class ItemCategory(object):
     Collectible = 5
     Favor = 6
     RecruitCoin = 7
-    MonthlyBonus = 8
+    InvisibleToken = 8
 

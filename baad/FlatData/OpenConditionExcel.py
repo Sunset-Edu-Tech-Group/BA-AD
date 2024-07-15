@@ -107,55 +107,90 @@ class OpenConditionExcel(object):
         return 0
 
     # OpenConditionExcel
-    def CampaignStageId(self):
+    def ScenarioModeId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # OpenConditionExcel
-    def MultipleConditionCheckType_(self):
+    def CampaignStageId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # OpenConditionExcel
-    def OpenDayOfWeek(self):
+    def MultipleConditionCheckType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # OpenConditionExcel
-    def OpenHour(self):
+    def OpenDayOfWeek(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # OpenConditionExcel
+    def OpenHour(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # OpenConditionExcel
     def CloseDayOfWeek(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # OpenConditionExcel
     def CloseHour(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # OpenConditionExcel
+    def OpenedCafeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # OpenConditionExcel
+    def CafeIdforCafeRank(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # OpenConditionExcel
     def CafeRank(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(15)
+    # OpenConditionExcel
+    def ContentsOpenShow(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # OpenConditionExcel
+    def ContentsOpenShortcutUI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(20)
 def OpenConditionExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -199,34 +234,54 @@ def AddAccountLevel(builder, AccountLevel): builder.PrependInt64Slot(7, AccountL
 def OpenConditionExcelAddAccountLevel(builder, AccountLevel):
     """This method is deprecated. Please switch to AddAccountLevel."""
     return AddAccountLevel(builder, AccountLevel)
-def AddCampaignStageId(builder, CampaignStageId): builder.PrependInt64Slot(8, CampaignStageId, 0)
+def AddScenarioModeId(builder, ScenarioModeId): builder.PrependInt64Slot(8, ScenarioModeId, 0)
+def OpenConditionExcelAddScenarioModeId(builder, ScenarioModeId):
+    """This method is deprecated. Please switch to AddScenarioModeId."""
+    return AddScenarioModeId(builder, ScenarioModeId)
+def AddCampaignStageId(builder, CampaignStageId): builder.PrependInt64Slot(9, CampaignStageId, 0)
 def OpenConditionExcelAddCampaignStageId(builder, CampaignStageId):
     """This method is deprecated. Please switch to AddCampaignStageId."""
     return AddCampaignStageId(builder, CampaignStageId)
-def AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_): builder.PrependInt32Slot(9, MultipleConditionCheckType_, 0)
+def AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_): builder.PrependInt32Slot(10, MultipleConditionCheckType_, 0)
 def OpenConditionExcelAddMultipleConditionCheckType_(builder, MultipleConditionCheckType_):
     """This method is deprecated. Please switch to AddMultipleConditionCheckType_."""
     return AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_)
-def AddOpenDayOfWeek(builder, OpenDayOfWeek): builder.PrependInt32Slot(10, OpenDayOfWeek, 0)
+def AddOpenDayOfWeek(builder, OpenDayOfWeek): builder.PrependInt32Slot(11, OpenDayOfWeek, 0)
 def OpenConditionExcelAddOpenDayOfWeek(builder, OpenDayOfWeek):
     """This method is deprecated. Please switch to AddOpenDayOfWeek."""
     return AddOpenDayOfWeek(builder, OpenDayOfWeek)
-def AddOpenHour(builder, OpenHour): builder.PrependInt64Slot(11, OpenHour, 0)
+def AddOpenHour(builder, OpenHour): builder.PrependInt64Slot(12, OpenHour, 0)
 def OpenConditionExcelAddOpenHour(builder, OpenHour):
     """This method is deprecated. Please switch to AddOpenHour."""
     return AddOpenHour(builder, OpenHour)
-def AddCloseDayOfWeek(builder, CloseDayOfWeek): builder.PrependInt32Slot(12, CloseDayOfWeek, 0)
+def AddCloseDayOfWeek(builder, CloseDayOfWeek): builder.PrependInt32Slot(13, CloseDayOfWeek, 0)
 def OpenConditionExcelAddCloseDayOfWeek(builder, CloseDayOfWeek):
     """This method is deprecated. Please switch to AddCloseDayOfWeek."""
     return AddCloseDayOfWeek(builder, CloseDayOfWeek)
-def AddCloseHour(builder, CloseHour): builder.PrependInt64Slot(13, CloseHour, 0)
+def AddCloseHour(builder, CloseHour): builder.PrependInt64Slot(14, CloseHour, 0)
 def OpenConditionExcelAddCloseHour(builder, CloseHour):
     """This method is deprecated. Please switch to AddCloseHour."""
     return AddCloseHour(builder, CloseHour)
-def AddCafeRank(builder, CafeRank): builder.PrependInt64Slot(14, CafeRank, 0)
+def AddOpenedCafeId(builder, OpenedCafeId): builder.PrependInt64Slot(15, OpenedCafeId, 0)
+def OpenConditionExcelAddOpenedCafeId(builder, OpenedCafeId):
+    """This method is deprecated. Please switch to AddOpenedCafeId."""
+    return AddOpenedCafeId(builder, OpenedCafeId)
+def AddCafeIdforCafeRank(builder, CafeIdforCafeRank): builder.PrependInt64Slot(16, CafeIdforCafeRank, 0)
+def OpenConditionExcelAddCafeIdforCafeRank(builder, CafeIdforCafeRank):
+    """This method is deprecated. Please switch to AddCafeIdforCafeRank."""
+    return AddCafeIdforCafeRank(builder, CafeIdforCafeRank)
+def AddCafeRank(builder, CafeRank): builder.PrependInt64Slot(17, CafeRank, 0)
 def OpenConditionExcelAddCafeRank(builder, CafeRank):
     """This method is deprecated. Please switch to AddCafeRank."""
     return AddCafeRank(builder, CafeRank)
+def AddContentsOpenShow(builder, ContentsOpenShow): builder.PrependBoolSlot(18, ContentsOpenShow, 0)
+def OpenConditionExcelAddContentsOpenShow(builder, ContentsOpenShow):
+    """This method is deprecated. Please switch to AddContentsOpenShow."""
+    return AddContentsOpenShow(builder, ContentsOpenShow)
+def AddContentsOpenShortcutUI(builder, ContentsOpenShortcutUI): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(ContentsOpenShortcutUI), 0)
+def OpenConditionExcelAddContentsOpenShortcutUI(builder, ContentsOpenShortcutUI):
+    """This method is deprecated. Please switch to AddContentsOpenShortcutUI."""
+    return AddContentsOpenShortcutUI(builder, ContentsOpenShortcutUI)
 def End(builder): return builder.EndObject()
 def OpenConditionExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -59,42 +59,7 @@ class TutorialFailureImageExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # TutorialFailureImageExcel
-    def ImagePathTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # TutorialFailureImageExcel
-    def ImagePathTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # TutorialFailureImageExcel
-    def ImagePathEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # TutorialFailureImageExcel
-    def ImagePathDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # TutorialFailureImageExcel
-    def ImagePathFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(10)
+def Start(builder): builder.StartObject(5)
 def TutorialFailureImageExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -118,26 +83,6 @@ def AddImagePathJp(builder, ImagePathJp): builder.PrependUOffsetTRelativeSlot(4,
 def TutorialFailureImageExcelAddImagePathJp(builder, ImagePathJp):
     """This method is deprecated. Please switch to AddImagePathJp."""
     return AddImagePathJp(builder, ImagePathJp)
-def AddImagePathTh(builder, ImagePathTh): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathTh), 0)
-def TutorialFailureImageExcelAddImagePathTh(builder, ImagePathTh):
-    """This method is deprecated. Please switch to AddImagePathTh."""
-    return AddImagePathTh(builder, ImagePathTh)
-def AddImagePathTw(builder, ImagePathTw): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathTw), 0)
-def TutorialFailureImageExcelAddImagePathTw(builder, ImagePathTw):
-    """This method is deprecated. Please switch to AddImagePathTw."""
-    return AddImagePathTw(builder, ImagePathTw)
-def AddImagePathEn(builder, ImagePathEn): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathEn), 0)
-def TutorialFailureImageExcelAddImagePathEn(builder, ImagePathEn):
-    """This method is deprecated. Please switch to AddImagePathEn."""
-    return AddImagePathEn(builder, ImagePathEn)
-def AddImagePathDe(builder, ImagePathDe): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathDe), 0)
-def TutorialFailureImageExcelAddImagePathDe(builder, ImagePathDe):
-    """This method is deprecated. Please switch to AddImagePathDe."""
-    return AddImagePathDe(builder, ImagePathDe)
-def AddImagePathFr(builder, ImagePathFr): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ImagePathFr), 0)
-def TutorialFailureImageExcelAddImagePathFr(builder, ImagePathFr):
-    """This method is deprecated. Please switch to AddImagePathFr."""
-    return AddImagePathFr(builder, ImagePathFr)
 def End(builder): return builder.EndObject()
 def TutorialFailureImageExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

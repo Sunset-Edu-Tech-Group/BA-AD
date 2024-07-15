@@ -20,6 +20,16 @@ class CurrencyTypes(object):
     SchoolDungeonATicket = 14
     SchoolDungeonBTicket = 15
     SchoolDungeonCTicket = 16
-    MasterCoin = 17
-    Max = 18
+    TimeAttackDungeonTicket = 17
+    MasterCoin = 18
+    WorldRaidTicketA = 19
+    WorldRaidTicketB = 20
+    WorldRaidTicketC = 21
+    ChaserTotalTicket = 22
+    SchoolDungeonTotalTicket = 23
+    EliminateTicketA = 24
+    EliminateTicketB = 25
+    EliminateTicketC = 26
+    EliminateTicketD = 27
+    Max = 28
 

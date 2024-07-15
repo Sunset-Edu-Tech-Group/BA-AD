@@ -7,8 +7,6 @@ class CafeCharacterState(object):
     Idle = 1
     Walk = 2
     Reaction = 3
-    Speedrace = 4
-    Hockey1 = 5
-    Hockey2 = 6
-    Max = 7
+    Interaction = 4
+    Max = 5
 

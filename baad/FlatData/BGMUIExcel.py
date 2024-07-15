@@ -38,7 +38,28 @@ class BGMUIExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(2)
+    # BGMUIExcel
+    def BGMId2nd(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # BGMUIExcel
+    def BGMId3rd(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # BGMUIExcel
+    def EventContentId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(5)
 def BGMUIExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -50,6 +71,18 @@ def AddBGMId(builder, BGMId): builder.PrependInt64Slot(1, BGMId, 0)
 def BGMUIExcelAddBGMId(builder, BGMId):
     """This method is deprecated. Please switch to AddBGMId."""
     return AddBGMId(builder, BGMId)
+def AddBGMId2nd(builder, BGMId2nd): builder.PrependInt64Slot(2, BGMId2nd, 0)
+def BGMUIExcelAddBGMId2nd(builder, BGMId2nd):
+    """This method is deprecated. Please switch to AddBGMId2nd."""
+    return AddBGMId2nd(builder, BGMId2nd)
+def AddBGMId3rd(builder, BGMId3rd): builder.PrependInt64Slot(3, BGMId3rd, 0)
+def BGMUIExcelAddBGMId3rd(builder, BGMId3rd):
+    """This method is deprecated. Please switch to AddBGMId3rd."""
+    return AddBGMId3rd(builder, BGMId3rd)
+def AddEventContentId(builder, EventContentId): builder.PrependInt64Slot(4, EventContentId, 0)
+def BGMUIExcelAddEventContentId(builder, EventContentId):
+    """This method is deprecated. Please switch to AddEventContentId."""
+    return AddEventContentId(builder, EventContentId)
 def End(builder): return builder.EndObject()
 def BGMUIExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

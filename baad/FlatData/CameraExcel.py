@@ -67,34 +67,41 @@ class CameraExcel(object):
         return False
 
     # CameraExcel
-    def LeftMargin(self):
+    def MoveInstantlyRotationSave(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # CameraExcel
-    def BottomMargin(self):
+    def LeftMargin(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # CameraExcel
-    def IgnoreEnemies(self):
+    def BottomMargin(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # CameraExcel
+    def IgnoreEnemies(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CameraExcel
     def UseRailPointCompensation(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def Start(builder): builder.StartObject(10)
+def Start(builder): builder.StartObject(11)
 def CameraExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -122,19 +129,23 @@ def AddMoveInstantly(builder, MoveInstantly): builder.PrependBoolSlot(5, MoveIns
 def CameraExcelAddMoveInstantly(builder, MoveInstantly):
     """This method is deprecated. Please switch to AddMoveInstantly."""
     return AddMoveInstantly(builder, MoveInstantly)
-def AddLeftMargin(builder, LeftMargin): builder.PrependFloat32Slot(6, LeftMargin, 0.0)
+def AddMoveInstantlyRotationSave(builder, MoveInstantlyRotationSave): builder.PrependBoolSlot(6, MoveInstantlyRotationSave, 0)
+def CameraExcelAddMoveInstantlyRotationSave(builder, MoveInstantlyRotationSave):
+    """This method is deprecated. Please switch to AddMoveInstantlyRotationSave."""
+    return AddMoveInstantlyRotationSave(builder, MoveInstantlyRotationSave)
+def AddLeftMargin(builder, LeftMargin): builder.PrependFloat32Slot(7, LeftMargin, 0.0)
 def CameraExcelAddLeftMargin(builder, LeftMargin):
     """This method is deprecated. Please switch to AddLeftMargin."""
     return AddLeftMargin(builder, LeftMargin)
-def AddBottomMargin(builder, BottomMargin): builder.PrependFloat32Slot(7, BottomMargin, 0.0)
+def AddBottomMargin(builder, BottomMargin): builder.PrependFloat32Slot(8, BottomMargin, 0.0)
 def CameraExcelAddBottomMargin(builder, BottomMargin):
     """This method is deprecated. Please switch to AddBottomMargin."""
     return AddBottomMargin(builder, BottomMargin)
-def AddIgnoreEnemies(builder, IgnoreEnemies): builder.PrependBoolSlot(8, IgnoreEnemies, 0)
+def AddIgnoreEnemies(builder, IgnoreEnemies): builder.PrependBoolSlot(9, IgnoreEnemies, 0)
 def CameraExcelAddIgnoreEnemies(builder, IgnoreEnemies):
     """This method is deprecated. Please switch to AddIgnoreEnemies."""
     return AddIgnoreEnemies(builder, IgnoreEnemies)
-def AddUseRailPointCompensation(builder, UseRailPointCompensation): builder.PrependBoolSlot(9, UseRailPointCompensation, 0)
+def AddUseRailPointCompensation(builder, UseRailPointCompensation): builder.PrependBoolSlot(10, UseRailPointCompensation, 0)
 def CameraExcelAddUseRailPointCompensation(builder, UseRailPointCompensation):
     """This method is deprecated. Please switch to AddUseRailPointCompensation."""
     return AddUseRailPointCompensation(builder, UseRailPointCompensation)

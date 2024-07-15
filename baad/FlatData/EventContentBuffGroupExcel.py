@@ -67,41 +67,62 @@ class EventContentBuffGroupExcel(object):
         return None
 
     # EventContentBuffGroupExcel
-    def EventContentBuffId2(self):
+    def BuffDescriptionIconPath1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentBuffGroupExcel
+    def EventContentBuffId2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # EventContentBuffGroupExcel
     def BuffNameLocalizeCodeId2(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentBuffGroupExcel
-    def EventContentDebuffId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # EventContentBuffGroupExcel
-    def DebuffNameLocalizeCodeId(self):
+    def BuffDescriptionIconPath2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentBuffGroupExcel
-    def BuffGroupProb(self):
+    def EventContentDebuffId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(11)
+    # EventContentBuffGroupExcel
+    def DebuffNameLocalizeCodeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentBuffGroupExcel
+    def DeBuffDescriptionIconPath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentBuffGroupExcel
+    def BuffGroupProb(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(14)
 def EventContentBuffGroupExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -129,23 +150,35 @@ def AddBuffNameLocalizeCodeId1(builder, BuffNameLocalizeCodeId1): builder.Prepen
 def EventContentBuffGroupExcelAddBuffNameLocalizeCodeId1(builder, BuffNameLocalizeCodeId1):
     """This method is deprecated. Please switch to AddBuffNameLocalizeCodeId1."""
     return AddBuffNameLocalizeCodeId1(builder, BuffNameLocalizeCodeId1)
-def AddEventContentBuffId2(builder, EventContentBuffId2): builder.PrependInt64Slot(6, EventContentBuffId2, 0)
+def AddBuffDescriptionIconPath1(builder, BuffDescriptionIconPath1): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(BuffDescriptionIconPath1), 0)
+def EventContentBuffGroupExcelAddBuffDescriptionIconPath1(builder, BuffDescriptionIconPath1):
+    """This method is deprecated. Please switch to AddBuffDescriptionIconPath1."""
+    return AddBuffDescriptionIconPath1(builder, BuffDescriptionIconPath1)
+def AddEventContentBuffId2(builder, EventContentBuffId2): builder.PrependInt64Slot(7, EventContentBuffId2, 0)
 def EventContentBuffGroupExcelAddEventContentBuffId2(builder, EventContentBuffId2):
     """This method is deprecated. Please switch to AddEventContentBuffId2."""
     return AddEventContentBuffId2(builder, EventContentBuffId2)
-def AddBuffNameLocalizeCodeId2(builder, BuffNameLocalizeCodeId2): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(BuffNameLocalizeCodeId2), 0)
+def AddBuffNameLocalizeCodeId2(builder, BuffNameLocalizeCodeId2): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BuffNameLocalizeCodeId2), 0)
 def EventContentBuffGroupExcelAddBuffNameLocalizeCodeId2(builder, BuffNameLocalizeCodeId2):
     """This method is deprecated. Please switch to AddBuffNameLocalizeCodeId2."""
     return AddBuffNameLocalizeCodeId2(builder, BuffNameLocalizeCodeId2)
-def AddEventContentDebuffId(builder, EventContentDebuffId): builder.PrependInt64Slot(8, EventContentDebuffId, 0)
+def AddBuffDescriptionIconPath2(builder, BuffDescriptionIconPath2): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(BuffDescriptionIconPath2), 0)
+def EventContentBuffGroupExcelAddBuffDescriptionIconPath2(builder, BuffDescriptionIconPath2):
+    """This method is deprecated. Please switch to AddBuffDescriptionIconPath2."""
+    return AddBuffDescriptionIconPath2(builder, BuffDescriptionIconPath2)
+def AddEventContentDebuffId(builder, EventContentDebuffId): builder.PrependInt64Slot(10, EventContentDebuffId, 0)
 def EventContentBuffGroupExcelAddEventContentDebuffId(builder, EventContentDebuffId):
     """This method is deprecated. Please switch to AddEventContentDebuffId."""
     return AddEventContentDebuffId(builder, EventContentDebuffId)
-def AddDebuffNameLocalizeCodeId(builder, DebuffNameLocalizeCodeId): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DebuffNameLocalizeCodeId), 0)
+def AddDebuffNameLocalizeCodeId(builder, DebuffNameLocalizeCodeId): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DebuffNameLocalizeCodeId), 0)
 def EventContentBuffGroupExcelAddDebuffNameLocalizeCodeId(builder, DebuffNameLocalizeCodeId):
     """This method is deprecated. Please switch to AddDebuffNameLocalizeCodeId."""
     return AddDebuffNameLocalizeCodeId(builder, DebuffNameLocalizeCodeId)
-def AddBuffGroupProb(builder, BuffGroupProb): builder.PrependInt64Slot(10, BuffGroupProb, 0)
+def AddDeBuffDescriptionIconPath(builder, DeBuffDescriptionIconPath): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(DeBuffDescriptionIconPath), 0)
+def EventContentBuffGroupExcelAddDeBuffDescriptionIconPath(builder, DeBuffDescriptionIconPath):
+    """This method is deprecated. Please switch to AddDeBuffDescriptionIconPath."""
+    return AddDeBuffDescriptionIconPath(builder, DeBuffDescriptionIconPath)
+def AddBuffGroupProb(builder, BuffGroupProb): builder.PrependInt64Slot(13, BuffGroupProb, 0)
 def EventContentBuffGroupExcelAddBuffGroupProb(builder, BuffGroupProb):
     """This method is deprecated. Please switch to AddBuffGroupProb."""
     return AddBuffGroupProb(builder, BuffGroupProb)

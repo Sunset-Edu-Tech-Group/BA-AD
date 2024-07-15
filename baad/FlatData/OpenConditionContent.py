@@ -44,4 +44,20 @@ class OpenConditionContent(object):
     Cafe_Invite = 38
     EventMiniGame_1 = 39
     SchoolDungeon = 40
+    TimeAttackDungeon = 41
+    ShiftingCraft = 42
+    WorldRaid = 43
+    Tactic_Skip = 44
+    Mulligan = 45
+    EventPermanent = 46
+    Main_L_1_2 = 47
+    Main_L_1_3 = 48
+    Main_L_1_4 = 49
+    EliminateRaid = 50
+    Cafe_2 = 51
+    Cafe_Invite_2 = 52
+    MultiFloorRaid = 53
+    StrategySkip = 54
+    MinigameDreamMaker = 55
+    Temp = 56
 

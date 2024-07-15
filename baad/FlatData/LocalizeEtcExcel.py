@@ -59,77 +59,7 @@ class LocalizeEtcExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # LocalizeEtcExcel
-    def NameTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def DescriptionTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def NameTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def DescriptionTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def NameEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def DescriptionEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def NameDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def DescriptionDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def NameFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # LocalizeEtcExcel
-    def DescriptionFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(15)
+def Start(builder): builder.StartObject(5)
 def LocalizeEtcExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -153,46 +83,6 @@ def AddDescriptionJp(builder, DescriptionJp): builder.PrependUOffsetTRelativeSlo
 def LocalizeEtcExcelAddDescriptionJp(builder, DescriptionJp):
     """This method is deprecated. Please switch to AddDescriptionJp."""
     return AddDescriptionJp(builder, DescriptionJp)
-def AddNameTh(builder, NameTh): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NameTh), 0)
-def LocalizeEtcExcelAddNameTh(builder, NameTh):
-    """This method is deprecated. Please switch to AddNameTh."""
-    return AddNameTh(builder, NameTh)
-def AddDescriptionTh(builder, DescriptionTh): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(DescriptionTh), 0)
-def LocalizeEtcExcelAddDescriptionTh(builder, DescriptionTh):
-    """This method is deprecated. Please switch to AddDescriptionTh."""
-    return AddDescriptionTh(builder, DescriptionTh)
-def AddNameTw(builder, NameTw): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(NameTw), 0)
-def LocalizeEtcExcelAddNameTw(builder, NameTw):
-    """This method is deprecated. Please switch to AddNameTw."""
-    return AddNameTw(builder, NameTw)
-def AddDescriptionTw(builder, DescriptionTw): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DescriptionTw), 0)
-def LocalizeEtcExcelAddDescriptionTw(builder, DescriptionTw):
-    """This method is deprecated. Please switch to AddDescriptionTw."""
-    return AddDescriptionTw(builder, DescriptionTw)
-def AddNameEn(builder, NameEn): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(NameEn), 0)
-def LocalizeEtcExcelAddNameEn(builder, NameEn):
-    """This method is deprecated. Please switch to AddNameEn."""
-    return AddNameEn(builder, NameEn)
-def AddDescriptionEn(builder, DescriptionEn): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DescriptionEn), 0)
-def LocalizeEtcExcelAddDescriptionEn(builder, DescriptionEn):
-    """This method is deprecated. Please switch to AddDescriptionEn."""
-    return AddDescriptionEn(builder, DescriptionEn)
-def AddNameDe(builder, NameDe): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(NameDe), 0)
-def LocalizeEtcExcelAddNameDe(builder, NameDe):
-    """This method is deprecated. Please switch to AddNameDe."""
-    return AddNameDe(builder, NameDe)
-def AddDescriptionDe(builder, DescriptionDe): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(DescriptionDe), 0)
-def LocalizeEtcExcelAddDescriptionDe(builder, DescriptionDe):
-    """This method is deprecated. Please switch to AddDescriptionDe."""
-    return AddDescriptionDe(builder, DescriptionDe)
-def AddNameFr(builder, NameFr): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NameFr), 0)
-def LocalizeEtcExcelAddNameFr(builder, NameFr):
-    """This method is deprecated. Please switch to AddNameFr."""
-    return AddNameFr(builder, NameFr)
-def AddDescriptionFr(builder, DescriptionFr): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(DescriptionFr), 0)
-def LocalizeEtcExcelAddDescriptionFr(builder, DescriptionFr):
-    """This method is deprecated. Please switch to AddDescriptionFr."""
-    return AddDescriptionFr(builder, DescriptionFr)
 def End(builder): return builder.EndObject()
 def LocalizeEtcExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

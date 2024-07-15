@@ -186,146 +186,307 @@ class CharacterStatExcel(object):
         return 0
 
     # CharacterStatExcel
-    def AmmoCount(self):
+    def DefensePenetrationResist1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def AmmoCost(self):
+    def DefensePenetrationResist100(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def IgnoreDelayCount(self):
+    def EnhanceExplosionRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def NormalAttackSpeed(self):
+    def EnhancePierceRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def Range(self):
+    def EnhanceMysticRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def InitialRangeRate(self):
+    def EnhanceSonicRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def MoveSpeed(self):
+    def EnhanceSiegeRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def SightPoint(self):
+    def EnhanceNormalRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def ActiveGauge(self):
+    def EnhanceLightArmorRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def GroggyGauge(self):
+    def EnhanceHeavyArmorRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def GroggyTime(self):
+    def EnhanceUnarmedRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def StrategyMobility(self):
+    def EnhanceElasticArmorRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def ActionCount(self):
+    def EnhanceStructureRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def StrategySightRange(self):
+    def EnhanceNormalArmorRate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def DamageRatio(self):
+    def ExtendBuffDuration(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def DamagedRatio(self):
+    def ExtendDebuffDuration(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
-    def StreetBattleAdaptation(self):
+    def ExtendCrowdControlDuration(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def AmmoCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def AmmoCost(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def IgnoreDelayCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def NormalAttackSpeed(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def Range(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def InitialRangeRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def MoveSpeed(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def SightPoint(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def ActiveGauge(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def GroggyGauge(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def GroggyTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def StrategyMobility(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def ActionCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def StrategySightRange(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def DamageRatio(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def DamagedRatio(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def DamageRatio2Increase(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def DamageRatio2Decrease(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def DamagedRatio2Increase(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def DamagedRatio2Decrease(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def ExDamagedRatioIncrease(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def ExDamagedRatioDecrease(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CharacterStatExcel
+    def StreetBattleAdaptation(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
     def OutdoorBattleAdaptation(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
     def IndoorBattleAdaptation(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterStatExcel
     def RegenCost(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(43)
+def Start(builder): builder.StartObject(66)
 def CharacterStatExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -421,83 +582,175 @@ def AddDefensePenetration100(builder, DefensePenetration100): builder.PrependInt
 def CharacterStatExcelAddDefensePenetration100(builder, DefensePenetration100):
     """This method is deprecated. Please switch to AddDefensePenetration100."""
     return AddDefensePenetration100(builder, DefensePenetration100)
-def AddAmmoCount(builder, AmmoCount): builder.PrependInt64Slot(23, AmmoCount, 0)
+def AddDefensePenetrationResist1(builder, DefensePenetrationResist1): builder.PrependInt64Slot(23, DefensePenetrationResist1, 0)
+def CharacterStatExcelAddDefensePenetrationResist1(builder, DefensePenetrationResist1):
+    """This method is deprecated. Please switch to AddDefensePenetrationResist1."""
+    return AddDefensePenetrationResist1(builder, DefensePenetrationResist1)
+def AddDefensePenetrationResist100(builder, DefensePenetrationResist100): builder.PrependInt64Slot(24, DefensePenetrationResist100, 0)
+def CharacterStatExcelAddDefensePenetrationResist100(builder, DefensePenetrationResist100):
+    """This method is deprecated. Please switch to AddDefensePenetrationResist100."""
+    return AddDefensePenetrationResist100(builder, DefensePenetrationResist100)
+def AddEnhanceExplosionRate(builder, EnhanceExplosionRate): builder.PrependInt64Slot(25, EnhanceExplosionRate, 0)
+def CharacterStatExcelAddEnhanceExplosionRate(builder, EnhanceExplosionRate):
+    """This method is deprecated. Please switch to AddEnhanceExplosionRate."""
+    return AddEnhanceExplosionRate(builder, EnhanceExplosionRate)
+def AddEnhancePierceRate(builder, EnhancePierceRate): builder.PrependInt64Slot(26, EnhancePierceRate, 0)
+def CharacterStatExcelAddEnhancePierceRate(builder, EnhancePierceRate):
+    """This method is deprecated. Please switch to AddEnhancePierceRate."""
+    return AddEnhancePierceRate(builder, EnhancePierceRate)
+def AddEnhanceMysticRate(builder, EnhanceMysticRate): builder.PrependInt64Slot(27, EnhanceMysticRate, 0)
+def CharacterStatExcelAddEnhanceMysticRate(builder, EnhanceMysticRate):
+    """This method is deprecated. Please switch to AddEnhanceMysticRate."""
+    return AddEnhanceMysticRate(builder, EnhanceMysticRate)
+def AddEnhanceSonicRate(builder, EnhanceSonicRate): builder.PrependInt64Slot(28, EnhanceSonicRate, 0)
+def CharacterStatExcelAddEnhanceSonicRate(builder, EnhanceSonicRate):
+    """This method is deprecated. Please switch to AddEnhanceSonicRate."""
+    return AddEnhanceSonicRate(builder, EnhanceSonicRate)
+def AddEnhanceSiegeRate(builder, EnhanceSiegeRate): builder.PrependInt64Slot(29, EnhanceSiegeRate, 0)
+def CharacterStatExcelAddEnhanceSiegeRate(builder, EnhanceSiegeRate):
+    """This method is deprecated. Please switch to AddEnhanceSiegeRate."""
+    return AddEnhanceSiegeRate(builder, EnhanceSiegeRate)
+def AddEnhanceNormalRate(builder, EnhanceNormalRate): builder.PrependInt64Slot(30, EnhanceNormalRate, 0)
+def CharacterStatExcelAddEnhanceNormalRate(builder, EnhanceNormalRate):
+    """This method is deprecated. Please switch to AddEnhanceNormalRate."""
+    return AddEnhanceNormalRate(builder, EnhanceNormalRate)
+def AddEnhanceLightArmorRate(builder, EnhanceLightArmorRate): builder.PrependInt64Slot(31, EnhanceLightArmorRate, 0)
+def CharacterStatExcelAddEnhanceLightArmorRate(builder, EnhanceLightArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceLightArmorRate."""
+    return AddEnhanceLightArmorRate(builder, EnhanceLightArmorRate)
+def AddEnhanceHeavyArmorRate(builder, EnhanceHeavyArmorRate): builder.PrependInt64Slot(32, EnhanceHeavyArmorRate, 0)
+def CharacterStatExcelAddEnhanceHeavyArmorRate(builder, EnhanceHeavyArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceHeavyArmorRate."""
+    return AddEnhanceHeavyArmorRate(builder, EnhanceHeavyArmorRate)
+def AddEnhanceUnarmedRate(builder, EnhanceUnarmedRate): builder.PrependInt64Slot(33, EnhanceUnarmedRate, 0)
+def CharacterStatExcelAddEnhanceUnarmedRate(builder, EnhanceUnarmedRate):
+    """This method is deprecated. Please switch to AddEnhanceUnarmedRate."""
+    return AddEnhanceUnarmedRate(builder, EnhanceUnarmedRate)
+def AddEnhanceElasticArmorRate(builder, EnhanceElasticArmorRate): builder.PrependInt64Slot(34, EnhanceElasticArmorRate, 0)
+def CharacterStatExcelAddEnhanceElasticArmorRate(builder, EnhanceElasticArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceElasticArmorRate."""
+    return AddEnhanceElasticArmorRate(builder, EnhanceElasticArmorRate)
+def AddEnhanceStructureRate(builder, EnhanceStructureRate): builder.PrependInt64Slot(35, EnhanceStructureRate, 0)
+def CharacterStatExcelAddEnhanceStructureRate(builder, EnhanceStructureRate):
+    """This method is deprecated. Please switch to AddEnhanceStructureRate."""
+    return AddEnhanceStructureRate(builder, EnhanceStructureRate)
+def AddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate): builder.PrependInt64Slot(36, EnhanceNormalArmorRate, 0)
+def CharacterStatExcelAddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceNormalArmorRate."""
+    return AddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate)
+def AddExtendBuffDuration(builder, ExtendBuffDuration): builder.PrependInt64Slot(37, ExtendBuffDuration, 0)
+def CharacterStatExcelAddExtendBuffDuration(builder, ExtendBuffDuration):
+    """This method is deprecated. Please switch to AddExtendBuffDuration."""
+    return AddExtendBuffDuration(builder, ExtendBuffDuration)
+def AddExtendDebuffDuration(builder, ExtendDebuffDuration): builder.PrependInt64Slot(38, ExtendDebuffDuration, 0)
+def CharacterStatExcelAddExtendDebuffDuration(builder, ExtendDebuffDuration):
+    """This method is deprecated. Please switch to AddExtendDebuffDuration."""
+    return AddExtendDebuffDuration(builder, ExtendDebuffDuration)
+def AddExtendCrowdControlDuration(builder, ExtendCrowdControlDuration): builder.PrependInt64Slot(39, ExtendCrowdControlDuration, 0)
+def CharacterStatExcelAddExtendCrowdControlDuration(builder, ExtendCrowdControlDuration):
+    """This method is deprecated. Please switch to AddExtendCrowdControlDuration."""
+    return AddExtendCrowdControlDuration(builder, ExtendCrowdControlDuration)
+def AddAmmoCount(builder, AmmoCount): builder.PrependInt64Slot(40, AmmoCount, 0)
 def CharacterStatExcelAddAmmoCount(builder, AmmoCount):
     """This method is deprecated. Please switch to AddAmmoCount."""
     return AddAmmoCount(builder, AmmoCount)
-def AddAmmoCost(builder, AmmoCost): builder.PrependInt64Slot(24, AmmoCost, 0)
+def AddAmmoCost(builder, AmmoCost): builder.PrependInt64Slot(41, AmmoCost, 0)
 def CharacterStatExcelAddAmmoCost(builder, AmmoCost):
     """This method is deprecated. Please switch to AddAmmoCost."""
     return AddAmmoCost(builder, AmmoCost)
-def AddIgnoreDelayCount(builder, IgnoreDelayCount): builder.PrependInt64Slot(25, IgnoreDelayCount, 0)
+def AddIgnoreDelayCount(builder, IgnoreDelayCount): builder.PrependInt64Slot(42, IgnoreDelayCount, 0)
 def CharacterStatExcelAddIgnoreDelayCount(builder, IgnoreDelayCount):
     """This method is deprecated. Please switch to AddIgnoreDelayCount."""
     return AddIgnoreDelayCount(builder, IgnoreDelayCount)
-def AddNormalAttackSpeed(builder, NormalAttackSpeed): builder.PrependInt64Slot(26, NormalAttackSpeed, 0)
+def AddNormalAttackSpeed(builder, NormalAttackSpeed): builder.PrependInt64Slot(43, NormalAttackSpeed, 0)
 def CharacterStatExcelAddNormalAttackSpeed(builder, NormalAttackSpeed):
     """This method is deprecated. Please switch to AddNormalAttackSpeed."""
     return AddNormalAttackSpeed(builder, NormalAttackSpeed)
-def AddRange(builder, Range): builder.PrependInt64Slot(27, Range, 0)
+def AddRange(builder, Range): builder.PrependInt64Slot(44, Range, 0)
 def CharacterStatExcelAddRange(builder, Range):
     """This method is deprecated. Please switch to AddRange."""
     return AddRange(builder, Range)
-def AddInitialRangeRate(builder, InitialRangeRate): builder.PrependInt64Slot(28, InitialRangeRate, 0)
+def AddInitialRangeRate(builder, InitialRangeRate): builder.PrependInt64Slot(45, InitialRangeRate, 0)
 def CharacterStatExcelAddInitialRangeRate(builder, InitialRangeRate):
     """This method is deprecated. Please switch to AddInitialRangeRate."""
     return AddInitialRangeRate(builder, InitialRangeRate)
-def AddMoveSpeed(builder, MoveSpeed): builder.PrependInt64Slot(29, MoveSpeed, 0)
+def AddMoveSpeed(builder, MoveSpeed): builder.PrependInt64Slot(46, MoveSpeed, 0)
 def CharacterStatExcelAddMoveSpeed(builder, MoveSpeed):
     """This method is deprecated. Please switch to AddMoveSpeed."""
     return AddMoveSpeed(builder, MoveSpeed)
-def AddSightPoint(builder, SightPoint): builder.PrependInt64Slot(30, SightPoint, 0)
+def AddSightPoint(builder, SightPoint): builder.PrependInt64Slot(47, SightPoint, 0)
 def CharacterStatExcelAddSightPoint(builder, SightPoint):
     """This method is deprecated. Please switch to AddSightPoint."""
     return AddSightPoint(builder, SightPoint)
-def AddActiveGauge(builder, ActiveGauge): builder.PrependInt64Slot(31, ActiveGauge, 0)
+def AddActiveGauge(builder, ActiveGauge): builder.PrependInt64Slot(48, ActiveGauge, 0)
 def CharacterStatExcelAddActiveGauge(builder, ActiveGauge):
     """This method is deprecated. Please switch to AddActiveGauge."""
     return AddActiveGauge(builder, ActiveGauge)
-def AddGroggyGauge(builder, GroggyGauge): builder.PrependInt32Slot(32, GroggyGauge, 0)
+def AddGroggyGauge(builder, GroggyGauge): builder.PrependInt32Slot(49, GroggyGauge, 0)
 def CharacterStatExcelAddGroggyGauge(builder, GroggyGauge):
     """This method is deprecated. Please switch to AddGroggyGauge."""
     return AddGroggyGauge(builder, GroggyGauge)
-def AddGroggyTime(builder, GroggyTime): builder.PrependInt32Slot(33, GroggyTime, 0)
+def AddGroggyTime(builder, GroggyTime): builder.PrependInt32Slot(50, GroggyTime, 0)
 def CharacterStatExcelAddGroggyTime(builder, GroggyTime):
     """This method is deprecated. Please switch to AddGroggyTime."""
     return AddGroggyTime(builder, GroggyTime)
-def AddStrategyMobility(builder, StrategyMobility): builder.PrependInt64Slot(34, StrategyMobility, 0)
+def AddStrategyMobility(builder, StrategyMobility): builder.PrependInt64Slot(51, StrategyMobility, 0)
 def CharacterStatExcelAddStrategyMobility(builder, StrategyMobility):
     """This method is deprecated. Please switch to AddStrategyMobility."""
     return AddStrategyMobility(builder, StrategyMobility)
-def AddActionCount(builder, ActionCount): builder.PrependInt64Slot(35, ActionCount, 0)
+def AddActionCount(builder, ActionCount): builder.PrependInt64Slot(52, ActionCount, 0)
 def CharacterStatExcelAddActionCount(builder, ActionCount):
     """This method is deprecated. Please switch to AddActionCount."""
     return AddActionCount(builder, ActionCount)
-def AddStrategySightRange(builder, StrategySightRange): builder.PrependInt64Slot(36, StrategySightRange, 0)
+def AddStrategySightRange(builder, StrategySightRange): builder.PrependInt64Slot(53, StrategySightRange, 0)
 def CharacterStatExcelAddStrategySightRange(builder, StrategySightRange):
     """This method is deprecated. Please switch to AddStrategySightRange."""
     return AddStrategySightRange(builder, StrategySightRange)
-def AddDamageRatio(builder, DamageRatio): builder.PrependInt64Slot(37, DamageRatio, 0)
+def AddDamageRatio(builder, DamageRatio): builder.PrependInt64Slot(54, DamageRatio, 0)
 def CharacterStatExcelAddDamageRatio(builder, DamageRatio):
     """This method is deprecated. Please switch to AddDamageRatio."""
     return AddDamageRatio(builder, DamageRatio)
-def AddDamagedRatio(builder, DamagedRatio): builder.PrependInt64Slot(38, DamagedRatio, 0)
+def AddDamagedRatio(builder, DamagedRatio): builder.PrependInt64Slot(55, DamagedRatio, 0)
 def CharacterStatExcelAddDamagedRatio(builder, DamagedRatio):
     """This method is deprecated. Please switch to AddDamagedRatio."""
     return AddDamagedRatio(builder, DamagedRatio)
-def AddStreetBattleAdaptation(builder, StreetBattleAdaptation): builder.PrependInt32Slot(39, StreetBattleAdaptation, 0)
+def AddDamageRatio2Increase(builder, DamageRatio2Increase): builder.PrependInt64Slot(56, DamageRatio2Increase, 0)
+def CharacterStatExcelAddDamageRatio2Increase(builder, DamageRatio2Increase):
+    """This method is deprecated. Please switch to AddDamageRatio2Increase."""
+    return AddDamageRatio2Increase(builder, DamageRatio2Increase)
+def AddDamageRatio2Decrease(builder, DamageRatio2Decrease): builder.PrependInt64Slot(57, DamageRatio2Decrease, 0)
+def CharacterStatExcelAddDamageRatio2Decrease(builder, DamageRatio2Decrease):
+    """This method is deprecated. Please switch to AddDamageRatio2Decrease."""
+    return AddDamageRatio2Decrease(builder, DamageRatio2Decrease)
+def AddDamagedRatio2Increase(builder, DamagedRatio2Increase): builder.PrependInt64Slot(58, DamagedRatio2Increase, 0)
+def CharacterStatExcelAddDamagedRatio2Increase(builder, DamagedRatio2Increase):
+    """This method is deprecated. Please switch to AddDamagedRatio2Increase."""
+    return AddDamagedRatio2Increase(builder, DamagedRatio2Increase)
+def AddDamagedRatio2Decrease(builder, DamagedRatio2Decrease): builder.PrependInt64Slot(59, DamagedRatio2Decrease, 0)
+def CharacterStatExcelAddDamagedRatio2Decrease(builder, DamagedRatio2Decrease):
+    """This method is deprecated. Please switch to AddDamagedRatio2Decrease."""
+    return AddDamagedRatio2Decrease(builder, DamagedRatio2Decrease)
+def AddExDamagedRatioIncrease(builder, ExDamagedRatioIncrease): builder.PrependInt64Slot(60, ExDamagedRatioIncrease, 0)
+def CharacterStatExcelAddExDamagedRatioIncrease(builder, ExDamagedRatioIncrease):
+    """This method is deprecated. Please switch to AddExDamagedRatioIncrease."""
+    return AddExDamagedRatioIncrease(builder, ExDamagedRatioIncrease)
+def AddExDamagedRatioDecrease(builder, ExDamagedRatioDecrease): builder.PrependInt64Slot(61, ExDamagedRatioDecrease, 0)
+def CharacterStatExcelAddExDamagedRatioDecrease(builder, ExDamagedRatioDecrease):
+    """This method is deprecated. Please switch to AddExDamagedRatioDecrease."""
+    return AddExDamagedRatioDecrease(builder, ExDamagedRatioDecrease)
+def AddStreetBattleAdaptation(builder, StreetBattleAdaptation): builder.PrependInt32Slot(62, StreetBattleAdaptation, 0)
 def CharacterStatExcelAddStreetBattleAdaptation(builder, StreetBattleAdaptation):
     """This method is deprecated. Please switch to AddStreetBattleAdaptation."""
     return AddStreetBattleAdaptation(builder, StreetBattleAdaptation)
-def AddOutdoorBattleAdaptation(builder, OutdoorBattleAdaptation): builder.PrependInt32Slot(40, OutdoorBattleAdaptation, 0)
+def AddOutdoorBattleAdaptation(builder, OutdoorBattleAdaptation): builder.PrependInt32Slot(63, OutdoorBattleAdaptation, 0)
 def CharacterStatExcelAddOutdoorBattleAdaptation(builder, OutdoorBattleAdaptation):
     """This method is deprecated. Please switch to AddOutdoorBattleAdaptation."""
     return AddOutdoorBattleAdaptation(builder, OutdoorBattleAdaptation)
-def AddIndoorBattleAdaptation(builder, IndoorBattleAdaptation): builder.PrependInt32Slot(41, IndoorBattleAdaptation, 0)
+def AddIndoorBattleAdaptation(builder, IndoorBattleAdaptation): builder.PrependInt32Slot(64, IndoorBattleAdaptation, 0)
 def CharacterStatExcelAddIndoorBattleAdaptation(builder, IndoorBattleAdaptation):
     """This method is deprecated. Please switch to AddIndoorBattleAdaptation."""
     return AddIndoorBattleAdaptation(builder, IndoorBattleAdaptation)
-def AddRegenCost(builder, RegenCost): builder.PrependInt64Slot(42, RegenCost, 0)
+def AddRegenCost(builder, RegenCost): builder.PrependInt64Slot(65, RegenCost, 0)
 def CharacterStatExcelAddRegenCost(builder, RegenCost):
     """This method is deprecated. Please switch to AddRegenCost."""
     return AddRegenCost(builder, RegenCost)

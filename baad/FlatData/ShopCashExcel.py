@@ -67,81 +67,81 @@ class ShopCashExcel(object):
         return 0
 
     # ShopCashExcel
-    def CategoryType(self):
+    def RenewalDisplayOrder(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ShopCashExcel
-    def DisplayTag(self):
+    def CategoryType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ShopCashExcel
-    def SalePeriodFrom(self):
+    def DisplayTag(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
     # ShopCashExcel
-    def SalePeriodTo(self):
+    def SalePeriodFrom(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ShopCashExcel
-    def PeriodTag(self):
+    def SalePeriodTo(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ShopCashExcel
+    def PeriodTag(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ShopCashExcel
     def AccountLevelLimit(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ShopCashExcel
     def AccountLevelHide(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ShopCashExcel
     def ClearMissionLimit(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ShopCashExcel
     def ClearMissionHide(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # ShopCashExcel
     def PurchaseReportEventName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
-
-    # ShopCashExcel
-    def PackageClientType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
 
 def Start(builder): builder.StartObject(17)
 def ShopCashExcelStart(builder):
@@ -171,50 +171,50 @@ def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(5, DisplayO
 def ShopCashExcelAddDisplayOrder(builder, DisplayOrder):
     """This method is deprecated. Please switch to AddDisplayOrder."""
     return AddDisplayOrder(builder, DisplayOrder)
-def AddCategoryType(builder, CategoryType): builder.PrependInt32Slot(6, CategoryType, 0)
+def AddRenewalDisplayOrder(builder, RenewalDisplayOrder): builder.PrependInt64Slot(6, RenewalDisplayOrder, 0)
+def ShopCashExcelAddRenewalDisplayOrder(builder, RenewalDisplayOrder):
+    """This method is deprecated. Please switch to AddRenewalDisplayOrder."""
+    return AddRenewalDisplayOrder(builder, RenewalDisplayOrder)
+def AddCategoryType(builder, CategoryType): builder.PrependInt32Slot(7, CategoryType, 0)
 def ShopCashExcelAddCategoryType(builder, CategoryType):
     """This method is deprecated. Please switch to AddCategoryType."""
     return AddCategoryType(builder, CategoryType)
-def AddDisplayTag(builder, DisplayTag): builder.PrependInt32Slot(7, DisplayTag, 0)
+def AddDisplayTag(builder, DisplayTag): builder.PrependInt32Slot(8, DisplayTag, 0)
 def ShopCashExcelAddDisplayTag(builder, DisplayTag):
     """This method is deprecated. Please switch to AddDisplayTag."""
     return AddDisplayTag(builder, DisplayTag)
-def AddSalePeriodFrom(builder, SalePeriodFrom): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SalePeriodFrom), 0)
+def AddSalePeriodFrom(builder, SalePeriodFrom): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SalePeriodFrom), 0)
 def ShopCashExcelAddSalePeriodFrom(builder, SalePeriodFrom):
     """This method is deprecated. Please switch to AddSalePeriodFrom."""
     return AddSalePeriodFrom(builder, SalePeriodFrom)
-def AddSalePeriodTo(builder, SalePeriodTo): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SalePeriodTo), 0)
+def AddSalePeriodTo(builder, SalePeriodTo): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SalePeriodTo), 0)
 def ShopCashExcelAddSalePeriodTo(builder, SalePeriodTo):
     """This method is deprecated. Please switch to AddSalePeriodTo."""
     return AddSalePeriodTo(builder, SalePeriodTo)
-def AddPeriodTag(builder, PeriodTag): builder.PrependBoolSlot(10, PeriodTag, 0)
+def AddPeriodTag(builder, PeriodTag): builder.PrependBoolSlot(11, PeriodTag, 0)
 def ShopCashExcelAddPeriodTag(builder, PeriodTag):
     """This method is deprecated. Please switch to AddPeriodTag."""
     return AddPeriodTag(builder, PeriodTag)
-def AddAccountLevelLimit(builder, AccountLevelLimit): builder.PrependInt64Slot(11, AccountLevelLimit, 0)
+def AddAccountLevelLimit(builder, AccountLevelLimit): builder.PrependInt64Slot(12, AccountLevelLimit, 0)
 def ShopCashExcelAddAccountLevelLimit(builder, AccountLevelLimit):
     """This method is deprecated. Please switch to AddAccountLevelLimit."""
     return AddAccountLevelLimit(builder, AccountLevelLimit)
-def AddAccountLevelHide(builder, AccountLevelHide): builder.PrependBoolSlot(12, AccountLevelHide, 0)
+def AddAccountLevelHide(builder, AccountLevelHide): builder.PrependBoolSlot(13, AccountLevelHide, 0)
 def ShopCashExcelAddAccountLevelHide(builder, AccountLevelHide):
     """This method is deprecated. Please switch to AddAccountLevelHide."""
     return AddAccountLevelHide(builder, AccountLevelHide)
-def AddClearMissionLimit(builder, ClearMissionLimit): builder.PrependInt64Slot(13, ClearMissionLimit, 0)
+def AddClearMissionLimit(builder, ClearMissionLimit): builder.PrependInt64Slot(14, ClearMissionLimit, 0)
 def ShopCashExcelAddClearMissionLimit(builder, ClearMissionLimit):
     """This method is deprecated. Please switch to AddClearMissionLimit."""
     return AddClearMissionLimit(builder, ClearMissionLimit)
-def AddClearMissionHide(builder, ClearMissionHide): builder.PrependBoolSlot(14, ClearMissionHide, 0)
+def AddClearMissionHide(builder, ClearMissionHide): builder.PrependBoolSlot(15, ClearMissionHide, 0)
 def ShopCashExcelAddClearMissionHide(builder, ClearMissionHide):
     """This method is deprecated. Please switch to AddClearMissionHide."""
     return AddClearMissionHide(builder, ClearMissionHide)
-def AddPurchaseReportEventName(builder, PurchaseReportEventName): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(PurchaseReportEventName), 0)
+def AddPurchaseReportEventName(builder, PurchaseReportEventName): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(PurchaseReportEventName), 0)
 def ShopCashExcelAddPurchaseReportEventName(builder, PurchaseReportEventName):
     """This method is deprecated. Please switch to AddPurchaseReportEventName."""
     return AddPurchaseReportEventName(builder, PurchaseReportEventName)
-def AddPackageClientType(builder, PackageClientType): builder.PrependInt32Slot(16, PackageClientType, 0)
-def ShopCashExcelAddPackageClientType(builder, PackageClientType):
-    """This method is deprecated. Please switch to AddPackageClientType."""
-    return AddPackageClientType(builder, PackageClientType)
 def End(builder): return builder.EndObject()
 def ShopCashExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

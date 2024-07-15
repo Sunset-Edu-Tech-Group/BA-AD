@@ -73,7 +73,14 @@ class CombatEmojiExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(7)
+    # CombatEmojiExcel
+    def ShowDefaultBG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def Start(builder): builder.StartObject(8)
 def CombatEmojiExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -105,6 +112,10 @@ def AddShowEmojiDelay(builder, ShowEmojiDelay): builder.PrependInt32Slot(6, Show
 def CombatEmojiExcelAddShowEmojiDelay(builder, ShowEmojiDelay):
     """This method is deprecated. Please switch to AddShowEmojiDelay."""
     return AddShowEmojiDelay(builder, ShowEmojiDelay)
+def AddShowDefaultBG(builder, ShowDefaultBG): builder.PrependBoolSlot(7, ShowDefaultBG, 0)
+def CombatEmojiExcelAddShowDefaultBG(builder, ShowDefaultBG):
+    """This method is deprecated. Please switch to AddShowDefaultBG."""
+    return AddShowDefaultBG(builder, ShowDefaultBG)
 def End(builder): return builder.EndObject()
 def CombatEmojiExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

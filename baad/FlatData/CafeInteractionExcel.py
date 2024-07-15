@@ -32,8 +32,29 @@ class CafeInteractionExcel(object):
         return 0
 
     # CafeInteractionExcel
-    def BubbleType_(self, j):
+    def IgnoreIfUnobtained(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CafeInteractionExcel
+    def IgnoreIfUnobtainedStartDate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CafeInteractionExcel
+    def IgnoreIfUnobtainedEndDate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CafeInteractionExcel
+    def BubbleType_(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -41,26 +62,26 @@ class CafeInteractionExcel(object):
 
     # CafeInteractionExcel
     def BubbleType_AsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # CafeInteractionExcel
     def BubbleType_Length(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CafeInteractionExcel
     def BubbleType_IsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         return o == 0
 
     # CafeInteractionExcel
     def BubbleDuration(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -68,72 +89,65 @@ class CafeInteractionExcel(object):
 
     # CafeInteractionExcel
     def BubbleDurationAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # CafeInteractionExcel
     def BubbleDurationLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CafeInteractionExcel
     def BubbleDurationIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
     # CafeInteractionExcel
     def FavorEmoticonRewardParcelType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CafeInteractionExcel
     def FavorEmoticonRewardId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeInteractionExcel
     def FavorEmoticonRewardAmount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CafeInteractionExcel
-    def CafeCharacterState_(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+    def CafeCharacterState(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return 0
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
 
     # CafeInteractionExcel
-    def CafeCharacterState_AsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
-        return 0
-
-    # CafeInteractionExcel
-    def CafeCharacterState_Length(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+    def CafeCharacterStateLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CafeInteractionExcel
-    def CafeCharacterState_IsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+    def CafeCharacterStateIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
-def Start(builder): builder.StartObject(7)
+def Start(builder): builder.StartObject(10)
 def CafeInteractionExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -141,7 +155,19 @@ def AddCharacterId(builder, CharacterId): builder.PrependInt64Slot(0, CharacterI
 def CafeInteractionExcelAddCharacterId(builder, CharacterId):
     """This method is deprecated. Please switch to AddCharacterId."""
     return AddCharacterId(builder, CharacterId)
-def AddBubbleType_(builder, BubbleType_): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(BubbleType_), 0)
+def AddIgnoreIfUnobtained(builder, IgnoreIfUnobtained): builder.PrependBoolSlot(1, IgnoreIfUnobtained, 0)
+def CafeInteractionExcelAddIgnoreIfUnobtained(builder, IgnoreIfUnobtained):
+    """This method is deprecated. Please switch to AddIgnoreIfUnobtained."""
+    return AddIgnoreIfUnobtained(builder, IgnoreIfUnobtained)
+def AddIgnoreIfUnobtainedStartDate(builder, IgnoreIfUnobtainedStartDate): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(IgnoreIfUnobtainedStartDate), 0)
+def CafeInteractionExcelAddIgnoreIfUnobtainedStartDate(builder, IgnoreIfUnobtainedStartDate):
+    """This method is deprecated. Please switch to AddIgnoreIfUnobtainedStartDate."""
+    return AddIgnoreIfUnobtainedStartDate(builder, IgnoreIfUnobtainedStartDate)
+def AddIgnoreIfUnobtainedEndDate(builder, IgnoreIfUnobtainedEndDate): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(IgnoreIfUnobtainedEndDate), 0)
+def CafeInteractionExcelAddIgnoreIfUnobtainedEndDate(builder, IgnoreIfUnobtainedEndDate):
+    """This method is deprecated. Please switch to AddIgnoreIfUnobtainedEndDate."""
+    return AddIgnoreIfUnobtainedEndDate(builder, IgnoreIfUnobtainedEndDate)
+def AddBubbleType_(builder, BubbleType_): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(BubbleType_), 0)
 def CafeInteractionExcelAddBubbleType_(builder, BubbleType_):
     """This method is deprecated. Please switch to AddBubbleType_."""
     return AddBubbleType_(builder, BubbleType_)
@@ -149,7 +175,7 @@ def StartBubbleType_Vector(builder, numElems): return builder.StartVector(4, num
 def CafeInteractionExcelStartBubbleType_Vector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBubbleType_Vector(builder, numElems)
-def AddBubbleDuration(builder, BubbleDuration): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BubbleDuration), 0)
+def AddBubbleDuration(builder, BubbleDuration): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BubbleDuration), 0)
 def CafeInteractionExcelAddBubbleDuration(builder, BubbleDuration):
     """This method is deprecated. Please switch to AddBubbleDuration."""
     return AddBubbleDuration(builder, BubbleDuration)
@@ -157,26 +183,26 @@ def StartBubbleDurationVector(builder, numElems): return builder.StartVector(8, 
 def CafeInteractionExcelStartBubbleDurationVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBubbleDurationVector(builder, numElems)
-def AddFavorEmoticonRewardParcelType(builder, FavorEmoticonRewardParcelType): builder.PrependInt32Slot(3, FavorEmoticonRewardParcelType, 0)
+def AddFavorEmoticonRewardParcelType(builder, FavorEmoticonRewardParcelType): builder.PrependInt32Slot(6, FavorEmoticonRewardParcelType, 0)
 def CafeInteractionExcelAddFavorEmoticonRewardParcelType(builder, FavorEmoticonRewardParcelType):
     """This method is deprecated. Please switch to AddFavorEmoticonRewardParcelType."""
     return AddFavorEmoticonRewardParcelType(builder, FavorEmoticonRewardParcelType)
-def AddFavorEmoticonRewardId(builder, FavorEmoticonRewardId): builder.PrependInt64Slot(4, FavorEmoticonRewardId, 0)
+def AddFavorEmoticonRewardId(builder, FavorEmoticonRewardId): builder.PrependInt64Slot(7, FavorEmoticonRewardId, 0)
 def CafeInteractionExcelAddFavorEmoticonRewardId(builder, FavorEmoticonRewardId):
     """This method is deprecated. Please switch to AddFavorEmoticonRewardId."""
     return AddFavorEmoticonRewardId(builder, FavorEmoticonRewardId)
-def AddFavorEmoticonRewardAmount(builder, FavorEmoticonRewardAmount): builder.PrependInt64Slot(5, FavorEmoticonRewardAmount, 0)
+def AddFavorEmoticonRewardAmount(builder, FavorEmoticonRewardAmount): builder.PrependInt64Slot(8, FavorEmoticonRewardAmount, 0)
 def CafeInteractionExcelAddFavorEmoticonRewardAmount(builder, FavorEmoticonRewardAmount):
     """This method is deprecated. Please switch to AddFavorEmoticonRewardAmount."""
     return AddFavorEmoticonRewardAmount(builder, FavorEmoticonRewardAmount)
-def AddCafeCharacterState_(builder, CafeCharacterState_): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterState_), 0)
-def CafeInteractionExcelAddCafeCharacterState_(builder, CafeCharacterState_):
-    """This method is deprecated. Please switch to AddCafeCharacterState_."""
-    return AddCafeCharacterState_(builder, CafeCharacterState_)
-def StartCafeCharacterState_Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def CafeInteractionExcelStartCafeCharacterState_Vector(builder, numElems):
+def AddCafeCharacterState(builder, CafeCharacterState): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterState), 0)
+def CafeInteractionExcelAddCafeCharacterState(builder, CafeCharacterState):
+    """This method is deprecated. Please switch to AddCafeCharacterState."""
+    return AddCafeCharacterState(builder, CafeCharacterState)
+def StartCafeCharacterStateVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CafeInteractionExcelStartCafeCharacterStateVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartCafeCharacterState_Vector(builder, numElems)
+    return StartCafeCharacterStateVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def CafeInteractionExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

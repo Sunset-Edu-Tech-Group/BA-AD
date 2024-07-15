@@ -217,8 +217,35 @@ class AcademyRewardExcel(object):
         return o == 0
 
     # AcademyRewardExcel
-    def RewardParcelType(self, j):
+    def IsExtraRewardDisplayed(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.BoolFlags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
+        return 0
+
+    # AcademyRewardExcel
+    def IsExtraRewardDisplayedAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.BoolFlags, o)
+        return 0
+
+    # AcademyRewardExcel
+    def IsExtraRewardDisplayedLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # AcademyRewardExcel
+    def IsExtraRewardDisplayedIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
+    # AcademyRewardExcel
+    def RewardParcelType(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -226,26 +253,26 @@ class AcademyRewardExcel(object):
 
     # AcademyRewardExcel
     def RewardParcelTypeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # AcademyRewardExcel
     def RewardParcelTypeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # AcademyRewardExcel
     def RewardParcelTypeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
     # AcademyRewardExcel
     def RewardParcelId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -253,26 +280,26 @@ class AcademyRewardExcel(object):
 
     # AcademyRewardExcel
     def RewardParcelIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # AcademyRewardExcel
     def RewardParcelIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # AcademyRewardExcel
     def RewardParcelIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
     # AcademyRewardExcel
     def RewardAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -280,24 +307,24 @@ class AcademyRewardExcel(object):
 
     # AcademyRewardExcel
     def RewardAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # AcademyRewardExcel
     def RewardAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # AcademyRewardExcel
     def RewardAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         return o == 0
 
-def Start(builder): builder.StartObject(19)
+def Start(builder): builder.StartObject(20)
 def AcademyRewardExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -381,7 +408,15 @@ def StartExtraRewardProbVector(builder, numElems): return builder.StartVector(8,
 def AcademyRewardExcelStartExtraRewardProbVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartExtraRewardProbVector(builder, numElems)
-def AddRewardParcelType(builder, RewardParcelType): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelType), 0)
+def AddIsExtraRewardDisplayed(builder, IsExtraRewardDisplayed): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(IsExtraRewardDisplayed), 0)
+def AcademyRewardExcelAddIsExtraRewardDisplayed(builder, IsExtraRewardDisplayed):
+    """This method is deprecated. Please switch to AddIsExtraRewardDisplayed."""
+    return AddIsExtraRewardDisplayed(builder, IsExtraRewardDisplayed)
+def StartIsExtraRewardDisplayedVector(builder, numElems): return builder.StartVector(1, numElems, 1)
+def AcademyRewardExcelStartIsExtraRewardDisplayedVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartIsExtraRewardDisplayedVector(builder, numElems)
+def AddRewardParcelType(builder, RewardParcelType): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelType), 0)
 def AcademyRewardExcelAddRewardParcelType(builder, RewardParcelType):
     """This method is deprecated. Please switch to AddRewardParcelType."""
     return AddRewardParcelType(builder, RewardParcelType)
@@ -389,7 +424,7 @@ def StartRewardParcelTypeVector(builder, numElems): return builder.StartVector(4
 def AcademyRewardExcelStartRewardParcelTypeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartRewardParcelTypeVector(builder, numElems)
-def AddRewardParcelId(builder, RewardParcelId): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelId), 0)
+def AddRewardParcelId(builder, RewardParcelId): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelId), 0)
 def AcademyRewardExcelAddRewardParcelId(builder, RewardParcelId):
     """This method is deprecated. Please switch to AddRewardParcelId."""
     return AddRewardParcelId(builder, RewardParcelId)
@@ -397,7 +432,7 @@ def StartRewardParcelIdVector(builder, numElems): return builder.StartVector(8, 
 def AcademyRewardExcelStartRewardParcelIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartRewardParcelIdVector(builder, numElems)
-def AddRewardAmount(builder, RewardAmount): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(RewardAmount), 0)
+def AddRewardAmount(builder, RewardAmount): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(RewardAmount), 0)
 def AcademyRewardExcelAddRewardAmount(builder, RewardAmount):
     """This method is deprecated. Please switch to AddRewardAmount."""
     return AddRewardAmount(builder, RewardAmount)

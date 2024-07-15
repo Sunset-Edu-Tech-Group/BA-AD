@@ -25,7 +25,7 @@ class BossExternalBTExcel(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # BossExternalBTExcel
-    def CharacterId(self):
+    def ExternalBTId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
@@ -84,10 +84,10 @@ def Start(builder): builder.StartObject(8)
 def BossExternalBTExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
-def AddCharacterId(builder, CharacterId): builder.PrependInt64Slot(0, CharacterId, 0)
-def BossExternalBTExcelAddCharacterId(builder, CharacterId):
-    """This method is deprecated. Please switch to AddCharacterId."""
-    return AddCharacterId(builder, CharacterId)
+def AddExternalBTId(builder, ExternalBTId): builder.PrependInt64Slot(0, ExternalBTId, 0)
+def BossExternalBTExcelAddExternalBTId(builder, ExternalBTId):
+    """This method is deprecated. Please switch to AddExternalBTId."""
+    return AddExternalBTId(builder, ExternalBTId)
 def AddAIPhase(builder, AIPhase): builder.PrependInt64Slot(1, AIPhase, 0)
 def BossExternalBTExcelAddAIPhase(builder, AIPhase):
     """This method is deprecated. Please switch to AddAIPhase."""

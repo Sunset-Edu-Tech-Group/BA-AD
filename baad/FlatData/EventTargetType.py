@@ -8,4 +8,9 @@ class EventTargetType(object):
     Campaign_Normal = 2
     Campaign_Hard = 3
     SchoolDungeon = 4
+    AcademySchedule = 5
+    TimeAttackDungeon = 6
+    AccountLevelExpIncrease = 7
+    Raid = 8
+    EliminateRaid = 9
 

@@ -9,7 +9,7 @@ class AccountAchievementType(object):
     TotalCharacterSkillLevelUpCount = 3
     TotalClearCampaignStageCount = 4
     TotalClearChaserDungeonCount = 5
-    TotalClearWeekDungeonCount = 6
+    TotalClearFindGiftAndBloodDungeonCount = 6
     TotalEquipmentLevelUpCount = 7
     TotalEquipmentTierUpCount = 8
     MaxComfortPoint = 9
@@ -17,4 +17,16 @@ class AccountAchievementType(object):
     TotalUseGold = 11
     TotalJoinArenaCount = 12
     TotalJoinRaidCount = 13
+    TotalClearSchoolDungeonCount = 14
+    TotalGetWeaponCount = 15
+    TotalWeaponLevelUpCount = 16
+    TotalWeaponTranscendenceCount = 17
+    KillEnemyWithDecagrammatonSPOTagCount = 18
+    EventPoint = 19
+    ConquestCalculateReward = 20
+    TotalJoinEliminateRaidCount = 21
+    Cafe2MaxComfortPoint = 22
+    TotalRaidTicketUseCount = 23
+    TotalEliminateTicketUseCount = 24
+    TotalCharacterPotentialUpCount = 25
 

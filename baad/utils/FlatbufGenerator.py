@@ -28,15 +28,16 @@ class FlatbufGenerator:
 
         self.flatc_path = self.root / 'lib' / 'flatbuf' / flatc_type
 
-        self.types = {'bool', 'byte', 'int', 'long', 'uint', 'ulong', 'float', 'double', 'string'}
+        self.types = {'bool', 'byte', 'ubyte', 'int', 'uint', 'long', 'ulong', 'float', 'double', 'string'}
         self.type_converters = {
             'string': 'table_encryption.convert_string',
             'int': 'table_encryption.convert_int',
-            'long': 'table_encryption.convert_long',
             'uint': 'table_encryption.convert_uint',
+            'long': 'table_encryption.convert_long',
             'ulong': 'table_encryption.convert_ulong',
             'float': 'table_encryption.convert_float',
             'double': 'table_encryption.convert_double',
+            'sbyte': 'table_encryption.convert_ubyte',
         }
 
         self.reEnum = re.compile(
@@ -151,14 +152,16 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
                     if typ.endswith('Length'):
                         typ = typ[:-6]
 
-                    if pname == typ:
+                    if pname in [typ, 'None']:
                         pname += '_'
 
                     if typ not in structs and typ not in enums and typ not in self.types:
                         continue
 
-                if pname == ptype:
+                if pname in [ptype, 'None']:
                     pname += '_'
+
+                ptype = ptype.replace('sbyte', 'ubyte')
 
                 f.write(f'    {pname}: {ptype};\n')
             f.write('}\n\n')
@@ -190,6 +193,9 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         for pname, ptype in struct.items():
             is_list = False
 
+            if pname == 'None':
+                pname += '_'
+
             if ptype.startswith('['):
                 ptype = ptype[1:-1]
                 is_list = True
@@ -218,8 +224,9 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         if ptype in enums:
             convert = self.type_converters[enums[ptype]['format']]
 
-            if pname == ptype:
+            if pname in [ptype, 'None']:
                 pname += '_'
+
             return f'{ptype}({convert}(obj.{pname}({{}}), password)).name'
 
         if ptype == 'bool':

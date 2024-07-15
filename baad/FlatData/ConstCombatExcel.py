@@ -74,35 +74,35 @@ class ConstCombatExcel(object):
         return False
 
     # ConstCombatExcel
-    def SuppliesConditionStringId(self):
+    def ShowBufficonGroundPassiveSkill(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ConstCombatExcel
+    def SuppliesConditionStringId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ConstCombatExcel
     def PublicSpeechBubbleOffsetX(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # ConstCombatExcel
-    def PublicSpeechBubbleOffsetY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # ConstCombatExcel
-    def PublicSpeechBubbleOffsetZ(self):
+    def PublicSpeechBubbleOffsetY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # ConstCombatExcel
-    def PublicSpeechDuration(self):
+    def PublicSpeechBubbleOffsetZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
@@ -116,105 +116,105 @@ class ConstCombatExcel(object):
         return 0
 
     # ConstCombatExcel
-    def MaxFinalDamage(self):
+    def MaxRaidTicketCount(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
-    def MaxFinalHeal(self):
+    def MaxRaidBossSkillSlot(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
-    def MaxRaidTicketCount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # ConstCombatExcel
     def EngageTimelinePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ConstCombatExcel
     def EngageWithSupporterTimelinePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ConstCombatExcel
     def VictoryTimelinePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ConstCombatExcel
     def TimeLimitAlarm(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def EchelonMaxCommonCost(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def EchelonInitCommonCost(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def SkillSlotCoolTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def EnemyRegenCost(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def ChampionRegenCost(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def PlayerRegenCostDelay(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def CrowdControlFactor(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ConstCombatExcel
     def RaidOpenScenarioId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ConstCombatExcel
+    def EliminateRaidOpenScenarioId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -444,7 +444,140 @@ class ConstCombatExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(60)
+    # ConstCombatExcel
+    def WORLDBOSSBATTLELITTLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def WORLDBOSSBATTLEMIDDLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def WORLDBOSSBATTLEHIGH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def WORLDBOSSBATTLEVERYHIGH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def WorldRaidAutoSyncTermSecond(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def WorldRaidBossHpDecreaseTerm(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def WorldRaidBossParcelReactionDelay(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def RaidRankingJumpMinimumWaitingTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def EffectTeleportDistance(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return 0.0
+
+    # ConstCombatExcel
+    def AuraExitThresholdMargin(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def TSAInteractionDamageFactor(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def VictoryInteractionRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def EchelonExtensionEngageTimelinePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ConstCombatExcel
+    def EchelonExtensionEngageWithSupporterTimelinePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ConstCombatExcel
+    def EchelonExtensionVictoryTimelinePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ConstCombatExcel
+    def EchelonExtensionEchelonMaxCommonCost(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def EchelonExtensionEchelonInitCommonCost(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def EchelonExtensionCostRegenRatio(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstCombatExcel
+    def CheckCheaterMaxUseCostMultiFloorRaid(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(79)
 def ConstCombatExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -476,90 +609,90 @@ def AddShowBufficonLeaderSkill(builder, ShowBufficonLeaderSkill): builder.Prepen
 def ConstCombatExcelAddShowBufficonLeaderSkill(builder, ShowBufficonLeaderSkill):
     """This method is deprecated. Please switch to AddShowBufficonLeaderSkill."""
     return AddShowBufficonLeaderSkill(builder, ShowBufficonLeaderSkill)
-def AddSuppliesConditionStringId(builder, SuppliesConditionStringId): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SuppliesConditionStringId), 0)
+def AddShowBufficonGroundPassiveSkill(builder, ShowBufficonGroundPassiveSkill): builder.PrependBoolSlot(7, ShowBufficonGroundPassiveSkill, 0)
+def ConstCombatExcelAddShowBufficonGroundPassiveSkill(builder, ShowBufficonGroundPassiveSkill):
+    """This method is deprecated. Please switch to AddShowBufficonGroundPassiveSkill."""
+    return AddShowBufficonGroundPassiveSkill(builder, ShowBufficonGroundPassiveSkill)
+def AddSuppliesConditionStringId(builder, SuppliesConditionStringId): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SuppliesConditionStringId), 0)
 def ConstCombatExcelAddSuppliesConditionStringId(builder, SuppliesConditionStringId):
     """This method is deprecated. Please switch to AddSuppliesConditionStringId."""
     return AddSuppliesConditionStringId(builder, SuppliesConditionStringId)
-def AddPublicSpeechBubbleOffsetX(builder, PublicSpeechBubbleOffsetX): builder.PrependFloat32Slot(8, PublicSpeechBubbleOffsetX, 0.0)
+def AddPublicSpeechBubbleOffsetX(builder, PublicSpeechBubbleOffsetX): builder.PrependFloat32Slot(9, PublicSpeechBubbleOffsetX, 0.0)
 def ConstCombatExcelAddPublicSpeechBubbleOffsetX(builder, PublicSpeechBubbleOffsetX):
     """This method is deprecated. Please switch to AddPublicSpeechBubbleOffsetX."""
     return AddPublicSpeechBubbleOffsetX(builder, PublicSpeechBubbleOffsetX)
-def AddPublicSpeechBubbleOffsetY(builder, PublicSpeechBubbleOffsetY): builder.PrependFloat32Slot(9, PublicSpeechBubbleOffsetY, 0.0)
+def AddPublicSpeechBubbleOffsetY(builder, PublicSpeechBubbleOffsetY): builder.PrependFloat32Slot(10, PublicSpeechBubbleOffsetY, 0.0)
 def ConstCombatExcelAddPublicSpeechBubbleOffsetY(builder, PublicSpeechBubbleOffsetY):
     """This method is deprecated. Please switch to AddPublicSpeechBubbleOffsetY."""
     return AddPublicSpeechBubbleOffsetY(builder, PublicSpeechBubbleOffsetY)
-def AddPublicSpeechBubbleOffsetZ(builder, PublicSpeechBubbleOffsetZ): builder.PrependFloat32Slot(10, PublicSpeechBubbleOffsetZ, 0.0)
+def AddPublicSpeechBubbleOffsetZ(builder, PublicSpeechBubbleOffsetZ): builder.PrependFloat32Slot(11, PublicSpeechBubbleOffsetZ, 0.0)
 def ConstCombatExcelAddPublicSpeechBubbleOffsetZ(builder, PublicSpeechBubbleOffsetZ):
     """This method is deprecated. Please switch to AddPublicSpeechBubbleOffsetZ."""
     return AddPublicSpeechBubbleOffsetZ(builder, PublicSpeechBubbleOffsetZ)
-def AddPublicSpeechDuration(builder, PublicSpeechDuration): builder.PrependFloat32Slot(11, PublicSpeechDuration, 0.0)
-def ConstCombatExcelAddPublicSpeechDuration(builder, PublicSpeechDuration):
-    """This method is deprecated. Please switch to AddPublicSpeechDuration."""
-    return AddPublicSpeechDuration(builder, PublicSpeechDuration)
 def AddShowRaidListCount(builder, ShowRaidListCount): builder.PrependInt32Slot(12, ShowRaidListCount, 0)
 def ConstCombatExcelAddShowRaidListCount(builder, ShowRaidListCount):
     """This method is deprecated. Please switch to AddShowRaidListCount."""
     return AddShowRaidListCount(builder, ShowRaidListCount)
-def AddMaxFinalDamage(builder, MaxFinalDamage): builder.PrependInt64Slot(13, MaxFinalDamage, 0)
-def ConstCombatExcelAddMaxFinalDamage(builder, MaxFinalDamage):
-    """This method is deprecated. Please switch to AddMaxFinalDamage."""
-    return AddMaxFinalDamage(builder, MaxFinalDamage)
-def AddMaxFinalHeal(builder, MaxFinalHeal): builder.PrependInt64Slot(14, MaxFinalHeal, 0)
-def ConstCombatExcelAddMaxFinalHeal(builder, MaxFinalHeal):
-    """This method is deprecated. Please switch to AddMaxFinalHeal."""
-    return AddMaxFinalHeal(builder, MaxFinalHeal)
-def AddMaxRaidTicketCount(builder, MaxRaidTicketCount): builder.PrependInt64Slot(15, MaxRaidTicketCount, 0)
+def AddMaxRaidTicketCount(builder, MaxRaidTicketCount): builder.PrependInt64Slot(13, MaxRaidTicketCount, 0)
 def ConstCombatExcelAddMaxRaidTicketCount(builder, MaxRaidTicketCount):
     """This method is deprecated. Please switch to AddMaxRaidTicketCount."""
     return AddMaxRaidTicketCount(builder, MaxRaidTicketCount)
-def AddEngageTimelinePath(builder, EngageTimelinePath): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EngageTimelinePath), 0)
+def AddMaxRaidBossSkillSlot(builder, MaxRaidBossSkillSlot): builder.PrependInt64Slot(14, MaxRaidBossSkillSlot, 0)
+def ConstCombatExcelAddMaxRaidBossSkillSlot(builder, MaxRaidBossSkillSlot):
+    """This method is deprecated. Please switch to AddMaxRaidBossSkillSlot."""
+    return AddMaxRaidBossSkillSlot(builder, MaxRaidBossSkillSlot)
+def AddEngageTimelinePath(builder, EngageTimelinePath): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EngageTimelinePath), 0)
 def ConstCombatExcelAddEngageTimelinePath(builder, EngageTimelinePath):
     """This method is deprecated. Please switch to AddEngageTimelinePath."""
     return AddEngageTimelinePath(builder, EngageTimelinePath)
-def AddEngageWithSupporterTimelinePath(builder, EngageWithSupporterTimelinePath): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(EngageWithSupporterTimelinePath), 0)
+def AddEngageWithSupporterTimelinePath(builder, EngageWithSupporterTimelinePath): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EngageWithSupporterTimelinePath), 0)
 def ConstCombatExcelAddEngageWithSupporterTimelinePath(builder, EngageWithSupporterTimelinePath):
     """This method is deprecated. Please switch to AddEngageWithSupporterTimelinePath."""
     return AddEngageWithSupporterTimelinePath(builder, EngageWithSupporterTimelinePath)
-def AddVictoryTimelinePath(builder, VictoryTimelinePath): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(VictoryTimelinePath), 0)
+def AddVictoryTimelinePath(builder, VictoryTimelinePath): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(VictoryTimelinePath), 0)
 def ConstCombatExcelAddVictoryTimelinePath(builder, VictoryTimelinePath):
     """This method is deprecated. Please switch to AddVictoryTimelinePath."""
     return AddVictoryTimelinePath(builder, VictoryTimelinePath)
-def AddTimeLimitAlarm(builder, TimeLimitAlarm): builder.PrependInt64Slot(19, TimeLimitAlarm, 0)
+def AddTimeLimitAlarm(builder, TimeLimitAlarm): builder.PrependInt64Slot(18, TimeLimitAlarm, 0)
 def ConstCombatExcelAddTimeLimitAlarm(builder, TimeLimitAlarm):
     """This method is deprecated. Please switch to AddTimeLimitAlarm."""
     return AddTimeLimitAlarm(builder, TimeLimitAlarm)
-def AddEchelonMaxCommonCost(builder, EchelonMaxCommonCost): builder.PrependInt32Slot(20, EchelonMaxCommonCost, 0)
+def AddEchelonMaxCommonCost(builder, EchelonMaxCommonCost): builder.PrependInt32Slot(19, EchelonMaxCommonCost, 0)
 def ConstCombatExcelAddEchelonMaxCommonCost(builder, EchelonMaxCommonCost):
     """This method is deprecated. Please switch to AddEchelonMaxCommonCost."""
     return AddEchelonMaxCommonCost(builder, EchelonMaxCommonCost)
-def AddEchelonInitCommonCost(builder, EchelonInitCommonCost): builder.PrependInt32Slot(21, EchelonInitCommonCost, 0)
+def AddEchelonInitCommonCost(builder, EchelonInitCommonCost): builder.PrependInt32Slot(20, EchelonInitCommonCost, 0)
 def ConstCombatExcelAddEchelonInitCommonCost(builder, EchelonInitCommonCost):
     """This method is deprecated. Please switch to AddEchelonInitCommonCost."""
     return AddEchelonInitCommonCost(builder, EchelonInitCommonCost)
-def AddSkillSlotCoolTime(builder, SkillSlotCoolTime): builder.PrependInt64Slot(22, SkillSlotCoolTime, 0)
+def AddSkillSlotCoolTime(builder, SkillSlotCoolTime): builder.PrependInt64Slot(21, SkillSlotCoolTime, 0)
 def ConstCombatExcelAddSkillSlotCoolTime(builder, SkillSlotCoolTime):
     """This method is deprecated. Please switch to AddSkillSlotCoolTime."""
     return AddSkillSlotCoolTime(builder, SkillSlotCoolTime)
-def AddEnemyRegenCost(builder, EnemyRegenCost): builder.PrependInt64Slot(23, EnemyRegenCost, 0)
+def AddEnemyRegenCost(builder, EnemyRegenCost): builder.PrependInt64Slot(22, EnemyRegenCost, 0)
 def ConstCombatExcelAddEnemyRegenCost(builder, EnemyRegenCost):
     """This method is deprecated. Please switch to AddEnemyRegenCost."""
     return AddEnemyRegenCost(builder, EnemyRegenCost)
-def AddChampionRegenCost(builder, ChampionRegenCost): builder.PrependInt64Slot(24, ChampionRegenCost, 0)
+def AddChampionRegenCost(builder, ChampionRegenCost): builder.PrependInt64Slot(23, ChampionRegenCost, 0)
 def ConstCombatExcelAddChampionRegenCost(builder, ChampionRegenCost):
     """This method is deprecated. Please switch to AddChampionRegenCost."""
     return AddChampionRegenCost(builder, ChampionRegenCost)
-def AddPlayerRegenCostDelay(builder, PlayerRegenCostDelay): builder.PrependInt64Slot(25, PlayerRegenCostDelay, 0)
+def AddPlayerRegenCostDelay(builder, PlayerRegenCostDelay): builder.PrependInt64Slot(24, PlayerRegenCostDelay, 0)
 def ConstCombatExcelAddPlayerRegenCostDelay(builder, PlayerRegenCostDelay):
     """This method is deprecated. Please switch to AddPlayerRegenCostDelay."""
     return AddPlayerRegenCostDelay(builder, PlayerRegenCostDelay)
-def AddCrowdControlFactor(builder, CrowdControlFactor): builder.PrependInt64Slot(26, CrowdControlFactor, 0)
+def AddCrowdControlFactor(builder, CrowdControlFactor): builder.PrependInt64Slot(25, CrowdControlFactor, 0)
 def ConstCombatExcelAddCrowdControlFactor(builder, CrowdControlFactor):
     """This method is deprecated. Please switch to AddCrowdControlFactor."""
     return AddCrowdControlFactor(builder, CrowdControlFactor)
-def AddRaidOpenScenarioId(builder, RaidOpenScenarioId): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(RaidOpenScenarioId), 0)
+def AddRaidOpenScenarioId(builder, RaidOpenScenarioId): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(RaidOpenScenarioId), 0)
 def ConstCombatExcelAddRaidOpenScenarioId(builder, RaidOpenScenarioId):
     """This method is deprecated. Please switch to AddRaidOpenScenarioId."""
     return AddRaidOpenScenarioId(builder, RaidOpenScenarioId)
+def AddEliminateRaidOpenScenarioId(builder, EliminateRaidOpenScenarioId): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(EliminateRaidOpenScenarioId), 0)
+def ConstCombatExcelAddEliminateRaidOpenScenarioId(builder, EliminateRaidOpenScenarioId):
+    """This method is deprecated. Please switch to AddEliminateRaidOpenScenarioId."""
+    return AddEliminateRaidOpenScenarioId(builder, EliminateRaidOpenScenarioId)
 def AddDefenceConstA(builder, DefenceConstA): builder.PrependInt64Slot(28, DefenceConstA, 0)
 def ConstCombatExcelAddDefenceConstA(builder, DefenceConstA):
     """This method is deprecated. Please switch to AddDefenceConstA."""
@@ -688,6 +821,82 @@ def AddArenaMinimumClearTime(builder, ArenaMinimumClearTime): builder.PrependInt
 def ConstCombatExcelAddArenaMinimumClearTime(builder, ArenaMinimumClearTime):
     """This method is deprecated. Please switch to AddArenaMinimumClearTime."""
     return AddArenaMinimumClearTime(builder, ArenaMinimumClearTime)
+def AddWORLDBOSSBATTLELITTLE(builder, WORLDBOSSBATTLELITTLE): builder.PrependInt64Slot(60, WORLDBOSSBATTLELITTLE, 0)
+def ConstCombatExcelAddWORLDBOSSBATTLELITTLE(builder, WORLDBOSSBATTLELITTLE):
+    """This method is deprecated. Please switch to AddWORLDBOSSBATTLELITTLE."""
+    return AddWORLDBOSSBATTLELITTLE(builder, WORLDBOSSBATTLELITTLE)
+def AddWORLDBOSSBATTLEMIDDLE(builder, WORLDBOSSBATTLEMIDDLE): builder.PrependInt64Slot(61, WORLDBOSSBATTLEMIDDLE, 0)
+def ConstCombatExcelAddWORLDBOSSBATTLEMIDDLE(builder, WORLDBOSSBATTLEMIDDLE):
+    """This method is deprecated. Please switch to AddWORLDBOSSBATTLEMIDDLE."""
+    return AddWORLDBOSSBATTLEMIDDLE(builder, WORLDBOSSBATTLEMIDDLE)
+def AddWORLDBOSSBATTLEHIGH(builder, WORLDBOSSBATTLEHIGH): builder.PrependInt64Slot(62, WORLDBOSSBATTLEHIGH, 0)
+def ConstCombatExcelAddWORLDBOSSBATTLEHIGH(builder, WORLDBOSSBATTLEHIGH):
+    """This method is deprecated. Please switch to AddWORLDBOSSBATTLEHIGH."""
+    return AddWORLDBOSSBATTLEHIGH(builder, WORLDBOSSBATTLEHIGH)
+def AddWORLDBOSSBATTLEVERYHIGH(builder, WORLDBOSSBATTLEVERYHIGH): builder.PrependInt64Slot(63, WORLDBOSSBATTLEVERYHIGH, 0)
+def ConstCombatExcelAddWORLDBOSSBATTLEVERYHIGH(builder, WORLDBOSSBATTLEVERYHIGH):
+    """This method is deprecated. Please switch to AddWORLDBOSSBATTLEVERYHIGH."""
+    return AddWORLDBOSSBATTLEVERYHIGH(builder, WORLDBOSSBATTLEVERYHIGH)
+def AddWorldRaidAutoSyncTermSecond(builder, WorldRaidAutoSyncTermSecond): builder.PrependInt64Slot(64, WorldRaidAutoSyncTermSecond, 0)
+def ConstCombatExcelAddWorldRaidAutoSyncTermSecond(builder, WorldRaidAutoSyncTermSecond):
+    """This method is deprecated. Please switch to AddWorldRaidAutoSyncTermSecond."""
+    return AddWorldRaidAutoSyncTermSecond(builder, WorldRaidAutoSyncTermSecond)
+def AddWorldRaidBossHpDecreaseTerm(builder, WorldRaidBossHpDecreaseTerm): builder.PrependInt64Slot(65, WorldRaidBossHpDecreaseTerm, 0)
+def ConstCombatExcelAddWorldRaidBossHpDecreaseTerm(builder, WorldRaidBossHpDecreaseTerm):
+    """This method is deprecated. Please switch to AddWorldRaidBossHpDecreaseTerm."""
+    return AddWorldRaidBossHpDecreaseTerm(builder, WorldRaidBossHpDecreaseTerm)
+def AddWorldRaidBossParcelReactionDelay(builder, WorldRaidBossParcelReactionDelay): builder.PrependInt64Slot(66, WorldRaidBossParcelReactionDelay, 0)
+def ConstCombatExcelAddWorldRaidBossParcelReactionDelay(builder, WorldRaidBossParcelReactionDelay):
+    """This method is deprecated. Please switch to AddWorldRaidBossParcelReactionDelay."""
+    return AddWorldRaidBossParcelReactionDelay(builder, WorldRaidBossParcelReactionDelay)
+def AddRaidRankingJumpMinimumWaitingTime(builder, RaidRankingJumpMinimumWaitingTime): builder.PrependInt64Slot(67, RaidRankingJumpMinimumWaitingTime, 0)
+def ConstCombatExcelAddRaidRankingJumpMinimumWaitingTime(builder, RaidRankingJumpMinimumWaitingTime):
+    """This method is deprecated. Please switch to AddRaidRankingJumpMinimumWaitingTime."""
+    return AddRaidRankingJumpMinimumWaitingTime(builder, RaidRankingJumpMinimumWaitingTime)
+def AddEffectTeleportDistance(builder, EffectTeleportDistance): builder.PrependFloat32Slot(68, EffectTeleportDistance, 0.0)
+def ConstCombatExcelAddEffectTeleportDistance(builder, EffectTeleportDistance):
+    """This method is deprecated. Please switch to AddEffectTeleportDistance."""
+    return AddEffectTeleportDistance(builder, EffectTeleportDistance)
+def AddAuraExitThresholdMargin(builder, AuraExitThresholdMargin): builder.PrependInt64Slot(69, AuraExitThresholdMargin, 0)
+def ConstCombatExcelAddAuraExitThresholdMargin(builder, AuraExitThresholdMargin):
+    """This method is deprecated. Please switch to AddAuraExitThresholdMargin."""
+    return AddAuraExitThresholdMargin(builder, AuraExitThresholdMargin)
+def AddTSAInteractionDamageFactor(builder, TSAInteractionDamageFactor): builder.PrependInt64Slot(70, TSAInteractionDamageFactor, 0)
+def ConstCombatExcelAddTSAInteractionDamageFactor(builder, TSAInteractionDamageFactor):
+    """This method is deprecated. Please switch to AddTSAInteractionDamageFactor."""
+    return AddTSAInteractionDamageFactor(builder, TSAInteractionDamageFactor)
+def AddVictoryInteractionRate(builder, VictoryInteractionRate): builder.PrependInt64Slot(71, VictoryInteractionRate, 0)
+def ConstCombatExcelAddVictoryInteractionRate(builder, VictoryInteractionRate):
+    """This method is deprecated. Please switch to AddVictoryInteractionRate."""
+    return AddVictoryInteractionRate(builder, VictoryInteractionRate)
+def AddEchelonExtensionEngageTimelinePath(builder, EchelonExtensionEngageTimelinePath): builder.PrependUOffsetTRelativeSlot(72, flatbuffers.number_types.UOffsetTFlags.py_type(EchelonExtensionEngageTimelinePath), 0)
+def ConstCombatExcelAddEchelonExtensionEngageTimelinePath(builder, EchelonExtensionEngageTimelinePath):
+    """This method is deprecated. Please switch to AddEchelonExtensionEngageTimelinePath."""
+    return AddEchelonExtensionEngageTimelinePath(builder, EchelonExtensionEngageTimelinePath)
+def AddEchelonExtensionEngageWithSupporterTimelinePath(builder, EchelonExtensionEngageWithSupporterTimelinePath): builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(EchelonExtensionEngageWithSupporterTimelinePath), 0)
+def ConstCombatExcelAddEchelonExtensionEngageWithSupporterTimelinePath(builder, EchelonExtensionEngageWithSupporterTimelinePath):
+    """This method is deprecated. Please switch to AddEchelonExtensionEngageWithSupporterTimelinePath."""
+    return AddEchelonExtensionEngageWithSupporterTimelinePath(builder, EchelonExtensionEngageWithSupporterTimelinePath)
+def AddEchelonExtensionVictoryTimelinePath(builder, EchelonExtensionVictoryTimelinePath): builder.PrependUOffsetTRelativeSlot(74, flatbuffers.number_types.UOffsetTFlags.py_type(EchelonExtensionVictoryTimelinePath), 0)
+def ConstCombatExcelAddEchelonExtensionVictoryTimelinePath(builder, EchelonExtensionVictoryTimelinePath):
+    """This method is deprecated. Please switch to AddEchelonExtensionVictoryTimelinePath."""
+    return AddEchelonExtensionVictoryTimelinePath(builder, EchelonExtensionVictoryTimelinePath)
+def AddEchelonExtensionEchelonMaxCommonCost(builder, EchelonExtensionEchelonMaxCommonCost): builder.PrependInt32Slot(75, EchelonExtensionEchelonMaxCommonCost, 0)
+def ConstCombatExcelAddEchelonExtensionEchelonMaxCommonCost(builder, EchelonExtensionEchelonMaxCommonCost):
+    """This method is deprecated. Please switch to AddEchelonExtensionEchelonMaxCommonCost."""
+    return AddEchelonExtensionEchelonMaxCommonCost(builder, EchelonExtensionEchelonMaxCommonCost)
+def AddEchelonExtensionEchelonInitCommonCost(builder, EchelonExtensionEchelonInitCommonCost): builder.PrependInt32Slot(76, EchelonExtensionEchelonInitCommonCost, 0)
+def ConstCombatExcelAddEchelonExtensionEchelonInitCommonCost(builder, EchelonExtensionEchelonInitCommonCost):
+    """This method is deprecated. Please switch to AddEchelonExtensionEchelonInitCommonCost."""
+    return AddEchelonExtensionEchelonInitCommonCost(builder, EchelonExtensionEchelonInitCommonCost)
+def AddEchelonExtensionCostRegenRatio(builder, EchelonExtensionCostRegenRatio): builder.PrependInt64Slot(77, EchelonExtensionCostRegenRatio, 0)
+def ConstCombatExcelAddEchelonExtensionCostRegenRatio(builder, EchelonExtensionCostRegenRatio):
+    """This method is deprecated. Please switch to AddEchelonExtensionCostRegenRatio."""
+    return AddEchelonExtensionCostRegenRatio(builder, EchelonExtensionCostRegenRatio)
+def AddCheckCheaterMaxUseCostMultiFloorRaid(builder, CheckCheaterMaxUseCostMultiFloorRaid): builder.PrependInt32Slot(78, CheckCheaterMaxUseCostMultiFloorRaid, 0)
+def ConstCombatExcelAddCheckCheaterMaxUseCostMultiFloorRaid(builder, CheckCheaterMaxUseCostMultiFloorRaid):
+    """This method is deprecated. Please switch to AddCheckCheaterMaxUseCostMultiFloorRaid."""
+    return AddCheckCheaterMaxUseCostMultiFloorRaid(builder, CheckCheaterMaxUseCostMultiFloorRaid)
 def End(builder): return builder.EndObject()
 def ConstCombatExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -25,273 +25,129 @@ class VoiceExcel(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # VoiceExcel
-    def NameHash(self):
+    def UniqueId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # VoiceExcel
+    def Id(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # VoiceExcel
-    def OnlyOne(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # VoiceExcel
-    def VolumeJp(self):
+    def Nation_(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def DelayJp(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def Priority(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
         return 0
 
     # VoiceExcel
-    def AudioClipJp(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+    def Nation_AsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
 
     # VoiceExcel
-    def VolumeKr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+    def Nation_Length(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.VectorLen(o)
+        return 0
 
     # VoiceExcel
-    def DelayKr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+    def Nation_IsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
 
     # VoiceExcel
-    def AudioClipKr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+    def Path(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
 
     # VoiceExcel
-    def VolumeTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+    def PathLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.VectorLen(o)
+        return 0
 
     # VoiceExcel
-    def DelayTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+    def PathIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
 
     # VoiceExcel
-    def AudioClipTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+    def Volume(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # VoiceExcel
-    def VolumeTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+    def VolumeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
 
     # VoiceExcel
-    def DelayTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+    def VolumeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.VectorLen(o)
+        return 0
 
     # VoiceExcel
-    def AudioClipTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+    def VolumeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
 
-    # VoiceExcel
-    def VolumeEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def DelayEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def AudioClipEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # VoiceExcel
-    def VolumeDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def DelayDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def AudioClipDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # VoiceExcel
-    def VolumeFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def DelayFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # VoiceExcel
-    def AudioClipFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(24)
+def Start(builder): builder.StartObject(5)
 def VoiceExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
-def AddNameHash(builder, NameHash): builder.PrependUint32Slot(0, NameHash, 0)
-def VoiceExcelAddNameHash(builder, NameHash):
-    """This method is deprecated. Please switch to AddNameHash."""
-    return AddNameHash(builder, NameHash)
-def AddOnlyOne(builder, OnlyOne): builder.PrependBoolSlot(1, OnlyOne, 0)
-def VoiceExcelAddOnlyOne(builder, OnlyOne):
-    """This method is deprecated. Please switch to AddOnlyOne."""
-    return AddOnlyOne(builder, OnlyOne)
-def AddVolumeJp(builder, VolumeJp): builder.PrependFloat32Slot(2, VolumeJp, 0.0)
-def VoiceExcelAddVolumeJp(builder, VolumeJp):
-    """This method is deprecated. Please switch to AddVolumeJp."""
-    return AddVolumeJp(builder, VolumeJp)
-def AddDelayJp(builder, DelayJp): builder.PrependFloat32Slot(3, DelayJp, 0.0)
-def VoiceExcelAddDelayJp(builder, DelayJp):
-    """This method is deprecated. Please switch to AddDelayJp."""
-    return AddDelayJp(builder, DelayJp)
-def AddPriority(builder, Priority): builder.PrependInt32Slot(4, Priority, 0)
-def VoiceExcelAddPriority(builder, Priority):
-    """This method is deprecated. Please switch to AddPriority."""
-    return AddPriority(builder, Priority)
-def AddAudioClipJp(builder, AudioClipJp): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipJp), 0)
-def VoiceExcelAddAudioClipJp(builder, AudioClipJp):
-    """This method is deprecated. Please switch to AddAudioClipJp."""
-    return AddAudioClipJp(builder, AudioClipJp)
-def AddVolumeKr(builder, VolumeKr): builder.PrependFloat32Slot(6, VolumeKr, 0.0)
-def VoiceExcelAddVolumeKr(builder, VolumeKr):
-    """This method is deprecated. Please switch to AddVolumeKr."""
-    return AddVolumeKr(builder, VolumeKr)
-def AddDelayKr(builder, DelayKr): builder.PrependFloat32Slot(7, DelayKr, 0.0)
-def VoiceExcelAddDelayKr(builder, DelayKr):
-    """This method is deprecated. Please switch to AddDelayKr."""
-    return AddDelayKr(builder, DelayKr)
-def AddAudioClipKr(builder, AudioClipKr): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipKr), 0)
-def VoiceExcelAddAudioClipKr(builder, AudioClipKr):
-    """This method is deprecated. Please switch to AddAudioClipKr."""
-    return AddAudioClipKr(builder, AudioClipKr)
-def AddVolumeTh(builder, VolumeTh): builder.PrependFloat32Slot(9, VolumeTh, 0.0)
-def VoiceExcelAddVolumeTh(builder, VolumeTh):
-    """This method is deprecated. Please switch to AddVolumeTh."""
-    return AddVolumeTh(builder, VolumeTh)
-def AddDelayTh(builder, DelayTh): builder.PrependFloat32Slot(10, DelayTh, 0.0)
-def VoiceExcelAddDelayTh(builder, DelayTh):
-    """This method is deprecated. Please switch to AddDelayTh."""
-    return AddDelayTh(builder, DelayTh)
-def AddAudioClipTh(builder, AudioClipTh): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipTh), 0)
-def VoiceExcelAddAudioClipTh(builder, AudioClipTh):
-    """This method is deprecated. Please switch to AddAudioClipTh."""
-    return AddAudioClipTh(builder, AudioClipTh)
-def AddVolumeTw(builder, VolumeTw): builder.PrependFloat32Slot(12, VolumeTw, 0.0)
-def VoiceExcelAddVolumeTw(builder, VolumeTw):
-    """This method is deprecated. Please switch to AddVolumeTw."""
-    return AddVolumeTw(builder, VolumeTw)
-def AddDelayTw(builder, DelayTw): builder.PrependFloat32Slot(13, DelayTw, 0.0)
-def VoiceExcelAddDelayTw(builder, DelayTw):
-    """This method is deprecated. Please switch to AddDelayTw."""
-    return AddDelayTw(builder, DelayTw)
-def AddAudioClipTw(builder, AudioClipTw): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipTw), 0)
-def VoiceExcelAddAudioClipTw(builder, AudioClipTw):
-    """This method is deprecated. Please switch to AddAudioClipTw."""
-    return AddAudioClipTw(builder, AudioClipTw)
-def AddVolumeEn(builder, VolumeEn): builder.PrependFloat32Slot(15, VolumeEn, 0.0)
-def VoiceExcelAddVolumeEn(builder, VolumeEn):
-    """This method is deprecated. Please switch to AddVolumeEn."""
-    return AddVolumeEn(builder, VolumeEn)
-def AddDelayEn(builder, DelayEn): builder.PrependFloat32Slot(16, DelayEn, 0.0)
-def VoiceExcelAddDelayEn(builder, DelayEn):
-    """This method is deprecated. Please switch to AddDelayEn."""
-    return AddDelayEn(builder, DelayEn)
-def AddAudioClipEn(builder, AudioClipEn): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipEn), 0)
-def VoiceExcelAddAudioClipEn(builder, AudioClipEn):
-    """This method is deprecated. Please switch to AddAudioClipEn."""
-    return AddAudioClipEn(builder, AudioClipEn)
-def AddVolumeDe(builder, VolumeDe): builder.PrependFloat32Slot(18, VolumeDe, 0.0)
-def VoiceExcelAddVolumeDe(builder, VolumeDe):
-    """This method is deprecated. Please switch to AddVolumeDe."""
-    return AddVolumeDe(builder, VolumeDe)
-def AddDelayDe(builder, DelayDe): builder.PrependFloat32Slot(19, DelayDe, 0.0)
-def VoiceExcelAddDelayDe(builder, DelayDe):
-    """This method is deprecated. Please switch to AddDelayDe."""
-    return AddDelayDe(builder, DelayDe)
-def AddAudioClipDe(builder, AudioClipDe): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipDe), 0)
-def VoiceExcelAddAudioClipDe(builder, AudioClipDe):
-    """This method is deprecated. Please switch to AddAudioClipDe."""
-    return AddAudioClipDe(builder, AudioClipDe)
-def AddVolumeFr(builder, VolumeFr): builder.PrependFloat32Slot(21, VolumeFr, 0.0)
-def VoiceExcelAddVolumeFr(builder, VolumeFr):
-    """This method is deprecated. Please switch to AddVolumeFr."""
-    return AddVolumeFr(builder, VolumeFr)
-def AddDelayFr(builder, DelayFr): builder.PrependFloat32Slot(22, DelayFr, 0.0)
-def VoiceExcelAddDelayFr(builder, DelayFr):
-    """This method is deprecated. Please switch to AddDelayFr."""
-    return AddDelayFr(builder, DelayFr)
-def AddAudioClipFr(builder, AudioClipFr): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipFr), 0)
-def VoiceExcelAddAudioClipFr(builder, AudioClipFr):
-    """This method is deprecated. Please switch to AddAudioClipFr."""
-    return AddAudioClipFr(builder, AudioClipFr)
+def AddUniqueId(builder, UniqueId): builder.PrependInt64Slot(0, UniqueId, 0)
+def VoiceExcelAddUniqueId(builder, UniqueId):
+    """This method is deprecated. Please switch to AddUniqueId."""
+    return AddUniqueId(builder, UniqueId)
+def AddId(builder, Id): builder.PrependUint32Slot(1, Id, 0)
+def VoiceExcelAddId(builder, Id):
+    """This method is deprecated. Please switch to AddId."""
+    return AddId(builder, Id)
+def AddNation_(builder, Nation_): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(Nation_), 0)
+def VoiceExcelAddNation_(builder, Nation_):
+    """This method is deprecated. Please switch to AddNation_."""
+    return AddNation_(builder, Nation_)
+def StartNation_Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def VoiceExcelStartNation_Vector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartNation_Vector(builder, numElems)
+def AddPath(builder, Path): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(Path), 0)
+def VoiceExcelAddPath(builder, Path):
+    """This method is deprecated. Please switch to AddPath."""
+    return AddPath(builder, Path)
+def StartPathVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def VoiceExcelStartPathVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartPathVector(builder, numElems)
+def AddVolume(builder, Volume): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(Volume), 0)
+def VoiceExcelAddVolume(builder, Volume):
+    """This method is deprecated. Please switch to AddVolume."""
+    return AddVolume(builder, Volume)
+def StartVolumeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def VoiceExcelStartVolumeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartVolumeVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def VoiceExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

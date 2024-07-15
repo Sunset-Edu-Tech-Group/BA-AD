@@ -17,6 +17,8 @@ class TableEncryptionService:
             'int64': Struct('<q'),
             'float32': Struct('<f'),
             'float64': Struct('<d'),
+            'int8': Struct('<b'),
+            'uint8': Struct('<B'),
         }
 
     def create_key(self, name: str) -> bytes:
@@ -57,6 +59,9 @@ class TableEncryptionService:
 
     def convert_ulong(self, value: int, key: bytes) -> int:
         return self._xor_struct(value, key, 'uint64') if value else 0
+
+    def convert_ubyte(self, value: int, key: bytes) -> int:
+        return self._xor_struct(value, key, 'uint8') if value else 0
 
     def convert_float(self, value: float, key: bytes) -> float:
         return self.convert_int(int(value), key) * 0.00001 if value else 0.0

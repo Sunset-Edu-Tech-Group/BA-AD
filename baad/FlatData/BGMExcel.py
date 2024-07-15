@@ -32,53 +32,186 @@ class BGMExcel(object):
         return 0
 
     # BGMExcel
-    def ProductionStep_(self):
+    def Nation_(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
         return 0
 
     # BGMExcel
-    def Path(self):
+    def Nation_AsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # BGMExcel
+    def Nation_Length(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def Nation_IsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
+
+    # BGMExcel
+    def Path(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
 
     # BGMExcel
-    def Volume(self):
+    def PathLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def PathIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        return o == 0
+
+    # BGMExcel
+    def Volume(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # BGMExcel
-    def LoopStartTime(self):
+    def VolumeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
+
+    # BGMExcel
+    def VolumeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def VolumeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        return o == 0
+
+    # BGMExcel
+    def LoopStartTime(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # BGMExcel
-    def LoopEndTime(self):
+    def LoopStartTimeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
+
+    # BGMExcel
+    def LoopStartTimeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def LoopStartTimeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        return o == 0
+
+    # BGMExcel
+    def LoopEndTime(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # BGMExcel
-    def LoopTranstionTime(self):
+    def LoopEndTimeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
+
+    # BGMExcel
+    def LoopEndTimeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def LoopEndTimeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # BGMExcel
+    def LoopTranstionTime(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # BGMExcel
-    def LoopOffsetTime(self):
+    def LoopTranstionTimeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
+
+    # BGMExcel
+    def LoopTranstionTimeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def LoopTranstionTimeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # BGMExcel
+    def LoopOffsetTime(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # BGMExcel
+    def LoopOffsetTimeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float32Flags, o)
+        return 0
+
+    # BGMExcel
+    def LoopOffsetTimeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # BGMExcel
+    def LoopOffsetTimeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
 
 def Start(builder): builder.StartObject(8)
 def BGMExcelStart(builder):
@@ -88,34 +221,62 @@ def AddId(builder, Id): builder.PrependInt64Slot(0, Id, 0)
 def BGMExcelAddId(builder, Id):
     """This method is deprecated. Please switch to AddId."""
     return AddId(builder, Id)
-def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(1, ProductionStep_, 0)
-def BGMExcelAddProductionStep_(builder, ProductionStep_):
-    """This method is deprecated. Please switch to AddProductionStep_."""
-    return AddProductionStep_(builder, ProductionStep_)
+def AddNation_(builder, Nation_): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(Nation_), 0)
+def BGMExcelAddNation_(builder, Nation_):
+    """This method is deprecated. Please switch to AddNation_."""
+    return AddNation_(builder, Nation_)
+def StartNation_Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartNation_Vector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartNation_Vector(builder, numElems)
 def AddPath(builder, Path): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(Path), 0)
 def BGMExcelAddPath(builder, Path):
     """This method is deprecated. Please switch to AddPath."""
     return AddPath(builder, Path)
-def AddVolume(builder, Volume): builder.PrependFloat32Slot(3, Volume, 0.0)
+def StartPathVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartPathVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartPathVector(builder, numElems)
+def AddVolume(builder, Volume): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(Volume), 0)
 def BGMExcelAddVolume(builder, Volume):
     """This method is deprecated. Please switch to AddVolume."""
     return AddVolume(builder, Volume)
-def AddLoopStartTime(builder, LoopStartTime): builder.PrependFloat32Slot(4, LoopStartTime, 0.0)
+def StartVolumeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartVolumeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartVolumeVector(builder, numElems)
+def AddLoopStartTime(builder, LoopStartTime): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LoopStartTime), 0)
 def BGMExcelAddLoopStartTime(builder, LoopStartTime):
     """This method is deprecated. Please switch to AddLoopStartTime."""
     return AddLoopStartTime(builder, LoopStartTime)
-def AddLoopEndTime(builder, LoopEndTime): builder.PrependFloat32Slot(5, LoopEndTime, 0.0)
+def StartLoopStartTimeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartLoopStartTimeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartLoopStartTimeVector(builder, numElems)
+def AddLoopEndTime(builder, LoopEndTime): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(LoopEndTime), 0)
 def BGMExcelAddLoopEndTime(builder, LoopEndTime):
     """This method is deprecated. Please switch to AddLoopEndTime."""
     return AddLoopEndTime(builder, LoopEndTime)
-def AddLoopTranstionTime(builder, LoopTranstionTime): builder.PrependFloat32Slot(6, LoopTranstionTime, 0.0)
+def StartLoopEndTimeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartLoopEndTimeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartLoopEndTimeVector(builder, numElems)
+def AddLoopTranstionTime(builder, LoopTranstionTime): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LoopTranstionTime), 0)
 def BGMExcelAddLoopTranstionTime(builder, LoopTranstionTime):
     """This method is deprecated. Please switch to AddLoopTranstionTime."""
     return AddLoopTranstionTime(builder, LoopTranstionTime)
-def AddLoopOffsetTime(builder, LoopOffsetTime): builder.PrependFloat32Slot(7, LoopOffsetTime, 0.0)
+def StartLoopTranstionTimeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartLoopTranstionTimeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartLoopTranstionTimeVector(builder, numElems)
+def AddLoopOffsetTime(builder, LoopOffsetTime): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LoopOffsetTime), 0)
 def BGMExcelAddLoopOffsetTime(builder, LoopOffsetTime):
     """This method is deprecated. Please switch to AddLoopOffsetTime."""
     return AddLoopOffsetTime(builder, LoopOffsetTime)
+def StartLoopOffsetTimeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def BGMExcelStartLoopOffsetTimeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartLoopOffsetTimeVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def BGMExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

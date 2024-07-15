@@ -39,11 +39,11 @@ class MiniGameRhythmExcel(object):
         return 0
 
     # MiniGameRhythmExcel
-    def PresetId(self):
+    def PresetName(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # MiniGameRhythmExcel
     def StageDifficulty(self):
@@ -176,10 +176,10 @@ def AddRhythmBgmId(builder, RhythmBgmId): builder.PrependInt64Slot(1, RhythmBgmI
 def MiniGameRhythmExcelAddRhythmBgmId(builder, RhythmBgmId):
     """This method is deprecated. Please switch to AddRhythmBgmId."""
     return AddRhythmBgmId(builder, RhythmBgmId)
-def AddPresetId(builder, PresetId): builder.PrependInt64Slot(2, PresetId, 0)
-def MiniGameRhythmExcelAddPresetId(builder, PresetId):
-    """This method is deprecated. Please switch to AddPresetId."""
-    return AddPresetId(builder, PresetId)
+def AddPresetName(builder, PresetName): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(PresetName), 0)
+def MiniGameRhythmExcelAddPresetName(builder, PresetName):
+    """This method is deprecated. Please switch to AddPresetName."""
+    return AddPresetName(builder, PresetName)
 def AddStageDifficulty(builder, StageDifficulty): builder.PrependInt32Slot(3, StageDifficulty, 0)
 def MiniGameRhythmExcelAddStageDifficulty(builder, StageDifficulty):
     """This method is deprecated. Please switch to AddStageDifficulty."""

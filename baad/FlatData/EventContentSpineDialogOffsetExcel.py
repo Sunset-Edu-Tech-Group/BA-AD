@@ -39,7 +39,7 @@ class EventContentSpineDialogOffsetExcel(object):
         return 0
 
     # EventContentSpineDialogOffsetExcel
-    def CharacterId(self):
+    def CostumeUniqueId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
@@ -85,10 +85,10 @@ def AddEventContentType_(builder, EventContentType_): builder.PrependInt32Slot(1
 def EventContentSpineDialogOffsetExcelAddEventContentType_(builder, EventContentType_):
     """This method is deprecated. Please switch to AddEventContentType_."""
     return AddEventContentType_(builder, EventContentType_)
-def AddCharacterId(builder, CharacterId): builder.PrependInt64Slot(2, CharacterId, 0)
-def EventContentSpineDialogOffsetExcelAddCharacterId(builder, CharacterId):
-    """This method is deprecated. Please switch to AddCharacterId."""
-    return AddCharacterId(builder, CharacterId)
+def AddCostumeUniqueId(builder, CostumeUniqueId): builder.PrependInt64Slot(2, CostumeUniqueId, 0)
+def EventContentSpineDialogOffsetExcelAddCostumeUniqueId(builder, CostumeUniqueId):
+    """This method is deprecated. Please switch to AddCostumeUniqueId."""
+    return AddCostumeUniqueId(builder, CostumeUniqueId)
 def AddSpineOffsetX(builder, SpineOffsetX): builder.PrependFloat32Slot(3, SpineOffsetX, 0.0)
 def EventContentSpineDialogOffsetExcelAddSpineOffsetX(builder, SpineOffsetX):
     """This method is deprecated. Please switch to AddSpineOffsetX."""

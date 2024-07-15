@@ -3,9 +3,10 @@
 # namespace: FlatData
 
 class TacticRole(object):
-    DamageDealer = 0
-    Tanker = 1
-    Supporter = 2
-    Healer = 3
-    Vehicle = 4
+    None_ = 0
+    DamageDealer = 1
+    Tanker = 2
+    Supporter = 3
+    Healer = 4
+    Vehicle = 5
 

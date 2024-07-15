@@ -136,15 +136,36 @@ class EquipmentExcel(object):
         return o == 0
 
     # EquipmentExcel
-    def CraftQuality(self):
+    def CraftQualityTier0(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # EquipmentExcel
-    def ShopCategory(self, j):
+    def CraftQualityTier1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EquipmentExcel
+    def CraftQualityTier2(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EquipmentExcel
+    def ShiftingCraftQuality(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EquipmentExcel
+    def ShopCategory(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -152,31 +173,31 @@ class EquipmentExcel(object):
 
     # EquipmentExcel
     def ShopCategoryAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # EquipmentExcel
     def ShopCategoryLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EquipmentExcel
     def ShopCategoryIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
     # EquipmentExcel
     def ShortcutTypeId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(16)
+def Start(builder): builder.StartObject(19)
 def EquipmentExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -236,11 +257,23 @@ def StartTagsVector(builder, numElems): return builder.StartVector(4, numElems, 
 def EquipmentExcelStartTagsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartTagsVector(builder, numElems)
-def AddCraftQuality(builder, CraftQuality): builder.PrependInt64Slot(13, CraftQuality, 0)
-def EquipmentExcelAddCraftQuality(builder, CraftQuality):
-    """This method is deprecated. Please switch to AddCraftQuality."""
-    return AddCraftQuality(builder, CraftQuality)
-def AddShopCategory(builder, ShopCategory): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ShopCategory), 0)
+def AddCraftQualityTier0(builder, CraftQualityTier0): builder.PrependInt64Slot(13, CraftQualityTier0, 0)
+def EquipmentExcelAddCraftQualityTier0(builder, CraftQualityTier0):
+    """This method is deprecated. Please switch to AddCraftQualityTier0."""
+    return AddCraftQualityTier0(builder, CraftQualityTier0)
+def AddCraftQualityTier1(builder, CraftQualityTier1): builder.PrependInt64Slot(14, CraftQualityTier1, 0)
+def EquipmentExcelAddCraftQualityTier1(builder, CraftQualityTier1):
+    """This method is deprecated. Please switch to AddCraftQualityTier1."""
+    return AddCraftQualityTier1(builder, CraftQualityTier1)
+def AddCraftQualityTier2(builder, CraftQualityTier2): builder.PrependInt64Slot(15, CraftQualityTier2, 0)
+def EquipmentExcelAddCraftQualityTier2(builder, CraftQualityTier2):
+    """This method is deprecated. Please switch to AddCraftQualityTier2."""
+    return AddCraftQualityTier2(builder, CraftQualityTier2)
+def AddShiftingCraftQuality(builder, ShiftingCraftQuality): builder.PrependInt64Slot(16, ShiftingCraftQuality, 0)
+def EquipmentExcelAddShiftingCraftQuality(builder, ShiftingCraftQuality):
+    """This method is deprecated. Please switch to AddShiftingCraftQuality."""
+    return AddShiftingCraftQuality(builder, ShiftingCraftQuality)
+def AddShopCategory(builder, ShopCategory): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ShopCategory), 0)
 def EquipmentExcelAddShopCategory(builder, ShopCategory):
     """This method is deprecated. Please switch to AddShopCategory."""
     return AddShopCategory(builder, ShopCategory)
@@ -248,7 +281,7 @@ def StartShopCategoryVector(builder, numElems): return builder.StartVector(4, nu
 def EquipmentExcelStartShopCategoryVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartShopCategoryVector(builder, numElems)
-def AddShortcutTypeId(builder, ShortcutTypeId): builder.PrependInt64Slot(15, ShortcutTypeId, 0)
+def AddShortcutTypeId(builder, ShortcutTypeId): builder.PrependInt64Slot(18, ShortcutTypeId, 0)
 def EquipmentExcelAddShortcutTypeId(builder, ShortcutTypeId):
     """This method is deprecated. Please switch to AddShortcutTypeId."""
     return AddShortcutTypeId(builder, ShortcutTypeId)

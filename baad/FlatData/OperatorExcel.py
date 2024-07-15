@@ -74,160 +74,61 @@ class OperatorExcel(object):
         return 0
 
     # OperatorExcel
-    def PortraitPath(self):
+    def OperatorOutputPriority(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
     # OperatorExcel
-    def TextLocalizeKey(self):
+    def PortraitPath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # OperatorExcel
-    def VoiceClipsKr(self, j):
+    def TextLocalizeKey(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # OperatorExcel
-    def VoiceClipsKrLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OperatorExcel
-    def VoiceClipsKrIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        return o == 0
-
-    # OperatorExcel
-    def VoiceClipsJp(self, j):
+    def VoiceId(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # OperatorExcel
-    def VoiceClipsJpLength(self):
+    def VoiceIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
+        return 0
+
+    # OperatorExcel
+    def VoiceIdLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OperatorExcel
-    def VoiceClipsJpIsNone(self):
+    def VoiceIdIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # OperatorExcel
-    def VoiceClipsTh(self, j):
+    def OperatorWaitQueue(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
-    # OperatorExcel
-    def VoiceClipsThLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OperatorExcel
-    def VoiceClipsThIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        return o == 0
-
-    # OperatorExcel
-    def VoiceClipsTw(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # OperatorExcel
-    def VoiceClipsTwLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OperatorExcel
-    def VoiceClipsTwIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        return o == 0
-
-    # OperatorExcel
-    def VoiceClipsEn(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # OperatorExcel
-    def VoiceClipsEnLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OperatorExcel
-    def VoiceClipsEnIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        return o == 0
-
-    # OperatorExcel
-    def VoiceClipsDe(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # OperatorExcel
-    def VoiceClipsDeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OperatorExcel
-    def VoiceClipsDeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        return o == 0
-
-    # OperatorExcel
-    def VoiceClipsFr(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # OperatorExcel
-    def VoiceClipsFrLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OperatorExcel
-    def VoiceClipsFrIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        return o == 0
-
-def Start(builder): builder.StartObject(16)
+def Start(builder): builder.StartObject(12)
 def OperatorExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -259,70 +160,30 @@ def AddDuration(builder, Duration): builder.PrependInt32Slot(6, Duration, 0)
 def OperatorExcelAddDuration(builder, Duration):
     """This method is deprecated. Please switch to AddDuration."""
     return AddDuration(builder, Duration)
-def AddPortraitPath(builder, PortraitPath): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PortraitPath), 0)
+def AddOperatorOutputPriority(builder, OperatorOutputPriority): builder.PrependInt32Slot(7, OperatorOutputPriority, 0)
+def OperatorExcelAddOperatorOutputPriority(builder, OperatorOutputPriority):
+    """This method is deprecated. Please switch to AddOperatorOutputPriority."""
+    return AddOperatorOutputPriority(builder, OperatorOutputPriority)
+def AddPortraitPath(builder, PortraitPath): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PortraitPath), 0)
 def OperatorExcelAddPortraitPath(builder, PortraitPath):
     """This method is deprecated. Please switch to AddPortraitPath."""
     return AddPortraitPath(builder, PortraitPath)
-def AddTextLocalizeKey(builder, TextLocalizeKey): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TextLocalizeKey), 0)
+def AddTextLocalizeKey(builder, TextLocalizeKey): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TextLocalizeKey), 0)
 def OperatorExcelAddTextLocalizeKey(builder, TextLocalizeKey):
     """This method is deprecated. Please switch to AddTextLocalizeKey."""
     return AddTextLocalizeKey(builder, TextLocalizeKey)
-def AddVoiceClipsKr(builder, VoiceClipsKr): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsKr), 0)
-def OperatorExcelAddVoiceClipsKr(builder, VoiceClipsKr):
-    """This method is deprecated. Please switch to AddVoiceClipsKr."""
-    return AddVoiceClipsKr(builder, VoiceClipsKr)
-def StartVoiceClipsKrVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsKrVector(builder, numElems):
+def AddVoiceId(builder, VoiceId): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceId), 0)
+def OperatorExcelAddVoiceId(builder, VoiceId):
+    """This method is deprecated. Please switch to AddVoiceId."""
+    return AddVoiceId(builder, VoiceId)
+def StartVoiceIdVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def OperatorExcelStartVoiceIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsKrVector(builder, numElems)
-def AddVoiceClipsJp(builder, VoiceClipsJp): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsJp), 0)
-def OperatorExcelAddVoiceClipsJp(builder, VoiceClipsJp):
-    """This method is deprecated. Please switch to AddVoiceClipsJp."""
-    return AddVoiceClipsJp(builder, VoiceClipsJp)
-def StartVoiceClipsJpVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsJpVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsJpVector(builder, numElems)
-def AddVoiceClipsTh(builder, VoiceClipsTh): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsTh), 0)
-def OperatorExcelAddVoiceClipsTh(builder, VoiceClipsTh):
-    """This method is deprecated. Please switch to AddVoiceClipsTh."""
-    return AddVoiceClipsTh(builder, VoiceClipsTh)
-def StartVoiceClipsThVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsThVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsThVector(builder, numElems)
-def AddVoiceClipsTw(builder, VoiceClipsTw): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsTw), 0)
-def OperatorExcelAddVoiceClipsTw(builder, VoiceClipsTw):
-    """This method is deprecated. Please switch to AddVoiceClipsTw."""
-    return AddVoiceClipsTw(builder, VoiceClipsTw)
-def StartVoiceClipsTwVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsTwVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsTwVector(builder, numElems)
-def AddVoiceClipsEn(builder, VoiceClipsEn): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsEn), 0)
-def OperatorExcelAddVoiceClipsEn(builder, VoiceClipsEn):
-    """This method is deprecated. Please switch to AddVoiceClipsEn."""
-    return AddVoiceClipsEn(builder, VoiceClipsEn)
-def StartVoiceClipsEnVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsEnVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsEnVector(builder, numElems)
-def AddVoiceClipsDe(builder, VoiceClipsDe): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsDe), 0)
-def OperatorExcelAddVoiceClipsDe(builder, VoiceClipsDe):
-    """This method is deprecated. Please switch to AddVoiceClipsDe."""
-    return AddVoiceClipsDe(builder, VoiceClipsDe)
-def StartVoiceClipsDeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsDeVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsDeVector(builder, numElems)
-def AddVoiceClipsFr(builder, VoiceClipsFr): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(VoiceClipsFr), 0)
-def OperatorExcelAddVoiceClipsFr(builder, VoiceClipsFr):
-    """This method is deprecated. Please switch to AddVoiceClipsFr."""
-    return AddVoiceClipsFr(builder, VoiceClipsFr)
-def StartVoiceClipsFrVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def OperatorExcelStartVoiceClipsFrVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartVoiceClipsFrVector(builder, numElems)
+    return StartVoiceIdVector(builder, numElems)
+def AddOperatorWaitQueue(builder, OperatorWaitQueue): builder.PrependBoolSlot(11, OperatorWaitQueue, 0)
+def OperatorExcelAddOperatorWaitQueue(builder, OperatorWaitQueue):
+    """This method is deprecated. Please switch to AddOperatorWaitQueue."""
+    return AddOperatorWaitQueue(builder, OperatorWaitQueue)
 def End(builder): return builder.EndObject()
 def OperatorExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

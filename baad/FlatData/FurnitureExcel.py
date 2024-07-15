@@ -234,68 +234,156 @@ class FurnitureExcel(object):
         return o == 0
 
     # FurnitureExcel
-    def CraftQuality(self):
+    def CraftQualityTier0(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # FurnitureExcel
-    def EventCollectionId(self):
+    def CraftQualityTier1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # FurnitureExcel
-    def EventCollectionBubbleOffsetX(self):
+    def CraftQualityTier2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # FurnitureExcel
-    def EventCollectionBubbleOffsetY(self):
+    def ShiftingCraftQuality(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # FurnitureExcel
-    def MultipleConditionCheckType_(self):
+    def FurnitureFunctionType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # FurnitureExcel
-    def CafeCharacterState_(self, j):
+    def FurnitureFunctionParameter(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # FurnitureExcel
+    def VideoId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # FurnitureExcel
+    def EventCollectionId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # FurnitureExcel
+    def FurnitureBubbleOffsetX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # FurnitureExcel
+    def FurnitureBubbleOffsetY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # FurnitureExcel
+    def CafeCharacterStateReq(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return 0
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
 
     # FurnitureExcel
-    def CafeCharacterState_AsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
-        return 0
-
-    # FurnitureExcel
-    def CafeCharacterState_Length(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+    def CafeCharacterStateReqLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # FurnitureExcel
-    def CafeCharacterState_IsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+    def CafeCharacterStateReqIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         return o == 0
 
-def Start(builder): builder.StartObject(33)
+    # FurnitureExcel
+    def CafeCharacterStateAdd(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # FurnitureExcel
+    def CafeCharacterStateAddLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FurnitureExcel
+    def CafeCharacterStateAddIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        return o == 0
+
+    # FurnitureExcel
+    def CafeCharacterStateMake(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # FurnitureExcel
+    def CafeCharacterStateMakeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FurnitureExcel
+    def CafeCharacterStateMakeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        return o == 0
+
+    # FurnitureExcel
+    def CafeCharacterStateOnly(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # FurnitureExcel
+    def CafeCharacterStateOnlyLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FurnitureExcel
+    def CafeCharacterStateOnlyIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        return o == 0
+
+def Start(builder): builder.StartObject(41)
 def FurnitureExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -411,34 +499,78 @@ def StartTagsVector(builder, numElems): return builder.StartVector(4, numElems, 
 def FurnitureExcelStartTagsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartTagsVector(builder, numElems)
-def AddCraftQuality(builder, CraftQuality): builder.PrependInt64Slot(27, CraftQuality, 0)
-def FurnitureExcelAddCraftQuality(builder, CraftQuality):
-    """This method is deprecated. Please switch to AddCraftQuality."""
-    return AddCraftQuality(builder, CraftQuality)
-def AddEventCollectionId(builder, EventCollectionId): builder.PrependInt64Slot(28, EventCollectionId, 0)
+def AddCraftQualityTier0(builder, CraftQualityTier0): builder.PrependInt64Slot(27, CraftQualityTier0, 0)
+def FurnitureExcelAddCraftQualityTier0(builder, CraftQualityTier0):
+    """This method is deprecated. Please switch to AddCraftQualityTier0."""
+    return AddCraftQualityTier0(builder, CraftQualityTier0)
+def AddCraftQualityTier1(builder, CraftQualityTier1): builder.PrependInt64Slot(28, CraftQualityTier1, 0)
+def FurnitureExcelAddCraftQualityTier1(builder, CraftQualityTier1):
+    """This method is deprecated. Please switch to AddCraftQualityTier1."""
+    return AddCraftQualityTier1(builder, CraftQualityTier1)
+def AddCraftQualityTier2(builder, CraftQualityTier2): builder.PrependInt64Slot(29, CraftQualityTier2, 0)
+def FurnitureExcelAddCraftQualityTier2(builder, CraftQualityTier2):
+    """This method is deprecated. Please switch to AddCraftQualityTier2."""
+    return AddCraftQualityTier2(builder, CraftQualityTier2)
+def AddShiftingCraftQuality(builder, ShiftingCraftQuality): builder.PrependInt64Slot(30, ShiftingCraftQuality, 0)
+def FurnitureExcelAddShiftingCraftQuality(builder, ShiftingCraftQuality):
+    """This method is deprecated. Please switch to AddShiftingCraftQuality."""
+    return AddShiftingCraftQuality(builder, ShiftingCraftQuality)
+def AddFurnitureFunctionType_(builder, FurnitureFunctionType_): builder.PrependInt32Slot(31, FurnitureFunctionType_, 0)
+def FurnitureExcelAddFurnitureFunctionType_(builder, FurnitureFunctionType_):
+    """This method is deprecated. Please switch to AddFurnitureFunctionType_."""
+    return AddFurnitureFunctionType_(builder, FurnitureFunctionType_)
+def AddFurnitureFunctionParameter(builder, FurnitureFunctionParameter): builder.PrependInt64Slot(32, FurnitureFunctionParameter, 0)
+def FurnitureExcelAddFurnitureFunctionParameter(builder, FurnitureFunctionParameter):
+    """This method is deprecated. Please switch to AddFurnitureFunctionParameter."""
+    return AddFurnitureFunctionParameter(builder, FurnitureFunctionParameter)
+def AddVideoId(builder, VideoId): builder.PrependInt64Slot(33, VideoId, 0)
+def FurnitureExcelAddVideoId(builder, VideoId):
+    """This method is deprecated. Please switch to AddVideoId."""
+    return AddVideoId(builder, VideoId)
+def AddEventCollectionId(builder, EventCollectionId): builder.PrependInt64Slot(34, EventCollectionId, 0)
 def FurnitureExcelAddEventCollectionId(builder, EventCollectionId):
     """This method is deprecated. Please switch to AddEventCollectionId."""
     return AddEventCollectionId(builder, EventCollectionId)
-def AddEventCollectionBubbleOffsetX(builder, EventCollectionBubbleOffsetX): builder.PrependInt64Slot(29, EventCollectionBubbleOffsetX, 0)
-def FurnitureExcelAddEventCollectionBubbleOffsetX(builder, EventCollectionBubbleOffsetX):
-    """This method is deprecated. Please switch to AddEventCollectionBubbleOffsetX."""
-    return AddEventCollectionBubbleOffsetX(builder, EventCollectionBubbleOffsetX)
-def AddEventCollectionBubbleOffsetY(builder, EventCollectionBubbleOffsetY): builder.PrependInt64Slot(30, EventCollectionBubbleOffsetY, 0)
-def FurnitureExcelAddEventCollectionBubbleOffsetY(builder, EventCollectionBubbleOffsetY):
-    """This method is deprecated. Please switch to AddEventCollectionBubbleOffsetY."""
-    return AddEventCollectionBubbleOffsetY(builder, EventCollectionBubbleOffsetY)
-def AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_): builder.PrependInt32Slot(31, MultipleConditionCheckType_, 0)
-def FurnitureExcelAddMultipleConditionCheckType_(builder, MultipleConditionCheckType_):
-    """This method is deprecated. Please switch to AddMultipleConditionCheckType_."""
-    return AddMultipleConditionCheckType_(builder, MultipleConditionCheckType_)
-def AddCafeCharacterState_(builder, CafeCharacterState_): builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterState_), 0)
-def FurnitureExcelAddCafeCharacterState_(builder, CafeCharacterState_):
-    """This method is deprecated. Please switch to AddCafeCharacterState_."""
-    return AddCafeCharacterState_(builder, CafeCharacterState_)
-def StartCafeCharacterState_Vector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def FurnitureExcelStartCafeCharacterState_Vector(builder, numElems):
+def AddFurnitureBubbleOffsetX(builder, FurnitureBubbleOffsetX): builder.PrependInt64Slot(35, FurnitureBubbleOffsetX, 0)
+def FurnitureExcelAddFurnitureBubbleOffsetX(builder, FurnitureBubbleOffsetX):
+    """This method is deprecated. Please switch to AddFurnitureBubbleOffsetX."""
+    return AddFurnitureBubbleOffsetX(builder, FurnitureBubbleOffsetX)
+def AddFurnitureBubbleOffsetY(builder, FurnitureBubbleOffsetY): builder.PrependInt64Slot(36, FurnitureBubbleOffsetY, 0)
+def FurnitureExcelAddFurnitureBubbleOffsetY(builder, FurnitureBubbleOffsetY):
+    """This method is deprecated. Please switch to AddFurnitureBubbleOffsetY."""
+    return AddFurnitureBubbleOffsetY(builder, FurnitureBubbleOffsetY)
+def AddCafeCharacterStateReq(builder, CafeCharacterStateReq): builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterStateReq), 0)
+def FurnitureExcelAddCafeCharacterStateReq(builder, CafeCharacterStateReq):
+    """This method is deprecated. Please switch to AddCafeCharacterStateReq."""
+    return AddCafeCharacterStateReq(builder, CafeCharacterStateReq)
+def StartCafeCharacterStateReqVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def FurnitureExcelStartCafeCharacterStateReqVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartCafeCharacterState_Vector(builder, numElems)
+    return StartCafeCharacterStateReqVector(builder, numElems)
+def AddCafeCharacterStateAdd(builder, CafeCharacterStateAdd): builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterStateAdd), 0)
+def FurnitureExcelAddCafeCharacterStateAdd(builder, CafeCharacterStateAdd):
+    """This method is deprecated. Please switch to AddCafeCharacterStateAdd."""
+    return AddCafeCharacterStateAdd(builder, CafeCharacterStateAdd)
+def StartCafeCharacterStateAddVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def FurnitureExcelStartCafeCharacterStateAddVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCafeCharacterStateAddVector(builder, numElems)
+def AddCafeCharacterStateMake(builder, CafeCharacterStateMake): builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterStateMake), 0)
+def FurnitureExcelAddCafeCharacterStateMake(builder, CafeCharacterStateMake):
+    """This method is deprecated. Please switch to AddCafeCharacterStateMake."""
+    return AddCafeCharacterStateMake(builder, CafeCharacterStateMake)
+def StartCafeCharacterStateMakeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def FurnitureExcelStartCafeCharacterStateMakeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCafeCharacterStateMakeVector(builder, numElems)
+def AddCafeCharacterStateOnly(builder, CafeCharacterStateOnly): builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(CafeCharacterStateOnly), 0)
+def FurnitureExcelAddCafeCharacterStateOnly(builder, CafeCharacterStateOnly):
+    """This method is deprecated. Please switch to AddCafeCharacterStateOnly."""
+    return AddCafeCharacterStateOnly(builder, CafeCharacterStateOnly)
+def StartCafeCharacterStateOnlyVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def FurnitureExcelStartCafeCharacterStateOnlyVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartCafeCharacterStateOnlyVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def FurnitureExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -8,4 +8,8 @@ class ResetContentType(object):
     StarategyMapHeal = 2
     ShopRefresh = 3
     ArenaDefenseVictoryReward = 4
+    WeeklyMasterCoin = 5
+    WorldRaidGemEnterCount = 6
+    ConquestDailyErosionCheck = 7
+    MiniEventToken = 8
 

@@ -32,34 +32,33 @@ class StatLevelInterpolationExcel(object):
         return 0
 
     # StatLevelInterpolationExcel
-    def Standard(self):
+    def StatTypeIndex(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
         return 0
 
     # StatLevelInterpolationExcel
-    def Premature(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+    def StatTypeIndexAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # StatLevelInterpolationExcel
-    def LateBloom(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+    def StatTypeIndexLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            return self._tab.VectorLen(o)
         return 0
 
     # StatLevelInterpolationExcel
-    def Obstacle(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
+    def StatTypeIndexIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        return o == 0
 
-def Start(builder): builder.StartObject(5)
+def Start(builder): builder.StartObject(2)
 def StatLevelInterpolationExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -67,22 +66,14 @@ def AddLevel(builder, Level): builder.PrependInt64Slot(0, Level, 0)
 def StatLevelInterpolationExcelAddLevel(builder, Level):
     """This method is deprecated. Please switch to AddLevel."""
     return AddLevel(builder, Level)
-def AddStandard(builder, Standard): builder.PrependInt64Slot(1, Standard, 0)
-def StatLevelInterpolationExcelAddStandard(builder, Standard):
-    """This method is deprecated. Please switch to AddStandard."""
-    return AddStandard(builder, Standard)
-def AddPremature(builder, Premature): builder.PrependInt64Slot(2, Premature, 0)
-def StatLevelInterpolationExcelAddPremature(builder, Premature):
-    """This method is deprecated. Please switch to AddPremature."""
-    return AddPremature(builder, Premature)
-def AddLateBloom(builder, LateBloom): builder.PrependInt64Slot(3, LateBloom, 0)
-def StatLevelInterpolationExcelAddLateBloom(builder, LateBloom):
-    """This method is deprecated. Please switch to AddLateBloom."""
-    return AddLateBloom(builder, LateBloom)
-def AddObstacle(builder, Obstacle): builder.PrependInt64Slot(4, Obstacle, 0)
-def StatLevelInterpolationExcelAddObstacle(builder, Obstacle):
-    """This method is deprecated. Please switch to AddObstacle."""
-    return AddObstacle(builder, Obstacle)
+def AddStatTypeIndex(builder, StatTypeIndex): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(StatTypeIndex), 0)
+def StatLevelInterpolationExcelAddStatTypeIndex(builder, StatTypeIndex):
+    """This method is deprecated. Please switch to AddStatTypeIndex."""
+    return AddStatTypeIndex(builder, StatTypeIndex)
+def StartStatTypeIndexVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def StatLevelInterpolationExcelStartStatTypeIndexVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStatTypeIndexVector(builder, numElems)
 def End(builder): return builder.EndObject()
 def StatLevelInterpolationExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -135,7 +135,84 @@ class ConstStrategyExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(13)
+    # ConstStrategyExcel
+    def TimeAttackDungeonEchelonCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def WorldRaidEchelonCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def TacticSkipClearTimeSeconds(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def TacticSkipFramePerSecond(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def ConquestEchelonCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def StoryEchelonCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def MultiSweepPresetCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def MultiSweepPresetNameMaxLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def MultiSweepPresetSelectStageMaxCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def MultiSweepPresetMaxSweepCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ConstStrategyExcel
+    def MultiSweepPresetSelectParcelMaxCount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(24)
 def ConstStrategyExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -195,6 +272,50 @@ def AddEventContentEchelonCount(builder, EventContentEchelonCount): builder.Prep
 def ConstStrategyExcelAddEventContentEchelonCount(builder, EventContentEchelonCount):
     """This method is deprecated. Please switch to AddEventContentEchelonCount."""
     return AddEventContentEchelonCount(builder, EventContentEchelonCount)
+def AddTimeAttackDungeonEchelonCount(builder, TimeAttackDungeonEchelonCount): builder.PrependInt32Slot(13, TimeAttackDungeonEchelonCount, 0)
+def ConstStrategyExcelAddTimeAttackDungeonEchelonCount(builder, TimeAttackDungeonEchelonCount):
+    """This method is deprecated. Please switch to AddTimeAttackDungeonEchelonCount."""
+    return AddTimeAttackDungeonEchelonCount(builder, TimeAttackDungeonEchelonCount)
+def AddWorldRaidEchelonCount(builder, WorldRaidEchelonCount): builder.PrependInt32Slot(14, WorldRaidEchelonCount, 0)
+def ConstStrategyExcelAddWorldRaidEchelonCount(builder, WorldRaidEchelonCount):
+    """This method is deprecated. Please switch to AddWorldRaidEchelonCount."""
+    return AddWorldRaidEchelonCount(builder, WorldRaidEchelonCount)
+def AddTacticSkipClearTimeSeconds(builder, TacticSkipClearTimeSeconds): builder.PrependInt32Slot(15, TacticSkipClearTimeSeconds, 0)
+def ConstStrategyExcelAddTacticSkipClearTimeSeconds(builder, TacticSkipClearTimeSeconds):
+    """This method is deprecated. Please switch to AddTacticSkipClearTimeSeconds."""
+    return AddTacticSkipClearTimeSeconds(builder, TacticSkipClearTimeSeconds)
+def AddTacticSkipFramePerSecond(builder, TacticSkipFramePerSecond): builder.PrependInt32Slot(16, TacticSkipFramePerSecond, 0)
+def ConstStrategyExcelAddTacticSkipFramePerSecond(builder, TacticSkipFramePerSecond):
+    """This method is deprecated. Please switch to AddTacticSkipFramePerSecond."""
+    return AddTacticSkipFramePerSecond(builder, TacticSkipFramePerSecond)
+def AddConquestEchelonCount(builder, ConquestEchelonCount): builder.PrependInt32Slot(17, ConquestEchelonCount, 0)
+def ConstStrategyExcelAddConquestEchelonCount(builder, ConquestEchelonCount):
+    """This method is deprecated. Please switch to AddConquestEchelonCount."""
+    return AddConquestEchelonCount(builder, ConquestEchelonCount)
+def AddStoryEchelonCount(builder, StoryEchelonCount): builder.PrependInt32Slot(18, StoryEchelonCount, 0)
+def ConstStrategyExcelAddStoryEchelonCount(builder, StoryEchelonCount):
+    """This method is deprecated. Please switch to AddStoryEchelonCount."""
+    return AddStoryEchelonCount(builder, StoryEchelonCount)
+def AddMultiSweepPresetCount(builder, MultiSweepPresetCount): builder.PrependInt32Slot(19, MultiSweepPresetCount, 0)
+def ConstStrategyExcelAddMultiSweepPresetCount(builder, MultiSweepPresetCount):
+    """This method is deprecated. Please switch to AddMultiSweepPresetCount."""
+    return AddMultiSweepPresetCount(builder, MultiSweepPresetCount)
+def AddMultiSweepPresetNameMaxLength(builder, MultiSweepPresetNameMaxLength): builder.PrependInt32Slot(20, MultiSweepPresetNameMaxLength, 0)
+def ConstStrategyExcelAddMultiSweepPresetNameMaxLength(builder, MultiSweepPresetNameMaxLength):
+    """This method is deprecated. Please switch to AddMultiSweepPresetNameMaxLength."""
+    return AddMultiSweepPresetNameMaxLength(builder, MultiSweepPresetNameMaxLength)
+def AddMultiSweepPresetSelectStageMaxCount(builder, MultiSweepPresetSelectStageMaxCount): builder.PrependInt32Slot(21, MultiSweepPresetSelectStageMaxCount, 0)
+def ConstStrategyExcelAddMultiSweepPresetSelectStageMaxCount(builder, MultiSweepPresetSelectStageMaxCount):
+    """This method is deprecated. Please switch to AddMultiSweepPresetSelectStageMaxCount."""
+    return AddMultiSweepPresetSelectStageMaxCount(builder, MultiSweepPresetSelectStageMaxCount)
+def AddMultiSweepPresetMaxSweepCount(builder, MultiSweepPresetMaxSweepCount): builder.PrependInt32Slot(22, MultiSweepPresetMaxSweepCount, 0)
+def ConstStrategyExcelAddMultiSweepPresetMaxSweepCount(builder, MultiSweepPresetMaxSweepCount):
+    """This method is deprecated. Please switch to AddMultiSweepPresetMaxSweepCount."""
+    return AddMultiSweepPresetMaxSweepCount(builder, MultiSweepPresetMaxSweepCount)
+def AddMultiSweepPresetSelectParcelMaxCount(builder, MultiSweepPresetSelectParcelMaxCount): builder.PrependInt32Slot(23, MultiSweepPresetSelectParcelMaxCount, 0)
+def ConstStrategyExcelAddMultiSweepPresetSelectParcelMaxCount(builder, MultiSweepPresetSelectParcelMaxCount):
+    """This method is deprecated. Please switch to AddMultiSweepPresetSelectParcelMaxCount."""
+    return AddMultiSweepPresetSelectParcelMaxCount(builder, MultiSweepPresetSelectParcelMaxCount)
 def End(builder): return builder.EndObject()
 def ConstStrategyExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

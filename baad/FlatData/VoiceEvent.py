@@ -20,4 +20,20 @@ class VoiceEvent(object):
     BattleCover = 14
     BattleMove = 15
     BattleMoveToForamtionBeacon = 16
+    MGS_GameStart = 17
+    MGS_CharacterSelect = 18
+    MGS_Attacking = 19
+    MGS_GeasGet = 20
+    EXSkill = 21
+    EXSkillLevel = 22
+    EXSkill2 = 23
+    EXSkillLevel2 = 24
+    EXSkill3 = 25
+    EXSkillLevel3 = 26
+    EXSkill4 = 27
+    EXSkillLevel4 = 28
+    PublicSkill01 = 29
+    PublicSkill02 = 30
+    InteractionPublicSkill01 = 31
+    InteractionPublicSkill02 = 32
 

@@ -60,7 +60,7 @@ class MemoryLobbyExcel(object):
         return None
 
     # MemoryLobbyExcel
-    def MemoryLobbyCategory(self):
+    def MemoryLobbyCategory_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
@@ -101,42 +101,7 @@ class MemoryLobbyExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # MemoryLobbyExcel
-    def AudioClipTh(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MemoryLobbyExcel
-    def AudioClipTw(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MemoryLobbyExcel
-    def AudioClipEn(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MemoryLobbyExcel
-    def AudioClipDe(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MemoryLobbyExcel
-    def AudioClipFr(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(16)
+def Start(builder): builder.StartObject(11)
 def MemoryLobbyExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -160,10 +125,10 @@ def AddPrefabName(builder, PrefabName): builder.PrependUOffsetTRelativeSlot(4, f
 def MemoryLobbyExcelAddPrefabName(builder, PrefabName):
     """This method is deprecated. Please switch to AddPrefabName."""
     return AddPrefabName(builder, PrefabName)
-def AddMemoryLobbyCategory(builder, MemoryLobbyCategory): builder.PrependInt32Slot(5, MemoryLobbyCategory, 0)
-def MemoryLobbyExcelAddMemoryLobbyCategory(builder, MemoryLobbyCategory):
-    """This method is deprecated. Please switch to AddMemoryLobbyCategory."""
-    return AddMemoryLobbyCategory(builder, MemoryLobbyCategory)
+def AddMemoryLobbyCategory_(builder, MemoryLobbyCategory_): builder.PrependInt32Slot(5, MemoryLobbyCategory_, 0)
+def MemoryLobbyExcelAddMemoryLobbyCategory_(builder, MemoryLobbyCategory_):
+    """This method is deprecated. Please switch to AddMemoryLobbyCategory_."""
+    return AddMemoryLobbyCategory_(builder, MemoryLobbyCategory_)
 def AddSlotTextureName(builder, SlotTextureName): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SlotTextureName), 0)
 def MemoryLobbyExcelAddSlotTextureName(builder, SlotTextureName):
     """This method is deprecated. Please switch to AddSlotTextureName."""
@@ -184,26 +149,6 @@ def AddAudioClipKr(builder, AudioClipKr): builder.PrependUOffsetTRelativeSlot(10
 def MemoryLobbyExcelAddAudioClipKr(builder, AudioClipKr):
     """This method is deprecated. Please switch to AddAudioClipKr."""
     return AddAudioClipKr(builder, AudioClipKr)
-def AddAudioClipTh(builder, AudioClipTh): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipTh), 0)
-def MemoryLobbyExcelAddAudioClipTh(builder, AudioClipTh):
-    """This method is deprecated. Please switch to AddAudioClipTh."""
-    return AddAudioClipTh(builder, AudioClipTh)
-def AddAudioClipTw(builder, AudioClipTw): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipTw), 0)
-def MemoryLobbyExcelAddAudioClipTw(builder, AudioClipTw):
-    """This method is deprecated. Please switch to AddAudioClipTw."""
-    return AddAudioClipTw(builder, AudioClipTw)
-def AddAudioClipEn(builder, AudioClipEn): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipEn), 0)
-def MemoryLobbyExcelAddAudioClipEn(builder, AudioClipEn):
-    """This method is deprecated. Please switch to AddAudioClipEn."""
-    return AddAudioClipEn(builder, AudioClipEn)
-def AddAudioClipDe(builder, AudioClipDe): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipDe), 0)
-def MemoryLobbyExcelAddAudioClipDe(builder, AudioClipDe):
-    """This method is deprecated. Please switch to AddAudioClipDe."""
-    return AddAudioClipDe(builder, AudioClipDe)
-def AddAudioClipFr(builder, AudioClipFr): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(AudioClipFr), 0)
-def MemoryLobbyExcelAddAudioClipFr(builder, AudioClipFr):
-    """This method is deprecated. Please switch to AddAudioClipFr."""
-    return AddAudioClipFr(builder, AudioClipFr)
 def End(builder): return builder.EndObject()
 def MemoryLobbyExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

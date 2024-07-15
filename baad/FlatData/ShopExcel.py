@@ -128,7 +128,28 @@ class ShopExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(12)
+    # ShopExcel
+    def RestrictBuyWhenInventoryFull(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ShopExcel
+    def DisplayTag(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopExcel
+    def ShopUpdateGroupId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(15)
 def ShopExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -184,6 +205,18 @@ def AddBuyReportEventName(builder, BuyReportEventName): builder.PrependUOffsetTR
 def ShopExcelAddBuyReportEventName(builder, BuyReportEventName):
     """This method is deprecated. Please switch to AddBuyReportEventName."""
     return AddBuyReportEventName(builder, BuyReportEventName)
+def AddRestrictBuyWhenInventoryFull(builder, RestrictBuyWhenInventoryFull): builder.PrependBoolSlot(12, RestrictBuyWhenInventoryFull, 0)
+def ShopExcelAddRestrictBuyWhenInventoryFull(builder, RestrictBuyWhenInventoryFull):
+    """This method is deprecated. Please switch to AddRestrictBuyWhenInventoryFull."""
+    return AddRestrictBuyWhenInventoryFull(builder, RestrictBuyWhenInventoryFull)
+def AddDisplayTag(builder, DisplayTag): builder.PrependInt32Slot(13, DisplayTag, 0)
+def ShopExcelAddDisplayTag(builder, DisplayTag):
+    """This method is deprecated. Please switch to AddDisplayTag."""
+    return AddDisplayTag(builder, DisplayTag)
+def AddShopUpdateGroupId(builder, ShopUpdateGroupId): builder.PrependInt32Slot(14, ShopUpdateGroupId, 0)
+def ShopExcelAddShopUpdateGroupId(builder, ShopUpdateGroupId):
+    """This method is deprecated. Please switch to AddShopUpdateGroupId."""
+    return AddShopUpdateGroupId(builder, ShopUpdateGroupId)
 def End(builder): return builder.EndObject()
 def ShopExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

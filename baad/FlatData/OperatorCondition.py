@@ -20,4 +20,15 @@ class OperatorCondition(object):
     SchoolDungeonCombatVictory = 14
     SchoolDungeonCombatDefeat = 15
     StrategyWarpUnitFromHideTile = 16
+    TimeAttackDungeonStart = 17
+    TimeAttackDungeonVictory = 18
+    TimeAttackDungeonDefeat = 19
+    WorldRaidBossSpawn = 20
+    WorldRaidBossKill = 21
+    WorldRaidBossDamaged = 22
+    WorldRaidScenarioBattle = 23
+    MinigameTBGThemaOpen = 24
+    MinigameTBGThemaComeback = 25
+    MinigameTBGAllyRevive = 26
+    MinigameTBGItemUse = 27
 

@@ -18,4 +18,7 @@ class ExternalBehavior(object):
     AlivePartsUseExSkill = 12
     ActivatePart = 13
     AddGroggy = 14
+    SelectTargetToUseSkillAlly = 15
+    ForceChangePhase = 16
+    ClearUseSkillEndGroupId = 17
 

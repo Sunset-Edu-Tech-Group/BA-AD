@@ -63,8 +63,8 @@ class MiniGameMissionExcel(object):
     def Description(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
     # MiniGameMissionExcel
     def ResetType(self):
@@ -74,22 +74,36 @@ class MiniGameMissionExcel(object):
         return 0
 
     # MiniGameMissionExcel
-    def ViewFlag(self):
+    def ToastDisplayType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # MiniGameMissionExcel
+    def ToastImagePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MiniGameMissionExcel
+    def ViewFlag(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # MiniGameMissionExcel
     def DisplayOrder(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # MiniGameMissionExcel
     def PreMissionId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -97,40 +111,40 @@ class MiniGameMissionExcel(object):
 
     # MiniGameMissionExcel
     def PreMissionIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # MiniGameMissionExcel
     def PreMissionIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
     def PreMissionIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # MiniGameMissionExcel
     def AccountType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # MiniGameMissionExcel
     def AccountLevel(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # MiniGameMissionExcel
     def ShortcutUI(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -138,33 +152,40 @@ class MiniGameMissionExcel(object):
 
     # MiniGameMissionExcel
     def ShortcutUILength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
     def ShortcutUIIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
     # MiniGameMissionExcel
     def CompleteConditionType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # MiniGameMissionExcel
+    def IsCompleteExtensionTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # MiniGameMissionExcel
     def CompleteConditionCount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # MiniGameMissionExcel
     def CompleteConditionParameter(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -172,53 +193,60 @@ class MiniGameMissionExcel(object):
 
     # MiniGameMissionExcel
     def CompleteConditionParameterAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # MiniGameMissionExcel
     def CompleteConditionParameterLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
     def CompleteConditionParameterIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
     # MiniGameMissionExcel
-    def CompleteConditionParameterName(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+    def CompleteConditionParameterTag(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # MiniGameMissionExcel
-    def CompleteConditionParameterNameLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+    def CompleteConditionParameterTagAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # MiniGameMissionExcel
+    def CompleteConditionParameterTagLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
-    def CompleteConditionParameterNameIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+    def CompleteConditionParameterTagIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         return o == 0
 
     # MiniGameMissionExcel
     def RewardIcon(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # MiniGameMissionExcel
     def MissionRewardParcelType(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -226,26 +254,26 @@ class MiniGameMissionExcel(object):
 
     # MiniGameMissionExcel
     def MissionRewardParcelTypeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # MiniGameMissionExcel
     def MissionRewardParcelTypeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
     def MissionRewardParcelTypeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
     # MiniGameMissionExcel
     def MissionRewardParcelId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -253,26 +281,26 @@ class MiniGameMissionExcel(object):
 
     # MiniGameMissionExcel
     def MissionRewardParcelIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # MiniGameMissionExcel
     def MissionRewardParcelIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
     def MissionRewardParcelIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
     # MiniGameMissionExcel
     def MissionRewardAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -280,24 +308,24 @@ class MiniGameMissionExcel(object):
 
     # MiniGameMissionExcel
     def MissionRewardAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # MiniGameMissionExcel
     def MissionRewardAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MiniGameMissionExcel
     def MissionRewardAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         return o == 0
 
-def Start(builder): builder.StartObject(21)
+def Start(builder): builder.StartObject(24)
 def MiniGameMissionExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -321,7 +349,7 @@ def AddCategory(builder, Category): builder.PrependInt32Slot(4, Category, 0)
 def MiniGameMissionExcelAddCategory(builder, Category):
     """This method is deprecated. Please switch to AddCategory."""
     return AddCategory(builder, Category)
-def AddDescription(builder, Description): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(Description), 0)
+def AddDescription(builder, Description): builder.PrependUint32Slot(5, Description, 0)
 def MiniGameMissionExcelAddDescription(builder, Description):
     """This method is deprecated. Please switch to AddDescription."""
     return AddDescription(builder, Description)
@@ -329,15 +357,23 @@ def AddResetType(builder, ResetType): builder.PrependInt32Slot(6, ResetType, 0)
 def MiniGameMissionExcelAddResetType(builder, ResetType):
     """This method is deprecated. Please switch to AddResetType."""
     return AddResetType(builder, ResetType)
-def AddViewFlag(builder, ViewFlag): builder.PrependBoolSlot(7, ViewFlag, 0)
+def AddToastDisplayType(builder, ToastDisplayType): builder.PrependInt32Slot(7, ToastDisplayType, 0)
+def MiniGameMissionExcelAddToastDisplayType(builder, ToastDisplayType):
+    """This method is deprecated. Please switch to AddToastDisplayType."""
+    return AddToastDisplayType(builder, ToastDisplayType)
+def AddToastImagePath(builder, ToastImagePath): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ToastImagePath), 0)
+def MiniGameMissionExcelAddToastImagePath(builder, ToastImagePath):
+    """This method is deprecated. Please switch to AddToastImagePath."""
+    return AddToastImagePath(builder, ToastImagePath)
+def AddViewFlag(builder, ViewFlag): builder.PrependBoolSlot(9, ViewFlag, 0)
 def MiniGameMissionExcelAddViewFlag(builder, ViewFlag):
     """This method is deprecated. Please switch to AddViewFlag."""
     return AddViewFlag(builder, ViewFlag)
-def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(8, DisplayOrder, 0)
+def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(10, DisplayOrder, 0)
 def MiniGameMissionExcelAddDisplayOrder(builder, DisplayOrder):
     """This method is deprecated. Please switch to AddDisplayOrder."""
     return AddDisplayOrder(builder, DisplayOrder)
-def AddPreMissionId(builder, PreMissionId): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PreMissionId), 0)
+def AddPreMissionId(builder, PreMissionId): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PreMissionId), 0)
 def MiniGameMissionExcelAddPreMissionId(builder, PreMissionId):
     """This method is deprecated. Please switch to AddPreMissionId."""
     return AddPreMissionId(builder, PreMissionId)
@@ -345,15 +381,15 @@ def StartPreMissionIdVector(builder, numElems): return builder.StartVector(8, nu
 def MiniGameMissionExcelStartPreMissionIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartPreMissionIdVector(builder, numElems)
-def AddAccountType(builder, AccountType): builder.PrependInt32Slot(10, AccountType, 0)
+def AddAccountType(builder, AccountType): builder.PrependInt32Slot(12, AccountType, 0)
 def MiniGameMissionExcelAddAccountType(builder, AccountType):
     """This method is deprecated. Please switch to AddAccountType."""
     return AddAccountType(builder, AccountType)
-def AddAccountLevel(builder, AccountLevel): builder.PrependInt64Slot(11, AccountLevel, 0)
+def AddAccountLevel(builder, AccountLevel): builder.PrependInt64Slot(13, AccountLevel, 0)
 def MiniGameMissionExcelAddAccountLevel(builder, AccountLevel):
     """This method is deprecated. Please switch to AddAccountLevel."""
     return AddAccountLevel(builder, AccountLevel)
-def AddShortcutUI(builder, ShortcutUI): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ShortcutUI), 0)
+def AddShortcutUI(builder, ShortcutUI): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ShortcutUI), 0)
 def MiniGameMissionExcelAddShortcutUI(builder, ShortcutUI):
     """This method is deprecated. Please switch to AddShortcutUI."""
     return AddShortcutUI(builder, ShortcutUI)
@@ -361,15 +397,19 @@ def StartShortcutUIVector(builder, numElems): return builder.StartVector(4, numE
 def MiniGameMissionExcelStartShortcutUIVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartShortcutUIVector(builder, numElems)
-def AddCompleteConditionType(builder, CompleteConditionType): builder.PrependInt32Slot(13, CompleteConditionType, 0)
+def AddCompleteConditionType(builder, CompleteConditionType): builder.PrependInt32Slot(15, CompleteConditionType, 0)
 def MiniGameMissionExcelAddCompleteConditionType(builder, CompleteConditionType):
     """This method is deprecated. Please switch to AddCompleteConditionType."""
     return AddCompleteConditionType(builder, CompleteConditionType)
-def AddCompleteConditionCount(builder, CompleteConditionCount): builder.PrependInt64Slot(14, CompleteConditionCount, 0)
+def AddIsCompleteExtensionTime(builder, IsCompleteExtensionTime): builder.PrependBoolSlot(16, IsCompleteExtensionTime, 0)
+def MiniGameMissionExcelAddIsCompleteExtensionTime(builder, IsCompleteExtensionTime):
+    """This method is deprecated. Please switch to AddIsCompleteExtensionTime."""
+    return AddIsCompleteExtensionTime(builder, IsCompleteExtensionTime)
+def AddCompleteConditionCount(builder, CompleteConditionCount): builder.PrependInt64Slot(17, CompleteConditionCount, 0)
 def MiniGameMissionExcelAddCompleteConditionCount(builder, CompleteConditionCount):
     """This method is deprecated. Please switch to AddCompleteConditionCount."""
     return AddCompleteConditionCount(builder, CompleteConditionCount)
-def AddCompleteConditionParameter(builder, CompleteConditionParameter): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameter), 0)
+def AddCompleteConditionParameter(builder, CompleteConditionParameter): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameter), 0)
 def MiniGameMissionExcelAddCompleteConditionParameter(builder, CompleteConditionParameter):
     """This method is deprecated. Please switch to AddCompleteConditionParameter."""
     return AddCompleteConditionParameter(builder, CompleteConditionParameter)
@@ -377,19 +417,19 @@ def StartCompleteConditionParameterVector(builder, numElems): return builder.Sta
 def MiniGameMissionExcelStartCompleteConditionParameterVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartCompleteConditionParameterVector(builder, numElems)
-def AddCompleteConditionParameterName(builder, CompleteConditionParameterName): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameterName), 0)
-def MiniGameMissionExcelAddCompleteConditionParameterName(builder, CompleteConditionParameterName):
-    """This method is deprecated. Please switch to AddCompleteConditionParameterName."""
-    return AddCompleteConditionParameterName(builder, CompleteConditionParameterName)
-def StartCompleteConditionParameterNameVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def MiniGameMissionExcelStartCompleteConditionParameterNameVector(builder, numElems):
+def AddCompleteConditionParameterTag(builder, CompleteConditionParameterTag): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameterTag), 0)
+def MiniGameMissionExcelAddCompleteConditionParameterTag(builder, CompleteConditionParameterTag):
+    """This method is deprecated. Please switch to AddCompleteConditionParameterTag."""
+    return AddCompleteConditionParameterTag(builder, CompleteConditionParameterTag)
+def StartCompleteConditionParameterTagVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def MiniGameMissionExcelStartCompleteConditionParameterTagVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartCompleteConditionParameterNameVector(builder, numElems)
-def AddRewardIcon(builder, RewardIcon): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(RewardIcon), 0)
+    return StartCompleteConditionParameterTagVector(builder, numElems)
+def AddRewardIcon(builder, RewardIcon): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(RewardIcon), 0)
 def MiniGameMissionExcelAddRewardIcon(builder, RewardIcon):
     """This method is deprecated. Please switch to AddRewardIcon."""
     return AddRewardIcon(builder, RewardIcon)
-def AddMissionRewardParcelType(builder, MissionRewardParcelType): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelType), 0)
+def AddMissionRewardParcelType(builder, MissionRewardParcelType): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelType), 0)
 def MiniGameMissionExcelAddMissionRewardParcelType(builder, MissionRewardParcelType):
     """This method is deprecated. Please switch to AddMissionRewardParcelType."""
     return AddMissionRewardParcelType(builder, MissionRewardParcelType)
@@ -397,7 +437,7 @@ def StartMissionRewardParcelTypeVector(builder, numElems): return builder.StartV
 def MiniGameMissionExcelStartMissionRewardParcelTypeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartMissionRewardParcelTypeVector(builder, numElems)
-def AddMissionRewardParcelId(builder, MissionRewardParcelId): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelId), 0)
+def AddMissionRewardParcelId(builder, MissionRewardParcelId): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelId), 0)
 def MiniGameMissionExcelAddMissionRewardParcelId(builder, MissionRewardParcelId):
     """This method is deprecated. Please switch to AddMissionRewardParcelId."""
     return AddMissionRewardParcelId(builder, MissionRewardParcelId)
@@ -405,7 +445,7 @@ def StartMissionRewardParcelIdVector(builder, numElems): return builder.StartVec
 def MiniGameMissionExcelStartMissionRewardParcelIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartMissionRewardParcelIdVector(builder, numElems)
-def AddMissionRewardAmount(builder, MissionRewardAmount): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardAmount), 0)
+def AddMissionRewardAmount(builder, MissionRewardAmount): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardAmount), 0)
 def MiniGameMissionExcelAddMissionRewardAmount(builder, MissionRewardAmount):
     """This method is deprecated. Please switch to AddMissionRewardAmount."""
     return AddMissionRewardAmount(builder, MissionRewardAmount)

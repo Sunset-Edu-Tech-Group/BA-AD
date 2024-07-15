@@ -21,7 +21,21 @@ class ShopCategoryType(object):
     EventContent_2 = 15
     EventContent_3 = 16
     EventContent_4 = 17
-    ThreeStarGacha = 18
+    _Obsolete = 18
     LimitedGacha = 19
     MasterCoin = 20
+    SecretStoneGrowth = 21
+    TicketGacha = 22
+    DirectPayGacha = 23
+    FesGacha = 24
+    TimeAttack = 25
+    Chaser = 26
+    ChaserTicket = 27
+    SchoolDungeonTicket = 28
+    AcademyTicket = 29
+    Special = 30
+    Care = 31
+    BeforehandGacha = 32
+    EliminateRaid = 33
+    GlobalSpecialGacha = 34
 

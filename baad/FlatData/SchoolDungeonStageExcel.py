@@ -60,36 +60,123 @@ class SchoolDungeonStageExcel(object):
         return 0
 
     # SchoolDungeonStageExcel
-    def StageActionPointCostAmount(self):
+    def StageEnterCostType(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
         return 0
 
     # SchoolDungeonStageExcel
-    def EnterCostType(self):
+    def StageEnterCostTypeAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostTypeLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostTypeIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        return o == 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostId(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
         return 0
 
     # SchoolDungeonStageExcel
-    def EnterCostAmount(self):
+    def StageEnterCostIdAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostIdLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostIdIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        return o == 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostAmount(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
         return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostAmountAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostAmountLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostAmountIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostMinimumAmount(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostMinimumAmountAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostMinimumAmountLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def StageEnterCostMinimumAmountIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
 
     # SchoolDungeonStageExcel
     def GroundId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SchoolDungeonStageExcel
     def StarGoal(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -97,26 +184,26 @@ class SchoolDungeonStageExcel(object):
 
     # SchoolDungeonStageExcel
     def StarGoalAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # SchoolDungeonStageExcel
     def StarGoalLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SchoolDungeonStageExcel
     def StarGoalIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # SchoolDungeonStageExcel
     def StarGoalAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -124,52 +211,59 @@ class SchoolDungeonStageExcel(object):
 
     # SchoolDungeonStageExcel
     def StarGoalAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # SchoolDungeonStageExcel
     def StarGoalAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SchoolDungeonStageExcel
     def StarGoalAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
     # SchoolDungeonStageExcel
     def StageTopography_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # SchoolDungeonStageExcel
     def RecommandLevel(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # SchoolDungeonStageExcel
-    def StageRewardId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # SchoolDungeonStageExcel
-    def PlayTimeLimitInSeconds(self):
+    def StageRewardId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(15)
+    # SchoolDungeonStageExcel
+    def PlayTimeLimitInSeconds(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # SchoolDungeonStageExcel
+    def EchelonExtensionType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(17)
 def SchoolDungeonStageExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -193,23 +287,43 @@ def AddPrevStageId(builder, PrevStageId): builder.PrependInt64Slot(4, PrevStageI
 def SchoolDungeonStageExcelAddPrevStageId(builder, PrevStageId):
     """This method is deprecated. Please switch to AddPrevStageId."""
     return AddPrevStageId(builder, PrevStageId)
-def AddStageActionPointCostAmount(builder, StageActionPointCostAmount): builder.PrependInt64Slot(5, StageActionPointCostAmount, 0)
-def SchoolDungeonStageExcelAddStageActionPointCostAmount(builder, StageActionPointCostAmount):
-    """This method is deprecated. Please switch to AddStageActionPointCostAmount."""
-    return AddStageActionPointCostAmount(builder, StageActionPointCostAmount)
-def AddEnterCostType(builder, EnterCostType): builder.PrependInt32Slot(6, EnterCostType, 0)
-def SchoolDungeonStageExcelAddEnterCostType(builder, EnterCostType):
-    """This method is deprecated. Please switch to AddEnterCostType."""
-    return AddEnterCostType(builder, EnterCostType)
-def AddEnterCostAmount(builder, EnterCostAmount): builder.PrependInt64Slot(7, EnterCostAmount, 0)
-def SchoolDungeonStageExcelAddEnterCostAmount(builder, EnterCostAmount):
-    """This method is deprecated. Please switch to AddEnterCostAmount."""
-    return AddEnterCostAmount(builder, EnterCostAmount)
-def AddGroundId(builder, GroundId): builder.PrependInt32Slot(8, GroundId, 0)
+def AddStageEnterCostType(builder, StageEnterCostType): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostType), 0)
+def SchoolDungeonStageExcelAddStageEnterCostType(builder, StageEnterCostType):
+    """This method is deprecated. Please switch to AddStageEnterCostType."""
+    return AddStageEnterCostType(builder, StageEnterCostType)
+def StartStageEnterCostTypeVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def SchoolDungeonStageExcelStartStageEnterCostTypeVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostTypeVector(builder, numElems)
+def AddStageEnterCostId(builder, StageEnterCostId): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostId), 0)
+def SchoolDungeonStageExcelAddStageEnterCostId(builder, StageEnterCostId):
+    """This method is deprecated. Please switch to AddStageEnterCostId."""
+    return AddStageEnterCostId(builder, StageEnterCostId)
+def StartStageEnterCostIdVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def SchoolDungeonStageExcelStartStageEnterCostIdVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostIdVector(builder, numElems)
+def AddStageEnterCostAmount(builder, StageEnterCostAmount): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostAmount), 0)
+def SchoolDungeonStageExcelAddStageEnterCostAmount(builder, StageEnterCostAmount):
+    """This method is deprecated. Please switch to AddStageEnterCostAmount."""
+    return AddStageEnterCostAmount(builder, StageEnterCostAmount)
+def StartStageEnterCostAmountVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def SchoolDungeonStageExcelStartStageEnterCostAmountVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostAmountVector(builder, numElems)
+def AddStageEnterCostMinimumAmount(builder, StageEnterCostMinimumAmount): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(StageEnterCostMinimumAmount), 0)
+def SchoolDungeonStageExcelAddStageEnterCostMinimumAmount(builder, StageEnterCostMinimumAmount):
+    """This method is deprecated. Please switch to AddStageEnterCostMinimumAmount."""
+    return AddStageEnterCostMinimumAmount(builder, StageEnterCostMinimumAmount)
+def StartStageEnterCostMinimumAmountVector(builder, numElems): return builder.StartVector(8, numElems, 8)
+def SchoolDungeonStageExcelStartStageEnterCostMinimumAmountVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartStageEnterCostMinimumAmountVector(builder, numElems)
+def AddGroundId(builder, GroundId): builder.PrependInt32Slot(9, GroundId, 0)
 def SchoolDungeonStageExcelAddGroundId(builder, GroundId):
     """This method is deprecated. Please switch to AddGroundId."""
     return AddGroundId(builder, GroundId)
-def AddStarGoal(builder, StarGoal): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoal), 0)
+def AddStarGoal(builder, StarGoal): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoal), 0)
 def SchoolDungeonStageExcelAddStarGoal(builder, StarGoal):
     """This method is deprecated. Please switch to AddStarGoal."""
     return AddStarGoal(builder, StarGoal)
@@ -217,7 +331,7 @@ def StartStarGoalVector(builder, numElems): return builder.StartVector(4, numEle
 def SchoolDungeonStageExcelStartStarGoalVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStarGoalVector(builder, numElems)
-def AddStarGoalAmount(builder, StarGoalAmount): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoalAmount), 0)
+def AddStarGoalAmount(builder, StarGoalAmount): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(StarGoalAmount), 0)
 def SchoolDungeonStageExcelAddStarGoalAmount(builder, StarGoalAmount):
     """This method is deprecated. Please switch to AddStarGoalAmount."""
     return AddStarGoalAmount(builder, StarGoalAmount)
@@ -225,22 +339,26 @@ def StartStarGoalAmountVector(builder, numElems): return builder.StartVector(4, 
 def SchoolDungeonStageExcelStartStarGoalAmountVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStarGoalAmountVector(builder, numElems)
-def AddStageTopography_(builder, StageTopography_): builder.PrependInt32Slot(11, StageTopography_, 0)
+def AddStageTopography_(builder, StageTopography_): builder.PrependInt32Slot(12, StageTopography_, 0)
 def SchoolDungeonStageExcelAddStageTopography_(builder, StageTopography_):
     """This method is deprecated. Please switch to AddStageTopography_."""
     return AddStageTopography_(builder, StageTopography_)
-def AddRecommandLevel(builder, RecommandLevel): builder.PrependInt64Slot(12, RecommandLevel, 0)
+def AddRecommandLevel(builder, RecommandLevel): builder.PrependInt64Slot(13, RecommandLevel, 0)
 def SchoolDungeonStageExcelAddRecommandLevel(builder, RecommandLevel):
     """This method is deprecated. Please switch to AddRecommandLevel."""
     return AddRecommandLevel(builder, RecommandLevel)
-def AddStageRewardId(builder, StageRewardId): builder.PrependInt64Slot(13, StageRewardId, 0)
+def AddStageRewardId(builder, StageRewardId): builder.PrependInt64Slot(14, StageRewardId, 0)
 def SchoolDungeonStageExcelAddStageRewardId(builder, StageRewardId):
     """This method is deprecated. Please switch to AddStageRewardId."""
     return AddStageRewardId(builder, StageRewardId)
-def AddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds): builder.PrependInt64Slot(14, PlayTimeLimitInSeconds, 0)
+def AddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds): builder.PrependInt64Slot(15, PlayTimeLimitInSeconds, 0)
 def SchoolDungeonStageExcelAddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds):
     """This method is deprecated. Please switch to AddPlayTimeLimitInSeconds."""
     return AddPlayTimeLimitInSeconds(builder, PlayTimeLimitInSeconds)
+def AddEchelonExtensionType_(builder, EchelonExtensionType_): builder.PrependInt32Slot(16, EchelonExtensionType_, 0)
+def SchoolDungeonStageExcelAddEchelonExtensionType_(builder, EchelonExtensionType_):
+    """This method is deprecated. Please switch to AddEchelonExtensionType_."""
+    return AddEchelonExtensionType_(builder, EchelonExtensionType_)
 def End(builder): return builder.EndObject()
 def SchoolDungeonStageExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

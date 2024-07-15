@@ -46,62 +46,69 @@ class CharacterAIExcel(object):
         return 0
 
     # CharacterAIExcel
-    def DistanceReduceRatioObstaclePath(self):
+    def CheckCanUseAutoSkill(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # CharacterAIExcel
-    def DistanceReduceObstaclePath(self):
+    def DistanceReduceRatioObstaclePath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterAIExcel
-    def DistanceReduceRatioFormationPath(self):
+    def DistanceReduceObstaclePath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterAIExcel
-    def DistanceReduceFormationPath(self):
+    def DistanceReduceRatioFormationPath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterAIExcel
-    def MinimumPositionGap(self):
+    def DistanceReduceFormationPath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterAIExcel
-    def CanUseObstacleOfKneelMotion(self):
+    def MinimumPositionGap(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
 
     # CharacterAIExcel
-    def CanUseObstacleOfStandMotion(self):
+    def CanUseObstacleOfKneelMotion(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterAIExcel
-    def HasTargetSwitchingMotion(self):
+    def CanUseObstacleOfStandMotion(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-def Start(builder): builder.StartObject(11)
+    # CharacterAIExcel
+    def HasTargetSwitchingMotion(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+def Start(builder): builder.StartObject(12)
 def CharacterAIExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -117,35 +124,39 @@ def AddPositioning(builder, Positioning): builder.PrependInt32Slot(2, Positionin
 def CharacterAIExcelAddPositioning(builder, Positioning):
     """This method is deprecated. Please switch to AddPositioning."""
     return AddPositioning(builder, Positioning)
-def AddDistanceReduceRatioObstaclePath(builder, DistanceReduceRatioObstaclePath): builder.PrependInt64Slot(3, DistanceReduceRatioObstaclePath, 0)
+def AddCheckCanUseAutoSkill(builder, CheckCanUseAutoSkill): builder.PrependBoolSlot(3, CheckCanUseAutoSkill, 0)
+def CharacterAIExcelAddCheckCanUseAutoSkill(builder, CheckCanUseAutoSkill):
+    """This method is deprecated. Please switch to AddCheckCanUseAutoSkill."""
+    return AddCheckCanUseAutoSkill(builder, CheckCanUseAutoSkill)
+def AddDistanceReduceRatioObstaclePath(builder, DistanceReduceRatioObstaclePath): builder.PrependInt64Slot(4, DistanceReduceRatioObstaclePath, 0)
 def CharacterAIExcelAddDistanceReduceRatioObstaclePath(builder, DistanceReduceRatioObstaclePath):
     """This method is deprecated. Please switch to AddDistanceReduceRatioObstaclePath."""
     return AddDistanceReduceRatioObstaclePath(builder, DistanceReduceRatioObstaclePath)
-def AddDistanceReduceObstaclePath(builder, DistanceReduceObstaclePath): builder.PrependInt64Slot(4, DistanceReduceObstaclePath, 0)
+def AddDistanceReduceObstaclePath(builder, DistanceReduceObstaclePath): builder.PrependInt64Slot(5, DistanceReduceObstaclePath, 0)
 def CharacterAIExcelAddDistanceReduceObstaclePath(builder, DistanceReduceObstaclePath):
     """This method is deprecated. Please switch to AddDistanceReduceObstaclePath."""
     return AddDistanceReduceObstaclePath(builder, DistanceReduceObstaclePath)
-def AddDistanceReduceRatioFormationPath(builder, DistanceReduceRatioFormationPath): builder.PrependInt64Slot(5, DistanceReduceRatioFormationPath, 0)
+def AddDistanceReduceRatioFormationPath(builder, DistanceReduceRatioFormationPath): builder.PrependInt64Slot(6, DistanceReduceRatioFormationPath, 0)
 def CharacterAIExcelAddDistanceReduceRatioFormationPath(builder, DistanceReduceRatioFormationPath):
     """This method is deprecated. Please switch to AddDistanceReduceRatioFormationPath."""
     return AddDistanceReduceRatioFormationPath(builder, DistanceReduceRatioFormationPath)
-def AddDistanceReduceFormationPath(builder, DistanceReduceFormationPath): builder.PrependInt64Slot(6, DistanceReduceFormationPath, 0)
+def AddDistanceReduceFormationPath(builder, DistanceReduceFormationPath): builder.PrependInt64Slot(7, DistanceReduceFormationPath, 0)
 def CharacterAIExcelAddDistanceReduceFormationPath(builder, DistanceReduceFormationPath):
     """This method is deprecated. Please switch to AddDistanceReduceFormationPath."""
     return AddDistanceReduceFormationPath(builder, DistanceReduceFormationPath)
-def AddMinimumPositionGap(builder, MinimumPositionGap): builder.PrependInt64Slot(7, MinimumPositionGap, 0)
+def AddMinimumPositionGap(builder, MinimumPositionGap): builder.PrependInt64Slot(8, MinimumPositionGap, 0)
 def CharacterAIExcelAddMinimumPositionGap(builder, MinimumPositionGap):
     """This method is deprecated. Please switch to AddMinimumPositionGap."""
     return AddMinimumPositionGap(builder, MinimumPositionGap)
-def AddCanUseObstacleOfKneelMotion(builder, CanUseObstacleOfKneelMotion): builder.PrependBoolSlot(8, CanUseObstacleOfKneelMotion, 0)
+def AddCanUseObstacleOfKneelMotion(builder, CanUseObstacleOfKneelMotion): builder.PrependBoolSlot(9, CanUseObstacleOfKneelMotion, 0)
 def CharacterAIExcelAddCanUseObstacleOfKneelMotion(builder, CanUseObstacleOfKneelMotion):
     """This method is deprecated. Please switch to AddCanUseObstacleOfKneelMotion."""
     return AddCanUseObstacleOfKneelMotion(builder, CanUseObstacleOfKneelMotion)
-def AddCanUseObstacleOfStandMotion(builder, CanUseObstacleOfStandMotion): builder.PrependBoolSlot(9, CanUseObstacleOfStandMotion, 0)
+def AddCanUseObstacleOfStandMotion(builder, CanUseObstacleOfStandMotion): builder.PrependBoolSlot(10, CanUseObstacleOfStandMotion, 0)
 def CharacterAIExcelAddCanUseObstacleOfStandMotion(builder, CanUseObstacleOfStandMotion):
     """This method is deprecated. Please switch to AddCanUseObstacleOfStandMotion."""
     return AddCanUseObstacleOfStandMotion(builder, CanUseObstacleOfStandMotion)
-def AddHasTargetSwitchingMotion(builder, HasTargetSwitchingMotion): builder.PrependBoolSlot(10, HasTargetSwitchingMotion, 0)
+def AddHasTargetSwitchingMotion(builder, HasTargetSwitchingMotion): builder.PrependBoolSlot(11, HasTargetSwitchingMotion, 0)
 def CharacterAIExcelAddHasTargetSwitchingMotion(builder, HasTargetSwitchingMotion):
     """This method is deprecated. Please switch to AddHasTargetSwitchingMotion."""
     return AddHasTargetSwitchingMotion(builder, HasTargetSwitchingMotion)

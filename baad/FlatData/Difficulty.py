@@ -9,4 +9,5 @@ class Difficulty(object):
     Hardcore = 3
     Extreme = 4
     Insane = 5
+    Torment = 6
 

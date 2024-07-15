@@ -176,7 +176,7 @@ class CharacterWeaponExcel(object):
         return o == 0
 
     # CharacterWeaponExcel
-    def PreviousSkillGroupId(self, j):
+    def LearnSkillSlot(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             a = self._tab.Vector(o)
@@ -184,40 +184,20 @@ class CharacterWeaponExcel(object):
         return ""
 
     # CharacterWeaponExcel
-    def PreviousSkillGroupIdLength(self):
+    def LearnSkillSlotLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterWeaponExcel
-    def PreviousSkillGroupIdIsNone(self):
+    def LearnSkillSlotIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        return o == 0
-
-    # CharacterWeaponExcel
-    def AfterSkillGroupId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # CharacterWeaponExcel
-    def AfterSkillGroupIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # CharacterWeaponExcel
-    def AfterSkillGroupIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
     # CharacterWeaponExcel
     def StatType(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -225,26 +205,26 @@ class CharacterWeaponExcel(object):
 
     # CharacterWeaponExcel
     def StatTypeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # CharacterWeaponExcel
     def StatTypeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterWeaponExcel
     def StatTypeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
     # CharacterWeaponExcel
     def StatValue(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -252,24 +232,24 @@ class CharacterWeaponExcel(object):
 
     # CharacterWeaponExcel
     def StatValueAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # CharacterWeaponExcel
     def StatValueLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterWeaponExcel
     def StatValueIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
-def Start(builder): builder.StartObject(17)
+def Start(builder): builder.StartObject(16)
 def CharacterWeaponExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -337,23 +317,15 @@ def StartMaxLevelVector(builder, numElems): return builder.StartVector(4, numEle
 def CharacterWeaponExcelStartMaxLevelVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartMaxLevelVector(builder, numElems)
-def AddPreviousSkillGroupId(builder, PreviousSkillGroupId): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PreviousSkillGroupId), 0)
-def CharacterWeaponExcelAddPreviousSkillGroupId(builder, PreviousSkillGroupId):
-    """This method is deprecated. Please switch to AddPreviousSkillGroupId."""
-    return AddPreviousSkillGroupId(builder, PreviousSkillGroupId)
-def StartPreviousSkillGroupIdVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def CharacterWeaponExcelStartPreviousSkillGroupIdVector(builder, numElems):
+def AddLearnSkillSlot(builder, LearnSkillSlot): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(LearnSkillSlot), 0)
+def CharacterWeaponExcelAddLearnSkillSlot(builder, LearnSkillSlot):
+    """This method is deprecated. Please switch to AddLearnSkillSlot."""
+    return AddLearnSkillSlot(builder, LearnSkillSlot)
+def StartLearnSkillSlotVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def CharacterWeaponExcelStartLearnSkillSlotVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartPreviousSkillGroupIdVector(builder, numElems)
-def AddAfterSkillGroupId(builder, AfterSkillGroupId): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(AfterSkillGroupId), 0)
-def CharacterWeaponExcelAddAfterSkillGroupId(builder, AfterSkillGroupId):
-    """This method is deprecated. Please switch to AddAfterSkillGroupId."""
-    return AddAfterSkillGroupId(builder, AfterSkillGroupId)
-def StartAfterSkillGroupIdVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def CharacterWeaponExcelStartAfterSkillGroupIdVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartAfterSkillGroupIdVector(builder, numElems)
-def AddStatType(builder, StatType): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(StatType), 0)
+    return StartLearnSkillSlotVector(builder, numElems)
+def AddStatType(builder, StatType): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(StatType), 0)
 def CharacterWeaponExcelAddStatType(builder, StatType):
     """This method is deprecated. Please switch to AddStatType."""
     return AddStatType(builder, StatType)
@@ -361,7 +333,7 @@ def StartStatTypeVector(builder, numElems): return builder.StartVector(4, numEle
 def CharacterWeaponExcelStartStatTypeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStatTypeVector(builder, numElems)
-def AddStatValue(builder, StatValue): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(StatValue), 0)
+def AddStatValue(builder, StatValue): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(StatValue), 0)
 def CharacterWeaponExcelAddStatValue(builder, StatValue):
     """This method is deprecated. Please switch to AddStatValue."""
     return AddStatValue(builder, StatValue)

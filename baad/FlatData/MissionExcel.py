@@ -42,8 +42,8 @@ class MissionExcel(object):
     def Description(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
     # MissionExcel
     def ResetType(self):
@@ -53,50 +53,78 @@ class MissionExcel(object):
         return 0
 
     # MissionExcel
-    def ViewFlag(self):
+    def ToastDisplayType(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
     # MissionExcel
-    def StartDate(self):
+    def ToastImagePath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # MissionExcel
-    def EndDate(self):
+    def ViewFlag(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # MissionExcel
-    def EndDay(self):
+    def Limit(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # MissionExcel
-    def StartableEndDate(self):
+    def StartDate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # MissionExcel
-    def DisplayOrder(self):
+    def EndDate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MissionExcel
+    def EndDay(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # MissionExcel
+    def StartableEndDate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # MissionExcel
+    def DateAutoRefer(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # MissionExcel
+    def DisplayOrder(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # MissionExcel
     def PreMissionId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -104,40 +132,67 @@ class MissionExcel(object):
 
     # MissionExcel
     def PreMissionIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # MissionExcel
     def PreMissionIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
     def PreMissionIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
     # MissionExcel
     def AccountType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # MissionExcel
     def AccountLevel(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # MissionExcel
+    def ContentTags(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # MissionExcel
+    def ContentTagsAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # MissionExcel
+    def ContentTagsLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # MissionExcel
+    def ContentTagsIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        return o == 0
+
+    # MissionExcel
     def ShortcutUI(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -145,33 +200,40 @@ class MissionExcel(object):
 
     # MissionExcel
     def ShortcutUILength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
     def ShortcutUIIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
     # MissionExcel
+    def ChallengeStageShortcut(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # MissionExcel
     def CompleteConditionType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # MissionExcel
     def CompleteConditionCount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # MissionExcel
     def CompleteConditionParameter(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -179,53 +241,60 @@ class MissionExcel(object):
 
     # MissionExcel
     def CompleteConditionParameterAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # MissionExcel
     def CompleteConditionParameterLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
     def CompleteConditionParameterIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
     # MissionExcel
-    def CompleteConditionParameterName(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+    def CompleteConditionParameterTag(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
 
     # MissionExcel
-    def CompleteConditionParameterNameLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+    def CompleteConditionParameterTagAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
+        return 0
+
+    # MissionExcel
+    def CompleteConditionParameterTagLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
-    def CompleteConditionParameterNameIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+    def CompleteConditionParameterTagIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         return o == 0
 
     # MissionExcel
     def RewardIcon(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # MissionExcel
     def MissionRewardParcelType(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -233,26 +302,26 @@ class MissionExcel(object):
 
     # MissionExcel
     def MissionRewardParcelTypeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # MissionExcel
     def MissionRewardParcelTypeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
     def MissionRewardParcelTypeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         return o == 0
 
     # MissionExcel
     def MissionRewardParcelId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -260,26 +329,26 @@ class MissionExcel(object):
 
     # MissionExcel
     def MissionRewardParcelIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # MissionExcel
     def MissionRewardParcelIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
     def MissionRewardParcelIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         return o == 0
 
     # MissionExcel
     def MissionRewardAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -287,24 +356,24 @@ class MissionExcel(object):
 
     # MissionExcel
     def MissionRewardAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # MissionExcel
     def MissionRewardAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MissionExcel
     def MissionRewardAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         return o == 0
 
-def Start(builder): builder.StartObject(22)
+def Start(builder): builder.StartObject(28)
 def MissionExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -316,7 +385,7 @@ def AddCategory(builder, Category): builder.PrependInt32Slot(1, Category, 0)
 def MissionExcelAddCategory(builder, Category):
     """This method is deprecated. Please switch to AddCategory."""
     return AddCategory(builder, Category)
-def AddDescription(builder, Description): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(Description), 0)
+def AddDescription(builder, Description): builder.PrependUint32Slot(2, Description, 0)
 def MissionExcelAddDescription(builder, Description):
     """This method is deprecated. Please switch to AddDescription."""
     return AddDescription(builder, Description)
@@ -324,31 +393,47 @@ def AddResetType(builder, ResetType): builder.PrependInt32Slot(3, ResetType, 0)
 def MissionExcelAddResetType(builder, ResetType):
     """This method is deprecated. Please switch to AddResetType."""
     return AddResetType(builder, ResetType)
-def AddViewFlag(builder, ViewFlag): builder.PrependBoolSlot(4, ViewFlag, 0)
+def AddToastDisplayType(builder, ToastDisplayType): builder.PrependInt32Slot(4, ToastDisplayType, 0)
+def MissionExcelAddToastDisplayType(builder, ToastDisplayType):
+    """This method is deprecated. Please switch to AddToastDisplayType."""
+    return AddToastDisplayType(builder, ToastDisplayType)
+def AddToastImagePath(builder, ToastImagePath): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ToastImagePath), 0)
+def MissionExcelAddToastImagePath(builder, ToastImagePath):
+    """This method is deprecated. Please switch to AddToastImagePath."""
+    return AddToastImagePath(builder, ToastImagePath)
+def AddViewFlag(builder, ViewFlag): builder.PrependBoolSlot(6, ViewFlag, 0)
 def MissionExcelAddViewFlag(builder, ViewFlag):
     """This method is deprecated. Please switch to AddViewFlag."""
     return AddViewFlag(builder, ViewFlag)
-def AddStartDate(builder, StartDate): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(StartDate), 0)
+def AddLimit(builder, Limit): builder.PrependBoolSlot(7, Limit, 0)
+def MissionExcelAddLimit(builder, Limit):
+    """This method is deprecated. Please switch to AddLimit."""
+    return AddLimit(builder, Limit)
+def AddStartDate(builder, StartDate): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(StartDate), 0)
 def MissionExcelAddStartDate(builder, StartDate):
     """This method is deprecated. Please switch to AddStartDate."""
     return AddStartDate(builder, StartDate)
-def AddEndDate(builder, EndDate): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EndDate), 0)
+def AddEndDate(builder, EndDate): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EndDate), 0)
 def MissionExcelAddEndDate(builder, EndDate):
     """This method is deprecated. Please switch to AddEndDate."""
     return AddEndDate(builder, EndDate)
-def AddEndDay(builder, EndDay): builder.PrependInt64Slot(7, EndDay, 0)
+def AddEndDay(builder, EndDay): builder.PrependInt64Slot(10, EndDay, 0)
 def MissionExcelAddEndDay(builder, EndDay):
     """This method is deprecated. Please switch to AddEndDay."""
     return AddEndDay(builder, EndDay)
-def AddStartableEndDate(builder, StartableEndDate): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(StartableEndDate), 0)
+def AddStartableEndDate(builder, StartableEndDate): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(StartableEndDate), 0)
 def MissionExcelAddStartableEndDate(builder, StartableEndDate):
     """This method is deprecated. Please switch to AddStartableEndDate."""
     return AddStartableEndDate(builder, StartableEndDate)
-def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(9, DisplayOrder, 0)
+def AddDateAutoRefer(builder, DateAutoRefer): builder.PrependInt32Slot(12, DateAutoRefer, 0)
+def MissionExcelAddDateAutoRefer(builder, DateAutoRefer):
+    """This method is deprecated. Please switch to AddDateAutoRefer."""
+    return AddDateAutoRefer(builder, DateAutoRefer)
+def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(13, DisplayOrder, 0)
 def MissionExcelAddDisplayOrder(builder, DisplayOrder):
     """This method is deprecated. Please switch to AddDisplayOrder."""
     return AddDisplayOrder(builder, DisplayOrder)
-def AddPreMissionId(builder, PreMissionId): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PreMissionId), 0)
+def AddPreMissionId(builder, PreMissionId): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(PreMissionId), 0)
 def MissionExcelAddPreMissionId(builder, PreMissionId):
     """This method is deprecated. Please switch to AddPreMissionId."""
     return AddPreMissionId(builder, PreMissionId)
@@ -356,15 +441,23 @@ def StartPreMissionIdVector(builder, numElems): return builder.StartVector(8, nu
 def MissionExcelStartPreMissionIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartPreMissionIdVector(builder, numElems)
-def AddAccountType(builder, AccountType): builder.PrependInt32Slot(11, AccountType, 0)
+def AddAccountType(builder, AccountType): builder.PrependInt32Slot(15, AccountType, 0)
 def MissionExcelAddAccountType(builder, AccountType):
     """This method is deprecated. Please switch to AddAccountType."""
     return AddAccountType(builder, AccountType)
-def AddAccountLevel(builder, AccountLevel): builder.PrependInt64Slot(12, AccountLevel, 0)
+def AddAccountLevel(builder, AccountLevel): builder.PrependInt64Slot(16, AccountLevel, 0)
 def MissionExcelAddAccountLevel(builder, AccountLevel):
     """This method is deprecated. Please switch to AddAccountLevel."""
     return AddAccountLevel(builder, AccountLevel)
-def AddShortcutUI(builder, ShortcutUI): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ShortcutUI), 0)
+def AddContentTags(builder, ContentTags): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ContentTags), 0)
+def MissionExcelAddContentTags(builder, ContentTags):
+    """This method is deprecated. Please switch to AddContentTags."""
+    return AddContentTags(builder, ContentTags)
+def StartContentTagsVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def MissionExcelStartContentTagsVector(builder, numElems):
+    """This method is deprecated. Please switch to Start."""
+    return StartContentTagsVector(builder, numElems)
+def AddShortcutUI(builder, ShortcutUI): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ShortcutUI), 0)
 def MissionExcelAddShortcutUI(builder, ShortcutUI):
     """This method is deprecated. Please switch to AddShortcutUI."""
     return AddShortcutUI(builder, ShortcutUI)
@@ -372,15 +465,19 @@ def StartShortcutUIVector(builder, numElems): return builder.StartVector(4, numE
 def MissionExcelStartShortcutUIVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartShortcutUIVector(builder, numElems)
-def AddCompleteConditionType(builder, CompleteConditionType): builder.PrependInt32Slot(14, CompleteConditionType, 0)
+def AddChallengeStageShortcut(builder, ChallengeStageShortcut): builder.PrependInt64Slot(19, ChallengeStageShortcut, 0)
+def MissionExcelAddChallengeStageShortcut(builder, ChallengeStageShortcut):
+    """This method is deprecated. Please switch to AddChallengeStageShortcut."""
+    return AddChallengeStageShortcut(builder, ChallengeStageShortcut)
+def AddCompleteConditionType(builder, CompleteConditionType): builder.PrependInt32Slot(20, CompleteConditionType, 0)
 def MissionExcelAddCompleteConditionType(builder, CompleteConditionType):
     """This method is deprecated. Please switch to AddCompleteConditionType."""
     return AddCompleteConditionType(builder, CompleteConditionType)
-def AddCompleteConditionCount(builder, CompleteConditionCount): builder.PrependInt64Slot(15, CompleteConditionCount, 0)
+def AddCompleteConditionCount(builder, CompleteConditionCount): builder.PrependInt64Slot(21, CompleteConditionCount, 0)
 def MissionExcelAddCompleteConditionCount(builder, CompleteConditionCount):
     """This method is deprecated. Please switch to AddCompleteConditionCount."""
     return AddCompleteConditionCount(builder, CompleteConditionCount)
-def AddCompleteConditionParameter(builder, CompleteConditionParameter): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameter), 0)
+def AddCompleteConditionParameter(builder, CompleteConditionParameter): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameter), 0)
 def MissionExcelAddCompleteConditionParameter(builder, CompleteConditionParameter):
     """This method is deprecated. Please switch to AddCompleteConditionParameter."""
     return AddCompleteConditionParameter(builder, CompleteConditionParameter)
@@ -388,19 +485,19 @@ def StartCompleteConditionParameterVector(builder, numElems): return builder.Sta
 def MissionExcelStartCompleteConditionParameterVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartCompleteConditionParameterVector(builder, numElems)
-def AddCompleteConditionParameterName(builder, CompleteConditionParameterName): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameterName), 0)
-def MissionExcelAddCompleteConditionParameterName(builder, CompleteConditionParameterName):
-    """This method is deprecated. Please switch to AddCompleteConditionParameterName."""
-    return AddCompleteConditionParameterName(builder, CompleteConditionParameterName)
-def StartCompleteConditionParameterNameVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def MissionExcelStartCompleteConditionParameterNameVector(builder, numElems):
+def AddCompleteConditionParameterTag(builder, CompleteConditionParameterTag): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(CompleteConditionParameterTag), 0)
+def MissionExcelAddCompleteConditionParameterTag(builder, CompleteConditionParameterTag):
+    """This method is deprecated. Please switch to AddCompleteConditionParameterTag."""
+    return AddCompleteConditionParameterTag(builder, CompleteConditionParameterTag)
+def StartCompleteConditionParameterTagVector(builder, numElems): return builder.StartVector(4, numElems, 4)
+def MissionExcelStartCompleteConditionParameterTagVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
-    return StartCompleteConditionParameterNameVector(builder, numElems)
-def AddRewardIcon(builder, RewardIcon): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(RewardIcon), 0)
+    return StartCompleteConditionParameterTagVector(builder, numElems)
+def AddRewardIcon(builder, RewardIcon): builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(RewardIcon), 0)
 def MissionExcelAddRewardIcon(builder, RewardIcon):
     """This method is deprecated. Please switch to AddRewardIcon."""
     return AddRewardIcon(builder, RewardIcon)
-def AddMissionRewardParcelType(builder, MissionRewardParcelType): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelType), 0)
+def AddMissionRewardParcelType(builder, MissionRewardParcelType): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelType), 0)
 def MissionExcelAddMissionRewardParcelType(builder, MissionRewardParcelType):
     """This method is deprecated. Please switch to AddMissionRewardParcelType."""
     return AddMissionRewardParcelType(builder, MissionRewardParcelType)
@@ -408,7 +505,7 @@ def StartMissionRewardParcelTypeVector(builder, numElems): return builder.StartV
 def MissionExcelStartMissionRewardParcelTypeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartMissionRewardParcelTypeVector(builder, numElems)
-def AddMissionRewardParcelId(builder, MissionRewardParcelId): builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelId), 0)
+def AddMissionRewardParcelId(builder, MissionRewardParcelId): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardParcelId), 0)
 def MissionExcelAddMissionRewardParcelId(builder, MissionRewardParcelId):
     """This method is deprecated. Please switch to AddMissionRewardParcelId."""
     return AddMissionRewardParcelId(builder, MissionRewardParcelId)
@@ -416,7 +513,7 @@ def StartMissionRewardParcelIdVector(builder, numElems): return builder.StartVec
 def MissionExcelStartMissionRewardParcelIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartMissionRewardParcelIdVector(builder, numElems)
-def AddMissionRewardAmount(builder, MissionRewardAmount): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardAmount), 0)
+def AddMissionRewardAmount(builder, MissionRewardAmount): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(MissionRewardAmount), 0)
 def MissionExcelAddMissionRewardAmount(builder, MissionRewardAmount):
     """This method is deprecated. Please switch to AddMissionRewardAmount."""
     return AddMissionRewardAmount(builder, MissionRewardAmount)

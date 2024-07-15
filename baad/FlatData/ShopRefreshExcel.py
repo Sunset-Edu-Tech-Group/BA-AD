@@ -53,41 +53,62 @@ class ShopRefreshExcel(object):
         return 0
 
     # ShopRefreshExcel
-    def DisplayOrder(self):
+    def IsBundle(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # ShopRefreshExcel
+    def VisibleAmount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopRefreshExcel
+    def DisplayOrder(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ShopRefreshExcel
     def CategoryType(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # ShopRefreshExcel
-    def RefreshGroup(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # ShopRefreshExcel
-    def Prob(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ShopRefreshExcel
-    def BuyReportEventName(self):
+    def RefreshGroup(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopRefreshExcel
+    def Prob(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # ShopRefreshExcel
+    def BuyReportEventName(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(9)
+    # ShopRefreshExcel
+    def DisplayTag(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(12)
 def ShopRefreshExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -107,26 +128,38 @@ def AddGoodsId(builder, GoodsId): builder.PrependInt64Slot(3, GoodsId, 0)
 def ShopRefreshExcelAddGoodsId(builder, GoodsId):
     """This method is deprecated. Please switch to AddGoodsId."""
     return AddGoodsId(builder, GoodsId)
-def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(4, DisplayOrder, 0)
+def AddIsBundle(builder, IsBundle): builder.PrependBoolSlot(4, IsBundle, 0)
+def ShopRefreshExcelAddIsBundle(builder, IsBundle):
+    """This method is deprecated. Please switch to AddIsBundle."""
+    return AddIsBundle(builder, IsBundle)
+def AddVisibleAmount(builder, VisibleAmount): builder.PrependInt64Slot(5, VisibleAmount, 0)
+def ShopRefreshExcelAddVisibleAmount(builder, VisibleAmount):
+    """This method is deprecated. Please switch to AddVisibleAmount."""
+    return AddVisibleAmount(builder, VisibleAmount)
+def AddDisplayOrder(builder, DisplayOrder): builder.PrependInt64Slot(6, DisplayOrder, 0)
 def ShopRefreshExcelAddDisplayOrder(builder, DisplayOrder):
     """This method is deprecated. Please switch to AddDisplayOrder."""
     return AddDisplayOrder(builder, DisplayOrder)
-def AddCategoryType(builder, CategoryType): builder.PrependInt32Slot(5, CategoryType, 0)
+def AddCategoryType(builder, CategoryType): builder.PrependInt32Slot(7, CategoryType, 0)
 def ShopRefreshExcelAddCategoryType(builder, CategoryType):
     """This method is deprecated. Please switch to AddCategoryType."""
     return AddCategoryType(builder, CategoryType)
-def AddRefreshGroup(builder, RefreshGroup): builder.PrependInt32Slot(6, RefreshGroup, 0)
+def AddRefreshGroup(builder, RefreshGroup): builder.PrependInt32Slot(8, RefreshGroup, 0)
 def ShopRefreshExcelAddRefreshGroup(builder, RefreshGroup):
     """This method is deprecated. Please switch to AddRefreshGroup."""
     return AddRefreshGroup(builder, RefreshGroup)
-def AddProb(builder, Prob): builder.PrependInt32Slot(7, Prob, 0)
+def AddProb(builder, Prob): builder.PrependInt32Slot(9, Prob, 0)
 def ShopRefreshExcelAddProb(builder, Prob):
     """This method is deprecated. Please switch to AddProb."""
     return AddProb(builder, Prob)
-def AddBuyReportEventName(builder, BuyReportEventName): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BuyReportEventName), 0)
+def AddBuyReportEventName(builder, BuyReportEventName): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BuyReportEventName), 0)
 def ShopRefreshExcelAddBuyReportEventName(builder, BuyReportEventName):
     """This method is deprecated. Please switch to AddBuyReportEventName."""
     return AddBuyReportEventName(builder, BuyReportEventName)
+def AddDisplayTag(builder, DisplayTag): builder.PrependInt32Slot(11, DisplayTag, 0)
+def ShopRefreshExcelAddDisplayTag(builder, DisplayTag):
+    """This method is deprecated. Please switch to AddDisplayTag."""
+    return AddDisplayTag(builder, DisplayTag)
 def End(builder): return builder.EndObject()
 def ShopRefreshExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

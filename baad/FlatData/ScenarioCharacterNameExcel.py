@@ -67,97 +67,27 @@ class ScenarioCharacterNameExcel(object):
         return None
 
     # ScenarioCharacterNameExcel
-    def NameTH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NicknameTH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NameTW(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NicknameTW(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NameEN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NicknameEN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NameDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NicknameDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NameFR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
-    def NicknameFR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # ScenarioCharacterNameExcel
     def Shape(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioCharacterNameExcel
     def SpinePrefabName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # ScenarioCharacterNameExcel
     def SmallPortrait(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(19)
+def Start(builder): builder.StartObject(9)
 def ScenarioCharacterNameExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -185,55 +115,15 @@ def AddNicknameJP(builder, NicknameJP): builder.PrependUOffsetTRelativeSlot(5, f
 def ScenarioCharacterNameExcelAddNicknameJP(builder, NicknameJP):
     """This method is deprecated. Please switch to AddNicknameJP."""
     return AddNicknameJP(builder, NicknameJP)
-def AddNameTH(builder, NameTH): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NameTH), 0)
-def ScenarioCharacterNameExcelAddNameTH(builder, NameTH):
-    """This method is deprecated. Please switch to AddNameTH."""
-    return AddNameTH(builder, NameTH)
-def AddNicknameTH(builder, NicknameTH): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(NicknameTH), 0)
-def ScenarioCharacterNameExcelAddNicknameTH(builder, NicknameTH):
-    """This method is deprecated. Please switch to AddNicknameTH."""
-    return AddNicknameTH(builder, NicknameTH)
-def AddNameTW(builder, NameTW): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(NameTW), 0)
-def ScenarioCharacterNameExcelAddNameTW(builder, NameTW):
-    """This method is deprecated. Please switch to AddNameTW."""
-    return AddNameTW(builder, NameTW)
-def AddNicknameTW(builder, NicknameTW): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(NicknameTW), 0)
-def ScenarioCharacterNameExcelAddNicknameTW(builder, NicknameTW):
-    """This method is deprecated. Please switch to AddNicknameTW."""
-    return AddNicknameTW(builder, NicknameTW)
-def AddNameEN(builder, NameEN): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(NameEN), 0)
-def ScenarioCharacterNameExcelAddNameEN(builder, NameEN):
-    """This method is deprecated. Please switch to AddNameEN."""
-    return AddNameEN(builder, NameEN)
-def AddNicknameEN(builder, NicknameEN): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(NicknameEN), 0)
-def ScenarioCharacterNameExcelAddNicknameEN(builder, NicknameEN):
-    """This method is deprecated. Please switch to AddNicknameEN."""
-    return AddNicknameEN(builder, NicknameEN)
-def AddNameDE(builder, NameDE): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(NameDE), 0)
-def ScenarioCharacterNameExcelAddNameDE(builder, NameDE):
-    """This method is deprecated. Please switch to AddNameDE."""
-    return AddNameDE(builder, NameDE)
-def AddNicknameDE(builder, NicknameDE): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NicknameDE), 0)
-def ScenarioCharacterNameExcelAddNicknameDE(builder, NicknameDE):
-    """This method is deprecated. Please switch to AddNicknameDE."""
-    return AddNicknameDE(builder, NicknameDE)
-def AddNameFR(builder, NameFR): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NameFR), 0)
-def ScenarioCharacterNameExcelAddNameFR(builder, NameFR):
-    """This method is deprecated. Please switch to AddNameFR."""
-    return AddNameFR(builder, NameFR)
-def AddNicknameFR(builder, NicknameFR): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(NicknameFR), 0)
-def ScenarioCharacterNameExcelAddNicknameFR(builder, NicknameFR):
-    """This method is deprecated. Please switch to AddNicknameFR."""
-    return AddNicknameFR(builder, NicknameFR)
-def AddShape(builder, Shape): builder.PrependInt32Slot(16, Shape, 0)
+def AddShape(builder, Shape): builder.PrependInt32Slot(6, Shape, 0)
 def ScenarioCharacterNameExcelAddShape(builder, Shape):
     """This method is deprecated. Please switch to AddShape."""
     return AddShape(builder, Shape)
-def AddSpinePrefabName(builder, SpinePrefabName): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(SpinePrefabName), 0)
+def AddSpinePrefabName(builder, SpinePrefabName): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SpinePrefabName), 0)
 def ScenarioCharacterNameExcelAddSpinePrefabName(builder, SpinePrefabName):
     """This method is deprecated. Please switch to AddSpinePrefabName."""
     return AddSpinePrefabName(builder, SpinePrefabName)
-def AddSmallPortrait(builder, SmallPortrait): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SmallPortrait), 0)
+def AddSmallPortrait(builder, SmallPortrait): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SmallPortrait), 0)
 def ScenarioCharacterNameExcelAddSmallPortrait(builder, SmallPortrait):
     """This method is deprecated. Please switch to AddSmallPortrait."""
     return AddSmallPortrait(builder, SmallPortrait)

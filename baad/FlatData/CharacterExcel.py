@@ -46,46 +46,46 @@ class CharacterExcel(object):
         return 0
 
     # CharacterExcel
-    def ProductionStep_(self):
+    def IsPlayable(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # CharacterExcel
+    def ProductionStep_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def CollectionVisible(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
-    def CollectionVisibleStartDate(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def CollectionVisibleEndDate(self):
+    def ReleaseDate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterExcel
-    def ReleaseDate(self):
+    def CollectionVisibleStartDate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # CharacterExcel
-    def IsPlayable(self):
+    def CollectionVisibleEndDate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
     # CharacterExcel
     def IsPlayableCharacter(self):
@@ -95,25 +95,25 @@ class CharacterExcel(object):
         return False
 
     # CharacterExcel
-    def IsNPC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # CharacterExcel
     def LocalizeEtcId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def Rarity_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
+
+    # CharacterExcel
+    def IsNPC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # CharacterExcel
     def TacticEntityType_(self):
@@ -249,7 +249,7 @@ class CharacterExcel(object):
         return 0
 
     # CharacterExcel
-    def ExternalBtId(self):
+    def ExternalBTId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
@@ -318,231 +318,141 @@ class CharacterExcel(object):
         return o == 0
 
     # CharacterExcel
-    def SpineResourceName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def SpineResourceNameDiorama(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def EntityMaterialType_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # CharacterExcel
-    def ModelPrefabName(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def TextureDir(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def TextureEchelon(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def CollectionTexturePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def CollectionBGTexturePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def TextureBoss(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def TextureSkillCard(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # CharacterExcel
-    def TextureSkillCardLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # CharacterExcel
-    def TextureSkillCardIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
-        return o == 0
-
-    # CharacterExcel
-    def WeaponImagePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
     def WeaponLocalizeId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def DisplayEnemyInfo(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def BodyRadius(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def RandomEffectRadius(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
-    def HpBarHide(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+    def HPBarHide(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def HpBarHeight(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # CharacterExcel
     def HighlightFloaterHeight(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # CharacterExcel
     def EmojiOffsetX(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # CharacterExcel
     def EmojiOffsetY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
     # CharacterExcel
     def MoveStartFrame(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def MoveEndFrame(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def JumpMotionFrame(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def AppearFrame(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def CanMove(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def CanFix(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def CanCrowdControl(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def CanBattleItemMove(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def IsAirUnit(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # CharacterExcel
     def AirUnitHeight(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def Tags(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -550,73 +460,59 @@ class CharacterExcel(object):
 
     # CharacterExcel
     def TagsAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # CharacterExcel
     def TagsLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CharacterExcel
     def TagsIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         return o == 0
 
     # CharacterExcel
     def SecretStoneItemId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def SecretStoneItemAmount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def CharacterPieceItemId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def CharacterPieceItemAmount(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # CharacterExcel
     def CombineRecipeId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-    # CharacterExcel
-    def InformationPacel(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # CharacterExcel
-    def AnimationSSR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-def Start(builder): builder.StartObject(77)
+def Start(builder): builder.StartObject(64)
 def CharacterExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -632,46 +528,46 @@ def AddCostumeGroupId(builder, CostumeGroupId): builder.PrependInt64Slot(2, Cost
 def CharacterExcelAddCostumeGroupId(builder, CostumeGroupId):
     """This method is deprecated. Please switch to AddCostumeGroupId."""
     return AddCostumeGroupId(builder, CostumeGroupId)
-def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(3, ProductionStep_, 0)
-def CharacterExcelAddProductionStep_(builder, ProductionStep_):
-    """This method is deprecated. Please switch to AddProductionStep_."""
-    return AddProductionStep_(builder, ProductionStep_)
-def AddCollectionVisible(builder, CollectionVisible): builder.PrependBoolSlot(4, CollectionVisible, 0)
-def CharacterExcelAddCollectionVisible(builder, CollectionVisible):
-    """This method is deprecated. Please switch to AddCollectionVisible."""
-    return AddCollectionVisible(builder, CollectionVisible)
-def AddCollectionVisibleStartDate(builder, CollectionVisibleStartDate): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CollectionVisibleStartDate), 0)
-def CharacterExcelAddCollectionVisibleStartDate(builder, CollectionVisibleStartDate):
-    """This method is deprecated. Please switch to AddCollectionVisibleStartDate."""
-    return AddCollectionVisibleStartDate(builder, CollectionVisibleStartDate)
-def AddCollectionVisibleEndDate(builder, CollectionVisibleEndDate): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CollectionVisibleEndDate), 0)
-def CharacterExcelAddCollectionVisibleEndDate(builder, CollectionVisibleEndDate):
-    """This method is deprecated. Please switch to AddCollectionVisibleEndDate."""
-    return AddCollectionVisibleEndDate(builder, CollectionVisibleEndDate)
-def AddReleaseDate(builder, ReleaseDate): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ReleaseDate), 0)
-def CharacterExcelAddReleaseDate(builder, ReleaseDate):
-    """This method is deprecated. Please switch to AddReleaseDate."""
-    return AddReleaseDate(builder, ReleaseDate)
-def AddIsPlayable(builder, IsPlayable): builder.PrependBoolSlot(8, IsPlayable, 0)
+def AddIsPlayable(builder, IsPlayable): builder.PrependBoolSlot(3, IsPlayable, 0)
 def CharacterExcelAddIsPlayable(builder, IsPlayable):
     """This method is deprecated. Please switch to AddIsPlayable."""
     return AddIsPlayable(builder, IsPlayable)
+def AddProductionStep_(builder, ProductionStep_): builder.PrependInt32Slot(4, ProductionStep_, 0)
+def CharacterExcelAddProductionStep_(builder, ProductionStep_):
+    """This method is deprecated. Please switch to AddProductionStep_."""
+    return AddProductionStep_(builder, ProductionStep_)
+def AddCollectionVisible(builder, CollectionVisible): builder.PrependBoolSlot(5, CollectionVisible, 0)
+def CharacterExcelAddCollectionVisible(builder, CollectionVisible):
+    """This method is deprecated. Please switch to AddCollectionVisible."""
+    return AddCollectionVisible(builder, CollectionVisible)
+def AddReleaseDate(builder, ReleaseDate): builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ReleaseDate), 0)
+def CharacterExcelAddReleaseDate(builder, ReleaseDate):
+    """This method is deprecated. Please switch to AddReleaseDate."""
+    return AddReleaseDate(builder, ReleaseDate)
+def AddCollectionVisibleStartDate(builder, CollectionVisibleStartDate): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CollectionVisibleStartDate), 0)
+def CharacterExcelAddCollectionVisibleStartDate(builder, CollectionVisibleStartDate):
+    """This method is deprecated. Please switch to AddCollectionVisibleStartDate."""
+    return AddCollectionVisibleStartDate(builder, CollectionVisibleStartDate)
+def AddCollectionVisibleEndDate(builder, CollectionVisibleEndDate): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CollectionVisibleEndDate), 0)
+def CharacterExcelAddCollectionVisibleEndDate(builder, CollectionVisibleEndDate):
+    """This method is deprecated. Please switch to AddCollectionVisibleEndDate."""
+    return AddCollectionVisibleEndDate(builder, CollectionVisibleEndDate)
 def AddIsPlayableCharacter(builder, IsPlayableCharacter): builder.PrependBoolSlot(9, IsPlayableCharacter, 0)
 def CharacterExcelAddIsPlayableCharacter(builder, IsPlayableCharacter):
     """This method is deprecated. Please switch to AddIsPlayableCharacter."""
     return AddIsPlayableCharacter(builder, IsPlayableCharacter)
-def AddIsNPC(builder, IsNPC): builder.PrependBoolSlot(10, IsNPC, 0)
-def CharacterExcelAddIsNPC(builder, IsNPC):
-    """This method is deprecated. Please switch to AddIsNPC."""
-    return AddIsNPC(builder, IsNPC)
-def AddLocalizeEtcId(builder, LocalizeEtcId): builder.PrependUint32Slot(11, LocalizeEtcId, 0)
+def AddLocalizeEtcId(builder, LocalizeEtcId): builder.PrependUint32Slot(10, LocalizeEtcId, 0)
 def CharacterExcelAddLocalizeEtcId(builder, LocalizeEtcId):
     """This method is deprecated. Please switch to AddLocalizeEtcId."""
     return AddLocalizeEtcId(builder, LocalizeEtcId)
-def AddRarity_(builder, Rarity_): builder.PrependInt32Slot(12, Rarity_, 0)
+def AddRarity_(builder, Rarity_): builder.PrependInt32Slot(11, Rarity_, 0)
 def CharacterExcelAddRarity_(builder, Rarity_):
     """This method is deprecated. Please switch to AddRarity_."""
     return AddRarity_(builder, Rarity_)
+def AddIsNPC(builder, IsNPC): builder.PrependBoolSlot(12, IsNPC, 0)
+def CharacterExcelAddIsNPC(builder, IsNPC):
+    """This method is deprecated. Please switch to AddIsNPC."""
+    return AddIsNPC(builder, IsNPC)
 def AddTacticEntityType_(builder, TacticEntityType_): builder.PrependInt32Slot(13, TacticEntityType_, 0)
 def CharacterExcelAddTacticEntityType_(builder, TacticEntityType_):
     """This method is deprecated. Please switch to AddTacticEntityType_."""
@@ -748,10 +644,10 @@ def AddCharacterAIId(builder, CharacterAIId): builder.PrependInt64Slot(31, Chara
 def CharacterExcelAddCharacterAIId(builder, CharacterAIId):
     """This method is deprecated. Please switch to AddCharacterAIId."""
     return AddCharacterAIId(builder, CharacterAIId)
-def AddExternalBtId(builder, ExternalBtId): builder.PrependInt64Slot(32, ExternalBtId, 0)
-def CharacterExcelAddExternalBtId(builder, ExternalBtId):
-    """This method is deprecated. Please switch to AddExternalBtId."""
-    return AddExternalBtId(builder, ExternalBtId)
+def AddExternalBTId(builder, ExternalBTId): builder.PrependInt64Slot(32, ExternalBTId, 0)
+def CharacterExcelAddExternalBTId(builder, ExternalBTId):
+    """This method is deprecated. Please switch to AddExternalBTId."""
+    return AddExternalBTId(builder, ExternalBTId)
 def AddMainCombatStyleId(builder, MainCombatStyleId): builder.PrependInt64Slot(33, MainCombatStyleId, 0)
 def CharacterExcelAddMainCombatStyleId(builder, MainCombatStyleId):
     """This method is deprecated. Please switch to AddMainCombatStyleId."""
@@ -780,131 +676,83 @@ def StartEquipmentSlotVector(builder, numElems): return builder.StartVector(4, n
 def CharacterExcelStartEquipmentSlotVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartEquipmentSlotVector(builder, numElems)
-def AddSpineResourceName(builder, SpineResourceName): builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(SpineResourceName), 0)
-def CharacterExcelAddSpineResourceName(builder, SpineResourceName):
-    """This method is deprecated. Please switch to AddSpineResourceName."""
-    return AddSpineResourceName(builder, SpineResourceName)
-def AddSpineResourceNameDiorama(builder, SpineResourceNameDiorama): builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(SpineResourceNameDiorama), 0)
-def CharacterExcelAddSpineResourceNameDiorama(builder, SpineResourceNameDiorama):
-    """This method is deprecated. Please switch to AddSpineResourceNameDiorama."""
-    return AddSpineResourceNameDiorama(builder, SpineResourceNameDiorama)
-def AddEntityMaterialType_(builder, EntityMaterialType_): builder.PrependInt32Slot(41, EntityMaterialType_, 0)
-def CharacterExcelAddEntityMaterialType_(builder, EntityMaterialType_):
-    """This method is deprecated. Please switch to AddEntityMaterialType_."""
-    return AddEntityMaterialType_(builder, EntityMaterialType_)
-def AddModelPrefabName(builder, ModelPrefabName): builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(ModelPrefabName), 0)
-def CharacterExcelAddModelPrefabName(builder, ModelPrefabName):
-    """This method is deprecated. Please switch to AddModelPrefabName."""
-    return AddModelPrefabName(builder, ModelPrefabName)
-def AddTextureDir(builder, TextureDir): builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(TextureDir), 0)
-def CharacterExcelAddTextureDir(builder, TextureDir):
-    """This method is deprecated. Please switch to AddTextureDir."""
-    return AddTextureDir(builder, TextureDir)
-def AddTextureEchelon(builder, TextureEchelon): builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(TextureEchelon), 0)
-def CharacterExcelAddTextureEchelon(builder, TextureEchelon):
-    """This method is deprecated. Please switch to AddTextureEchelon."""
-    return AddTextureEchelon(builder, TextureEchelon)
-def AddCollectionTexturePath(builder, CollectionTexturePath): builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(CollectionTexturePath), 0)
-def CharacterExcelAddCollectionTexturePath(builder, CollectionTexturePath):
-    """This method is deprecated. Please switch to AddCollectionTexturePath."""
-    return AddCollectionTexturePath(builder, CollectionTexturePath)
-def AddCollectionBGTexturePath(builder, CollectionBGTexturePath): builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(CollectionBGTexturePath), 0)
-def CharacterExcelAddCollectionBGTexturePath(builder, CollectionBGTexturePath):
-    """This method is deprecated. Please switch to AddCollectionBGTexturePath."""
-    return AddCollectionBGTexturePath(builder, CollectionBGTexturePath)
-def AddTextureBoss(builder, TextureBoss): builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(TextureBoss), 0)
-def CharacterExcelAddTextureBoss(builder, TextureBoss):
-    """This method is deprecated. Please switch to AddTextureBoss."""
-    return AddTextureBoss(builder, TextureBoss)
-def AddTextureSkillCard(builder, TextureSkillCard): builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(TextureSkillCard), 0)
-def CharacterExcelAddTextureSkillCard(builder, TextureSkillCard):
-    """This method is deprecated. Please switch to AddTextureSkillCard."""
-    return AddTextureSkillCard(builder, TextureSkillCard)
-def StartTextureSkillCardVector(builder, numElems): return builder.StartVector(4, numElems, 4)
-def CharacterExcelStartTextureSkillCardVector(builder, numElems):
-    """This method is deprecated. Please switch to Start."""
-    return StartTextureSkillCardVector(builder, numElems)
-def AddWeaponImagePath(builder, WeaponImagePath): builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(WeaponImagePath), 0)
-def CharacterExcelAddWeaponImagePath(builder, WeaponImagePath):
-    """This method is deprecated. Please switch to AddWeaponImagePath."""
-    return AddWeaponImagePath(builder, WeaponImagePath)
-def AddWeaponLocalizeId(builder, WeaponLocalizeId): builder.PrependUint32Slot(50, WeaponLocalizeId, 0)
+def AddWeaponLocalizeId(builder, WeaponLocalizeId): builder.PrependUint32Slot(39, WeaponLocalizeId, 0)
 def CharacterExcelAddWeaponLocalizeId(builder, WeaponLocalizeId):
     """This method is deprecated. Please switch to AddWeaponLocalizeId."""
     return AddWeaponLocalizeId(builder, WeaponLocalizeId)
-def AddDisplayEnemyInfo(builder, DisplayEnemyInfo): builder.PrependBoolSlot(51, DisplayEnemyInfo, 0)
+def AddDisplayEnemyInfo(builder, DisplayEnemyInfo): builder.PrependBoolSlot(40, DisplayEnemyInfo, 0)
 def CharacterExcelAddDisplayEnemyInfo(builder, DisplayEnemyInfo):
     """This method is deprecated. Please switch to AddDisplayEnemyInfo."""
     return AddDisplayEnemyInfo(builder, DisplayEnemyInfo)
-def AddBodyRadius(builder, BodyRadius): builder.PrependInt64Slot(52, BodyRadius, 0)
+def AddBodyRadius(builder, BodyRadius): builder.PrependInt64Slot(41, BodyRadius, 0)
 def CharacterExcelAddBodyRadius(builder, BodyRadius):
     """This method is deprecated. Please switch to AddBodyRadius."""
     return AddBodyRadius(builder, BodyRadius)
-def AddRandomEffectRadius(builder, RandomEffectRadius): builder.PrependInt64Slot(53, RandomEffectRadius, 0)
+def AddRandomEffectRadius(builder, RandomEffectRadius): builder.PrependInt64Slot(42, RandomEffectRadius, 0)
 def CharacterExcelAddRandomEffectRadius(builder, RandomEffectRadius):
     """This method is deprecated. Please switch to AddRandomEffectRadius."""
     return AddRandomEffectRadius(builder, RandomEffectRadius)
-def AddHpBarHide(builder, HpBarHide): builder.PrependBoolSlot(54, HpBarHide, 0)
-def CharacterExcelAddHpBarHide(builder, HpBarHide):
-    """This method is deprecated. Please switch to AddHpBarHide."""
-    return AddHpBarHide(builder, HpBarHide)
-def AddHpBarHeight(builder, HpBarHeight): builder.PrependFloat32Slot(55, HpBarHeight, 0.0)
+def AddHPBarHide(builder, HPBarHide): builder.PrependBoolSlot(43, HPBarHide, 0)
+def CharacterExcelAddHPBarHide(builder, HPBarHide):
+    """This method is deprecated. Please switch to AddHPBarHide."""
+    return AddHPBarHide(builder, HPBarHide)
+def AddHpBarHeight(builder, HpBarHeight): builder.PrependFloat32Slot(44, HpBarHeight, 0.0)
 def CharacterExcelAddHpBarHeight(builder, HpBarHeight):
     """This method is deprecated. Please switch to AddHpBarHeight."""
     return AddHpBarHeight(builder, HpBarHeight)
-def AddHighlightFloaterHeight(builder, HighlightFloaterHeight): builder.PrependFloat32Slot(56, HighlightFloaterHeight, 0.0)
+def AddHighlightFloaterHeight(builder, HighlightFloaterHeight): builder.PrependFloat32Slot(45, HighlightFloaterHeight, 0.0)
 def CharacterExcelAddHighlightFloaterHeight(builder, HighlightFloaterHeight):
     """This method is deprecated. Please switch to AddHighlightFloaterHeight."""
     return AddHighlightFloaterHeight(builder, HighlightFloaterHeight)
-def AddEmojiOffsetX(builder, EmojiOffsetX): builder.PrependFloat32Slot(57, EmojiOffsetX, 0.0)
+def AddEmojiOffsetX(builder, EmojiOffsetX): builder.PrependFloat32Slot(46, EmojiOffsetX, 0.0)
 def CharacterExcelAddEmojiOffsetX(builder, EmojiOffsetX):
     """This method is deprecated. Please switch to AddEmojiOffsetX."""
     return AddEmojiOffsetX(builder, EmojiOffsetX)
-def AddEmojiOffsetY(builder, EmojiOffsetY): builder.PrependFloat32Slot(58, EmojiOffsetY, 0.0)
+def AddEmojiOffsetY(builder, EmojiOffsetY): builder.PrependFloat32Slot(47, EmojiOffsetY, 0.0)
 def CharacterExcelAddEmojiOffsetY(builder, EmojiOffsetY):
     """This method is deprecated. Please switch to AddEmojiOffsetY."""
     return AddEmojiOffsetY(builder, EmojiOffsetY)
-def AddMoveStartFrame(builder, MoveStartFrame): builder.PrependInt32Slot(59, MoveStartFrame, 0)
+def AddMoveStartFrame(builder, MoveStartFrame): builder.PrependInt32Slot(48, MoveStartFrame, 0)
 def CharacterExcelAddMoveStartFrame(builder, MoveStartFrame):
     """This method is deprecated. Please switch to AddMoveStartFrame."""
     return AddMoveStartFrame(builder, MoveStartFrame)
-def AddMoveEndFrame(builder, MoveEndFrame): builder.PrependInt32Slot(60, MoveEndFrame, 0)
+def AddMoveEndFrame(builder, MoveEndFrame): builder.PrependInt32Slot(49, MoveEndFrame, 0)
 def CharacterExcelAddMoveEndFrame(builder, MoveEndFrame):
     """This method is deprecated. Please switch to AddMoveEndFrame."""
     return AddMoveEndFrame(builder, MoveEndFrame)
-def AddJumpMotionFrame(builder, JumpMotionFrame): builder.PrependInt32Slot(61, JumpMotionFrame, 0)
+def AddJumpMotionFrame(builder, JumpMotionFrame): builder.PrependInt32Slot(50, JumpMotionFrame, 0)
 def CharacterExcelAddJumpMotionFrame(builder, JumpMotionFrame):
     """This method is deprecated. Please switch to AddJumpMotionFrame."""
     return AddJumpMotionFrame(builder, JumpMotionFrame)
-def AddAppearFrame(builder, AppearFrame): builder.PrependInt32Slot(62, AppearFrame, 0)
+def AddAppearFrame(builder, AppearFrame): builder.PrependInt32Slot(51, AppearFrame, 0)
 def CharacterExcelAddAppearFrame(builder, AppearFrame):
     """This method is deprecated. Please switch to AddAppearFrame."""
     return AddAppearFrame(builder, AppearFrame)
-def AddCanMove(builder, CanMove): builder.PrependBoolSlot(63, CanMove, 0)
+def AddCanMove(builder, CanMove): builder.PrependBoolSlot(52, CanMove, 0)
 def CharacterExcelAddCanMove(builder, CanMove):
     """This method is deprecated. Please switch to AddCanMove."""
     return AddCanMove(builder, CanMove)
-def AddCanFix(builder, CanFix): builder.PrependBoolSlot(64, CanFix, 0)
+def AddCanFix(builder, CanFix): builder.PrependBoolSlot(53, CanFix, 0)
 def CharacterExcelAddCanFix(builder, CanFix):
     """This method is deprecated. Please switch to AddCanFix."""
     return AddCanFix(builder, CanFix)
-def AddCanCrowdControl(builder, CanCrowdControl): builder.PrependBoolSlot(65, CanCrowdControl, 0)
+def AddCanCrowdControl(builder, CanCrowdControl): builder.PrependBoolSlot(54, CanCrowdControl, 0)
 def CharacterExcelAddCanCrowdControl(builder, CanCrowdControl):
     """This method is deprecated. Please switch to AddCanCrowdControl."""
     return AddCanCrowdControl(builder, CanCrowdControl)
-def AddCanBattleItemMove(builder, CanBattleItemMove): builder.PrependBoolSlot(66, CanBattleItemMove, 0)
+def AddCanBattleItemMove(builder, CanBattleItemMove): builder.PrependBoolSlot(55, CanBattleItemMove, 0)
 def CharacterExcelAddCanBattleItemMove(builder, CanBattleItemMove):
     """This method is deprecated. Please switch to AddCanBattleItemMove."""
     return AddCanBattleItemMove(builder, CanBattleItemMove)
-def AddIsAirUnit(builder, IsAirUnit): builder.PrependBoolSlot(67, IsAirUnit, 0)
+def AddIsAirUnit(builder, IsAirUnit): builder.PrependBoolSlot(56, IsAirUnit, 0)
 def CharacterExcelAddIsAirUnit(builder, IsAirUnit):
     """This method is deprecated. Please switch to AddIsAirUnit."""
     return AddIsAirUnit(builder, IsAirUnit)
-def AddAirUnitHeight(builder, AirUnitHeight): builder.PrependInt64Slot(68, AirUnitHeight, 0)
+def AddAirUnitHeight(builder, AirUnitHeight): builder.PrependInt64Slot(57, AirUnitHeight, 0)
 def CharacterExcelAddAirUnitHeight(builder, AirUnitHeight):
     """This method is deprecated. Please switch to AddAirUnitHeight."""
     return AddAirUnitHeight(builder, AirUnitHeight)
-def AddTags(builder, Tags): builder.PrependUOffsetTRelativeSlot(69, flatbuffers.number_types.UOffsetTFlags.py_type(Tags), 0)
+def AddTags(builder, Tags): builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(Tags), 0)
 def CharacterExcelAddTags(builder, Tags):
     """This method is deprecated. Please switch to AddTags."""
     return AddTags(builder, Tags)
@@ -912,34 +760,26 @@ def StartTagsVector(builder, numElems): return builder.StartVector(4, numElems, 
 def CharacterExcelStartTagsVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartTagsVector(builder, numElems)
-def AddSecretStoneItemId(builder, SecretStoneItemId): builder.PrependInt64Slot(70, SecretStoneItemId, 0)
+def AddSecretStoneItemId(builder, SecretStoneItemId): builder.PrependInt64Slot(59, SecretStoneItemId, 0)
 def CharacterExcelAddSecretStoneItemId(builder, SecretStoneItemId):
     """This method is deprecated. Please switch to AddSecretStoneItemId."""
     return AddSecretStoneItemId(builder, SecretStoneItemId)
-def AddSecretStoneItemAmount(builder, SecretStoneItemAmount): builder.PrependInt32Slot(71, SecretStoneItemAmount, 0)
+def AddSecretStoneItemAmount(builder, SecretStoneItemAmount): builder.PrependInt32Slot(60, SecretStoneItemAmount, 0)
 def CharacterExcelAddSecretStoneItemAmount(builder, SecretStoneItemAmount):
     """This method is deprecated. Please switch to AddSecretStoneItemAmount."""
     return AddSecretStoneItemAmount(builder, SecretStoneItemAmount)
-def AddCharacterPieceItemId(builder, CharacterPieceItemId): builder.PrependInt64Slot(72, CharacterPieceItemId, 0)
+def AddCharacterPieceItemId(builder, CharacterPieceItemId): builder.PrependInt64Slot(61, CharacterPieceItemId, 0)
 def CharacterExcelAddCharacterPieceItemId(builder, CharacterPieceItemId):
     """This method is deprecated. Please switch to AddCharacterPieceItemId."""
     return AddCharacterPieceItemId(builder, CharacterPieceItemId)
-def AddCharacterPieceItemAmount(builder, CharacterPieceItemAmount): builder.PrependInt32Slot(73, CharacterPieceItemAmount, 0)
+def AddCharacterPieceItemAmount(builder, CharacterPieceItemAmount): builder.PrependInt32Slot(62, CharacterPieceItemAmount, 0)
 def CharacterExcelAddCharacterPieceItemAmount(builder, CharacterPieceItemAmount):
     """This method is deprecated. Please switch to AddCharacterPieceItemAmount."""
     return AddCharacterPieceItemAmount(builder, CharacterPieceItemAmount)
-def AddCombineRecipeId(builder, CombineRecipeId): builder.PrependInt64Slot(74, CombineRecipeId, 0)
+def AddCombineRecipeId(builder, CombineRecipeId): builder.PrependInt64Slot(63, CombineRecipeId, 0)
 def CharacterExcelAddCombineRecipeId(builder, CombineRecipeId):
     """This method is deprecated. Please switch to AddCombineRecipeId."""
     return AddCombineRecipeId(builder, CombineRecipeId)
-def AddInformationPacel(builder, InformationPacel): builder.PrependUOffsetTRelativeSlot(75, flatbuffers.number_types.UOffsetTFlags.py_type(InformationPacel), 0)
-def CharacterExcelAddInformationPacel(builder, InformationPacel):
-    """This method is deprecated. Please switch to AddInformationPacel."""
-    return AddInformationPacel(builder, InformationPacel)
-def AddAnimationSSR(builder, AnimationSSR): builder.PrependUOffsetTRelativeSlot(76, flatbuffers.number_types.UOffsetTFlags.py_type(AnimationSSR), 0)
-def CharacterExcelAddAnimationSSR(builder, AnimationSSR):
-    """This method is deprecated. Please switch to AddAnimationSSR."""
-    return AddAnimationSSR(builder, AnimationSSR)
 def End(builder): return builder.EndObject()
 def CharacterExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

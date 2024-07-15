@@ -15,4 +15,6 @@ class FontType(object):
     DamageWeak = 9
     CriticalResist = 10
     CriticalWeak = 11
+    Effective = 12
+    CriticalEffective = 13
 

@@ -7,4 +7,5 @@ class ScenarioModeReplayTypes(object):
     Event = 1
     Favor = 2
     Work = 3
+    EventMeetup = 4
 

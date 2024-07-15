@@ -32,106 +32,148 @@ class EventContentSeasonExcel(object):
         return 0
 
     # EventContentSeasonExcel
-    def Name(self):
+    def OriginalEventContentId(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def IsReturn(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # EventContentSeasonExcel
+    def Name(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentSeasonExcel
     def EventContentType_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # EventContentSeasonExcel
-    def OpenConditionContent_(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # EventContentSeasonExcel
-    def ContentLockType_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # EventContentSeasonExcel
-    def EventDisplay(self):
+    def OpenConditionContent_(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def EventDisplay(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # EventContentSeasonExcel
+    def IconOrder(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def SubEventType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def SubEvent(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
     # EventContentSeasonExcel
     def EventItemId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def MainEventId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def EventChangeOpenCondition(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # EventContentSeasonExcel
     def BeforehandExposedTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # EventContentSeasonExcel
-    def EventContentOpenTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # EventContentSeasonExcel
-    def EventContentCloseTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # EventContentSeasonExcel
-    def ExtensionTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # EventContentSeasonExcel
-    def MainIconParcelPath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # EventContentSeasonExcel
-    def SubIconParcelPath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # EventContentSeasonExcel
-    def BeforehandBgImagePath(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentSeasonExcel
-    def MinigamePrologScenarioGroupId(self):
+    def EventContentOpenTime(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def EventContentCloseTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def ExtensionTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def MainIconParcelPath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def SubIconParcelPath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def BeforehandBgImagePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def MinigamePrologScenarioGroupId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # EventContentSeasonExcel
     def BeforehandScenarioGroupId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -139,38 +181,122 @@ class EventContentSeasonExcel(object):
 
     # EventContentSeasonExcel
     def BeforehandScenarioGroupIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # EventContentSeasonExcel
     def BeforehandScenarioGroupIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EventContentSeasonExcel
     def BeforehandScenarioGroupIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
     # EventContentSeasonExcel
     def MainBannerImagePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # EventContentSeasonExcel
     def MainBgImagePath(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(18)
+    # EventContentSeasonExcel
+    def ShiftTriggerStageId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def ShiftMainBgImagePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def MinigameLobbyPrefabName(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def MinigameVictoryPrefabName(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def MinigameMissionBgPrefabName(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def MinigameMissionBgImagePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def CardBgImagePath(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EventContentSeasonExcel
+    def EventAssist(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # EventContentSeasonExcel
+    def EventContentReleaseType_(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def EventContentStageRewardIdPermanent(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def RewardTagPermanent(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentSeasonExcel
+    def MiniEventShortCutScenarioModeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(36)
 def EventContentSeasonExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -178,63 +304,87 @@ def AddEventContentId(builder, EventContentId): builder.PrependInt64Slot(0, Even
 def EventContentSeasonExcelAddEventContentId(builder, EventContentId):
     """This method is deprecated. Please switch to AddEventContentId."""
     return AddEventContentId(builder, EventContentId)
-def AddName(builder, Name): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(Name), 0)
+def AddOriginalEventContentId(builder, OriginalEventContentId): builder.PrependInt64Slot(1, OriginalEventContentId, 0)
+def EventContentSeasonExcelAddOriginalEventContentId(builder, OriginalEventContentId):
+    """This method is deprecated. Please switch to AddOriginalEventContentId."""
+    return AddOriginalEventContentId(builder, OriginalEventContentId)
+def AddIsReturn(builder, IsReturn): builder.PrependBoolSlot(2, IsReturn, 0)
+def EventContentSeasonExcelAddIsReturn(builder, IsReturn):
+    """This method is deprecated. Please switch to AddIsReturn."""
+    return AddIsReturn(builder, IsReturn)
+def AddName(builder, Name): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(Name), 0)
 def EventContentSeasonExcelAddName(builder, Name):
     """This method is deprecated. Please switch to AddName."""
     return AddName(builder, Name)
-def AddEventContentType_(builder, EventContentType_): builder.PrependInt32Slot(2, EventContentType_, 0)
+def AddEventContentType_(builder, EventContentType_): builder.PrependInt32Slot(4, EventContentType_, 0)
 def EventContentSeasonExcelAddEventContentType_(builder, EventContentType_):
     """This method is deprecated. Please switch to AddEventContentType_."""
     return AddEventContentType_(builder, EventContentType_)
-def AddOpenConditionContent_(builder, OpenConditionContent_): builder.PrependInt32Slot(3, OpenConditionContent_, 0)
+def AddOpenConditionContent_(builder, OpenConditionContent_): builder.PrependInt32Slot(5, OpenConditionContent_, 0)
 def EventContentSeasonExcelAddOpenConditionContent_(builder, OpenConditionContent_):
     """This method is deprecated. Please switch to AddOpenConditionContent_."""
     return AddOpenConditionContent_(builder, OpenConditionContent_)
-def AddContentLockType_(builder, ContentLockType_): builder.PrependInt32Slot(4, ContentLockType_, 0)
-def EventContentSeasonExcelAddContentLockType_(builder, ContentLockType_):
-    """This method is deprecated. Please switch to AddContentLockType_."""
-    return AddContentLockType_(builder, ContentLockType_)
-def AddEventDisplay(builder, EventDisplay): builder.PrependBoolSlot(5, EventDisplay, 0)
+def AddEventDisplay(builder, EventDisplay): builder.PrependBoolSlot(6, EventDisplay, 0)
 def EventContentSeasonExcelAddEventDisplay(builder, EventDisplay):
     """This method is deprecated. Please switch to AddEventDisplay."""
     return AddEventDisplay(builder, EventDisplay)
-def AddEventItemId(builder, EventItemId): builder.PrependInt64Slot(6, EventItemId, 0)
+def AddIconOrder(builder, IconOrder): builder.PrependInt32Slot(7, IconOrder, 0)
+def EventContentSeasonExcelAddIconOrder(builder, IconOrder):
+    """This method is deprecated. Please switch to AddIconOrder."""
+    return AddIconOrder(builder, IconOrder)
+def AddSubEventType_(builder, SubEventType_): builder.PrependInt32Slot(8, SubEventType_, 0)
+def EventContentSeasonExcelAddSubEventType_(builder, SubEventType_):
+    """This method is deprecated. Please switch to AddSubEventType_."""
+    return AddSubEventType_(builder, SubEventType_)
+def AddSubEvent(builder, SubEvent): builder.PrependBoolSlot(9, SubEvent, 0)
+def EventContentSeasonExcelAddSubEvent(builder, SubEvent):
+    """This method is deprecated. Please switch to AddSubEvent."""
+    return AddSubEvent(builder, SubEvent)
+def AddEventItemId(builder, EventItemId): builder.PrependInt64Slot(10, EventItemId, 0)
 def EventContentSeasonExcelAddEventItemId(builder, EventItemId):
     """This method is deprecated. Please switch to AddEventItemId."""
     return AddEventItemId(builder, EventItemId)
-def AddBeforehandExposedTime(builder, BeforehandExposedTime): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(BeforehandExposedTime), 0)
+def AddMainEventId(builder, MainEventId): builder.PrependInt64Slot(11, MainEventId, 0)
+def EventContentSeasonExcelAddMainEventId(builder, MainEventId):
+    """This method is deprecated. Please switch to AddMainEventId."""
+    return AddMainEventId(builder, MainEventId)
+def AddEventChangeOpenCondition(builder, EventChangeOpenCondition): builder.PrependInt64Slot(12, EventChangeOpenCondition, 0)
+def EventContentSeasonExcelAddEventChangeOpenCondition(builder, EventChangeOpenCondition):
+    """This method is deprecated. Please switch to AddEventChangeOpenCondition."""
+    return AddEventChangeOpenCondition(builder, EventChangeOpenCondition)
+def AddBeforehandExposedTime(builder, BeforehandExposedTime): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(BeforehandExposedTime), 0)
 def EventContentSeasonExcelAddBeforehandExposedTime(builder, BeforehandExposedTime):
     """This method is deprecated. Please switch to AddBeforehandExposedTime."""
     return AddBeforehandExposedTime(builder, BeforehandExposedTime)
-def AddEventContentOpenTime(builder, EventContentOpenTime): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EventContentOpenTime), 0)
+def AddEventContentOpenTime(builder, EventContentOpenTime): builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(EventContentOpenTime), 0)
 def EventContentSeasonExcelAddEventContentOpenTime(builder, EventContentOpenTime):
     """This method is deprecated. Please switch to AddEventContentOpenTime."""
     return AddEventContentOpenTime(builder, EventContentOpenTime)
-def AddEventContentCloseTime(builder, EventContentCloseTime): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EventContentCloseTime), 0)
+def AddEventContentCloseTime(builder, EventContentCloseTime): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EventContentCloseTime), 0)
 def EventContentSeasonExcelAddEventContentCloseTime(builder, EventContentCloseTime):
     """This method is deprecated. Please switch to AddEventContentCloseTime."""
     return AddEventContentCloseTime(builder, EventContentCloseTime)
-def AddExtensionTime(builder, ExtensionTime): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ExtensionTime), 0)
+def AddExtensionTime(builder, ExtensionTime): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ExtensionTime), 0)
 def EventContentSeasonExcelAddExtensionTime(builder, ExtensionTime):
     """This method is deprecated. Please switch to AddExtensionTime."""
     return AddExtensionTime(builder, ExtensionTime)
-def AddMainIconParcelPath(builder, MainIconParcelPath): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MainIconParcelPath), 0)
+def AddMainIconParcelPath(builder, MainIconParcelPath): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(MainIconParcelPath), 0)
 def EventContentSeasonExcelAddMainIconParcelPath(builder, MainIconParcelPath):
     """This method is deprecated. Please switch to AddMainIconParcelPath."""
     return AddMainIconParcelPath(builder, MainIconParcelPath)
-def AddSubIconParcelPath(builder, SubIconParcelPath): builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SubIconParcelPath), 0)
+def AddSubIconParcelPath(builder, SubIconParcelPath): builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SubIconParcelPath), 0)
 def EventContentSeasonExcelAddSubIconParcelPath(builder, SubIconParcelPath):
     """This method is deprecated. Please switch to AddSubIconParcelPath."""
     return AddSubIconParcelPath(builder, SubIconParcelPath)
-def AddBeforehandBgImagePath(builder, BeforehandBgImagePath): builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(BeforehandBgImagePath), 0)
+def AddBeforehandBgImagePath(builder, BeforehandBgImagePath): builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(BeforehandBgImagePath), 0)
 def EventContentSeasonExcelAddBeforehandBgImagePath(builder, BeforehandBgImagePath):
     """This method is deprecated. Please switch to AddBeforehandBgImagePath."""
     return AddBeforehandBgImagePath(builder, BeforehandBgImagePath)
-def AddMinigamePrologScenarioGroupId(builder, MinigamePrologScenarioGroupId): builder.PrependInt64Slot(14, MinigamePrologScenarioGroupId, 0)
+def AddMinigamePrologScenarioGroupId(builder, MinigamePrologScenarioGroupId): builder.PrependInt64Slot(20, MinigamePrologScenarioGroupId, 0)
 def EventContentSeasonExcelAddMinigamePrologScenarioGroupId(builder, MinigamePrologScenarioGroupId):
     """This method is deprecated. Please switch to AddMinigamePrologScenarioGroupId."""
     return AddMinigamePrologScenarioGroupId(builder, MinigamePrologScenarioGroupId)
-def AddBeforehandScenarioGroupId(builder, BeforehandScenarioGroupId): builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(BeforehandScenarioGroupId), 0)
+def AddBeforehandScenarioGroupId(builder, BeforehandScenarioGroupId): builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(BeforehandScenarioGroupId), 0)
 def EventContentSeasonExcelAddBeforehandScenarioGroupId(builder, BeforehandScenarioGroupId):
     """This method is deprecated. Please switch to AddBeforehandScenarioGroupId."""
     return AddBeforehandScenarioGroupId(builder, BeforehandScenarioGroupId)
@@ -242,14 +392,62 @@ def StartBeforehandScenarioGroupIdVector(builder, numElems): return builder.Star
 def EventContentSeasonExcelStartBeforehandScenarioGroupIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartBeforehandScenarioGroupIdVector(builder, numElems)
-def AddMainBannerImagePath(builder, MainBannerImagePath): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(MainBannerImagePath), 0)
+def AddMainBannerImagePath(builder, MainBannerImagePath): builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(MainBannerImagePath), 0)
 def EventContentSeasonExcelAddMainBannerImagePath(builder, MainBannerImagePath):
     """This method is deprecated. Please switch to AddMainBannerImagePath."""
     return AddMainBannerImagePath(builder, MainBannerImagePath)
-def AddMainBgImagePath(builder, MainBgImagePath): builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(MainBgImagePath), 0)
+def AddMainBgImagePath(builder, MainBgImagePath): builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(MainBgImagePath), 0)
 def EventContentSeasonExcelAddMainBgImagePath(builder, MainBgImagePath):
     """This method is deprecated. Please switch to AddMainBgImagePath."""
     return AddMainBgImagePath(builder, MainBgImagePath)
+def AddShiftTriggerStageId(builder, ShiftTriggerStageId): builder.PrependInt64Slot(24, ShiftTriggerStageId, 0)
+def EventContentSeasonExcelAddShiftTriggerStageId(builder, ShiftTriggerStageId):
+    """This method is deprecated. Please switch to AddShiftTriggerStageId."""
+    return AddShiftTriggerStageId(builder, ShiftTriggerStageId)
+def AddShiftMainBgImagePath(builder, ShiftMainBgImagePath): builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(ShiftMainBgImagePath), 0)
+def EventContentSeasonExcelAddShiftMainBgImagePath(builder, ShiftMainBgImagePath):
+    """This method is deprecated. Please switch to AddShiftMainBgImagePath."""
+    return AddShiftMainBgImagePath(builder, ShiftMainBgImagePath)
+def AddMinigameLobbyPrefabName(builder, MinigameLobbyPrefabName): builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(MinigameLobbyPrefabName), 0)
+def EventContentSeasonExcelAddMinigameLobbyPrefabName(builder, MinigameLobbyPrefabName):
+    """This method is deprecated. Please switch to AddMinigameLobbyPrefabName."""
+    return AddMinigameLobbyPrefabName(builder, MinigameLobbyPrefabName)
+def AddMinigameVictoryPrefabName(builder, MinigameVictoryPrefabName): builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(MinigameVictoryPrefabName), 0)
+def EventContentSeasonExcelAddMinigameVictoryPrefabName(builder, MinigameVictoryPrefabName):
+    """This method is deprecated. Please switch to AddMinigameVictoryPrefabName."""
+    return AddMinigameVictoryPrefabName(builder, MinigameVictoryPrefabName)
+def AddMinigameMissionBgPrefabName(builder, MinigameMissionBgPrefabName): builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(MinigameMissionBgPrefabName), 0)
+def EventContentSeasonExcelAddMinigameMissionBgPrefabName(builder, MinigameMissionBgPrefabName):
+    """This method is deprecated. Please switch to AddMinigameMissionBgPrefabName."""
+    return AddMinigameMissionBgPrefabName(builder, MinigameMissionBgPrefabName)
+def AddMinigameMissionBgImagePath(builder, MinigameMissionBgImagePath): builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(MinigameMissionBgImagePath), 0)
+def EventContentSeasonExcelAddMinigameMissionBgImagePath(builder, MinigameMissionBgImagePath):
+    """This method is deprecated. Please switch to AddMinigameMissionBgImagePath."""
+    return AddMinigameMissionBgImagePath(builder, MinigameMissionBgImagePath)
+def AddCardBgImagePath(builder, CardBgImagePath): builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(CardBgImagePath), 0)
+def EventContentSeasonExcelAddCardBgImagePath(builder, CardBgImagePath):
+    """This method is deprecated. Please switch to AddCardBgImagePath."""
+    return AddCardBgImagePath(builder, CardBgImagePath)
+def AddEventAssist(builder, EventAssist): builder.PrependBoolSlot(31, EventAssist, 0)
+def EventContentSeasonExcelAddEventAssist(builder, EventAssist):
+    """This method is deprecated. Please switch to AddEventAssist."""
+    return AddEventAssist(builder, EventAssist)
+def AddEventContentReleaseType_(builder, EventContentReleaseType_): builder.PrependInt32Slot(32, EventContentReleaseType_, 0)
+def EventContentSeasonExcelAddEventContentReleaseType_(builder, EventContentReleaseType_):
+    """This method is deprecated. Please switch to AddEventContentReleaseType_."""
+    return AddEventContentReleaseType_(builder, EventContentReleaseType_)
+def AddEventContentStageRewardIdPermanent(builder, EventContentStageRewardIdPermanent): builder.PrependInt64Slot(33, EventContentStageRewardIdPermanent, 0)
+def EventContentSeasonExcelAddEventContentStageRewardIdPermanent(builder, EventContentStageRewardIdPermanent):
+    """This method is deprecated. Please switch to AddEventContentStageRewardIdPermanent."""
+    return AddEventContentStageRewardIdPermanent(builder, EventContentStageRewardIdPermanent)
+def AddRewardTagPermanent(builder, RewardTagPermanent): builder.PrependInt32Slot(34, RewardTagPermanent, 0)
+def EventContentSeasonExcelAddRewardTagPermanent(builder, RewardTagPermanent):
+    """This method is deprecated. Please switch to AddRewardTagPermanent."""
+    return AddRewardTagPermanent(builder, RewardTagPermanent)
+def AddMiniEventShortCutScenarioModeId(builder, MiniEventShortCutScenarioModeId): builder.PrependInt64Slot(35, MiniEventShortCutScenarioModeId, 0)
+def EventContentSeasonExcelAddMiniEventShortCutScenarioModeId(builder, MiniEventShortCutScenarioModeId):
+    """This method is deprecated. Please switch to AddMiniEventShortCutScenarioModeId."""
+    return AddMiniEventShortCutScenarioModeId(builder, MiniEventShortCutScenarioModeId)
 def End(builder): return builder.EndObject()
 def EventContentSeasonExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

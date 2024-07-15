@@ -53,18 +53,18 @@ class EventContentCardShopExcel(object):
         return 0
 
     # EventContentCardShopExcel
-    def IsLegacy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # EventContentCardShopExcel
     def CardGroupId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
+
+    # EventContentCardShopExcel
+    def IsLegacy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
     # EventContentCardShopExcel
     def RefreshGroup(self):
@@ -81,8 +81,15 @@ class EventContentCardShopExcel(object):
         return 0
 
     # EventContentCardShopExcel
-    def RewardParcelType(self, j):
+    def ProbWeight1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # EventContentCardShopExcel
+    def RewardParcelType(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -90,26 +97,26 @@ class EventContentCardShopExcel(object):
 
     # EventContentCardShopExcel
     def RewardParcelTypeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int32Flags, o)
         return 0
 
     # EventContentCardShopExcel
     def RewardParcelTypeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EventContentCardShopExcel
     def RewardParcelTypeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
     # EventContentCardShopExcel
     def RewardParcelId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -117,26 +124,26 @@ class EventContentCardShopExcel(object):
 
     # EventContentCardShopExcel
     def RewardParcelIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # EventContentCardShopExcel
     def RewardParcelIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EventContentCardShopExcel
     def RewardParcelIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
     # EventContentCardShopExcel
     def RewardParcelAmount(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -144,24 +151,24 @@ class EventContentCardShopExcel(object):
 
     # EventContentCardShopExcel
     def RewardParcelAmountAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # EventContentCardShopExcel
     def RewardParcelAmountLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # EventContentCardShopExcel
     def RewardParcelAmountIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
-def Start(builder): builder.StartObject(11)
+def Start(builder): builder.StartObject(12)
 def EventContentCardShopExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -181,14 +188,14 @@ def AddCostGoodsId(builder, CostGoodsId): builder.PrependInt64Slot(3, CostGoodsI
 def EventContentCardShopExcelAddCostGoodsId(builder, CostGoodsId):
     """This method is deprecated. Please switch to AddCostGoodsId."""
     return AddCostGoodsId(builder, CostGoodsId)
-def AddIsLegacy(builder, IsLegacy): builder.PrependBoolSlot(4, IsLegacy, 0)
-def EventContentCardShopExcelAddIsLegacy(builder, IsLegacy):
-    """This method is deprecated. Please switch to AddIsLegacy."""
-    return AddIsLegacy(builder, IsLegacy)
-def AddCardGroupId(builder, CardGroupId): builder.PrependInt32Slot(5, CardGroupId, 0)
+def AddCardGroupId(builder, CardGroupId): builder.PrependInt32Slot(4, CardGroupId, 0)
 def EventContentCardShopExcelAddCardGroupId(builder, CardGroupId):
     """This method is deprecated. Please switch to AddCardGroupId."""
     return AddCardGroupId(builder, CardGroupId)
+def AddIsLegacy(builder, IsLegacy): builder.PrependBoolSlot(5, IsLegacy, 0)
+def EventContentCardShopExcelAddIsLegacy(builder, IsLegacy):
+    """This method is deprecated. Please switch to AddIsLegacy."""
+    return AddIsLegacy(builder, IsLegacy)
 def AddRefreshGroup(builder, RefreshGroup): builder.PrependInt32Slot(6, RefreshGroup, 0)
 def EventContentCardShopExcelAddRefreshGroup(builder, RefreshGroup):
     """This method is deprecated. Please switch to AddRefreshGroup."""
@@ -197,7 +204,11 @@ def AddProb(builder, Prob): builder.PrependInt32Slot(7, Prob, 0)
 def EventContentCardShopExcelAddProb(builder, Prob):
     """This method is deprecated. Please switch to AddProb."""
     return AddProb(builder, Prob)
-def AddRewardParcelType(builder, RewardParcelType): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelType), 0)
+def AddProbWeight1(builder, ProbWeight1): builder.PrependInt32Slot(8, ProbWeight1, 0)
+def EventContentCardShopExcelAddProbWeight1(builder, ProbWeight1):
+    """This method is deprecated. Please switch to AddProbWeight1."""
+    return AddProbWeight1(builder, ProbWeight1)
+def AddRewardParcelType(builder, RewardParcelType): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelType), 0)
 def EventContentCardShopExcelAddRewardParcelType(builder, RewardParcelType):
     """This method is deprecated. Please switch to AddRewardParcelType."""
     return AddRewardParcelType(builder, RewardParcelType)
@@ -205,7 +216,7 @@ def StartRewardParcelTypeVector(builder, numElems): return builder.StartVector(4
 def EventContentCardShopExcelStartRewardParcelTypeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartRewardParcelTypeVector(builder, numElems)
-def AddRewardParcelId(builder, RewardParcelId): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelId), 0)
+def AddRewardParcelId(builder, RewardParcelId): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelId), 0)
 def EventContentCardShopExcelAddRewardParcelId(builder, RewardParcelId):
     """This method is deprecated. Please switch to AddRewardParcelId."""
     return AddRewardParcelId(builder, RewardParcelId)
@@ -213,7 +224,7 @@ def StartRewardParcelIdVector(builder, numElems): return builder.StartVector(8, 
 def EventContentCardShopExcelStartRewardParcelIdVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartRewardParcelIdVector(builder, numElems)
-def AddRewardParcelAmount(builder, RewardParcelAmount): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelAmount), 0)
+def AddRewardParcelAmount(builder, RewardParcelAmount): builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(RewardParcelAmount), 0)
 def EventContentCardShopExcelAddRewardParcelAmount(builder, RewardParcelAmount):
     """This method is deprecated. Please switch to AddRewardParcelAmount."""
     return AddRewardParcelAmount(builder, RewardParcelAmount)

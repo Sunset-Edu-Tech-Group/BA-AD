@@ -32,29 +32,36 @@ class RaidSeasonManageExcel(object):
         return 0
 
     # RaidSeasonManageExcel
-    def SeasonStartData(self):
+    def SeasonDisplay(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
 
     # RaidSeasonManageExcel
-    def SeasonEndData(self):
+    def SeasonStartData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidSeasonManageExcel
-    def SettlementEndDate(self):
+    def SeasonEndData(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
     # RaidSeasonManageExcel
-    def OpenRaidBossGroup(self, j):
+    def SettlementEndDate(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RaidSeasonManageExcel
+    def OpenRaidBossGroup(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -62,33 +69,33 @@ class RaidSeasonManageExcel(object):
 
     # RaidSeasonManageExcel
     def OpenRaidBossGroupLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidSeasonManageExcel
     def OpenRaidBossGroupIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         return o == 0
 
     # RaidSeasonManageExcel
     def RankingRewardGroupId(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # RaidSeasonManageExcel
     def MaxSeasonRewardGauage(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # RaidSeasonManageExcel
     def StackedSeasonRewardGauge(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -96,26 +103,26 @@ class RaidSeasonManageExcel(object):
 
     # RaidSeasonManageExcel
     def StackedSeasonRewardGaugeAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # RaidSeasonManageExcel
     def StackedSeasonRewardGaugeLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidSeasonManageExcel
     def StackedSeasonRewardGaugeIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
     # RaidSeasonManageExcel
     def SeasonRewardId(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.Get(flatbuffers.number_types.Int64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
@@ -123,24 +130,24 @@ class RaidSeasonManageExcel(object):
 
     # RaidSeasonManageExcel
     def SeasonRewardIdAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Int64Flags, o)
         return 0
 
     # RaidSeasonManageExcel
     def SeasonRewardIdLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RaidSeasonManageExcel
     def SeasonRewardIdIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
-def Start(builder): builder.StartObject(9)
+def Start(builder): builder.StartObject(10)
 def RaidSeasonManageExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -148,19 +155,23 @@ def AddSeasonId(builder, SeasonId): builder.PrependInt64Slot(0, SeasonId, 0)
 def RaidSeasonManageExcelAddSeasonId(builder, SeasonId):
     """This method is deprecated. Please switch to AddSeasonId."""
     return AddSeasonId(builder, SeasonId)
-def AddSeasonStartData(builder, SeasonStartData): builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SeasonStartData), 0)
+def AddSeasonDisplay(builder, SeasonDisplay): builder.PrependInt64Slot(1, SeasonDisplay, 0)
+def RaidSeasonManageExcelAddSeasonDisplay(builder, SeasonDisplay):
+    """This method is deprecated. Please switch to AddSeasonDisplay."""
+    return AddSeasonDisplay(builder, SeasonDisplay)
+def AddSeasonStartData(builder, SeasonStartData): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SeasonStartData), 0)
 def RaidSeasonManageExcelAddSeasonStartData(builder, SeasonStartData):
     """This method is deprecated. Please switch to AddSeasonStartData."""
     return AddSeasonStartData(builder, SeasonStartData)
-def AddSeasonEndData(builder, SeasonEndData): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SeasonEndData), 0)
+def AddSeasonEndData(builder, SeasonEndData): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SeasonEndData), 0)
 def RaidSeasonManageExcelAddSeasonEndData(builder, SeasonEndData):
     """This method is deprecated. Please switch to AddSeasonEndData."""
     return AddSeasonEndData(builder, SeasonEndData)
-def AddSettlementEndDate(builder, SettlementEndDate): builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SettlementEndDate), 0)
+def AddSettlementEndDate(builder, SettlementEndDate): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SettlementEndDate), 0)
 def RaidSeasonManageExcelAddSettlementEndDate(builder, SettlementEndDate):
     """This method is deprecated. Please switch to AddSettlementEndDate."""
     return AddSettlementEndDate(builder, SettlementEndDate)
-def AddOpenRaidBossGroup(builder, OpenRaidBossGroup): builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OpenRaidBossGroup), 0)
+def AddOpenRaidBossGroup(builder, OpenRaidBossGroup): builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OpenRaidBossGroup), 0)
 def RaidSeasonManageExcelAddOpenRaidBossGroup(builder, OpenRaidBossGroup):
     """This method is deprecated. Please switch to AddOpenRaidBossGroup."""
     return AddOpenRaidBossGroup(builder, OpenRaidBossGroup)
@@ -168,15 +179,15 @@ def StartOpenRaidBossGroupVector(builder, numElems): return builder.StartVector(
 def RaidSeasonManageExcelStartOpenRaidBossGroupVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartOpenRaidBossGroupVector(builder, numElems)
-def AddRankingRewardGroupId(builder, RankingRewardGroupId): builder.PrependInt64Slot(5, RankingRewardGroupId, 0)
+def AddRankingRewardGroupId(builder, RankingRewardGroupId): builder.PrependInt64Slot(6, RankingRewardGroupId, 0)
 def RaidSeasonManageExcelAddRankingRewardGroupId(builder, RankingRewardGroupId):
     """This method is deprecated. Please switch to AddRankingRewardGroupId."""
     return AddRankingRewardGroupId(builder, RankingRewardGroupId)
-def AddMaxSeasonRewardGauage(builder, MaxSeasonRewardGauage): builder.PrependInt32Slot(6, MaxSeasonRewardGauage, 0)
+def AddMaxSeasonRewardGauage(builder, MaxSeasonRewardGauage): builder.PrependInt32Slot(7, MaxSeasonRewardGauage, 0)
 def RaidSeasonManageExcelAddMaxSeasonRewardGauage(builder, MaxSeasonRewardGauage):
     """This method is deprecated. Please switch to AddMaxSeasonRewardGauage."""
     return AddMaxSeasonRewardGauage(builder, MaxSeasonRewardGauage)
-def AddStackedSeasonRewardGauge(builder, StackedSeasonRewardGauge): builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(StackedSeasonRewardGauge), 0)
+def AddStackedSeasonRewardGauge(builder, StackedSeasonRewardGauge): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(StackedSeasonRewardGauge), 0)
 def RaidSeasonManageExcelAddStackedSeasonRewardGauge(builder, StackedSeasonRewardGauge):
     """This method is deprecated. Please switch to AddStackedSeasonRewardGauge."""
     return AddStackedSeasonRewardGauge(builder, StackedSeasonRewardGauge)
@@ -184,7 +195,7 @@ def StartStackedSeasonRewardGaugeVector(builder, numElems): return builder.Start
 def RaidSeasonManageExcelStartStackedSeasonRewardGaugeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartStackedSeasonRewardGaugeVector(builder, numElems)
-def AddSeasonRewardId(builder, SeasonRewardId): builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SeasonRewardId), 0)
+def AddSeasonRewardId(builder, SeasonRewardId): builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(SeasonRewardId), 0)
 def RaidSeasonManageExcelAddSeasonRewardId(builder, SeasonRewardId):
     """This method is deprecated. Please switch to AddSeasonRewardId."""
     return AddSeasonRewardId(builder, SeasonRewardId)
