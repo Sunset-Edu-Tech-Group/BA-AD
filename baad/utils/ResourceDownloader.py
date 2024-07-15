@@ -80,7 +80,7 @@ class ResourceDownloader:
             file_path.unlink(missing_ok=True)
             return False
 
-        self.console.print(f'[green]Successfully downloaded {file_path.name}[/green]')
+        self.console.print(f'[green]Successfully downloaded: {file_path.name}[/green]')
         return True
 
     async def _get_file_size(self, session: ClientSession, url: str) -> int | None:

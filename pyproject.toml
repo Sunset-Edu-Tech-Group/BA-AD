@@ -24,6 +24,7 @@ dependencies = [
         'requests-cache>=1.2.1',
         'flatbuffers',
         'pycryptodome',
+        'UnityPy',
         'rich',
         'xxhash'
 ]
