@@ -1,7 +1,7 @@
 import asyncio
 from pathlib import Path
 
-from aiohttp import ClientOSError, ClientSession
+from aiohttp import ClientConnectionError, ClientError, ClientPayloadError, ClientSession
 from rich.console import Console
 
 from .ApkParser import ApkParser
@@ -43,36 +43,55 @@ class ResourceDownloader:
         if self.catalog_parser._calculate_crc32(file_path) != crc:
             return False
 
-        self.console.print(f'[green]{file_path.name} Already downloaded, skipping...[/green]')
+        self.console.print(f'[green]Skipping {file_path.name}, already downloaded.[/green]')
         return True
 
-    async def _fetch_file_content(self, session: ClientSession, url: str, timeout: int = 60) -> tuple:
-        async with session.get(url, timeout=timeout) as response:
-            if response.status != 200:
-                self.console.print(f'[red]Failed to download {url}[/red]')
-                return 0, None
-        return int(response.headers.get('content-length', 0)), response.content
+    async def _download_file_content(
+        self, session: ClientSession, url: str, fp: Path, size: int, retries: int = 3
+    ) -> bool:
+        for attempt in range(retries):
+            bytes_downloaded = 0
 
-    async def _write_file_content(self, file_path: Path, content: asyncio.StreamReader, total_size: int) -> None:
-        download_task = self.download_progress.add_task(f'[cyan]{file_path.name}', total=total_size)
-        with self.live:
-            with open(file_path, 'wb') as f:
-                async for chunk in content.iter_chunked(8192):
-                    f.write(chunk)
+            try:
+                async with session.get(url, timeout=60) as response:
+                    with open(fp, 'wb') as f:
+                        async for chunk in response.content.iter_chunked(8192):
+                            if not chunk:
+                                break
 
-                    self.download_progress.update(download_task, advance=len(chunk))
-                    self.live.update(self.progress_group)
-            self.download_progress.update(download_task, completed=total_size)
-            self.live.update(self.progress_group)
+                            f.write(chunk)
+                            bytes_downloaded += len(chunk)
+
+                if bytes_downloaded == size:
+                    self.console.print(f'[green]Successfully downloaded {fp.name}[/green]')
+                    return True
+
+            except (ClientConnectionError, ClientPayloadError, asyncio.TimeoutError) as e:
+                self.console.print(f'[yellow]Error downloading {fp.name}: {str(e)}[/yellow]')
+                return False
+
+            if attempt < retries - 1:
+                await asyncio.sleep(2**attempt)
+
+        self.console.print(f'[bold red]Failed to download {fp.name} after {retries} attempts.[/bold red]')
+        return False
 
     async def _verify_download(self, file_path: Path, crc: int) -> bool:
         if self.catalog_parser._calculate_crc32(file_path) != crc:
             self.console.print(f'[yellow]Hash mismatch for {file_path.name}, retrying...[/yellow]')
-            file_path.unlink()
+            file_path.unlink(missing_ok=True)
             return False
 
         self.console.print(f'[green]Successfully downloaded {file_path.name}[/green]')
         return True
+
+    async def _get_file_size(self, session: ClientSession, url: str) -> int | None:
+        try:
+            async with session.head(url, allow_redirects=True) as response:
+                return int(response.headers.get('Content-Length', 0))
+
+        except (ClientError, ValueError):
+            return None
 
     async def _download_file(
         self, session: ClientSession, url: str, file_path: Path, crc: int, retries: int = 3
@@ -80,28 +99,17 @@ class ResourceDownloader:
         if await self._check_existing_file(file_path, crc):
             return
 
-        for attempt in range(retries):
-            async with self.semaphore:
-                try:
-                    total_size, content = await self._fetch_file_content(session, url)
-                    if content is None:
-                        return
+        file_path.parent.mkdir(parents=True, exist_ok=True)
+        total_size = await self._get_file_size(session, url)
 
-                    file_path.parent.mkdir(parents=True, exist_ok=True)
-                    await self._write_file_content(file_path, content, total_size)
+        if total_size is None:
+            self.console.print(f'[bold red]Failed to get file size for {url}[/bold red]')
+            return
 
-                    if await self._verify_download(file_path, crc):
-                        return
+        download_success = await self._download_file_content(session, url, file_path, total_size, retries)
 
-                except (ClientOSError, ConnectionError, TimeoutError) as e:
-                    self.console.print(f'[bold red]Error: Download failed. {str(e)}[/bold red]')
-
-                if attempt < retries - 1:
-                    self.console.print(f'[yellow]Retrying... ({attempt + 2}/{retries})[/yellow]')
-                    await asyncio.sleep(2**attempt)
-                    continue
-
-        self.console.print(f'[bold red]Failed to download {url} after {retries} attempts.[/bold red]')
+        if download_success and await self._verify_download(file_path, crc):
+            return
 
     async def _download_category(self, files: list, base_path: Path) -> None:
         async with ClientSession() as session:
@@ -131,21 +139,14 @@ class ResourceDownloader:
         return result
 
     def download(self, assets: bool = True, tables: bool = True, media: bool = True, limit: int | None = 5) -> None:
-        try:
-            game_files = self._initialize_download()
+        game_files = self._initialize_download()
 
-            categories = [
-                self.categories[cat]
-                for cat, enabled in [('asset', assets), ('table', tables), ('media', media)]
-                if enabled
-            ]
+        categories = [
+            self.categories[cat] for cat, enabled in [('asset', assets), ('table', tables), ('media', media)] if enabled
+        ]
 
-            self.semaphore = asyncio.Semaphore(limit if limit is not None else float('inf'))
-            asyncio.run(self._download_all_categories(game_files, categories))
-
-        finally:
-            if self.live:
-                self.live.stop()
+        self.semaphore = asyncio.Semaphore(limit if limit is not None else float('inf'))
+        asyncio.run(self._download_all_categories(game_files, categories))
 
     def fetch_catalog_url(self) -> None:
         ApkParser().download_apk(self.update)
