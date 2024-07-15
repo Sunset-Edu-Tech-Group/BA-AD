@@ -1,7 +1,7 @@
 import asyncio
 from pathlib import Path
 
-import aiohttp
+from aiohttp import ClientOSError, ClientSession
 from rich.console import Console
 
 from .ApkParser import ApkParser
@@ -36,52 +36,84 @@ class ResourceDownloader:
 
         return Path(file['url'])
 
-    async def _download_file(self, session: aiohttp.ClientSession, url: str, file_path: Path, retries: int = 3) -> None:
+    async def _check_existing_file(self, file_path: Path, crc: int) -> bool:
+        if not file_path.exists():
+            return False
+
+        if self.catalog_parser._calculate_crc32(file_path) != crc:
+            return False
+
+        self.console.print(f'[green]{file_path.name} Already downloaded, skipping...[/green]')
+        return True
+
+    async def _fetch_file_content(self, session: ClientSession, url: str, timeout: int = 60) -> tuple:
+        async with session.get(url, timeout=timeout) as response:
+            if response.status != 200:
+                self.console.print(f'[red]Failed to download {url}[/red]')
+                return 0, None
+        return int(response.headers.get('content-length', 0)), response.content
+
+    async def _write_file_content(self, file_path: Path, content: asyncio.StreamReader, total_size: int) -> None:
+        download_task = self.download_progress.add_task(f'[cyan]{file_path.name}', total=total_size)
+        with self.live:
+            with open(file_path, 'wb') as f:
+                async for chunk in content.iter_chunked(8192):
+                    f.write(chunk)
+
+                    self.download_progress.update(download_task, advance=len(chunk))
+                    self.live.update(self.progress_group)
+            self.download_progress.update(download_task, completed=total_size)
+            self.live.update(self.progress_group)
+
+    async def _verify_download(self, file_path: Path, crc: int) -> bool:
+        if self.catalog_parser._calculate_crc32(file_path) != crc:
+            self.console.print(f'[yellow]Hash mismatch for {file_path.name}, retrying...[/yellow]')
+            file_path.unlink()
+            return False
+
+        self.console.print(f'[green]Successfully downloaded {file_path.name}[/green]')
+        return True
+
+    async def _download_file(
+        self, session: ClientSession, url: str, file_path: Path, crc: int, retries: int = 3
+    ) -> None:
+        if await self._check_existing_file(file_path, crc):
+            return
+
         for attempt in range(retries):
             async with self.semaphore:
                 try:
-                    async with session.get(url, timeout=60) as response:
-                        if response.status != 200:
-                            self.console.print(f'[red]Failed to download {url}[/red]')
-                            return
-
-                        file_path.parent.mkdir(parents=True, exist_ok=True)
-                        total_size = int(response.headers.get('content-length', 0))
-                        download_task = self.download_progress.add_task(f'[cyan]{file_path.name}', total=total_size)
-
-                        with self.live:
-                            with open(file_path, 'wb') as f:
-                                async for chunk in response.content.iter_chunked(8192):
-                                    f.write(chunk)
-                                    self.download_progress.update(download_task, advance=len(chunk))
-                                    self.live.update(self.progress_group)
-
-                            self.download_progress.update(download_task, completed=total_size)
-                            self.live.update(self.progress_group)
+                    total_size, content = await self._fetch_file_content(session, url)
+                    if content is None:
                         return
 
-                except (aiohttp.ClientOSError, ConnectionError, TimeoutError) as e:
+                    file_path.parent.mkdir(parents=True, exist_ok=True)
+                    await self._write_file_content(file_path, content, total_size)
+
+                    if await self._verify_download(file_path, crc):
+                        return
+
+                except (ClientOSError, ConnectionError, TimeoutError) as e:
                     self.console.print(f'[bold red]Error: Download failed. {str(e)}[/bold red]')
 
-                    if attempt < retries - 1:
-                        self.console.print(f'[yellow]Retrying... ({attempt + 1}/{retries})[/yellow]')
-                        await asyncio.sleep(2**attempt)
-                        continue
+                if attempt < retries - 1:
+                    self.console.print(f'[yellow]Retrying... ({attempt + 2}/{retries})[/yellow]')
+                    await asyncio.sleep(2**attempt)
+                    continue
 
-            self.console.print(f'[bold red]Failed to download {url} after {retries} attempts.[/bold red]')
-            return
+        self.console.print(f'[bold red]Failed to download {url} after {retries} attempts.[/bold red]')
 
     async def _download_category(self, files: list, base_path: Path) -> None:
-        async with aiohttp.ClientSession() as session:
+        async with ClientSession() as session:
             tasks = [
                 self._download_file(
                     session,
                     file['url'],
                     base_path / self._get_file_path(file),
+                    file['crc'],
                 )
                 for file in files
             ]
-
             await asyncio.gather(*tasks)
 
     async def _download_all_categories(self, game_files: dict, categories: list) -> None:
