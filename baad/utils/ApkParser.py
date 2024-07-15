@@ -2,7 +2,6 @@ from pathlib import Path
 from zipfile import ZipFile
 
 import requests
-from rich.console import Console
 
 from .Progress import create_live_display, create_progress_group
 
@@ -14,9 +13,10 @@ class ApkParser:
         self.root = Path(__file__).parent.parent
         self.apk_path = apk_path or self.root / 'public' / 'BlueArchive.apk'
 
-        self.console = Console()
         self.live = create_live_display()
-        self.progress_group, self.download_progress, self.extract_progress = create_progress_group()
+        self.progress_group, self.download_progress, self.extract_progress, self.print_progress, self.console = (
+            create_progress_group()
+        )
 
     @staticmethod
     def _get_files(zip: ZipFile) -> set:
@@ -27,7 +27,8 @@ class ApkParser:
             return requests.get(self.apk_url, stream=True)
 
         except (ConnectionError, TimeoutError, requests.exceptions.RequestException) as e:
-            self.console.print(f'[bold red]Error: {str(e)}[/bold red]')
+            self.console.log(f'[bold red]Error: Connection Failed{str(e)}[/bold red]')
+            self.console.log(f'[bold red]{str(e)}[/bold red]')
             raise SystemExit(1) from e
 
     def _download_file(self, response: requests.Response) -> None:
@@ -39,13 +40,12 @@ class ApkParser:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
-                        self.download_progress.update(download_task, advance=len(chunk))
-                        self.live.update(self.progress_group)
 
-            self.download_progress.update(download_task, completed=total_size)
+                    self.download_progress.update(download_task, advance=len(chunk))
+                    self.live.update(self.progress_group)
+
+            self.download_progress.update(download_task, description='[green]APK downloaded...')
             self.live.update(self.progress_group)
-
-        self.console.print('[green]APK downloaded.[/green]')
 
     def _force_download(self) -> None:
         response = self._get_response()
@@ -56,11 +56,11 @@ class ApkParser:
 
     def _fetch_size(self) -> int:
         try:
-            response = requests.get(self.apk_url, stream=True)
+            response = requests.get(self.apk_url, stream=True, timeout=60)
             return int(response.headers.get('content-length', 0))
 
         except (ConnectionError, TimeoutError, requests.exceptions.RequestException) as e:
-            self.console.print(f'[bold red]Error: {str(e)}[/bold red]')
+            self.console.log(f'[bold red]Error: {str(e)}[/bold red]')
             raise SystemExit(1) from e
 
     def _log_size(self, local: int, remote: int) -> None:
@@ -71,19 +71,20 @@ class ApkParser:
             self.console.print('[yellow]Apk is out of date. Downloading...[/yellow]')
 
     def _extract_files(self, zip: ZipFile, extract: set) -> None:
-        extract_task = self.extract_progress.add_task('[green]Extracting', total=len(extract))
+        extract_task = self.extract_progress.add_task('[green]Extracting...', total=len(extract))
 
         with self.live:
             for file_info in extract:
                 target_path = Path(self.apk_path).parent / 'data' / Path(file_info.filename)
                 target_path.parent.mkdir(parents=True, exist_ok=True)
+
                 zip.extract(file_info, Path(self.apk_path).parent / 'data')
+
                 self.extract_progress.update(extract_task, advance=1)
                 self.live.update(self.progress_group)
 
+            self.extract_progress.update(extract_task, description='[green]APK Extracted...')
             self.live.update(self.progress_group)
-
-        self.console.print('[green]APK extracted.[/green]')
 
     def compare_apk(self) -> bool:
         remote_size = self._fetch_size()
@@ -103,6 +104,8 @@ class ApkParser:
 
         if self.compare_apk():
             self._force_download()
+            return
+
         self.extract_apk()
 
     def extract_apk(self) -> None:

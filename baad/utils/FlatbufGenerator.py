@@ -3,15 +3,12 @@ import re
 import subprocess
 from pathlib import Path
 
-from rich.console import Console
-
 from .Progress import create_live_display, create_progress_group
 
 
 class FlatbufGenerator:
     def __init__(self) -> None:
         self.root = Path(__file__).parent.parent
-        self.console = Console()
 
         flatc_types = {
             'Windows': 'flatc_win.exe',
@@ -64,7 +61,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         self.reTableDataType = re.compile(r'public Nullable<(.+?)> DataList\(int j\) { }')
 
         self.live = create_live_display()
-        self.progress_group, _, self.extract_progress = create_progress_group()
+        self.progress_group, _, self.extract_progress, _, self.console = create_progress_group()
 
     @staticmethod
     def _write_enums_to_fbs(enums: dict, f) -> None:
@@ -278,8 +275,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
                 self._initialize_generate(task)
 
         finally:
-            if self.live:
-                self.live.stop()
+            self.live.stop()
 
     def dump_cs_to_structs_and_enums(self, dump_cs_filepath: Path) -> tuple:
         with open(dump_cs_filepath, 'rt', encoding='utf-8') as f:
@@ -313,7 +309,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         )
 
         if res.returncode != 0:
-            self.console.print('[red]Failed to compile FBS[/red]')
+            self.console.log('[red]Failed to compile FBS[/red]')
             raise SystemExit(1)
 
     def write_init_file(self) -> None:

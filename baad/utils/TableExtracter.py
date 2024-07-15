@@ -2,8 +2,6 @@ import json
 from pathlib import Path
 from zipfile import BadZipFile
 
-from rich.console import Console
-
 from .. import FlatData
 from ..FlatData.dump import dump_table
 from ..lib.StringCipher import decrypt
@@ -17,9 +15,8 @@ class TableExtracter:
         self.table_path = output or Path.cwd() / 'output' / 'TableBundles'
         self.extracted_path = Path(self.table_path).parent / 'TableExtracted'
         self.lower_name_to_module_dict = self._get_lower_name_to_module_dict()
-        self.console = Console()
         self.live = create_live_display()
-        self.progress_group, _, self.extract_progress = create_progress_group()
+        self.progress_group, _, self.extract_progress, self.print_progress, self.console = create_progress_group()
 
     @staticmethod
     def _get_lower_name_to_module_dict() -> dict:
@@ -65,7 +62,7 @@ class TableExtracter:
                             data, name = self._process_excel_file(name, data)
 
                     except Exception as e:
-                        self.console.print(f'[yellow]Warning processing {name}: {e}[/yellow]')
+                        self.print_progress.add_task(f'[yellow]Warning processing {name}: {e}[/yellow]')
                         continue
 
                     fp = table_dir_fp / name if create_dir else self.extracted_path / name
@@ -75,7 +72,7 @@ class TableExtracter:
                     self.live.update(self.progress_group)
 
         except BadZipFile:
-            self.console.print(f'[red]Error: {table_file} is not a valid zip file.[/red]')
+            self.console.log(f'[red]Error: {table_file} is not a valid zip file.[/red]')
 
     def extract_all_tables(self) -> None:
         table_files = list(Path(self.table_path).glob('*.zip'))
@@ -85,9 +82,7 @@ class TableExtracter:
             with self.live:
                 for table_file in table_files:
                     self.extract_table(table_file, extract_task)
+                self.print_progress.add_task('[green]Extraction completed![/green]')
 
         finally:
-            if self.live:
-                self.live.stop()
-
-            self.console.print('[green]Extraction completed![/green]')
+            self.live.stop()

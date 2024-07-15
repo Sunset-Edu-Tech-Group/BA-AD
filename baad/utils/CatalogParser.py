@@ -47,7 +47,7 @@ class CatalogParser:
                 return session.get(url).json()
 
             except (ConnectionError, TimeoutError) as e:
-                self.console.print('[bold red]Error: Connection failed.[/bold red]')
+                self.console.log('[bold red]Error: Connection failed.[/bold red]')
                 raise SystemExit(1) from e
 
     def fetch_catalog_url(self) -> str:

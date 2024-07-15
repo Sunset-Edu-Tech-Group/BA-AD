@@ -2,7 +2,6 @@ import asyncio
 from pathlib import Path
 
 from aiohttp import ClientConnectionError, ClientError, ClientPayloadError, ClientSession
-from rich.console import Console
 
 from .ApkParser import ApkParser
 from .CatalogParser import CatalogParser
@@ -16,7 +15,6 @@ class ResourceDownloader:
         self.update = update
 
         self.semaphore = None
-        self.console = Console()
         self.catalog_parser = CatalogParser()
         self.categories = {
             'asset': 'AssetBundles',
@@ -24,7 +22,7 @@ class ResourceDownloader:
             'media': 'MediaResources',
         }
         self.live = create_live_display()
-        self.progress_group, self.download_progress, _ = create_progress_group()
+        self.progress_group, self.download_progress, _, _, self.console = create_progress_group()
 
     @staticmethod
     def _get_file_path(file: dict) -> str | Path:
@@ -67,18 +65,18 @@ class ResourceDownloader:
                     return True
 
             except (ClientConnectionError, ClientPayloadError, asyncio.TimeoutError) as e:
-                self.console.print(f'[yellow]Error downloading {fp.name}: {str(e)}[/yellow]')
+                self.console.log(f'[yellow]Error downloading {fp.name}: {str(e)}[/yellow]')
                 return False
 
             if attempt < retries - 1:
                 await asyncio.sleep(2**attempt)
 
-        self.console.print(f'[bold red]Failed to download {fp.name} after {retries} attempts.[/bold red]')
+        self.console.log(f'[bold red]Failed to download {fp.name} after {retries} attempts.[/bold red]')
         return False
 
     async def _verify_download(self, file_path: Path, crc: int) -> bool:
         if self.catalog_parser._calculate_crc32(file_path) != crc:
-            self.console.print(f'[yellow]Hash mismatch for {file_path.name}, retrying...[/yellow]')
+            self.console.log(f'[yellow]Hash mismatch for {file_path.name}, retrying...[/yellow]')
             file_path.unlink(missing_ok=True)
             return False
 
@@ -103,7 +101,7 @@ class ResourceDownloader:
         total_size = await self._get_file_size(session, url)
 
         if total_size is None:
-            self.console.print(f'[bold red]Failed to get file size for {url}[/bold red]')
+            self.console.log(f'[bold red]Failed to get file size for {url}[/bold red]')
             return
 
         download_success = await self._download_file_content(session, url, file_path, total_size, retries)
