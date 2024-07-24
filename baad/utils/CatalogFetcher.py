@@ -28,7 +28,7 @@ def find_game_config() -> None | bytes:
         0x00,
         0x00,
     ])
-    game_path = Path(__file__).parent.parent / 'public' / 'data' / 'assets' / 'bin' / 'Data'
+    game_path = Path(__file__).parent.parent / 'public' / 'jp' / 'data' / 'assets' / 'bin' / 'Data'
 
     for config_file in game_path.rglob('*'):
         if config_file.is_file():

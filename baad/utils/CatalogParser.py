@@ -61,22 +61,22 @@ class CatalogParser:
         self.console.print('[cyan]Fetching catalogs...[/cyan]')
 
         bundle_data = self._fetch_data(f'{server_url}/Android/bundleDownloadInfo.json', 'catalogurl')
-        self.save_json(self.root / 'public' / 'bundleDownloadInfo.json', bundle_data)
+        self.save_json(self.root / 'public' / 'jp' / 'bundleDownloadInfo.json', bundle_data)
 
         table_data = self._fetch_table_bytes(catalog=server_url)
         table_catalog = TableCatalog.from_bytes(table_data, server_url)
-        table_catalog.to_json(self.root / 'public' / 'TableCatalog.json')
+        table_catalog.to_json(self.root / 'public' / 'jp' / 'TableCatalog.json')
 
         media_data = self._fetch_media_bytes(catalog=server_url)
         media_catalog = MediaCatalog.from_bytes(media_data, server_url)
-        media_catalog.to_json(self.root / 'public' / 'MediaCatalog.json')
+        media_catalog.to_json(self.root / 'public' / 'jp' / 'MediaCatalog.json')
 
     def get_game_files(self) -> dict:
         server_url = self.fetch_catalog_url()
 
-        bundle_data = self._load_json(self.root / 'public' / 'bundleDownloadInfo.json')
-        table_data = self._load_json(self.root / 'public' / 'TableCatalog.json')
-        media_data = self._load_json(self.root / 'public' / 'MediaCatalog.json')
+        bundle_data = self._load_json(self.root / 'public' / 'jp' / 'bundleDownloadInfo.json')
+        table_data = self._load_json(self.root / 'public' / 'jp' / 'TableCatalog.json')
+        media_data = self._load_json(self.root / 'public' / 'jp' / 'MediaCatalog.json')
 
         return {
             'AssetBundles': [

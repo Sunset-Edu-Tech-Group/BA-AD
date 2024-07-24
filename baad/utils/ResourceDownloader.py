@@ -132,7 +132,7 @@ class ResourceDownloader:
         self.catalog_parser.fetch_catalogs()
 
         result = self.catalog_parser.get_game_files()
-        self.catalog_parser.save_json(self.root / 'public' / 'GameFiles.json', result)
+        self.catalog_parser.save_json(self.root / 'public' / 'jp' / 'GameFiles.json', result)
 
         return result
 

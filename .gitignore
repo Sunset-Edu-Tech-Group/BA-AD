@@ -109,3 +109,7 @@ ruff.toml
 
 # pycharm
 .idea/
+
+jp/
+gl/
+output/

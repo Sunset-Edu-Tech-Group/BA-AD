@@ -1,6 +1,7 @@
 from pathlib import Path
 from zipfile import ZipFile
 
+import cloudscraper
 import requests
 
 from .Progress import create_live_display, create_progress_group
@@ -8,23 +9,25 @@ from .Progress import create_live_display, create_progress_group
 
 class ApkParser:
     def __init__(self, apk_url: str | None = None, apk_path: str | None = None) -> None:
-        self.apk_url = apk_url or 'https://api.qoo-app.com/v6/apps/com.YostarJP.BlueArchive/download'
+        self.apk_url = apk_url or 'https://d.apkpure.com/b/XAPK/com.YostarJP.BlueArchive?version=latest'
 
         self.root = Path(__file__).parent.parent
-        self.apk_path = apk_path or self.root / 'public' / 'BlueArchive.apk'
+        self.apk_path = apk_path or self.root / 'public' / 'jp' / 'BlueArchive.xapk'
 
         self.live = create_live_display()
         self.progress_group, self.download_progress, self.extract_progress, self.print_progress, self.console = (
             create_progress_group()
         )
 
+        self.scraper = cloudscraper.create_scraper()
+
     @staticmethod
     def _get_files(zip: ZipFile) -> set:
-        return {file_info for file_info in zip.infolist() if file_info.filename.startswith('assets/bin/Data/')}
+        return {file_info for file_info in zip.infolist() if not file_info.is_dir()}
 
     def _get_response(self) -> requests.Response | SystemExit:
         try:
-            return requests.get(self.apk_url, stream=True)
+            return self.scraper.get(self.apk_url, stream=True)
 
         except (ConnectionError, TimeoutError, requests.exceptions.RequestException) as e:
             self.console.log(f'[bold red]Error: Connection Failed{str(e)}[/bold red]')
@@ -49,14 +52,12 @@ class ApkParser:
 
     def _force_download(self) -> None:
         response = self._get_response()
-        if response is None:
-            return
-
-        self._download_file(response)
+        if isinstance(response, requests.Response):
+            self._download_file(response)
 
     def _fetch_size(self) -> int:
         try:
-            response = requests.get(self.apk_url, stream=True, timeout=60)
+            response = self.scraper.get(self.apk_url, stream=True, timeout=60)
             return int(response.headers.get('content-length', 0))
 
         except (ConnectionError, TimeoutError, requests.exceptions.RequestException) as e:
@@ -70,7 +71,12 @@ class ApkParser:
         if local < remote:
             self.console.print('[yellow]Apk is out of date. Downloading...[/yellow]')
 
-    def _extract_files(self, zip: ZipFile, extract: set) -> None:
+    def _parse_zipfile(self, apk_path: Path, extract_path: Path) -> None:
+        with ZipFile(apk_path, 'r') as zip:
+            extract = self._get_files(zip)
+            self._extract_files(zip, extract, extract_path)
+
+    def _extract_files(self, zip: ZipFile, extract: set, extract_path: Path) -> None:
         extract_task = self.extract_progress.add_task('[green]Extracting...', total=len(extract))
 
         with self.live:
@@ -78,7 +84,7 @@ class ApkParser:
                 target_path = Path(self.apk_path).parent / 'data' / Path(file_info.filename)
                 target_path.parent.mkdir(parents=True, exist_ok=True)
 
-                zip.extract(file_info, Path(self.apk_path).parent / 'data')
+                zip.extract(file_info, extract_path)
 
                 self.extract_progress.update(extract_task, advance=1)
                 self.live.update(self.progress_group)
@@ -109,6 +115,12 @@ class ApkParser:
         self.extract_apk()
 
     def extract_apk(self) -> None:
-        with ZipFile(Path(self.apk_path), 'r') as zip:
-            extract = self._get_files(zip)
-            self._extract_files(zip, extract)
+        xapk_path = Path(self.apk_path)
+        apk_path = xapk_path.parent / 'apk'
+        data_path = xapk_path.parent / 'data'
+        unity_apk = apk_path / 'UnityDataAssetPack.apk'
+        main_apk = apk_path / 'com.YostarJP.BlueArchive.apk'
+
+        self._parse_zipfile(xapk_path, apk_path)
+        self._parse_zipfile(unity_apk, data_path)
+        self._parse_zipfile(main_apk, data_path)
