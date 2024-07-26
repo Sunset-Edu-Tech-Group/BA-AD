@@ -15,6 +15,7 @@ It downloads them directly from the **Yostar Servers**.
 - aiohttp
 - xxhash
 - pycryptodome
+- UnityPy
 - flatbuffers
 
 ## ~~Installation~~ (WIP)
@@ -33,6 +34,7 @@ pip install .
 ```
 
 ## Usage
+Before you go downloading the game assets please read [Nexon's Terms and Service](https://m.nexon.com/terms/304) first.
 
 ```sh
 > baad --help
