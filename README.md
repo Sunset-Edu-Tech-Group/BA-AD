@@ -17,7 +17,7 @@ It downloads them directly from the **Yostar Servers**.
 - pycryptodome
 - UnityPy
 - flatbuffers
-- .Net Runtime (Linux) | .Net Desktop Runtime (Windows)
+- .Net Runtime 6.0 (Linux) | .Net Desktop Runtime 8.0 (Windows)
 
 ## ~~Installation~~ (WIP)
 ~~Download and install [`python`](https://www.python.org/downloads/). After that clone this repository~~
@@ -35,7 +35,7 @@ pip install .
 ```
 
 ## Usage
-Before you go downloading the game assets please read [Nexon's Terms and Service](https://m.nexon.com/terms/304) first.
+Before you go downloading the game assets please read [Nexon's Terms and Service](https://m.nexon.com/terms/304) first. You are not allowed to sell the game files, models or use them for commercial purposes.
 
 ```
 > baad --help
@@ -56,6 +56,8 @@ options:
 ```
 
 #### Downloading
+
+To download the assetsbundles, tablebundles, and media resources we need to initialize download mode, to do that we pass `download` so it will be like this `baad download`.
 
 - `--assets` will download just the assetbundles only.
 - `--tables` will download just the tablebundles only.
@@ -83,6 +85,10 @@ Examples:
 
 > [!NOTE]
 > If you have low connection and download say error, rerun the program again it will retry downloading the remaining files. Don't worry it will not download the already downloaded files again
+
+#### Extracting (WIP)
+
+~~To extract the assetsbundles, and  tablebundles we need to initialize extract mode, to do that we pass `extract` so it will be like this `baad extract`.~~
 
 
 

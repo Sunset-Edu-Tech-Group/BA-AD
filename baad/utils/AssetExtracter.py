@@ -24,7 +24,7 @@ class AssetExtracter:
         }
 
         self.live = create_live_display()
-        self.progress_group, _, self.extract_progress, _, self.console = create_progress_group()
+        self.progress_group, _, self.extract_progress, self.print_progress, self.console = create_progress_group()
 
     def _sort_objects(self, objects) -> list:
         return sorted(
@@ -152,16 +152,25 @@ class AssetExtracter:
 
         return [obj.path_id]
 
-    def _process_asset(self, asset) -> None:
+    def _process_asset(self, asset, task_id) -> None:
         objs = self._sort_objects(asset.get_objects())
         cobjs = self._sort_container_objects(asset.container.items())
 
         self._extract_objects(objs, cobjs, asset)
+        self.extract_progress.update(task_id, advance=1)
+        self.live.update(self.progress_group)
 
     def extract_assets(self) -> None:
-        env = UnityPy.load(self.asset_path)
-        for asset in env.assets:
-            if not asset.container:
-                continue
+        try:
+            with self.live:
+                env = UnityPy.load(self.asset_path)
+                assets = [asset for asset in env.assets if asset.container]
 
-            self._process_asset(asset)
+                extract_task = self.extract_progress.add_task('[green]Extracting assets...', total=len(assets))
+
+                for asset in assets:
+                    self._process_asset(asset, extract_task)
+
+                self.print_progress.add_task('[green]Asset extraction completed![/green]')
+        finally:
+            self.live.stop()
