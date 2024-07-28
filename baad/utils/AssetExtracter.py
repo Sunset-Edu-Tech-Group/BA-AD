@@ -10,7 +10,7 @@ from .Progress import create_live_display, create_progress_group
 
 class AssetExtracter:
     def __init__(self, output_path: Path) -> None:
-        self.output_path = output_path
+        self.asset_path = output_path or Path.cwd() / 'output' / 'AssetBundles'
         self.ignore_count = 0
         self.types = {
             'Sprite',
@@ -53,7 +53,7 @@ class AssetExtracter:
 
     def _get_most_common_path(self, asset) -> Path:
         occurrence_count = Counter(Path(asset_path).with_suffix('') for asset_path in asset.container.keys())
-        export_path = Path(self.output_path).parent / 'AssetExtracted'
+        export_path = Path(self.asset_path).parent / 'AssetExtracted'
 
         return export_path.joinpath(*occurrence_count.most_common(1)[0][0].parts[self.ignore_count :])
 
@@ -78,7 +78,7 @@ class AssetExtracter:
         return export_func(obj, data, fp)
 
     def _get_file_path(self, asset_path: str) -> Path:
-        export_path = Path(self.output_path).parent / 'AssetExtracted'
+        export_path = Path(self.asset_path).parent / 'AssetExtracted'
 
         return export_path.joinpath(*Path(asset_path).parts[self.ignore_count :])
 
@@ -159,7 +159,7 @@ class AssetExtracter:
         self._extract_objects(objs, cobjs, asset)
 
     def extract_assets(self) -> None:
-        env = UnityPy.load(self.output_path)
+        env = UnityPy.load(self.asset_path)
         for asset in env.assets:
             if not asset.container:
                 continue

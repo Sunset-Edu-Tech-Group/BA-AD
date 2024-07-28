@@ -57,10 +57,10 @@ class TableExtracter:
 
                     try:
                         if name.endswith('.json'):
-                            data = await asyncio.to_thread(self._process_json_file, name, data)
+                            data = self._process_json_file(name, data)
 
                         elif table_file.name == 'Excel.zip':
-                            data, name = await asyncio.to_thread(self._process_excel_file, name, data)
+                            data, name = self._process_excel_file(name, data)
 
                     except Exception as e:
                         self.print_progress.add_task(f'[yellow]Warning processing {name}: {e}[/yellow]')
@@ -69,8 +69,6 @@ class TableExtracter:
                     fp = table_dir_fp / name if create_dir else self.extracted_path / name
                     fp.parent.mkdir(parents=True, exist_ok=True)
                     fp.write_bytes(data)
-
-                    await asyncio.to_thread(fp.write_bytes, data)
 
                     self.extract_progress.update(task, advance=1)
                     self.live.update(self.progress_group)
@@ -82,11 +80,14 @@ class TableExtracter:
         table_files = list(Path(self.table_path).glob('*.zip'))
         extract_task = self.extract_progress.add_task('[green]Extracting...', total=len(table_files))
 
+        task = [self.extract_table(table_file, extract_task) for table_file in table_files]
+        await asyncio.gather(*task)
+        self.print_progress.add_task('[green]Extraction completed![/green]')
+
+    def run_extraction(self) -> None:
         try:
             with self.live:
-                task = [self.extract_table(table_file, extract_task) for table_file in table_files]
-                await asyncio.gather(*task)
-                self.print_progress.add_task('[green]Extraction completed![/green]')
+                asyncio.run(self.extract_all_tables())
 
         finally:
             self.live.stop()

@@ -1,4 +1,3 @@
-import asyncio
 from argparse import ArgumentParser, ArgumentTypeError
 
 from rich.console import Console
@@ -148,12 +147,12 @@ def resource_downloader(args) -> ResourceDownloader:
     return downloader
 
 
-async def extracter(args) -> TableExtracter | AssetExtracter | None:
+def extracter(args) -> TableExtracter | AssetExtracter | None:
     table_extract = TableExtracter(args.path)
     asset_extract = AssetExtracter(args.path)
 
     if args.tables:
-        asyncio.run(table_extract.extract_all_tables())
+        table_extract.run_extraction()
         return table_extract
 
     elif args.assets:
@@ -171,7 +170,7 @@ def main() -> None:
         return
 
     if hasattr(args, 'commands') and args.commands == 'extract':
-        asyncio.run(extracter(args))
+        extracter(args)
         return
 
     if args.update:
