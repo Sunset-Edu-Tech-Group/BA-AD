@@ -80,7 +80,7 @@ Examples:
 > baad download --media --output C:\Users\User\ocuments
 ```
 
-> ![NOTE]
+> [!NOTE]
 > If you have low connection and download say error, rerun the program again it will retry downloading the remaining files. Don't worry it will not download the already downloaded files again
 
 
