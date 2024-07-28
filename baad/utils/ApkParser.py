@@ -38,8 +38,11 @@ class ApkParser:
         total_size = int(response.headers.get('content-length', 0))
         download_task = self.download_progress.add_task('[red]Downloading APK...', total=total_size)
 
+        apk_path = Path(self.apk_path)
+        apk_path.parent.mkdir(parents=True, exist_ok=True)
+
         with self.live:
-            with open(Path(self.apk_path), 'wb') as f:
+            with open(apk_path, 'wb') as f:
                 for chunk in response.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)

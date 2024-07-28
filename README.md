@@ -17,6 +17,7 @@ It downloads them directly from the **Yostar Servers**.
 - pycryptodome
 - UnityPy
 - flatbuffers
+- .Net Runtime (Linux) | .Net Desktop Runtime (Windows)
 
 ## ~~Installation~~ (WIP)
 ~~Download and install [`python`](https://www.python.org/downloads/). After that clone this repository~~

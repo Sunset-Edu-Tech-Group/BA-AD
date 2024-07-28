@@ -163,7 +163,7 @@ async def extracter(args) -> TableExtracter | AssetExtracter | None:
     return None
 
 
-async def main() -> None:
+def main() -> None:
     parser, args = arguments()
 
     if hasattr(args, 'commands') and args.commands == 'download':
@@ -171,7 +171,7 @@ async def main() -> None:
         return
 
     if hasattr(args, 'commands') and args.commands == 'extract':
-        await extracter(args)
+        asyncio.run(extracter(args))
         return
 
     if args.update:
@@ -186,4 +186,4 @@ async def main() -> None:
 
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    main()
