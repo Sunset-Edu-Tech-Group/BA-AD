@@ -26,4 +26,6 @@ class MailType(object):
     Temp_3 = 20
     CouponCompleteReward = 21
     BirthdayMail = 22
+    FromCS = 23
+    ExpiryChangeCurrency = 24
 

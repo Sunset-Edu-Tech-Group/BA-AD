@@ -52,4 +52,5 @@ class Club(object):
     KnowledgeLiberationFront = 46
     Hyakkayouran = 47
     ShinySparkleSociety = 48
+    AbydosStudentCouncil = 49
 

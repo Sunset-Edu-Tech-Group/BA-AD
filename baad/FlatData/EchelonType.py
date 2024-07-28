@@ -28,5 +28,5 @@ class EchelonType(object):
     EliminateRaid03 = 22
     Field = 23
     MultiFloorRaid = 24
-    Temp = 25
+    MinigameDefense = 25
 

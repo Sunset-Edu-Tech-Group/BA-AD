@@ -206,7 +206,21 @@ class MinigameTBGSeasonExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(26)
+    # MinigameTBGSeasonExcel
+    def StartThemaIndex(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # MinigameTBGSeasonExcel
+    def LoopThemaIndex(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(28)
 def MinigameTBGSeasonExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -314,6 +328,14 @@ def AddMapNameLocalize(builder, MapNameLocalize): builder.PrependUOffsetTRelativ
 def MinigameTBGSeasonExcelAddMapNameLocalize(builder, MapNameLocalize):
     """This method is deprecated. Please switch to AddMapNameLocalize."""
     return AddMapNameLocalize(builder, MapNameLocalize)
+def AddStartThemaIndex(builder, StartThemaIndex): builder.PrependInt32Slot(26, StartThemaIndex, 0)
+def MinigameTBGSeasonExcelAddStartThemaIndex(builder, StartThemaIndex):
+    """This method is deprecated. Please switch to AddStartThemaIndex."""
+    return AddStartThemaIndex(builder, StartThemaIndex)
+def AddLoopThemaIndex(builder, LoopThemaIndex): builder.PrependInt32Slot(27, LoopThemaIndex, 0)
+def MinigameTBGSeasonExcelAddLoopThemaIndex(builder, LoopThemaIndex):
+    """This method is deprecated. Please switch to AddLoopThemaIndex."""
+    return AddLoopThemaIndex(builder, LoopThemaIndex)
 def End(builder): return builder.EndObject()
 def MinigameTBGSeasonExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

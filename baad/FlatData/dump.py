@@ -1013,6 +1013,7 @@ def dump_CharacterTranscendenceExcel(obj, password) -> dict:
         'RecipeId': [table_encryption.convert_long(obj.RecipeId(j), password) for j in range(obj.RecipeIdLength())],
         'SkillSlotA': [table_encryption.convert_string(obj.SkillSlotA(j), password) for j in range(obj.SkillSlotALength())],
         'SkillSlotB': [table_encryption.convert_string(obj.SkillSlotB(j), password) for j in range(obj.SkillSlotBLength())],
+        'SkillSlotC': [table_encryption.convert_string(obj.SkillSlotC(j), password) for j in range(obj.SkillSlotCLength())],
         'MaxlevelStar': [table_encryption.convert_int(obj.MaxlevelStar(j), password) for j in range(obj.MaxlevelStarLength())],
     }
 
@@ -1961,6 +1962,7 @@ def dump_CostumeExcel(obj, password) -> dict:
         'EnterStrategyAnimationName': table_encryption.convert_string(obj.EnterStrategyAnimationName(), password),
         'AnimationValidator': obj.AnimationValidator(),
         'CharacterVoiceGroupId': table_encryption.convert_long(obj.CharacterVoiceGroupId(), password),
+        'ShowObjectHpStatus': obj.ShowObjectHpStatus(),
     }
 
 
@@ -1996,6 +1998,11 @@ def dump_CurrencyExcel(obj, password) -> dict:
         'DailyRefillType': DailyRefillType(table_encryption.convert_int(obj.DailyRefillType_(), password)).name,
         'DailyRefillAmount': table_encryption.convert_long(obj.DailyRefillAmount(), password),
         'DailyRefillTime': [table_encryption.convert_long(obj.DailyRefillTime(j), password) for j in range(obj.DailyRefillTimeLength())],
+        'ExpirationDateTime': table_encryption.convert_string(obj.ExpirationDateTime(), password),
+        'ExpirationNotifyDateIn': table_encryption.convert_int(obj.ExpirationNotifyDateIn(), password),
+        'ExpiryChangeParcelType': ParcelType(table_encryption.convert_int(obj.ExpiryChangeParcelType(), password)).name,
+        'ExpiryChangeId': table_encryption.convert_long(obj.ExpiryChangeId(), password),
+        'ExpiryChangeAmount': table_encryption.convert_long(obj.ExpiryChangeAmount(), password),
     }
 
 
@@ -2489,6 +2496,7 @@ def dump_EventContentCollectionExcel(obj, password) -> dict:
         'MultipleConditionCheckType': MultipleConditionCheckType(table_encryption.convert_int(obj.MultipleConditionCheckType_(), password)).name,
         'UnlockConditionCount': table_encryption.convert_long(obj.UnlockConditionCount(), password),
         'IsObject': obj.IsObject(),
+        'IsObjectOnFullResource': obj.IsObjectOnFullResource(),
         'IsHorizon': obj.IsHorizon(),
         'EmblemResource': table_encryption.convert_string(obj.EmblemResource(), password),
         'ThumbResource': table_encryption.convert_string(obj.ThumbResource(), password),
@@ -3664,6 +3672,7 @@ def dump_GroundExcel(obj, password) -> dict:
         'BeforeVictoryTimelinePath': table_encryption.convert_string(obj.BeforeVictoryTimelinePath(), password),
         'SkipBattleEnd': obj.SkipBattleEnd(),
         'HideNPCWhenBattleEnd': obj.HideNPCWhenBattleEnd(),
+        'CoverPointOff': obj.CoverPointOff(),
         'UIHpScale': table_encryption.convert_float(obj.UIHpScale(), password),
         'UIEmojiScale': table_encryption.convert_float(obj.UIEmojiScale(), password),
         'UISkillMainLogScale': table_encryption.convert_float(obj.UISkillMainLogScale(), password),
@@ -4364,6 +4373,8 @@ def dump_MinigameTBGSeasonExcel(obj, password) -> dict:
         'MaxHp': table_encryption.convert_int(obj.MaxHp(), password),
         'MapImagePath': table_encryption.convert_string(obj.MapImagePath(), password),
         'MapNameLocalize': table_encryption.convert_string(obj.MapNameLocalize(), password),
+        'StartThemaIndex': table_encryption.convert_int(obj.StartThemaIndex(), password),
+        'LoopThemaIndex': table_encryption.convert_int(obj.LoopThemaIndex(), password),
     }
 
 
@@ -4385,6 +4396,7 @@ def dump_MinigameTBGThemaExcel(obj, password) -> dict:
         'ThemaLeaderId': table_encryption.convert_long(obj.ThemaLeaderId(), password),
         'ThemaGoalLocalize': table_encryption.convert_string(obj.ThemaGoalLocalize(), password),
         'InstantClearCostAmount': table_encryption.convert_long(obj.InstantClearCostAmount(), password),
+        'IsTutorial': obj.IsTutorial(),
     }
 
 
@@ -4506,6 +4518,12 @@ def dump_ObstacleStatExcel(obj, password) -> dict:
         'Dodge': table_encryption.convert_long(obj.Dodge(), password),
         'CanNotStandRange': table_encryption.convert_long(obj.CanNotStandRange(), password),
         'HighlightFloaterHeight': table_encryption.convert_float(obj.HighlightFloaterHeight(), password),
+        'EnhanceLightArmorRate': table_encryption.convert_long(obj.EnhanceLightArmorRate(), password),
+        'EnhanceHeavyArmorRate': table_encryption.convert_long(obj.EnhanceHeavyArmorRate(), password),
+        'EnhanceUnarmedRate': table_encryption.convert_long(obj.EnhanceUnarmedRate(), password),
+        'EnhanceElasticArmorRate': table_encryption.convert_long(obj.EnhanceElasticArmorRate(), password),
+        'EnhanceStructureRate': table_encryption.convert_long(obj.EnhanceStructureRate(), password),
+        'EnhanceNormalArmorRate': table_encryption.convert_long(obj.EnhanceNormalArmorRate(), password),
     }
 
 
@@ -4664,6 +4682,7 @@ def dump_ProductMonthlyExcel(obj, password) -> dict:
         'PriceReference': table_encryption.convert_string(obj.PriceReference(), password),
         'ProductTagType': ProductTagType(table_encryption.convert_int(obj.ProductTagType_(), password)).name,
         'MonthlyDays': table_encryption.convert_long(obj.MonthlyDays(), password),
+        'UseMonthlyProductCheck': obj.UseMonthlyProductCheck(),
         'ParcelType': [ParcelType(table_encryption.convert_int(obj.ParcelType_(j), password)).name for j in range(obj.ParcelTypeLength())],
         'ParcelId': [table_encryption.convert_long(obj.ParcelId(j), password) for j in range(obj.ParcelIdLength())],
         'ParcelAmount': [table_encryption.convert_long(obj.ParcelAmount(j), password) for j in range(obj.ParcelAmountLength())],
@@ -5925,6 +5944,19 @@ def dump_CharacterDialogExcel(obj, password) -> dict:
     }
 
 
+def dump_CharacterDialogSubtitleExcel(obj, password) -> dict:
+    table_encryption = TableEncryptionService()
+
+    return {
+        'LocalizeCVGroup': table_encryption.convert_string(obj.LocalizeCVGroup(), password),
+        'CharacterId': table_encryption.convert_long(obj.CharacterId(), password),
+        'Duration': table_encryption.convert_long(obj.Duration(), password),
+        'Separate': obj.Separate(),
+        'LocalizeKR': table_encryption.convert_string(obj.LocalizeKR(), password),
+        'LocalizeJP': table_encryption.convert_string(obj.LocalizeJP(), password),
+    }
+
+
 def dump_CharacterPotentialExcel(obj, password) -> dict:
     table_encryption = TableEncryptionService()
 
@@ -5978,6 +6010,19 @@ def dump_CharacterVoiceExcel(obj, password) -> dict:
         'Volume': [table_encryption.convert_float(obj.Volume(j), password) for j in range(obj.VolumeLength())],
         'Delay': [table_encryption.convert_float(obj.Delay(j), password) for j in range(obj.DelayLength())],
         'Path': [table_encryption.convert_string(obj.Path(j), password) for j in range(obj.PathLength())],
+    }
+
+
+def dump_CharacterVoiceSubtitleExcel(obj, password) -> dict:
+    table_encryption = TableEncryptionService()
+
+    return {
+        'LocalizeCVGroup': table_encryption.convert_string(obj.LocalizeCVGroup(), password),
+        'CharacterVoiceGroupId': table_encryption.convert_long(obj.CharacterVoiceGroupId(), password),
+        'Duration': table_encryption.convert_long(obj.Duration(), password),
+        'Separate': obj.Separate(),
+        'LocalizeKR': table_encryption.convert_string(obj.LocalizeKR(), password),
+        'LocalizeJP': table_encryption.convert_string(obj.LocalizeJP(), password),
     }
 
 
@@ -6229,6 +6274,83 @@ def dump_MessagePopupExcel(obj, password) -> dict:
         'ButtonText': [table_encryption.convert_uint(obj.ButtonText(j), password) for j in range(obj.ButtonTextLength())],
         'ButtonCommand': [table_encryption.convert_string(obj.ButtonCommand(j), password) for j in range(obj.ButtonCommandLength())],
         'ButtonParameter': [table_encryption.convert_string(obj.ButtonParameter(j), password) for j in range(obj.ButtonParameterLength())],
+    }
+
+
+def dump_MiniGameDefenseCharacterBanExcel(obj, password) -> dict:
+    table_encryption = TableEncryptionService()
+
+    return {
+        'EventContentId': table_encryption.convert_long(obj.EventContentId(), password),
+        'CharacterId': table_encryption.convert_long(obj.CharacterId(), password),
+    }
+
+
+def dump_MiniGameDefenseFixedStatExcel(obj, password) -> dict:
+    table_encryption = TableEncryptionService()
+
+    return {
+        'MinigameDefenseFixedStatId': table_encryption.convert_long(obj.MinigameDefenseFixedStatId(), password),
+        'Level': table_encryption.convert_int(obj.Level(), password),
+        'Grade': table_encryption.convert_int(obj.Grade(), password),
+        'ExSkillLevel': table_encryption.convert_int(obj.ExSkillLevel(), password),
+        'NoneExSkillLevel': table_encryption.convert_int(obj.NoneExSkillLevel(), password),
+        'Equipment1Tier': table_encryption.convert_int(obj.Equipment1Tier(), password),
+        'Equipment1Level': table_encryption.convert_int(obj.Equipment1Level(), password),
+        'Equipment2Tier': table_encryption.convert_int(obj.Equipment2Tier(), password),
+        'Equipment2Level': table_encryption.convert_int(obj.Equipment2Level(), password),
+        'Equipment3Tier': table_encryption.convert_int(obj.Equipment3Tier(), password),
+        'Equipment3Level': table_encryption.convert_int(obj.Equipment3Level(), password),
+        'CharacterWeaponGrade': table_encryption.convert_int(obj.CharacterWeaponGrade(), password),
+        'CharacterWeaponLevel': table_encryption.convert_int(obj.CharacterWeaponLevel(), password),
+        'CharacterGearTier': table_encryption.convert_int(obj.CharacterGearTier(), password),
+        'CharacterGearLevel': table_encryption.convert_int(obj.CharacterGearLevel(), password),
+    }
+
+
+def dump_MiniGameDefenseInfoExcel(obj, password) -> dict:
+    table_encryption = TableEncryptionService()
+
+    return {
+        'EventContentId': table_encryption.convert_long(obj.EventContentId(), password),
+        'DefenseBattleParcelType': ParcelType(table_encryption.convert_int(obj.DefenseBattleParcelType(), password)).name,
+        'DefenseBattleParcelId': table_encryption.convert_long(obj.DefenseBattleParcelId(), password),
+        'DefenseBattleMultiplierMax': table_encryption.convert_long(obj.DefenseBattleMultiplierMax(), password),
+        'DisableRootMotion': obj.DisableRootMotion(),
+    }
+
+
+def dump_MiniGameDefenseStageExcel(obj, password) -> dict:
+    table_encryption = TableEncryptionService()
+
+    return {
+        'Id': table_encryption.convert_long(obj.Id(), password),
+        'Name': table_encryption.convert_string(obj.Name(), password),
+        'EventContentId': table_encryption.convert_long(obj.EventContentId(), password),
+        'StageDifficulty': StageDifficulty(table_encryption.convert_int(obj.StageDifficulty_(), password)).name,
+        'StageDifficultyLocalize': table_encryption.convert_uint(obj.StageDifficultyLocalize(), password),
+        'StageNumber': table_encryption.convert_int(obj.StageNumber(), password),
+        'StageDisplay': table_encryption.convert_int(obj.StageDisplay(), password),
+        'PrevStageId': table_encryption.convert_long(obj.PrevStageId(), password),
+        'EchelonExtensionType': EchelonExtensionType(table_encryption.convert_int(obj.EchelonExtensionType_(), password)).name,
+        'BattleDuration': table_encryption.convert_long(obj.BattleDuration(), password),
+        'StageEnterCostType': ParcelType(table_encryption.convert_int(obj.StageEnterCostType(), password)).name,
+        'StageEnterCostId': table_encryption.convert_long(obj.StageEnterCostId(), password),
+        'StageEnterCostAmount': table_encryption.convert_int(obj.StageEnterCostAmount(), password),
+        'EventContentStageRewardId': table_encryption.convert_long(obj.EventContentStageRewardId(), password),
+        'EnterScenarioGroupId': [table_encryption.convert_long(obj.EnterScenarioGroupId(j), password) for j in range(obj.EnterScenarioGroupIdLength())],
+        'ClearScenarioGroupId': [table_encryption.convert_long(obj.ClearScenarioGroupId(j), password) for j in range(obj.ClearScenarioGroupIdLength())],
+        'StageTopography': StageTopography(table_encryption.convert_int(obj.StageTopography_(), password)).name,
+        'RecommandLevel': table_encryption.convert_int(obj.RecommandLevel(), password),
+        'GroundID': table_encryption.convert_long(obj.GroundID(), password),
+        'ContentType': ContentType(table_encryption.convert_int(obj.ContentType_(), password)).name,
+        'StarGoal': [StarGoalType(table_encryption.convert_int(obj.StarGoal(j), password)).name for j in range(obj.StarGoalLength())],
+        'StarGoalAmount': [table_encryption.convert_int(obj.StarGoalAmount(j), password) for j in range(obj.StarGoalAmountLength())],
+        'DefenseFormationBGPrefab': table_encryption.convert_string(obj.DefenseFormationBGPrefab(), password),
+        'DefenseFormationBGPrefabScale': table_encryption.convert_float(obj.DefenseFormationBGPrefabScale(), password),
+        'FixedEchelon': table_encryption.convert_long(obj.FixedEchelon(), password),
+        'MininageDefenseFixedStatId': table_encryption.convert_long(obj.MininageDefenseFixedStatId(), password),
+        'StageHint': table_encryption.convert_uint(obj.StageHint(), password),
     }
 
 
@@ -7004,6 +7126,7 @@ class VoiceEvent(IntEnum):
     PublicSkill02 = 30
     InteractionPublicSkill01 = 31
     InteractionPublicSkill02 = 32
+    FormationStyleChange = 33
 
 class UnitType(IntEnum):
     none = 0
@@ -7135,6 +7258,7 @@ class WeaponType(IntEnum):
     MT = 17
     Relic = 18
     FT = 19
+    Akemi = 20
 
 class EntityMaterialType(IntEnum):
     Wood = 0
@@ -7756,7 +7880,7 @@ class ContentType(IntEnum):
     Chaser = 19
     FieldContentStage = 20
     MultiFloorRaid = 21
-    Temp = 22
+    MinigameDefense = 22
 
 class EventContentType(IntEnum):
     Stage = 0
@@ -7791,7 +7915,7 @@ class EventContentType(IntEnum):
     Field = 29
     MultiFloorRaid = 30
     MinigameDreamMaker = 31
-    Temp = 32
+    MiniGameDefense = 32
 
 class OpenCondition(IntEnum):
     Hide = 0
@@ -7882,7 +8006,7 @@ class OpenConditionContent(IntEnum):
     MultiFloorRaid = 53
     StrategySkip = 54
     MinigameDreamMaker = 55
-    Temp = 56
+    MiniGameDefense = 56
 
 class ContentLockType(IntEnum):
     none = 0
@@ -8282,7 +8406,7 @@ class EchelonType(IntEnum):
     EliminateRaid03 = 22
     Field = 23
     MultiFloorRaid = 24
-    Temp = 25
+    MinigameDefense = 25
 
 class EchelonExtensionType(IntEnum):
     Base = 0
@@ -8547,6 +8671,8 @@ class MailType(IntEnum):
     Temp_3 = 20
     CouponCompleteReward = 21
     BirthdayMail = 22
+    FromCS = 23
+    ExpiryChangeCurrency = 24
 
 class AttendanceType(IntEnum):
     Basic = 0
@@ -8887,10 +9013,10 @@ class MissionCompleteConditionType(IntEnum):
     Reset_DreamGetEndingCount = 162
     Reset_DreamGetSpecificEndingCount = 163
     Reset_DreamGetCollectionScenarioCount = 164
-    Temp_1 = 165
-    Temp_2 = 166
-    Temp_3 = 167
-    Temp_4 = 168
+    Reset_ClearCountDefense = 165
+    Reset_ClearSpecificDefenseStage = 166
+    Reset_ClearCharacterLimitDefense = 167
+    Reset_ClearTimeLimitDefenseFromSecond = 168
 
 class AccountAchievementType(IntEnum):
     TotalLoginCount = 0
@@ -9288,9 +9414,10 @@ class ParcelChangeReason(IntEnum):
     MiniGame_DreamDailyClosing = 174
     MiniGame_DreamEnding = 175
     Item_ExpireChange = 176
-    Temp = 177
+    MiniGame_DefenseBattleResult = 177
     Raid_FailCompensateReward = 178
     EliminateRaid_FailCompensateReward = 179
+    Currency_ExpireChange = 180
 
 class ConsumeCondition(IntEnum):
     And = 0
@@ -9422,6 +9549,7 @@ class DialogCategory(IntEnum):
     UIEventTreasure = 67
     UIMultiFloorRaid = 68
     UIEventMiniGameDreamMaker = 69
+    UIAttendanceEvent17 = 70
 
 class DialogCondition(IntEnum):
     Idle = 0
@@ -12922,4 +13050,5 @@ class Club(IntEnum):
     KnowledgeLiberationFront = 46
     Hyakkayouran = 47
     ShinySparkleSociety = 48
+    AbydosStudentCouncil = 49
 

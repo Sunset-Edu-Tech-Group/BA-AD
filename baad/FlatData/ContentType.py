@@ -25,5 +25,5 @@ class ContentType(object):
     Chaser = 19
     FieldContentStage = 20
     MultiFloorRaid = 21
-    Temp = 22
+    MinigameDefense = 22
 

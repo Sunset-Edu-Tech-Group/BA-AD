@@ -133,6 +133,7 @@ __all__ = [
     'CharacterDialogExcelTable',
     'CharacterDialogFieldExcel',
     'CharacterDialogFieldExcelTable',
+    'CharacterDialogSubtitleExcel',
     'CharacterExcel',
     'CharacterExcelTable',
     'CharacterGearExcel',
@@ -163,6 +164,7 @@ __all__ = [
     'CharacterVictoryInteractionExcel',
     'CharacterVictoryInteractionExcelTable',
     'CharacterVoiceExcel',
+    'CharacterVoiceSubtitleExcel',
     'CharacterWeaponExcel',
     'CharacterWeaponExcelTable',
     'CharacterWeaponExpBonusExcel',
@@ -629,6 +631,10 @@ __all__ = [
     'MessagePopupLayout',
     'MiniGameAudioAnimatorExcel',
     'MiniGameAudioAnimatorExcelTable',
+    'MiniGameDefenseCharacterBanExcel',
+    'MiniGameDefenseFixedStatExcel',
+    'MiniGameDefenseInfoExcel',
+    'MiniGameDefenseStageExcel',
     'MiniGameDreamCollectionScenarioExcel',
     'MiniGameDreamDailyPointExcel',
     'MiniGameDreamEndingExcel',
@@ -1178,6 +1184,7 @@ from .CharacterDialogExcel import CharacterDialogExcel
 from .CharacterDialogExcelTable import CharacterDialogExcelTable
 from .CharacterDialogFieldExcel import CharacterDialogFieldExcel
 from .CharacterDialogFieldExcelTable import CharacterDialogFieldExcelTable
+from .CharacterDialogSubtitleExcel import CharacterDialogSubtitleExcel
 from .CharacterExcel import CharacterExcel
 from .CharacterExcelTable import CharacterExcelTable
 from .CharacterGearExcel import CharacterGearExcel
@@ -1208,6 +1215,7 @@ from .CharacterTranscendenceExcelTable import CharacterTranscendenceExcelTable
 from .CharacterVictoryInteractionExcel import CharacterVictoryInteractionExcel
 from .CharacterVictoryInteractionExcelTable import CharacterVictoryInteractionExcelTable
 from .CharacterVoiceExcel import CharacterVoiceExcel
+from .CharacterVoiceSubtitleExcel import CharacterVoiceSubtitleExcel
 from .CharacterWeaponExcel import CharacterWeaponExcel
 from .CharacterWeaponExcelTable import CharacterWeaponExcelTable
 from .CharacterWeaponExpBonusExcel import CharacterWeaponExpBonusExcel
@@ -1674,6 +1682,10 @@ from .MessagePopupImagePositionType import MessagePopupImagePositionType
 from .MessagePopupLayout import MessagePopupLayout
 from .MiniGameAudioAnimatorExcel import MiniGameAudioAnimatorExcel
 from .MiniGameAudioAnimatorExcelTable import MiniGameAudioAnimatorExcelTable
+from .MiniGameDefenseCharacterBanExcel import MiniGameDefenseCharacterBanExcel
+from .MiniGameDefenseFixedStatExcel import MiniGameDefenseFixedStatExcel
+from .MiniGameDefenseInfoExcel import MiniGameDefenseInfoExcel
+from .MiniGameDefenseStageExcel import MiniGameDefenseStageExcel
 from .MiniGameDreamCollectionScenarioExcel import MiniGameDreamCollectionScenarioExcel
 from .MiniGameDreamDailyPointExcel import MiniGameDreamDailyPointExcel
 from .MiniGameDreamEndingExcel import MiniGameDreamEndingExcel

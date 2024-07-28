@@ -35,5 +35,5 @@ class EventContentType(object):
     Field = 29
     MultiFloorRaid = 30
     MinigameDreamMaker = 31
-    Temp = 32
+    MiniGameDefense = 32
 

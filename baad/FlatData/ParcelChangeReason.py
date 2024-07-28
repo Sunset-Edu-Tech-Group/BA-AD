@@ -180,7 +180,8 @@ class ParcelChangeReason(object):
     MiniGame_DreamDailyClosing = 174
     MiniGame_DreamEnding = 175
     Item_ExpireChange = 176
-    Temp = 177
+    MiniGame_DefenseBattleResult = 177
     Raid_FailCompensateReward = 178
     EliminateRaid_FailCompensateReward = 179
+    Currency_ExpireChange = 180
 

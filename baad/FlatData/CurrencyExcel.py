@@ -156,7 +156,42 @@ class CurrencyExcel(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
-def Start(builder): builder.StartObject(16)
+    # CurrencyExcel
+    def ExpirationDateTime(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # CurrencyExcel
+    def ExpirationNotifyDateIn(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CurrencyExcel
+    def ExpiryChangeParcelType(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # CurrencyExcel
+    def ExpiryChangeId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # CurrencyExcel
+    def ExpiryChangeAmount(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(21)
 def CurrencyExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -228,6 +263,26 @@ def StartDailyRefillTimeVector(builder, numElems): return builder.StartVector(8,
 def CurrencyExcelStartDailyRefillTimeVector(builder, numElems):
     """This method is deprecated. Please switch to Start."""
     return StartDailyRefillTimeVector(builder, numElems)
+def AddExpirationDateTime(builder, ExpirationDateTime): builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ExpirationDateTime), 0)
+def CurrencyExcelAddExpirationDateTime(builder, ExpirationDateTime):
+    """This method is deprecated. Please switch to AddExpirationDateTime."""
+    return AddExpirationDateTime(builder, ExpirationDateTime)
+def AddExpirationNotifyDateIn(builder, ExpirationNotifyDateIn): builder.PrependInt32Slot(17, ExpirationNotifyDateIn, 0)
+def CurrencyExcelAddExpirationNotifyDateIn(builder, ExpirationNotifyDateIn):
+    """This method is deprecated. Please switch to AddExpirationNotifyDateIn."""
+    return AddExpirationNotifyDateIn(builder, ExpirationNotifyDateIn)
+def AddExpiryChangeParcelType(builder, ExpiryChangeParcelType): builder.PrependInt32Slot(18, ExpiryChangeParcelType, 0)
+def CurrencyExcelAddExpiryChangeParcelType(builder, ExpiryChangeParcelType):
+    """This method is deprecated. Please switch to AddExpiryChangeParcelType."""
+    return AddExpiryChangeParcelType(builder, ExpiryChangeParcelType)
+def AddExpiryChangeId(builder, ExpiryChangeId): builder.PrependInt64Slot(19, ExpiryChangeId, 0)
+def CurrencyExcelAddExpiryChangeId(builder, ExpiryChangeId):
+    """This method is deprecated. Please switch to AddExpiryChangeId."""
+    return AddExpiryChangeId(builder, ExpiryChangeId)
+def AddExpiryChangeAmount(builder, ExpiryChangeAmount): builder.PrependInt64Slot(20, ExpiryChangeAmount, 0)
+def CurrencyExcelAddExpiryChangeAmount(builder, ExpiryChangeAmount):
+    """This method is deprecated. Please switch to AddExpiryChangeAmount."""
+    return AddExpiryChangeAmount(builder, ExpiryChangeAmount)
 def End(builder): return builder.EndObject()
 def CurrencyExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

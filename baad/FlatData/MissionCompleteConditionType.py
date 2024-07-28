@@ -168,8 +168,8 @@ class MissionCompleteConditionType(object):
     Reset_DreamGetEndingCount = 162
     Reset_DreamGetSpecificEndingCount = 163
     Reset_DreamGetCollectionScenarioCount = 164
-    Temp_1 = 165
-    Temp_2 = 166
-    Temp_3 = 167
-    Temp_4 = 168
+    Reset_ClearCountDefense = 165
+    Reset_ClearSpecificDefenseStage = 166
+    Reset_ClearCharacterLimitDefense = 167
+    Reset_ClearTimeLimitDefenseFromSecond = 168
 

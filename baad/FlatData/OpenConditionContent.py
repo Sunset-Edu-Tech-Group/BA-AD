@@ -59,5 +59,5 @@ class OpenConditionContent(object):
     MultiFloorRaid = 53
     StrategySkip = 54
     MinigameDreamMaker = 55
-    Temp = 56
+    MiniGameDefense = 56
 

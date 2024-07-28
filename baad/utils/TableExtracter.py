@@ -1,3 +1,4 @@
+import asyncio
 import json
 from pathlib import Path
 from zipfile import BadZipFile
@@ -41,7 +42,7 @@ class TableExtracter:
 
         return processed_data, new_name
 
-    def extract_table(self, table_file: Path | str, task: int) -> None:
+    async def extract_table(self, table_file: Path | str, task: int) -> None:
         try:
             with TableZipFile(table_file) as tz:
                 file_list = tz.namelist()
@@ -56,10 +57,10 @@ class TableExtracter:
 
                     try:
                         if name.endswith('.json'):
-                            data = self._process_json_file(name, data)
+                            data = await asyncio.to_thread(self._process_json_file, name, data)
 
                         elif table_file.name == 'Excel.zip':
-                            data, name = self._process_excel_file(name, data)
+                            data, name = await asyncio.to_thread(self._process_excel_file, name, data)
 
                     except Exception as e:
                         self.print_progress.add_task(f'[yellow]Warning processing {name}: {e}[/yellow]')
@@ -68,20 +69,23 @@ class TableExtracter:
                     fp = table_dir_fp / name if create_dir else self.extracted_path / name
                     fp.parent.mkdir(parents=True, exist_ok=True)
                     fp.write_bytes(data)
+
+                    await asyncio.to_thread(fp.write_bytes, data)
+
                     self.extract_progress.update(task, advance=1)
                     self.live.update(self.progress_group)
 
         except BadZipFile:
             self.console.log(f'[red]Error: {table_file} is not a valid zip file.[/red]')
 
-    def extract_all_tables(self) -> None:
+    async def extract_all_tables(self) -> None:
         table_files = list(Path(self.table_path).glob('*.zip'))
         extract_task = self.extract_progress.add_task('[green]Extracting...', total=len(table_files))
 
         try:
             with self.live:
-                for table_file in table_files:
-                    self.extract_table(table_file, extract_task)
+                task = [self.extract_table(table_file, extract_task) for table_file in table_files]
+                await asyncio.gather(*task)
                 self.print_progress.add_task('[green]Extraction completed![/green]')
 
         finally:

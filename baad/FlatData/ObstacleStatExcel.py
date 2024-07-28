@@ -80,7 +80,49 @@ class ObstacleStatExcel(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-def Start(builder): builder.StartObject(8)
+    # ObstacleStatExcel
+    def EnhanceLightArmorRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ObstacleStatExcel
+    def EnhanceHeavyArmorRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ObstacleStatExcel
+    def EnhanceUnarmedRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ObstacleStatExcel
+    def EnhanceElasticArmorRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ObstacleStatExcel
+    def EnhanceStructureRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # ObstacleStatExcel
+    def EnhanceNormalArmorRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(14)
 def ObstacleStatExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -116,6 +158,30 @@ def AddHighlightFloaterHeight(builder, HighlightFloaterHeight): builder.PrependF
 def ObstacleStatExcelAddHighlightFloaterHeight(builder, HighlightFloaterHeight):
     """This method is deprecated. Please switch to AddHighlightFloaterHeight."""
     return AddHighlightFloaterHeight(builder, HighlightFloaterHeight)
+def AddEnhanceLightArmorRate(builder, EnhanceLightArmorRate): builder.PrependInt64Slot(8, EnhanceLightArmorRate, 0)
+def ObstacleStatExcelAddEnhanceLightArmorRate(builder, EnhanceLightArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceLightArmorRate."""
+    return AddEnhanceLightArmorRate(builder, EnhanceLightArmorRate)
+def AddEnhanceHeavyArmorRate(builder, EnhanceHeavyArmorRate): builder.PrependInt64Slot(9, EnhanceHeavyArmorRate, 0)
+def ObstacleStatExcelAddEnhanceHeavyArmorRate(builder, EnhanceHeavyArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceHeavyArmorRate."""
+    return AddEnhanceHeavyArmorRate(builder, EnhanceHeavyArmorRate)
+def AddEnhanceUnarmedRate(builder, EnhanceUnarmedRate): builder.PrependInt64Slot(10, EnhanceUnarmedRate, 0)
+def ObstacleStatExcelAddEnhanceUnarmedRate(builder, EnhanceUnarmedRate):
+    """This method is deprecated. Please switch to AddEnhanceUnarmedRate."""
+    return AddEnhanceUnarmedRate(builder, EnhanceUnarmedRate)
+def AddEnhanceElasticArmorRate(builder, EnhanceElasticArmorRate): builder.PrependInt64Slot(11, EnhanceElasticArmorRate, 0)
+def ObstacleStatExcelAddEnhanceElasticArmorRate(builder, EnhanceElasticArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceElasticArmorRate."""
+    return AddEnhanceElasticArmorRate(builder, EnhanceElasticArmorRate)
+def AddEnhanceStructureRate(builder, EnhanceStructureRate): builder.PrependInt64Slot(12, EnhanceStructureRate, 0)
+def ObstacleStatExcelAddEnhanceStructureRate(builder, EnhanceStructureRate):
+    """This method is deprecated. Please switch to AddEnhanceStructureRate."""
+    return AddEnhanceStructureRate(builder, EnhanceStructureRate)
+def AddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate): builder.PrependInt64Slot(13, EnhanceNormalArmorRate, 0)
+def ObstacleStatExcelAddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate):
+    """This method is deprecated. Please switch to AddEnhanceNormalArmorRate."""
+    return AddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate)
 def End(builder): return builder.EndObject()
 def ObstacleStatExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -36,8 +36,9 @@ pip install .
 ## Usage
 Before you go downloading the game assets please read [Nexon's Terms and Service](https://m.nexon.com/terms/304) first.
 
-```sh
+```
 > baad --help
+usage: baad [-h] [-v] [-u] [-g] {download,extract} ...
 
 Blue Archive Asset Downloader
 
@@ -48,15 +49,47 @@ positional arguments:
 
 options:
   -h, --help          show this help message and exit
+  -v, --version       show program's version number and exit
   -u, --update        force update the apk
-  -g, --generate      generate the flatbuf schemas
+  -g, --generate      generate the flatbuf schema
 ```
+
+#### Downloading
+
+- `--assets` will download just the assetbundles only.
+- `--tables` will download just the tablebundles only.
+- `--media` will download just the media resources only.
+- `--all` will download everything.
+- `--limit` is the number of files will download concurrently (default is 5).
+- `--output` is the path to save the downloaded files (default is `./output`).
+
+Examples:
+
+- Saves the files using Posix Path style
+```
+> baad download --tables --output ./Downloads
+```
+
+- Limit the concurrent download to 10 files
+```
+> baad download --assets --limit 10
+```
+
+- Saves the files using Windows Path style
+```
+> baad download --media --output C:\Users\User\ocuments
+```
+
+> ![NOTE]
+> If you have low connection and download say error, rerun the program again it will retry downloading the remaining files. Don't worry it will not download the already downloaded files again
+
+
 
 ### Dump
 To get `dump.cs` you need to manually decompile the `libil2cpp.so`. I recommend following the instructions from [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper) or [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper). Also I recommend using a emulator like **MuMuPlayer** to get easy root access.
 
-But you your lazy you can use [Il2CppDumper](Il2CppDumper) to dump it manually or automatically using a script. You gonna need the **Blue Archive JP** apk from **Qooapp**, then rename .apk to .zip and extract it. `libil2cpp.so` is located at `lib\arm64-v8a` and the `global-metadata.dat` is located at `assets\bin\Data\Managed\Metadata`.
-Note that you will face a [ERROR: Can't use auto mode to process file, try manual mode.](https://github.com/Perfare/Il2CppDumper?tab=readme-ov-file#error-cant-use-auto-mode-to-process-file-try-manual-mode) by doing this method.
+But you your lazy you can use [Il2CppDumper](Il2CppDumper) to dump it manually or automatically using a script. You gonna need the **Blue Archive JP** apk from **Qooapp**, then rename .apk to .zip and extract it. `libil2cpp.so` is located at `lib/arm64-v8a` and the `global-metadata.dat` is located at `assets/bin/Data/Managed/Metadata`.
+Note that you will face a [ERROR: Can't use auto mode to process file, try manual mode](https://github.com/Perfare/Il2CppDumper?tab=readme-ov-file#error-cant-use-auto-mode-to-process-file-try-manual-mode) by doing this method.
 
 ### Acknowledgement
  - [hdk5/MoeXCOM](https://github.com/hdk5/MoeXCOM)

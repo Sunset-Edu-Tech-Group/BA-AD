@@ -1,15 +1,17 @@
+import asyncio
 from argparse import ArgumentParser, ArgumentTypeError
 
 from rich.console import Console
 from rich.traceback import Traceback
 
 from . import __version__
+from .utils.AssetExtracter import AssetExtracter
 from .utils.FlatbufGenerator import FlatbufGenerator
 from .utils.ResourceDownloader import ResourceDownloader
 from .utils.TableExtracter import TableExtracter
 
 
-def arguments():  # sourcery skip: extract-duplicate-method
+def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
     parser = ArgumentParser(description='Blue Archive Asset Downloader')
     sub_parser = parser.add_subparsers(dest='commands')
 
@@ -123,7 +125,7 @@ def arguments():  # sourcery skip: extract-duplicate-method
             )
         )
         raise SystemExit(1)
-    return args
+    return parser, args
 
 
 def resource_downloader(args) -> ResourceDownloader:
@@ -146,23 +148,30 @@ def resource_downloader(args) -> ResourceDownloader:
     return downloader
 
 
-def extracter(args) -> TableExtracter:
-    extract = TableExtracter(args.path)
+async def extracter(args) -> TableExtracter | AssetExtracter | None:
+    table_extract = TableExtracter(args.path)
+    asset_extract = AssetExtracter(args.path)
 
     if args.tables:
-        extract.extract_all_tables()
-    return extract
+        asyncio.run(table_extract.extract_all_tables())
+        return table_extract
+
+    elif args.assets:
+        asset_extract.extract_assets()
+        return asset_extract
+
+    return None
 
 
-def main() -> None:
-    args = arguments()
+async def main() -> None:
+    parser, args = arguments()
 
     if hasattr(args, 'commands') and args.commands == 'download':
         resource_downloader(args)
         return
 
     if hasattr(args, 'commands') and args.commands == 'extract':
-        extracter(args)
+        await extracter(args)
         return
 
     if args.update:
@@ -173,8 +182,8 @@ def main() -> None:
         FlatbufGenerator().generate()
         return
 
-    args.print_help()
+    parser.print_help()
 
 
 if __name__ == '__main__':
-    main()
+    asyncio.run(main())
