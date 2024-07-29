@@ -47,7 +47,7 @@ class AssetStudioExtracter:
         self.bin_path.mkdir(parents=True, exist_ok=True)
 
         if not zip_path.exists():
-            self.console.log('[cyan]Downloading AssetStudioModCLI...[/cyan]')
+            self.console.print('[cyan]Downloading AssetStudioModCLI...[/cyan]')
 
             response = requests.get(self._get_asset_studio_url())
             zip_path.write_bytes(response.content)
