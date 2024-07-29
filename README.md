@@ -19,16 +19,16 @@ It downloads them directly from the **Yostar Servers**.
 - flatbuffers
 - .Net Runtime 6.0 (Linux) | .Net Desktop Runtime 8.0 (Windows)
 
-## ~~Installation~~ (WIP)
-~~Download and install [`python`](https://www.python.org/downloads/). After that clone this repository~~
+## Installation
+Download and install [`python`](https://www.python.org/downloads/). After that clone this repository
 
 ```
-git clone https://github.com/Deathemonic/BA-AD.git
+git clone https://github.com/Deathemonic/BA-AD
 ```
 
-~~or just download as a zip by clicking `Code` > `Download Zip`. Then open `BA-AD` folder in your `Terminal` or `CMD`~~
+or just download as a zip by clicking `Code` > `Download Zip`. Then open `BA-AD` folder in your `Terminal` or `CMD`
 
-~~Then install it using pip~~
+Then install it using pip
 
 ```
 pip install .
@@ -59,12 +59,25 @@ options:
 
 To download the assetsbundles, tablebundles, and media resources we need to initialize download mode, to do that we pass `download` so it will be like this `baad download`.
 
-- `--assets` will download just the assetbundles only.
-- `--tables` will download just the tablebundles only.
-- `--media` will download just the media resources only.
-- `--all` will download everything.
-- `--limit` is the number of files will download concurrently (default is 5).
-- `--output` is the path to save the downloaded files (default is `./output`).
+```
+> baad download --help
+usage: baad download [-h] [--output OUTPUT] [--limit LIMIT] [--assets] [--tables] [--media] [-a]
+
+options:
+  -h, --help       show this help message and exit
+  --output OUTPUT  output directory for the downloaded files (default: ./output)
+  --limit LIMIT    set a limit the download limit (default: 5)
+  --assets         download the assetbundles
+  --tables         download the tablebundles
+  --media          download the mediaresources
+  -a, --all        download all game files
+```
+
+You can pass `--update` to force update the game version.
+
+```
+> baad --update
+```
 
 Examples:
 
@@ -80,17 +93,78 @@ Examples:
 
 - Saves the files using Windows Path style
 ```
-> baad download --media --output C:\Users\User\ocuments
+> baad download --media --output C:\Users\User\Documents
 ```
 
 > [!NOTE]
 > If you have low connection and download say error, rerun the program again it will retry downloading the remaining files. Don't worry it will not download the already downloaded files again
 
-#### Extracting (WIP)
+#### Extracting
 
-~~To extract the assetsbundles, and  tablebundles we need to initialize extract mode, to do that we pass `extract` so it will be like this `baad extract`.~~
+To extract the assetsbundles, and  tablebundles we need to initialize extract mode, to do that we pass `extract` so it will be like this `baad extract`.
+
+No need to extract the `MediaResources` as it's already extracted by default.
+
+```
+> baad extract --help
+
+usage: baad extract [-h] [--path PATH] [--studio] [--assets] [--tables] [-a]
+
+options:
+  -h, --help   show this help message and exit
+  --path PATH  path of the files that will be extracted
+  --studio     uses the assetstudiomod as a backend for extracting the assetbundles
+  --assets     extract the assetbundles
+  --tables     extract the tablebundles
+  -a, --all    extract all game files
+```
 
 
+<details open>
+	<summary>AssetBundles</summary>
+
+  To extract assetbundles you need to pass `--assets` to extract the asset then pass `--path` to specify the path to extract the assetbundles. This will extract the assets files to the parent path folder then `AssetExtracted`.
+  
+  By default the extracter uses [UnityPy](https://github.com/ic005k/UnityPy) as it's backend but you can pass `--studio` to toggle [AssetStudioMod](https://github.com/aelurum/AssetStudio) as the backend.
+  Due to the limitations for [UnityPy](https://github.com/ic005k/UnityPy) there's no way to extract the fbx, you could use [AssetStudioMod](https://github.com/aelurum/AssetStudio) backend to extract the fbx but any fbx associated with animator or animationclips will not be extracted.
+
+  Example:
+  - Extracts the assets to `./output/AssetExtracted`
+  ```
+  > baad extract --assets --path ./output/assetbundles
+  ```
+  
+  - Uses AssetStudioMod as backend
+  ```
+  > baad extract --assets --path ./output/assetbundles --studio
+  ```
+
+  > [!NOTE]
+  > This is not meant to be used for primary extracting the assetbundles, this is meant for quick and lazy extraction of the assetbundles and people uses GNU/Linux or MacOS.
+  > For proper extraction of the assetbundles you need to use [AssetStudioMod GUI](https://github.com/aelurum/AssetStudio) (Only runs in windows or use wine in linux [#696](https://github.com/Perfare/AssetStudio/issues/696)).
+</details>
+
+<details open>
+	<summary>TableBundles</summary>
+
+  Before extracting the tablebundles we need to generate the **flatbuffers** first.
+
+  ```
+  > baad --generate
+  ```
+
+  To extract tablebundles you need to pass `--tables` to extract the asset then pass `--path` to specify the path to extract the tablebundles. This will extract the assets files to the parent path folder then `TableExtracted`.
+
+
+  Example:
+  - Extracts the tables to `./output/TableExtracted`
+  ```
+  > baad extract --tables --path ./output/tablebundles
+  ```
+
+  > [!NOTE]
+  > Note you may see warnings and some files didn't get parse, it's a known issue for now but most files will be parse just fine.
+</details>
 
 ### Dump
 To get `dump.cs` you need to manually decompile the `libil2cpp.so`. I recommend following the instructions from [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper) or [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper). Also I recommend using a emulator like **MuMuPlayer** to get easy root access.

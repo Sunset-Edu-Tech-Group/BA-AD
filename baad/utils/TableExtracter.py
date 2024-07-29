@@ -15,7 +15,9 @@ class TableExtracter:
     def __init__(self, output: str) -> None:
         self.table_path = output or Path.cwd() / 'output' / 'TableBundles'
         self.extracted_path = Path(self.table_path).parent / 'TableExtracted'
+
         self.lower_name_to_module_dict = self._get_lower_name_to_module_dict()
+
         self.live = create_live_display()
         self.progress_group, _, self.extract_progress, self.print_progress, self.console = create_progress_group()
 

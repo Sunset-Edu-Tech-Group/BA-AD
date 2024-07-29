@@ -7,6 +7,7 @@ from . import __version__
 from .utils.AssetExtracter import AssetExtracter
 from .utils.FlatbufGenerator import FlatbufGenerator
 from .utils.ResourceDownloader import ResourceDownloader
+from .utils.StudioExtracter import AssetStudioExtracter
 from .utils.TableExtracter import TableExtracter
 
 
@@ -81,6 +82,11 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
         help='path of the files that will be extracted',
     )
     extract.add_argument(
+        '--studio',
+        action='store_true',
+        help='uses the assetstudiomod as a backend for extracting the assetbundles',
+    )
+    extract.add_argument(
         '--assets',
         action='store_true',
         help='extract the assetbundles',
@@ -147,17 +153,22 @@ def resource_downloader(args) -> ResourceDownloader:
     return downloader
 
 
-def extracter(args) -> TableExtracter | AssetExtracter | None:
+def extracter(args) -> TableExtracter | AssetExtracter | AssetStudioExtracter | None:
     table_extract = TableExtracter(args.path)
     asset_extract = AssetExtracter(args.path)
+    asset_studio_extract = AssetStudioExtracter(args.path)
 
     if args.tables:
         table_extract.run_extraction()
         return table_extract
 
-    elif args.assets:
+    if args.assets and not args.studio:
         asset_extract.extract_assets()
         return asset_extract
+
+    if args.assets and args.studio:
+        asset_studio_extract.extract_assets()
+        return asset_studio_extract
 
     return None
 
