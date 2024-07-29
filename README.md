@@ -138,11 +138,11 @@ options:
   ```
   > baad extract --assets --path ./output/assetbundles --studio
   ```
-
-  > [!NOTE]
-  > This is not meant to be used for primary extracting the assetbundles, this is meant for quick and lazy extraction of the assetbundles and people uses GNU/Linux or MacOS.
-  > For proper extraction of the assetbundles you need to use [AssetStudioMod GUI](https://github.com/aelurum/AssetStudio) (Only runs in windows or use wine in linux [#696](https://github.com/Perfare/AssetStudio/issues/696)).
 </details>
+
+> [!NOTE]
+> This is not meant to be used for primary extracting the assetbundles, this is meant for quick and lazy extraction of the assetbundles and people uses GNU/Linux or MacOS.
+> For proper extraction of the assetbundles you need to use [AssetStudioMod GUI](https://github.com/aelurum/AssetStudio) (Only runs in windows or use wine in linux [#696](https://github.com/Perfare/AssetStudio/issues/696)).
 
 <details open>
 	<summary>TableBundles</summary>
@@ -161,10 +161,10 @@ options:
   ```
   > baad extract --tables --path ./output/tablebundles
   ```
-
-  > [!NOTE]
-  > Note you may see warnings and some files didn't get parse, it's a known issue for now but most files will be parse just fine.
 </details>
+
+> [!NOTE]
+> Note you may see warnings and some files didn't get parse, it's a known issue for now but most files will be parse just fine.
 
 ### Dump
 To get `dump.cs` you need to manually decompile the `libil2cpp.so`. I recommend following the instructions from [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper) or [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper). Also I recommend using a emulator like **MuMuPlayer** to get easy root access.
