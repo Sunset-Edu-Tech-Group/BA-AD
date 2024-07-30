@@ -14,16 +14,16 @@ class TableCatalog:
     def from_bytes(bytes_data: bytes, base_url: str) -> 'TableCatalog':
         cursor = BytesIO(initial_bytes=bytes_data)
 
-        def read_i8():
+        def read_i8() -> Any:
             return struct.unpack('b', cursor.read(1))[0]
 
-        def read_i32():
+        def read_i32() -> Any:
             return struct.unpack('i', cursor.read(4))[0]
 
-        def read_i64():
+        def read_i64() -> Any:
             return struct.unpack('q', cursor.read(8))[0]
 
-        def read_bool():
+        def read_bool() -> Any:
             return struct.unpack('?', cursor.read(1))[0]
 
         def read_string() -> str:
