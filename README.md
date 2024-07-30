@@ -8,16 +8,24 @@ A tool that downloads and extracts the **Blue Archive JP** `AssetBundles`, `Tabl
 It downloads them directly from the **Yostar Servers**.
 
 ## Requirements
-
 - Python 3.10+
-- requests
-- request-cache
+- .Net Runtime 6.0 (If you are using GNU/Linux or MacOS)
+
+<details>
+<summary>Librries Used</summary>
+
 - aiohttp
-- xxhash
+- aiofiles
+- requests
+- requests-cache
+- cloudscraper
+- flatbuffers
 - pycryptodome
 - UnityPy
-- flatbuffers
-- .Net Runtime 6.0 (Linux) | .Net Desktop Runtime 8.0 (Windows)
+- rich
+- xxhash
+
+</details>
 
 ## Installation
 Download and install [`python`](https://www.python.org/downloads/). After that clone this repository

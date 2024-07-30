@@ -53,7 +53,7 @@ class AssetStudioExtracter:
             zip_path.write_bytes(response.content)
 
         if not self.asset_studio_path.exists():
-            self.console.log('[cyan]Extracting AssetStudioModCLI...[/cyan]')
+            self.console.print('[cyan]Extracting AssetStudioModCLI...[/cyan]')
 
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
                 zip_ref.extractall(self.bin_path)

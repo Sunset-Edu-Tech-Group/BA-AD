@@ -1,7 +1,8 @@
 import asyncio
 from pathlib import Path
 
-from aiohttp import ClientConnectionError, ClientError, ClientPayloadError, ClientSession
+import aiofiles
+from aiohttp import ClientError, ClientSession
 
 from .ApkParser import ApkParser
 from .CatalogParser import CatalogParser
@@ -51,22 +52,22 @@ class ResourceDownloader:
             bytes_downloaded = 0
 
             try:
-                async with session.get(url, timeout=60) as response:
-                    with open(fp, 'wb') as f:
+                async with session.get(url) as response:
+                    async with aiofiles.open(fp, 'wb') as f:
                         async for chunk in response.content.iter_chunked(8192):
                             if not chunk:
                                 break
 
-                            f.write(chunk)
+                            await f.write(chunk)
                             bytes_downloaded += len(chunk)
 
                 if bytes_downloaded == size:
                     self.console.print(f'[green]Successfully downloaded {fp.name}[/green]')
                     return True
 
-            except (ClientConnectionError, ClientPayloadError, asyncio.TimeoutError) as e:
+            except Exception as e:
                 self.console.log(f'[yellow]Error downloading {fp.name}: {str(e)}[/yellow]')
-                return False
+                continue
 
             if attempt < retries - 1:
                 await asyncio.sleep(2**attempt)

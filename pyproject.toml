@@ -20,6 +20,7 @@ classifiers = [
 ]
 dependencies = [
         'aiohttp>=3.9.5',
+        'aiofiles>=24.1.0',
         'requests>=2.32.3',
         'requests-cache>=1.2.1',
         'cloudscraper',
