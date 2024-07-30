@@ -12,7 +12,8 @@ It downloads them directly from the **Yostar Servers**.
 - .Net Runtime 6.0 (If you are using GNU/Linux or MacOS)
 
 <details>
-<summary>Libraries Used</summary>
+  <summary>Libraries Used (Click to expand)</summary>
+<br>
 
 - aiohttp
 - aiofiles
@@ -43,7 +44,8 @@ pip install .
 ```
 
 <details>
-	<summary>Tutorial (with screenshots)</summary>
+	<summary>Tutorial with Screenshots (Click to expand)</summary>
+<br>
 
 1. Download the repository files
 
@@ -66,8 +68,11 @@ _alternatively you can open cmd then change directory to the folder_
 
 5. Your done just type `baad --help` to see the usage. Check out [Usage](#usage) on how to use the tool.
 
+<br>
+
 <details>
-<summary>Example Usage</summary>
+  <summary>Example Usage (Click to expand)</summary>
+<br>
 
 - Downloads the assetbundles
 ![stepfive](baad/public/tutorial/step5.png)
@@ -186,10 +191,11 @@ options:
   --tables     extract the tablebundles
   -a, --all    extract all game files
 ```
-
+<br>
 
 <details open>
 	<summary>AssetBundles</summary>
+<br>
 
   To extract assetbundles you need to pass `--assets` to extract the asset then pass `--path` to specify the path to extract the assetbundles. This will extract the assets files to the parent path folder then `AssetExtracted`.
   
@@ -214,8 +220,11 @@ options:
 > This is not meant to be used for primary extracting the assetbundles, this is meant for quick and lazy extraction of the assetbundles and people uses GNU/Linux or MacOS.
 > For proper extraction of the assetbundles you need to use [AssetStudioMod GUI](https://github.com/aelurum/AssetStudio) (Only runs in windows or use wine in linux [#696](https://github.com/Perfare/AssetStudio/issues/696)).
 
+<br>
+
 <details open>
 	<summary>TableBundles</summary>
+<br>
 
   Before extracting the tablebundles we need to generate the **flatbuffers** first.
 
