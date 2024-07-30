@@ -42,6 +42,55 @@ Then install it using pip
 pip install .
 ```
 
+<details>
+	<summary>Tutorial (with screenshots)</summary>
+
+1. Download the repository files
+
+![stepone](baad/public/tutorial/step1.png)
+
+2. Extract the downloaded zip and open the folder from the extracted zip
+
+![steptwo](baad/public/tutorial/step2.png)
+
+3. `Shift` + `Right Click` then click `Open PowerShell window here`
+
+_alternatively you can open cmd then change directory to the folder_
+
+![stepthree](baad/public/tutorial/step3.png)
+
+4. Install the program by typing `pip install .`
+
+![stepfour](baad/public/tutorial/step4.png)
+
+
+5. Your done just type `baad --help` to see the usage. Check out [Usage](#usage) on how to use the tool.
+
+<details>
+<summary>Example Usage</summary>
+
+- Downloads the assetbundles
+![stepfive](baad/public/tutorial/step5.png)
+![stepsix](baad/public/tutorial/step6.png)
+
+- Downloads the tablebundles
+![stepseven](baad/public/tutorial/step7.png)
+
+- Downloads the media reasources
+![stepeight](baad/public/tutorial/step8.png)
+
+- Output results
+![stepnine](baad/public/tutorial/step9.png)
+
+- Extracting the assetbundles
+![stepten](baad/public/tutorial/step10.png)
+![stepeleven](baad/public/tutorial/step11.png)
+
+</details>
+
+
+</details>
+
 ## Usage
 
 > [!IMPORTANT]
@@ -182,56 +231,6 @@ options:
 
 > [!NOTE]
 > Note you may see warnings and some files didn't get parse, it's a known issue for now but most files will be parse just fine.
-
-
-<details>
-	<summary>Tutorial</summary>
-
-1. Download the repository files
-
-![stepone](baad/public/tutorial/step1.png)
-
-2. Extract the downloaded zip and open the folder from the extracted zip
-
-![steptwo](baad/public/tutorial/step2.png)
-
-3. `Shift` + `Right Click` then click `Open PowerShell window here`
-
-_alternatively you can open cmd then change directory to the folder_
-
-![stepthree](baad/public/tutorial/step3.png)
-
-4. Install the program by typing `pip install .`
-
-![stepfour](baad/public/tutorial/step4.png)
-
-
-5. Your done just type `baad --help` to see the usage. 
-
-<details>
-<summary>Example Usage</summary>
-
-- Downloads the assetbundles
-![stepfive](baad/public/tutorial/step5.png)
-![stepsix](baad/public/tutorial/step6.png)
-
-- Downloads the tablebundles
-![stepseven](baad/public/tutorial/step7.png)
-
-- Downloads the media reasources
-![stepeight](baad/public/tutorial/step8.png)
-
-- Output Results
-![stepnine](baad/public/tutorial/step9.png)
-
-- Extracting the assetbundles
-![stepten](baad/public/tutorial/step10.png)
-![stepeleven](baad/public/tutorial/step11.png)
-
-</details>
-
-
-</details>
 
 ### Dump
 To get `dump.cs` you need to manually decompile the `libil2cpp.so`. I recommend following the instructions from [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper) or [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper). Also I recommend using a emulator like **MuMuPlayer** to get easy root access.
