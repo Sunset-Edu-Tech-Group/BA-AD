@@ -1,6 +1,6 @@
 <div align="center">
   <img src="baad/public/archive.png" width="500px" alt="logo">
-  <h1>Blue Archive - Asset Downloader (WIP)</h1>
+  <h1>Blue Archive - Asset Downloader</h1>
 </div>
 
 A tool that downloads and extracts the **Blue Archive JP** `AssetBundles`, `TableBundles`, `MediaResources`.
@@ -43,7 +43,9 @@ pip install .
 ```
 
 ## Usage
-Before you go downloading the game assets please read [Nexon's Terms and Service](https://m.nexon.com/terms/304) first. You are not allowed to sell the game files, models or use them for commercial purposes.
+
+> [!IMPORTANT]
+> Before you go downloading the game assets please read [Nexon's Terms and Service](https://m.nexon.com/terms/304) first. You are not allowed to sell the game files, models or use them for commercial purposes.
 
 ```
 > baad --help
@@ -99,6 +101,11 @@ Examples:
 > baad download --assets --limit 10
 ```
 
+- Downloads both `AssetBundles` and `MediaResources`
+```
+> baad download --assets --media
+```
+
 - Saves the files using Windows Path style
 ```
 > baad download --media --output C:\Users\User\Documents
@@ -136,8 +143,10 @@ options:
   By default the extracter uses [UnityPy](https://github.com/ic005k/UnityPy) as it's backend but you can pass `--studio` to toggle [AssetStudioMod](https://github.com/aelurum/AssetStudio) as the backend.
   Due to the limitations for [UnityPy](https://github.com/ic005k/UnityPy) there's no way to extract the fbx, you could use [AssetStudioMod](https://github.com/aelurum/AssetStudio) backend to extract the fbx but any fbx associated with animator or animationclips will not be extracted.
 
+  Generally you just pick the which assetbundle you need and put them in a seperate folder because it will extract all the assetbundles in the specified path. Extracting is RAM heavy.
+
   Example:
-  - Extracts the assets to `./output/AssetExtracted`
+  - Use the selected assetbundles then extracts the assets to `./output/AssetExtracted`
   ```
   > baad extract --assets --path ./output/assetbundles
   ```
@@ -174,11 +183,64 @@ options:
 > [!NOTE]
 > Note you may see warnings and some files didn't get parse, it's a known issue for now but most files will be parse just fine.
 
+
+<details>
+	<summary>Tutorial</summary>
+
+1. Download the repository files
+
+![stepone](baad/public/tutorial/step1.png)
+
+2. Extract the downloaded zip and open the folder from the extracted zip
+
+![steptwo](baad/public/tutorial/step2.png)
+
+3. `Shift` + `Right Click` then click `Open PowerShell window here`
+
+_alternatively you can open cmd then change directory to the folder_
+
+![stepthree](baad/public/tutorial/step3.png)
+
+4. Install the program by typing `pip install .`
+
+![stepfour](baad/public/tutorial/step4.png)
+
+
+5. Your done just type `baad --help` to see the usage. 
+
+<details>
+<summary>Example Usage</summary>
+
+- Downloads the assetbundles
+![stepfive](baad/public/tutorial/step5.png)
+![stepsix](baad/public/tutorial/step6.png)
+
+- Downloads the tablebundles
+![stepseven](baad/public/tutorial/step7.png)
+
+- Downloads the media reasources
+![stepeight](baad/public/tutorial/step8.png)
+
+- Output Results
+![stepnine](baad/public/tutorial/step9.png)
+
+- Extracting the assetbundles
+![stepten](baad/public/tutorial/step10.png)
+![stepeleven](baad/public/tutorial/step11.png)
+
+</details>
+
+
+</details>
+
 ### Dump
 To get `dump.cs` you need to manually decompile the `libil2cpp.so`. I recommend following the instructions from [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper) or [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper). Also I recommend using a emulator like **MuMuPlayer** to get easy root access.
 
 But you your lazy you can use [Il2CppDumper](Il2CppDumper) to dump it manually or automatically using a script. You gonna need the **Blue Archive JP** apk from **Qooapp**, then rename .apk to .zip and extract it. `libil2cpp.so` is located at `lib/arm64-v8a` and the `global-metadata.dat` is located at `assets/bin/Data/Managed/Metadata`.
 Note that you will face a [ERROR: Can't use auto mode to process file, try manual mode](https://github.com/Perfare/Il2CppDumper?tab=readme-ov-file#error-cant-use-auto-mode-to-process-file-try-manual-mode) by doing this method.
+
+### Contributing
+Don't like my [shitty code](https://shitcode.net/latest/language/python) and what to change it? Feel free to contribute by submitting a pull request or issue. Always appreciate the help.
 
 ### Acknowledgement
  - [hdk5/MoeXCOM](https://github.com/hdk5/MoeXCOM)
@@ -186,6 +248,7 @@ Note that you will face a [ERROR: Can't use auto mode to process file, try manua
  - [fiseleo/Blue-Archive-JP-Downloader](https://github.com/fiseleo/Blue-Archive-JP-Downloader)
  - [K0lb3/Blue-Archive---Asset-Downloader](https://github.com/K0lb3/Blue-Archive---Asset-Downloader)
  - [lwd-temp/blue-archive-spine-production](https://github.com/lwd-temp/blue-archive-spine-production)
+ - [aelurum/AssetStudio](https://github.com/aelurum/AssetStudio)
 
 
 ### Copyright
