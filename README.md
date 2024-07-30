@@ -245,6 +245,49 @@ options:
 > [!NOTE]
 > Note you may see warnings and some files didn't get parse, it's a known issue for now but most files will be parse just fine.
 
+### What to do now?
+
+You may be asking, I've downloaded everything so what do I do now?
+
+Well anything you want, you can use assetbundles to extract the chibi models and port them into a different game like **Gmod** or **Left 4 Dead**. You can use the extracted tablebundles to view the character dialogs. You can use the media resources to listen to the character voice lines or the OST.
+
+<details>
+  <summary>Examples (Click to expand)</summary>
+<br>
+
+1. You can export the assetbundles using [AssetStudioMod](https://github.com/aelurum/AssetStudio)
+![stepfourteen](baad/public/tutorial/step14.png)
+
+- Then you can view the extracted model using [Blender](https://www.blender.org)
+![stepfifteen](baad/public/tutorial/step15.png)
+
+- Or you can convert the model to pmx to use with [MikuMikuDance](hhttps://learnmmd.come)
+![stepsixteen](baad/public/tutorial/step16.png)
+
+- Or you can port the model to [Source](https://en.wikipedia.org/wiki/Source_(game_engine)) to use with **Gmod** or **Source Film Maker**
+![stepseventeen](baad/public/tutorial/step17.png)
+_I know it looks shit but it works_
+
+
+2. You can use the extracted tablebundles to view the game database
+
+- You can view the character dialog
+![stepeighteen](baad/public/tutorial/step18.png)
+
+- You can view the charater skill info
+![stepnineteen](baad/public/tutorial/step19.png)
+
+
+3. You can use the download media resources to view the game backgrounds, cg, video, or music
+
+- You can view the game backgrounds and CG
+![steptwenty](baad/public/tutorial/step20.png)
+
+- You can listen character voice lines and ost
+![steptwentyone](baad/public/tutorial/step21.png)
+
+</details>
+
 ### Dump
 To get `dump.cs` you need to manually decompile the `libil2cpp.so`. I recommend following the instructions from [Auto-Il2cppDumper](https://github.com/AndnixSH/Auto-Il2cppDumper) or [Zygisk-Il2CppDumper](https://github.com/Perfare/Zygisk-Il2CppDumper). Also I recommend using a emulator like **MuMuPlayer** to get easy root access.
 
