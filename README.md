@@ -261,7 +261,7 @@ Well anything you want, you can use assetbundles to extract the chibi models and
 - Then you can view the extracted model using [Blender](https://www.blender.org)
 ![stepfifteen](baad/public/tutorial/step15.png)
 
-- Or you can convert the model to pmx to use with [MikuMikuDance](hhttps://learnmmd.come)
+- Or you can convert the model to pmx to use with [MikuMikuDance](https://learnmmd.come)
 ![stepsixteen](baad/public/tutorial/step16.png)
 
 - Or you can port the model to [Source](https://en.wikipedia.org/wiki/Source_(game_engine)) to use with **Gmod** or **Source Film Maker**
