@@ -12,7 +12,7 @@ It downloads them directly from the **Yostar Servers**.
 - .Net Runtime 6.0 (If you are using GNU/Linux or MacOS)
 
 <details>
-<summary>Librries Used</summary>
+<summary>Libraries Used</summary>
 
 - aiohttp
 - aiofiles

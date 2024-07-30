@@ -84,6 +84,8 @@ class TableExtracter:
 
         task = [self.extract_table(table_file, extract_task) for table_file in table_files]
         await asyncio.gather(*task)
+        
+        self.extract_progress.update(extract_task, description='[green]Extracted...')
         self.print_progress.add_task('[green]Extraction completed![/green]')
 
     def run_extraction(self) -> None:

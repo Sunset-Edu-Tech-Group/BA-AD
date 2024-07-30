@@ -66,7 +66,7 @@ class ResourceDownloader:
                     return True
 
             except Exception as e:
-                self.console.log(f'[yellow]Error downloading {fp.name}: {str(e)}[/yellow]')
+                self.console.log(f'[yellow]Error downloading {fp.name} {str(e)}[/yellow]')
                 continue
 
             if attempt < retries - 1:
