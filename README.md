@@ -81,10 +81,14 @@ _alternatively you can open cmd then change directory to the folder_
 
 - Output results
 ![stepnine](baad/public/tutorial/step9.png)
+![stepthirteen](baad/public/tutorial/step13.png)
 
-- Extracting the assetbundles
+- Extracting assetbundles
 ![stepten](baad/public/tutorial/step10.png)
 ![stepeleven](baad/public/tutorial/step11.png)
+
+- Extracting tablebundles
+![steptwelve](baad/public/tutorial/step12.png)
 
 </details>
 
