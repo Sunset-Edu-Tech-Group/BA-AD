@@ -129,16 +129,17 @@ To download the assetsbundles, tablebundles, and media resources we need to init
 
 ```
 > baad download --help
-usage: baad download [-h] [--output OUTPUT] [--limit LIMIT] [--assets] [--tables] [--media] [-a]
+usage: baad download [-h] [--output OUTPUT] [--limit LIMIT] [--catalog CATALOG] [--assets] [--tables] [--media] [-a]
 
 options:
-  -h, --help       show this help message and exit
-  --output OUTPUT  output directory for the downloaded files (default: ./output)
-  --limit LIMIT    set a limit the download limit (default: 5)
-  --assets         download the assetbundles
-  --tables         download the tablebundles
-  --media          download the mediaresources
-  -a, --all        download all game files
+  -h, --help         show this help message and exit
+  --output OUTPUT    output directory for the downloaded files (default: ./output)
+  --limit LIMIT      set a limit the download limit (default: 5)
+  --catalog CATALOG  force change the catalog url (will skip apk download)
+  --assets           download the assetbundles
+  --tables           download the tablebundles
+  --media            download the mediaresources
+  -a, --all          download all game files
 ```
 
 You can pass `--update` to force update the game version.
@@ -167,6 +168,11 @@ Examples:
 - Saves the files using Windows Path style
 ```
 > baad download --media --output C:\Users\User\Documents
+```
+
+- Change the catalog url to a older catalog url
+```
+> baad download --assets --catalog https://prod-clientpatch.bluearchiveyostar.com/r67_jjjg51ngucokd90cuk4l_3
 ```
 
 > [!NOTE]
