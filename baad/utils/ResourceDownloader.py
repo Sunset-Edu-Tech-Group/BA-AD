@@ -10,13 +10,14 @@ from .Progress import create_live_display, create_progress_group
 
 
 class ResourceDownloader:
-    def __init__(self, update: bool = False, output: str | None = None) -> None:
+    def __init__(self, update: bool = False, output: str | None = None, catalog_url: str | None = None) -> None:
         self.root = Path(__file__).parent.parent
         self.output = output or Path.cwd() / 'output'
         self.update = update
+        self.catalog_url = catalog_url
 
         self.semaphore = None
-        self.catalog_parser = CatalogParser()
+        self.catalog_parser = CatalogParser(catalog_url)
         self.categories = {
             'asset': 'AssetBundles',
             'table': 'TableBundles',
@@ -148,8 +149,11 @@ class ResourceDownloader:
         asyncio.run(self._download_all_categories(game_files, categories))
 
     def fetch_catalog_url(self) -> None:
-        ApkParser().download_apk(self.update)
+        if self.catalog_url:
+            self.console.print(f'[cyan]Using provided catalog URL: {self.catalog_url}[/cyan]')
+            return
 
+        ApkParser().download_apk(self.update)
         self.console.print('[cyan]Fetching catalog URL...[/cyan]')
         catalog_url = self.catalog_parser.fetch_catalog_url()
         self.console.print(f'[green]Catalog URL fetched: {catalog_url}[/green]')

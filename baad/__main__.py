@@ -55,6 +55,11 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
         help='set a limit the download limit (default: 5)',
     )
     download.add_argument(
+        '--catalog',
+        type=str,
+        help='force change the catalog url (will skip apk download)',
+    )
+    download.add_argument(
         '--assets',
         action='store_true',
         help='download the assetbundles',
@@ -134,7 +139,11 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
 
 
 def resource_downloader(args) -> ResourceDownloader:
-    downloader_args = {'update': args.update}
+    downloader_args = {
+        'update': args.update,
+        'catalog_url': args.catalog
+    }
+    
     if args.output:
         downloader_args['output'] = args.output
     downloader = ResourceDownloader(**downloader_args)

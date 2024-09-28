@@ -11,9 +11,10 @@ from .CatalogFetcher import catalog_url
 
 
 class CatalogParser:
-    def __init__(self):
+    def __init__(self, catalog_url: str | None = None):
         self.root = Path(__file__).parent.parent
         self.console = Console()
+        self.catalog_url = catalog_url or None
 
     @staticmethod
     def _calculate_crc32(file_path: Path) -> int:
@@ -51,7 +52,7 @@ class CatalogParser:
                 raise SystemExit(1) from e
 
     def fetch_catalog_url(self) -> str:
-        server_api = catalog_url()
+        server_api = self.catalog_url if self.catalog_url else catalog_url()
         server_data = self._fetch_data(server_api, 'serverapi')
         return server_data['ConnectionGroups'][0]['OverrideConnectionGroups'][-1]['AddressablesCatalogUrlRoot']
 
