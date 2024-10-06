@@ -70,5 +70,18 @@ class StatType(object):
     EnhanceElasticArmorRate = 64
     ExDamagedRatioIncrease = 65
     ExDamagedRatioDecrease = 66
-    Max = 67
+    EnhanceExDamageRate = 67
+    ReduceExDamagedRate = 68
+    HealRate = 69
+    HealLightArmorRate = 70
+    HealHeavyArmorRate = 71
+    HealUnarmedRate = 72
+    HealElasticArmorRate = 73
+    HealNormalArmorRate = 74
+    HealedExplosionRate = 75
+    HealedPierceRate = 76
+    HealedMysticRate = 77
+    HealedSonicRate = 78
+    HealedNormalRate = 79
+    Max = 80
 

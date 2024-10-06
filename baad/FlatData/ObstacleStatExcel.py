@@ -122,7 +122,14 @@ class ObstacleStatExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(14)
+    # ObstacleStatExcel
+    def ReduceExDamagedRate(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(15)
 def ObstacleStatExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -182,6 +189,10 @@ def AddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate): builder.PrependI
 def ObstacleStatExcelAddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate):
     """This method is deprecated. Please switch to AddEnhanceNormalArmorRate."""
     return AddEnhanceNormalArmorRate(builder, EnhanceNormalArmorRate)
+def AddReduceExDamagedRate(builder, ReduceExDamagedRate): builder.PrependInt64Slot(14, ReduceExDamagedRate, 0)
+def ObstacleStatExcelAddReduceExDamagedRate(builder, ReduceExDamagedRate):
+    """This method is deprecated. Please switch to AddReduceExDamagedRate."""
+    return AddReduceExDamagedRate(builder, ReduceExDamagedRate)
 def End(builder): return builder.EndObject()
 def ObstacleStatExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

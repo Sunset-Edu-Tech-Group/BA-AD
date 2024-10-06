@@ -2,6 +2,7 @@ import platform
 import re
 import subprocess
 from pathlib import Path
+import keyword
 
 from .Progress import create_live_display, create_progress_group
 
@@ -63,24 +64,30 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         self.live = create_live_display()
         self.progress_group, _, self.extract_progress, _, self.console = create_progress_group()
 
-    @staticmethod
-    def _write_enums_to_fbs(enums: dict, f) -> None:
+        self.python_keywords = set(keyword.kwlist)
+
+    def _write_enums_to_fbs(self, enums: dict, f) -> None:
         for name, enum in enums.items():
-            enum_fields = ',\n    '.join(f'{key} = {value}' for value, key in enum['fields'].items())
+            enum_fields = ',\n    '.join(
+                f'{self._sanitize_enum_key(key)} = {value}'
+                for value, key in enum['fields'].items()
+            )
 
             f.write(f'enum {name}: {enum["format"]}{{\n')
             f.write(f'    {enum_fields}\n')
             f.write('}\n\n')
 
-    @staticmethod
-    def _write_enum_class(name: str, enum: dict, f) -> None:
+    def _sanitize_enum_key(self, key: str) -> str:
+        if key in self.python_keywords or key == 'None':
+            return f'{key}_'
+        return key
+
+    def _write_enum_class(self, name: str, enum: dict, f) -> None:
         f.write(f'class {name}(IntEnum):\n')
 
         for value, key in enum['fields'].items():
-            if key == 'None':
-                key = 'none'
-
-            f.write(f'    {key} = {value}\n')
+            sanitized_key = self._sanitize_enum_key(key)
+            f.write(f'    {sanitized_key} = {value}\n')
         f.write('\n')
 
     @staticmethod
@@ -149,13 +156,13 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
                     if typ.endswith('Length'):
                         typ = typ[:-6]
 
-                    if pname in [typ, 'None']:
+                    if pname in [typ, 'None'] or pname in self.python_keywords:
                         pname += '_'
 
                     if typ not in structs and typ not in enums and typ not in self.types:
                         continue
 
-                if pname in [ptype, 'None']:
+                if pname in [ptype, 'None'] or pname in self.python_keywords:
                     pname += '_'
 
                 ptype = ptype.replace('sbyte', 'ubyte')
@@ -190,7 +197,7 @@ public enum (.{1,128}?) // TypeDefIndex: \d+?
         for pname, ptype in struct.items():
             is_list = False
 
-            if pname == 'None':
+            if pname == 'None' or pname in self.python_keywords:
                 pname += '_'
 
             if ptype.startswith('['):

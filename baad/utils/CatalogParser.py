@@ -5,8 +5,7 @@ from pathlib import Path
 from requests_cache import CachedSession
 from rich.console import Console
 
-from ..lib.MediaParser import MediaCatalog
-from ..lib.TableParser import TableCatalog
+from ..lib.CatalogDecrypter import CatalogDecrypter
 from .CatalogFetcher import catalog_url
 
 
@@ -65,12 +64,12 @@ class CatalogParser:
         self.save_json(self.root / 'public' / 'jp' / 'bundleDownloadInfo.json', bundle_data)
 
         table_data = self._fetch_table_bytes(catalog=server_url)
-        table_catalog = TableCatalog.from_bytes(table_data, server_url)
-        table_catalog.to_json(self.root / 'public' / 'jp' / 'TableCatalog.json')
+        table_catalog = CatalogDecrypter.from_bytes(table_data, server_url, media=False)
+        table_catalog.to_json(self.root / 'public' / 'jp' / 'TableCatalog.json', media=False)
 
         media_data = self._fetch_media_bytes(catalog=server_url)
-        media_catalog = MediaCatalog.from_bytes(media_data, server_url)
-        media_catalog.to_json(self.root / 'public' / 'jp' / 'MediaCatalog.json')
+        media_catalog = CatalogDecrypter.from_bytes(media_data, server_url, media=True)
+        media_catalog.to_json(self.root / 'public' / 'jp' / 'MediaCatalog.json', media=True)
 
     def get_game_files(self) -> dict:
         server_url = self.fetch_catalog_url()
@@ -92,7 +91,7 @@ class CatalogParser:
                     'url': f'{server_url}/TableBundles/{key}',
                     'crc': asset.get('crc', 0),
                 }
-                for key, asset in table_data['Table'].items()
+                for key, asset in table_data['TableBundles'].items()
             ],
             'MediaResources': [
                 {
@@ -100,7 +99,7 @@ class CatalogParser:
                     'path': value['path'],
                     'crc': value.get('crc', 0),
                 }
-                for key, value in media_data['Table'].items()
+                for key, value in media_data['MediaResources'].items()
             ],
         }
 

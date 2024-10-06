@@ -32,6 +32,7 @@ __all__ = [
     'AddressableWhiteListExcel',
     'AddressableWhiteListExcelTable',
     'AimIKType',
+    'AmplifyDoTRemoveCondition',
     'AniEventData',
     'AniStateData',
     'AnimationBlendTable',
@@ -467,6 +468,8 @@ __all__ = [
     'FieldContentStageExcelTable',
     'FieldContentStageRewardExcel',
     'FieldContentStageRewardExcelTable',
+    'FieldCurtainCallFreeModeExcel',
+    'FieldCurtainCallFreeModeExcelTable',
     'FieldDateExcel',
     'FieldDateExcelTable',
     'FieldDialogType',
@@ -1083,6 +1086,7 @@ from .AddressableBlackListExcelTable import AddressableBlackListExcelTable
 from .AddressableWhiteListExcel import AddressableWhiteListExcel
 from .AddressableWhiteListExcelTable import AddressableWhiteListExcelTable
 from .AimIKType import AimIKType
+from .AmplifyDoTRemoveCondition import AmplifyDoTRemoveCondition
 from .AniEventData import AniEventData
 from .AniStateData import AniStateData
 from .AnimationBlendTable import AnimationBlendTable
@@ -1518,6 +1522,8 @@ from .FieldContentStageExcel import FieldContentStageExcel
 from .FieldContentStageExcelTable import FieldContentStageExcelTable
 from .FieldContentStageRewardExcel import FieldContentStageRewardExcel
 from .FieldContentStageRewardExcelTable import FieldContentStageRewardExcelTable
+from .FieldCurtainCallFreeModeExcel import FieldCurtainCallFreeModeExcel
+from .FieldCurtainCallFreeModeExcelTable import FieldCurtainCallFreeModeExcelTable
 from .FieldDateExcel import FieldDateExcel
 from .FieldDateExcelTable import FieldDateExcelTable
 from .FieldDialogType import FieldDialogType

@@ -172,4 +172,5 @@ class MissionCompleteConditionType(object):
     Reset_ClearSpecificDefenseStage = 166
     Reset_ClearCharacterLimitDefense = 167
     Reset_ClearTimeLimitDefenseFromSecond = 168
+    Reset_JoinMultiFloorRaidCount = 169
 

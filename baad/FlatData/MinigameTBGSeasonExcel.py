@@ -220,7 +220,14 @@ class MinigameTBGSeasonExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(28)
+    # MinigameTBGSeasonExcel
+    def MaxDicePlus(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(29)
 def MinigameTBGSeasonExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -336,6 +343,10 @@ def AddLoopThemaIndex(builder, LoopThemaIndex): builder.PrependInt32Slot(27, Loo
 def MinigameTBGSeasonExcelAddLoopThemaIndex(builder, LoopThemaIndex):
     """This method is deprecated. Please switch to AddLoopThemaIndex."""
     return AddLoopThemaIndex(builder, LoopThemaIndex)
+def AddMaxDicePlus(builder, MaxDicePlus): builder.PrependInt32Slot(28, MaxDicePlus, 0)
+def MinigameTBGSeasonExcelAddMaxDicePlus(builder, MaxDicePlus):
+    """This method is deprecated. Please switch to AddMaxDicePlus."""
+    return AddMaxDicePlus(builder, MaxDicePlus)
 def End(builder): return builder.EndObject()
 def MinigameTBGSeasonExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

@@ -296,7 +296,14 @@ class EventContentSeasonExcel(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(36)
+    # EventContentSeasonExcel
+    def ScenarioContentCollectionGroupId(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(37)
 def EventContentSeasonExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -448,6 +455,10 @@ def AddMiniEventShortCutScenarioModeId(builder, MiniEventShortCutScenarioModeId)
 def EventContentSeasonExcelAddMiniEventShortCutScenarioModeId(builder, MiniEventShortCutScenarioModeId):
     """This method is deprecated. Please switch to AddMiniEventShortCutScenarioModeId."""
     return AddMiniEventShortCutScenarioModeId(builder, MiniEventShortCutScenarioModeId)
+def AddScenarioContentCollectionGroupId(builder, ScenarioContentCollectionGroupId): builder.PrependInt64Slot(36, ScenarioContentCollectionGroupId, 0)
+def EventContentSeasonExcelAddScenarioContentCollectionGroupId(builder, ScenarioContentCollectionGroupId):
+    """This method is deprecated. Please switch to AddScenarioContentCollectionGroupId."""
+    return AddScenarioContentCollectionGroupId(builder, ScenarioContentCollectionGroupId)
 def End(builder): return builder.EndObject()
 def EventContentSeasonExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

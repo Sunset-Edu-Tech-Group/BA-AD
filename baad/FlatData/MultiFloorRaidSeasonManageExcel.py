@@ -94,7 +94,14 @@ class MultiFloorRaidSeasonManageExcel(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-def Start(builder): builder.StartObject(10)
+    # MultiFloorRaidSeasonManageExcel
+    def PlayTip(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+def Start(builder): builder.StartObject(11)
 def MultiFloorRaidSeasonManageExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -138,6 +145,10 @@ def AddLevelImgPath(builder, LevelImgPath): builder.PrependUOffsetTRelativeSlot(
 def MultiFloorRaidSeasonManageExcelAddLevelImgPath(builder, LevelImgPath):
     """This method is deprecated. Please switch to AddLevelImgPath."""
     return AddLevelImgPath(builder, LevelImgPath)
+def AddPlayTip(builder, PlayTip): builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PlayTip), 0)
+def MultiFloorRaidSeasonManageExcelAddPlayTip(builder, PlayTip):
+    """This method is deprecated. Please switch to AddPlayTip."""
+    return AddPlayTip(builder, PlayTip)
 def End(builder): return builder.EndObject()
 def MultiFloorRaidSeasonManageExcelEnd(builder):
     """This method is deprecated. Please switch to End."""

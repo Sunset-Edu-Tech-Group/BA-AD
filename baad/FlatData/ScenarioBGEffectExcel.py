@@ -39,34 +39,41 @@ class ScenarioBGEffectExcel(object):
         return None
 
     # ScenarioBGEffectExcel
-    def Scroll(self):
+    def Effect2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # ScenarioBGEffectExcel
+    def Scroll(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioBGEffectExcel
     def ScrollTime(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # ScenarioBGEffectExcel
-    def ScrollFrom(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
     # ScenarioBGEffectExcel
-    def ScrollTo(self):
+    def ScrollFrom(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
-def Start(builder): builder.StartObject(6)
+    # ScenarioBGEffectExcel
+    def ScrollTo(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+def Start(builder): builder.StartObject(7)
 def ScenarioBGEffectExcelStart(builder):
     """This method is deprecated. Please switch to Start."""
     return Start(builder)
@@ -78,19 +85,23 @@ def AddEffect(builder, Effect): builder.PrependUOffsetTRelativeSlot(1, flatbuffe
 def ScenarioBGEffectExcelAddEffect(builder, Effect):
     """This method is deprecated. Please switch to AddEffect."""
     return AddEffect(builder, Effect)
-def AddScroll(builder, Scroll): builder.PrependInt32Slot(2, Scroll, 0)
+def AddEffect2(builder, Effect2): builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(Effect2), 0)
+def ScenarioBGEffectExcelAddEffect2(builder, Effect2):
+    """This method is deprecated. Please switch to AddEffect2."""
+    return AddEffect2(builder, Effect2)
+def AddScroll(builder, Scroll): builder.PrependInt32Slot(3, Scroll, 0)
 def ScenarioBGEffectExcelAddScroll(builder, Scroll):
     """This method is deprecated. Please switch to AddScroll."""
     return AddScroll(builder, Scroll)
-def AddScrollTime(builder, ScrollTime): builder.PrependInt64Slot(3, ScrollTime, 0)
+def AddScrollTime(builder, ScrollTime): builder.PrependInt64Slot(4, ScrollTime, 0)
 def ScenarioBGEffectExcelAddScrollTime(builder, ScrollTime):
     """This method is deprecated. Please switch to AddScrollTime."""
     return AddScrollTime(builder, ScrollTime)
-def AddScrollFrom(builder, ScrollFrom): builder.PrependInt64Slot(4, ScrollFrom, 0)
+def AddScrollFrom(builder, ScrollFrom): builder.PrependInt64Slot(5, ScrollFrom, 0)
 def ScenarioBGEffectExcelAddScrollFrom(builder, ScrollFrom):
     """This method is deprecated. Please switch to AddScrollFrom."""
     return AddScrollFrom(builder, ScrollFrom)
-def AddScrollTo(builder, ScrollTo): builder.PrependInt64Slot(5, ScrollTo, 0)
+def AddScrollTo(builder, ScrollTo): builder.PrependInt64Slot(6, ScrollTo, 0)
 def ScenarioBGEffectExcelAddScrollTo(builder, ScrollTo):
     """This method is deprecated. Please switch to AddScrollTo."""
     return AddScrollTo(builder, ScrollTo)

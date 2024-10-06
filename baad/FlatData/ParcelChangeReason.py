@@ -184,4 +184,6 @@ class ParcelChangeReason(object):
     Raid_FailCompensateReward = 178
     EliminateRaid_FailCompensateReward = 179
     Currency_ExpireChange = 180
+    Conquest_ErosionBattleResult = 181
+    Conquest_EnterErosionBattle = 182
 

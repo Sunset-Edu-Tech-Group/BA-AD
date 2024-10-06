@@ -36,4 +36,8 @@ class EventContentType(object):
     MultiFloorRaid = 30
     MinigameDreamMaker = 31
     MiniGameDefense = 32
+    OpenWebView = 33
+    SpecialMiniEvent = 34
+    ScenarioCollection = 35
+    ScenarioShortcut = 36
 
