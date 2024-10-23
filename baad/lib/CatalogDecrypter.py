@@ -95,16 +95,10 @@ class CatalogDecrypter:
         _ = read_i8()  # Skip 1 byte
         data_size = read_i32()
         data: dict = {}
-
-        if media:
-            for _ in range(data_size):
-                key, value = read_media()
-                data[key] = value
         
-        if not media:
-            for _ in range(data_size):
-                key, value = read_table()
-                data[key] = value
+        for _ in range(data_size):
+            key, value = read_table() if not media else read_media()
+            data[key] = value
 
         return CatalogDecrypter(base_url=base_url, data=data)
 
