@@ -1,1 +1,0 @@
-# TODO: Implement db extracter

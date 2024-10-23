@@ -3,6 +3,7 @@ from zipfile import ZipFile
 
 import cloudscraper
 import requests
+import shutil
 
 from .Progress import create_live_display, create_progress_group
 
@@ -56,7 +57,18 @@ class ApkParser:
     def _force_download(self) -> None:
         response = self._get_response()
         if isinstance(response, requests.Response):
+            self._delete_outdated_files()
             self._download_file(response)
+
+    def _delete_outdated_files(self) -> None:
+        xapk_path = Path(self.apk_path)
+        apk_folder = xapk_path.parent / 'apk'
+        data_folder = xapk_path.parent / 'data'
+
+        for folder in [apk_folder, data_folder]:
+            if folder.exists():
+                shutil.rmtree(folder)
+                self.console.print(f"[yellow]Deleted outdated folder: {folder}[/yellow]")
 
     def _fetch_size(self) -> int:
         try:
