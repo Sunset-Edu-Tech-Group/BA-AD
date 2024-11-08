@@ -81,7 +81,15 @@ _alternatively you can open cmd then change directory to the folder_
 
 ![stepthree](baad/public/tutorial/step3.png)
 
-4. Install the program by typing `pip install .`
+- Install the program using `uv tool install .`
+
+![steptwentytwo](baad/public/tutorial/step22.png)
+
+you can now run it using the `uvx --from ba-ad baad` command
+
+![steptwentythree](baad/public/tutorial/step23.png)
+
+- Install the program by typing `pip install .`
 
 ![stepfour](baad/public/tutorial/step4.png)
 
