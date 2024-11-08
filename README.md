@@ -29,7 +29,7 @@ It downloads them directly from the **Yostar Servers**.
 </details>
 
 ## Installation
-Download and install [`python`](https://www.python.org/downloads/). After that clone this repository
+Download and install [`python`](https://www.python.org/downloads/) and [`uv`](https://docs.astral.sh/uv/getting-started/installation/). After that clone this repository
 
 ```
 git clone https://github.com/Deathemonic/BA-AD
@@ -37,11 +37,31 @@ git clone https://github.com/Deathemonic/BA-AD
 
 or just download as a zip by clicking `Code` > `Download Zip`. Then open `BA-AD` folder in your `Terminal` or `CMD`
 
-Then install it using pip
+
+Then install using `uv`
+```
+uv tool install .
+```
+
+you can now run it using the `uvx` command
+
+```
+uvx --from ba-ad baad
+```
+
+or if you don't want to type the `uvx` command all the time, you can your local bin directory to your [`PATH`](https://docs.astral.sh/uv/concepts/tools/#the-bin-directory) environment. Usually it's located at `{User Folder}/.local/bin`. Once you added it to your `PATH` environment you can now run it just by typing `baad` command.
+
+
+<details>
+  <summary>Install using pip (Click to expand)</summary>
+<br>
 
 ```
 pip install .
 ```
+</details>
+
+<br>
 
 <details>
 	<summary>Tutorial with Screenshots (Click to expand)</summary>

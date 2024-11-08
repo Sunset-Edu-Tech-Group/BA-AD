@@ -11,6 +11,7 @@ update_master.py
 # Distribution / packaging
 .Python
 build/
+*.py[oc]
 develop-eggs/
 dist/
 downloads/
@@ -113,4 +114,8 @@ ruff.toml
 jp/
 gl/
 bin/
+jp/
 output/
+
+# uv
+uv.lock
