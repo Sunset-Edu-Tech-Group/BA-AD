@@ -342,7 +342,7 @@ But you your lazy you can use [Il2CppDumper](https://github.com/Perfare/Il2CppDu
 `libil2cpp.so` is located at extracted the `config.arm64_v8a.apk` then at `lib/arm64-v8a` and the `global-metadata.dat` is located at the extracted `UnityDataAssetPack.apk` then at `assets/bin/Data/Managed/Metadata`.
 
 > [!NOTE]
-> You will face a [ERROR: Can't use auto mode to process file, try manual mode](https://github.com/Perfare/Il2CppDumper?tab=readme-ov-file#error-cant-use-auto-mode-to-process-file-try-manual-mode) by doing this method.
+> You will face a [ERROR: This file may be protected](https://github.com/Perfare/Il2CppDumper?tab=readme-ov-file#error-this-file-may-be-protected) by doing this method.
 
 ### Contributing
 Don't like my [shitty code](https://shitcode.net/latest/language/python) and what to change it? Feel free to contribute by submitting a pull request or issue. Always appreciate the help.
