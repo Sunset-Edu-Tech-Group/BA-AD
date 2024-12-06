@@ -60,6 +60,11 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
         help='force change the catalog url (will skip apk download)',
     )
     download.add_argument(
+        '--filter',
+        type=str,
+        help='filter by name',
+    )
+    download.add_argument(
         '--assets',
         action='store_true',
         help='download the assetbundles',
@@ -141,7 +146,8 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
 def resource_downloader(args) -> ResourceDownloader:
     downloader_args = {
         'update': args.update,
-        'catalog_url': args.catalog
+        'catalog_url': args.catalog,
+        'filter_pattern': args.filter if hasattr(args, 'filter') else None
     }
     
     if args.output:

@@ -10,6 +10,7 @@ dependencies = [
     "cloudscraper>=1.2.71",
     "flatbuffers>=24.3.25",
     "pycryptodome>=3.21.0",
+    "rapidfuzz>=3.10.1",
     "requests-cache>=1.2.1",
     "requests>=2.32.3",
     "rich>=13.9.4",

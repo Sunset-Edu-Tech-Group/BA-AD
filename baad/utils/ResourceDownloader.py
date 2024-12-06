@@ -7,14 +7,16 @@ from aiohttp import ClientError, ClientSession
 from .ApkParser import ApkParser
 from .CatalogParser import CatalogParser
 from .Progress import create_live_display, create_progress_group
+from .CatalogFilter import CatalogFilter
 
 
 class ResourceDownloader:
-    def __init__(self, update: bool = False, output: str | None = None, catalog_url: str | None = None) -> None:
+    def __init__(self, update: bool = False, output: str | None = None, catalog_url: str | None = None, filter_pattern: str | None = None) -> None:
         self.root = Path(__file__).parent.parent
         self.output = output or Path.cwd() / 'output'
         self.update = update
         self.catalog_url = catalog_url
+        self.filter_pattern = filter_pattern
 
         self.semaphore = None
         self.catalog_parser = CatalogParser(catalog_url)
@@ -132,11 +134,22 @@ class ResourceDownloader:
     def _initialize_download(self) -> dict:
         self.fetch_catalog_url()
         self.catalog_parser.fetch_catalogs()
-
         result = self.catalog_parser.get_game_files()
-        self.catalog_parser.save_json(self.root / 'public' / 'jp' / 'GameFiles.json', result)
-
-        return result
+        
+        game_files_path = self.root / 'public' / 'jp' / 'GameFiles.json'
+        self.catalog_parser.save_json(game_files_path, result)
+        
+        if not self.filter_pattern:
+            return result
+            
+        catalog_filter = CatalogFilter(game_files_path)
+        filtered_result = catalog_filter.filter_files(self.filter_pattern)
+        
+        if not any(filtered_result.values()):
+            self.console.print(f"[yellow]No files found matching filter pattern: {self.filter_pattern}[/yellow]")
+            return {}
+        
+        return filtered_result
 
     def download(self, assets: bool = True, tables: bool = True, media: bool = True, limit: int | None = 5) -> None:
         game_files = self._initialize_download()

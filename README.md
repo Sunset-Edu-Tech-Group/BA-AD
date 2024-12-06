@@ -23,6 +23,7 @@ It downloads them directly from the **Yostar Servers**.
 - flatbuffers
 - pycryptodome
 - UnityPy
+- rapidfuzz
 - rich
 - xxhash
 
@@ -169,6 +170,7 @@ options:
   --output OUTPUT    output directory for the downloaded files (default: ./output)
   --limit LIMIT      set a limit the download limit (default: 5)
   --catalog CATALOG  force change the catalog url (will skip apk download)
+  --filter FILTER    filter by name
   --assets           download the assetbundles
   --tables           download the tablebundles
   --media            download the mediaresources
@@ -206,6 +208,11 @@ Examples:
 - Change the catalog url to a older catalog url
 ```
 > baad download --assets --catalog https://prod-clientpatch.bluearchiveyostar.com/r67_jjjg51ngucokd90cuk4l_3
+```
+
+- Just download files that contains "Atsuko" in the name
+```
+> baad download --assets --filter "Atsuko"
 ```
 
 > [!NOTE]
