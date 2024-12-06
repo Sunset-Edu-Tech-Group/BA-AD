@@ -163,7 +163,7 @@ To download the assetsbundles, tablebundles, and media resources we need to init
 
 ```
 > baad download --help
-usage: baad download [-h] [--output OUTPUT] [--limit LIMIT] [--catalog CATALOG] [--assets] [--tables] [--media] [-a]
+usage: baad download [-h] [--output OUTPUT] [--limit LIMIT] [--catalog CATALOG] [--filter FILTER] [--assets] [--tables] [--media] [-a]
 
 options:
   -h, --help         show this help message and exit
