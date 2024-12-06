@@ -1,4 +1,5 @@
 from argparse import ArgumentParser, ArgumentTypeError
+from pathlib import Path
 
 from rich.console import Console
 from rich.traceback import Traceback
@@ -9,6 +10,7 @@ from .utils.FlatbufGenerator import FlatbufGenerator
 from .utils.ResourceDownloader import ResourceDownloader
 from .utils.StudioExtracter import AssetStudioExtracter
 from .utils.TableExtracter import TableExtracter
+from .utils.CatalogList import CatalogList
 
 
 def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
@@ -34,15 +36,20 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
         help='generate the flatbuf schemas',
     )
 
+    search = sub_parser.add_parser(
+        'search',
+        help='search mode',
+    )
+    search.add_argument(
+        '--output',
+        type=str,
+        help='output directory for the downloaded files (default: ./output)',
+    )
+
     download = sub_parser.add_parser(
         'download',
         help='download game files',
     )
-    extract = sub_parser.add_parser(
-        'extract',
-        help='extract game files',
-    )
-
     download.add_argument(
         '--output',
         type=str,
@@ -86,6 +93,10 @@ def arguments() -> tuple:  # sourcery skip: extract-duplicate-method
         help='download all game files',
     )
 
+    extract = sub_parser.add_parser(
+        'extract',
+        help='extract game files',
+    )
     extract.add_argument(
         '--path',
         type=str,
@@ -191,12 +202,22 @@ def extracter(args) -> TableExtracter | AssetExtracter | AssetStudioExtracter | 
 def main() -> None:
     parser, args = arguments()
 
-    if hasattr(args, 'commands') and args.commands == 'download':
-        resource_downloader(args)
+    if not hasattr(args, 'commands'):
         return
 
-    if hasattr(args, 'commands') and args.commands == 'extract':
+    if args.commands == 'download':
+        resource_downloader(args)
+        return
+        
+    if args.commands == 'extract':
         extracter(args)
+        return
+        
+    if args.commands == 'search':
+        root_path = Path(__file__).parent
+        output_path = args.output if hasattr(args, 'output') else None
+        catalog_list = CatalogList(root_path, output_path)
+        catalog_list.show()
         return
 
     if args.update:

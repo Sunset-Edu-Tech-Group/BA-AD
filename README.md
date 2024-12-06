@@ -141,25 +141,92 @@ _alternatively you can open cmd then change directory to the folder_
 
 ```
 > baad --help
-usage: baad [-h] [-v] [-u] [-g] {download,extract} ...
+usage: baad.py [-h] [-v] [-u] [-g] {search,download,extract} ...
 
 Blue Archive Asset Downloader
 
 positional arguments:
-  {download,extract}
-    download          download game files
-    extract           extract game files
+  {search,download,extract}
+    search              search mode
+    download            download game files
+    extract             extract game files
 
 options:
-  -h, --help          show this help message and exit
-  -v, --version       show program's version number and exit
-  -u, --update        force update the apk
-  -g, --generate      generate the flatbuf schema
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
+  -u, --update          force update the apk
+  -g, --generate        generate the flatbuf schemas
 ```
 
 #### Downloading
 
-To download the assetsbundles, tablebundles, and media resources we need to initialize download mode, to do that we pass `download` so it will be like this `baad download`.
+Two ways to download the `AssetBundles`, `TableBundles`, and `MediaResources`, you can use the `search` mode to search the files and download them one by one or you can use the `download` mode to download them all at once.
+
+
+##### Search Mode
+By passing `search` to the command it will initialize the search mode. It will display a telescope like interface to search.
+
+- Press `ESC / Ctrl+C` to exit the search mode. 
+- Press `Up / Down Arrow` to navigate the results.
+- Press `Enter` to download.
+
+
+```
+> baad search --help
+usage: baad search [-h] [--output OUTPUT]
+
+options:
+  -h, --help         show this help message and exit
+  --output OUTPUT    output directory for the downloaded files (default: ./output)
+```
+
+- Preview
+
+```
+> baad search
+╭──────────────────────────────────────────────────────── [242 matches] [Press ESC to exit] ─────────────────────────────────────────────────────────╮
+│ > hina                                                                                                                                             │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│  Category           Name                                                                                                                    Score  │
+│  AssetBundles       assets-_mx-characters-chinatsu_original-_mxdependency_assets_all_846378255.bundle                                       100.0  │
+│  AssetBundles       assets-_mx-characters-hinata_original-_mxdependency_assets_all_2633272979.bundle                                        100.0  │
+│  AssetBundles       assets-_mx-characters-hina_original-_mxdependency_assets_all_2197045057.bundle                                          100.0  │
+│  AssetBundles       assets-_mx-spinecharacters-hinata_spr-_mxdependency-2022-05-12_assets_all_2069167071.bundle                             100.0  │
+│  AssetBundles       assets-_mx-spinecharacters-hina_spr-_mxdependency-2022-05-12_assets_all_2902431980.bundle                               100.0  │
+│  AssetBundles       assets-_mx-spinelobbies-chinatsu_home-_mxdependency-2022-08-05_assets_all_3351844762.bundle                             100.0  │
+│  AssetBundles       assets-_mx-spinelobbies-chinatsu_home-_mxdependency-2024-10-07_assets_all_2446188734.bundle                             100.0  │
+│  AssetBundles       assets-_mx-spinelobbies-hinata_home-_mxdependency-2022-05-12_assets_all_954430367.bundle                                100.0  │
+│  AssetBundles       assets-_mx-spinelobbies-hina_home-_mxdependency-2022-05-12_assets_all_942958369.bundle                                  100.0  │
+│  AssetBundles       cafe-characteranimation-hinata_original-_mxload-2022-05-12_assets_all_3824060714.bundle                                 100.0  │
+│  AssetBundles       cafe-characteranimation-hinata_original-_mxload-2023-01-31_assets_all_84505541.bundle                                   100.0  │
+│  AssetBundles       ch0231_ex1_skillrange_hina-_mxload-2024-05-30_assets_all_3972412721.bundle                                              100.0  │
+│  AssetBundles       character-chinatsu_original-_mxload-2024-05-30_assets_all_3428424620.bundle                                             100.0  │
+│  AssetBundles       character-hinata_original-_mxload-2024-05-30_assets_all_3469200835.bundle                                               100.0  │
+│  AssetBundles       character-hina_original-_mxload-2024-05-30_assets_all_491539302.bundle                                                  100.0  │
+│  AssetBundles       character-npc_hina_original-_mxload-2024-05-30_assets_all_4216052020.bundle                                             100.0  │
+│  AssetBundles       field-animations-hina_original_field-_mxload-2024-01-05_assets_all_802754237.bundle                                     100.0  │
+│  AssetBundles       field-cafe-characteranimation-field_player_hina_original-_mxload-2024-01-05_assets_all_2972041167.bundle                100.0  │
+│  AssetBundles       fx_anim_hina_haloroot-_mxload-2024-05-30_assets_all_1580215221.bundle                                                   100.0  │
+│  AssetBundles       prologdepengroup-assets-_mx-characters-chinatsu_original-_mxprolog-2024-01-05_assets_all_2365528123.bundle              100.0  │
+│  AssetBundles       prologdepengroup-assets-_mx-spinecharacters-chinatsu_spr-_mxprolog-2022-05-12_assets_all_1184923134.bundle              100.0  │
+│  MediaResources     Hina_Battle_Damage_1.ogg                                                                                                100.0  │
+│  MediaResources     Hina_MemorialLobby_4_2.ogg                                                                                              100.0  │
+│  MediaResources     Hina_Battle_Damage_3.ogg                                                                                                100.0  │
+│  MediaResources     Hina_Battle_Damage_2.ogg                                                                                                100.0  │
+│  MediaResources     Hina_Formation_Select.ogg                                                                                               100.0  │
+│  MediaResources     Hina_MemorialLobby_4_1.ogg                                                                                              100.0  │
+│  MediaResources     Hina_Battle_BuffSelf_1.ogg                                                                                              100.0  │
+│  MediaResources     Hina_Season_Birthday_Player.ogg                                                                                         100.0  │
+│  MediaResources     Hina_Tactic_Defeat_1.ogg                                                                                                100.0  │
+│                                                                                                                                                    │
+│                                                                                                                                                    │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
+##### Download Mode
+By passing `download` to the command it will initialize the download mode. This is quite flexible than search mode because it alows you to control the _limitation of concurrent download_, _catalog url_, and _filter_.
+
 
 ```
 > baad download --help
