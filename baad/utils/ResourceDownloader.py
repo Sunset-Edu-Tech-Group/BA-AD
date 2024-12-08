@@ -131,7 +131,7 @@ class ResourceDownloader:
             if category in categories:
                 await self._download_category(files, Path(self.output) / category)
 
-    def _initialize_download(self) -> dict:
+    def initialize_download(self) -> dict:
         self.fetch_catalog_url()
         self.catalog_parser.fetch_catalogs()
         result = self.catalog_parser.get_game_files()
@@ -152,7 +152,7 @@ class ResourceDownloader:
         return filtered_result
 
     def download(self, assets: bool = True, tables: bool = True, media: bool = True, limit: int | None = 5) -> None:
-        game_files = self._initialize_download()
+        game_files = self.initialize_download()
 
         categories = [
             self.categories[cat] for cat, enabled in [('asset', assets), ('table', tables), ('media', media)] if enabled

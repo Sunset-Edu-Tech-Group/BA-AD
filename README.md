@@ -378,8 +378,7 @@ Well anything you want, you can use assetbundles to extract the chibi models and
 ![stepsixteen](baad/public/tutorial/step16.png)
 
 - Or you can port the model to [Source](https://en.wikipedia.org/wiki/Source_(game_engine)) to use with **Gmod** or **Source Film Maker**
-![stepseventeen](baad/public/tutorial/step17.png)
-_I know it looks shit but it works_
+![stepseventeen](baad/public/tutorial/step24.png)
 
 
 2. You can use the extracted tablebundles to view the game database

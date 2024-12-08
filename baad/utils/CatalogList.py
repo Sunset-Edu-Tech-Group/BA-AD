@@ -25,8 +25,14 @@ class CatalogList:
         self.selected_index = 0
         self.scroll_offset = 0
         self.visible_items = self.console.height - 8
+        self.downloader = ResourceDownloader(output=output_path)
+        
+        game_files_path = self.root / 'public' / 'jp' / 'GameFiles.json'
+        if not game_files_path.exists():
+            self.console.print("[yellow]Initializing game files...[/yellow]")
+            self.downloader.initialize_download()
+            
         self.all_items = self._load_all_items()
-        self.downloader = ResourceDownloader(output_path)
         
     def _load_catalogs(self) -> Dict[str, List[str]]:
         paths = {
@@ -209,7 +215,7 @@ class CatalogList:
 
         live.stop()
 
-        game_files = self.downloader._initialize_download()
+        game_files = self.downloader.initialize_download()
         
         selected_file = None
         category_key = category if category in ['AssetBundles', 'MediaResources', 'TableBundles'] else None
@@ -229,15 +235,12 @@ class CatalogList:
                 break
 
         if selected_file:
-            self.console.print(f"\n[cyan]Downloading {name}...[/cyan]")
-        
             single_file = {category_key: [selected_file]}    
             asyncio.run(self.downloader._download_all_categories(
                 single_file, 
                 [category_key]
             ))
-            
-            self.console.print("[green]Download complete![/green]")
+
             self._get_char()
         
         live.start()
