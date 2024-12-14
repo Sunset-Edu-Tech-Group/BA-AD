@@ -11,54 +11,35 @@ It downloads them directly from the **Yostar Servers**.
 - Python 3.10+
 - .Net Runtime 6.0 (If you are using GNU/Linux or MacOS)
 
-<details>
-  <summary>Libraries Used (Click to expand)</summary>
-<br>
-
-- aiohttp
-- aiofiles
-- requests
-- requests-cache
-- cloudscraper
-- flatbuffers
-- pycryptodome
-- UnityPy
-- rapidfuzz
-- rich
-- xxhash
-
-</details>
-
 ## Installation
-Download and install [`python`](https://www.python.org/downloads/) and [`uv`](https://docs.astral.sh/uv/getting-started/installation/). After that clone this repository
-
-```
-git clone https://github.com/Deathemonic/BA-AD
-```
-
-or just download as a zip by clicking `Code` > `Download Zip`. Then open `BA-AD` folder in your `Terminal` or `CMD`
+Before doing anything, make sure you have [`git`](https://git-scm.com/downloads) installed.
 
 
-Then install using `uv`
-```
-uv tool install .
-```
+- Windows (You might to close and reopen powershell after installing `uv`):
 
-you can now run it using the `uvx` command
+```sh
+# Install UV
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-```
-uvx --from ba-ad baad
+# Install Blue Archive Asset Downloader
+uv tool install git+github.com/Deathemonic/BA-AD
 ```
 
-or if you don't want to type the `uvx` command all the time, you can your local bin directory to your [`PATH`](https://docs.astral.sh/uv/concepts/tools/#the-bin-directory) environment. Usually it's located at `{User Folder}/.local/bin`. Once you added it to your `PATH` environment you can now run it just by typing `baad` command.
+- Linux or MacOS:
+```sh
+# Install UV
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
+# Install Blue Archive Asset Downloader
+uv tool install git+github.com/Deathemonic/BA-AD
+```
 
 <details>
   <summary>Install using pip (Click to expand)</summary>
 <br>
 
 ```
-pip install .
+pip install git+github.com/Deathemonic/BA-AD
 ```
 </details>
 
@@ -67,6 +48,8 @@ pip install .
 <details>
 	<summary>Tutorial with Screenshots (Click to expand)</summary>
 <br>
+
+Before doing anything, make sure you have [`uv`](https://github.com/astral-sh/uv?tab=readme-ov-file#installation) installed.
 
 1. Download the repository files
 

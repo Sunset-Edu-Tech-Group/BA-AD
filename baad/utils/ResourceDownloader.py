@@ -136,7 +136,7 @@ class ResourceDownloader:
         self.catalog_parser.fetch_catalogs()
         result = self.catalog_parser.get_game_files()
         
-        game_files_path = self.root / 'public' / 'jp' / 'GameFiles.json'
+        game_files_path = self.catalog_parser.cache_dir / 'GameFiles.json'
         self.catalog_parser.save_json(game_files_path, result)
         
         if not self.filter_pattern:

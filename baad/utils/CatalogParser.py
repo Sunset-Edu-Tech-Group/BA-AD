@@ -4,7 +4,9 @@ from pathlib import Path
 
 from requests_cache import CachedSession
 from rich.console import Console
+from platformdirs import user_cache_dir
 
+from .. import __app_name__, __app_author__
 from ..lib.CatalogDecrypter import CatalogDecrypter
 from .CatalogFetcher import catalog_url
 
@@ -12,6 +14,8 @@ from .CatalogFetcher import catalog_url
 class CatalogParser:
     def __init__(self, catalog_url: str | None = None):
         self.root = Path(__file__).parent.parent
+        self.cache_dir = Path(user_cache_dir(__app_name__, __app_author__))
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
         self.console = Console()
         self.catalog_url = catalog_url or None
 
@@ -61,22 +65,22 @@ class CatalogParser:
         self.console.print('[cyan]Fetching catalogs...[/cyan]')
 
         bundle_data = self._fetch_data(f'{server_url}/Android/bundleDownloadInfo.json', 'catalogurl')
-        self.save_json(self.root / 'public' / 'jp' / 'bundleDownloadInfo.json', bundle_data)
+        self.save_json(self.cache_dir / 'bundleDownloadInfo.json', bundle_data)
 
         table_data = self._fetch_table_bytes(catalog=server_url)
         table_catalog = CatalogDecrypter.from_bytes(table_data, server_url, media=False)
-        table_catalog.to_json(self.root / 'public' / 'jp' / 'TableCatalog.json', media=False)
+        table_catalog.to_json(self.cache_dir / 'TableCatalog.json', media=False)
 
         media_data = self._fetch_media_bytes(catalog=server_url)
         media_catalog = CatalogDecrypter.from_bytes(media_data, server_url, media=True)
-        media_catalog.to_json(self.root / 'public' / 'jp' / 'MediaCatalog.json', media=True)
+        media_catalog.to_json(self.cache_dir / 'MediaCatalog.json', media=True)
 
     def get_game_files(self) -> dict:
         server_url = self.fetch_catalog_url()
 
-        bundle_data = self._load_json(self.root / 'public' / 'jp' / 'bundleDownloadInfo.json')
-        table_data = self._load_json(self.root / 'public' / 'jp' / 'TableCatalog.json')
-        media_data = self._load_json(self.root / 'public' / 'jp' / 'MediaCatalog.json')
+        bundle_data = self._load_json(self.cache_dir / 'bundleDownloadInfo.json')
+        table_data = self._load_json(self.cache_dir / 'TableCatalog.json')
+        media_data = self._load_json(self.cache_dir / 'MediaCatalog.json')
 
         return {
             'AssetBundles': [

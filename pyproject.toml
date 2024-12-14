@@ -9,6 +9,7 @@ dependencies = [
     "aiohttp>=3.10.10",
     "cloudscraper>=1.2.71",
     "flatbuffers>=24.3.25",
+    "platformdirs>=4.3.6",
     "pycryptodome>=3.21.0",
     "rapidfuzz>=3.10.1",
     "requests-cache>=1.2.1",

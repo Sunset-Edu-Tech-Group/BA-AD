@@ -27,7 +27,7 @@ class CatalogList:
         self.visible_items = self.console.height - 8
         self.downloader = ResourceDownloader(output=output_path)
         
-        game_files_path = self.root / 'public' / 'jp' / 'GameFiles.json'
+        game_files_path = self.downloader.catalog_parser.cache_dir / 'GameFiles.json'
         if not game_files_path.exists():
             self.console.print("[yellow]Initializing game files...[/yellow]")
             self.downloader.initialize_download()
@@ -35,10 +35,11 @@ class CatalogList:
         self.all_items = self._load_all_items()
         
     def _load_catalogs(self) -> Dict[str, List[str]]:
+        cache_dir = self.downloader.catalog_parser.cache_dir
         paths = {
-            'AssetBundles': (self.root / 'public/jp/bundleDownloadInfo.json', 'BundleFiles'),
-            'MediaResources': (self.root / 'public/jp/MediaCatalog.json', 'MediaResources'),
-            'TableBundles': (self.root / 'public/jp/TableCatalog.json', 'TableBundles')
+            'AssetBundles': (cache_dir / 'bundleDownloadInfo.json', 'BundleFiles'),
+            'MediaResources': (cache_dir / 'MediaCatalog.json', 'MediaResources'),
+            'TableBundles': (cache_dir / 'TableCatalog.json', 'TableBundles')
         }
         
         return {
