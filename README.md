@@ -22,7 +22,7 @@ Before doing anything, make sure you have [`git`](https://git-scm.com/downloads)
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 # Install Blue Archive Asset Downloader
-uv tool install git+github.com/Deathemonic/BA-AD
+uv tool install git+https://github.com/Deathemonic/BA-AD
 ```
 
 - Linux or MacOS:
@@ -31,15 +31,15 @@ uv tool install git+github.com/Deathemonic/BA-AD
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Install Blue Archive Asset Downloader
-uv tool install git+github.com/Deathemonic/BA-AD
+uv tool install git+https://github.com/Deathemonic/BA-AD
 ```
 
 <details>
   <summary>Install using pip (Click to expand)</summary>
 <br>
 
-```
-pip install git+github.com/Deathemonic/BA-AD
+```sh
+pip install git+https://github.com/Deathemonic/BA-AD
 ```
 </details>
 
