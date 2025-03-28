@@ -1,9 +1,11 @@
 use crate::crypto::table_encryption::table_encryption_service;
 use crate::helpers::file::FileManager;
-use crate::utils::apk::{ApiData, RegionData};
+use crate::utils::apk::{ApiData, RegionData, GlobalRegionData};
 
 use anyhow::{Context, Result};
 use base64::{Engine, engine::general_purpose};
+use regex::Regex;
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -12,6 +14,9 @@ const GAME_CONFIG_PATTERN: &[u8] = &[
     0x92, 0x03, 0x00, 0x00,
 ];
 
+const PLAYSTORE_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive&hl=in&gl=US";
+const API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
+
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]
 pub struct GameMainConfig {
@@ -19,6 +24,24 @@ pub struct GameMainConfig {
     pub default_connection_group: String,
     pub skip_tutorial: String,
     pub language: String,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct ApiResponse {
+    pub api_version: String,
+    pub market_game_id: String,
+    pub latest_build_version: String,
+    pub latest_build_number: String,
+    pub min_build_version: String,
+    pub min_build_number: String,
+    pub patch: Patch,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct Patch {
+    pub patch_version: i32,
+    pub resource_path: String,
+    pub bdiff_path: Vec<HashMap<String, String>>,
 }
 
 impl GameMainConfig {
@@ -68,11 +91,15 @@ impl GameMainConfig {
 
 pub struct CatalogFetcher<'a> {
     file_manager: &'a FileManager,
+    client: Client,
 }
 
 impl<'a> CatalogFetcher<'a> {
     pub fn new(file_manager: &'a FileManager) -> Self {
-        Self { file_manager }
+        Self { 
+            file_manager,
+            client: Client::new(),
+        }
     }
 
     fn find_game_config(&self) -> Result<Option<Vec<u8>>> {
@@ -101,15 +128,8 @@ impl<'a> CatalogFetcher<'a> {
         Ok(None)
     }
 
-    pub fn get_catalog_url(&self) -> Result<String> {
-        let config_data: Vec<u8> = self
-            .find_game_config()?
-            .ok_or_else(|| anyhow::anyhow!("Game config not found"))?;
-
-        let config: GameMainConfig = GameMainConfig::from_bytes(&config_data)?;
-        
-        // Load existing API data or create new
-        let mut api_data = if self.file_manager.file_exists("api_data.json") {
+    pub fn save_catalog_url(&self, catalog_url: &str, region: &str, version: Option<&str>) -> Result<()> {
+        let mut api_data: ApiData = if self.file_manager.file_exists("api_data.json") {
             self.file_manager.load_json::<ApiData>("api_data.json")?
         } else {
             ApiData {
@@ -117,17 +137,71 @@ impl<'a> CatalogFetcher<'a> {
                     version: String::new(),
                     catalog_url: String::new(),
                 },
-                global: RegionData {
+                global: GlobalRegionData {
                     version: String::new(),
-                    catalog_url: String::new(),
+                    addressable_url: String::new(),
                 },
             }
         };
 
-        // Update the catalog URL
-        api_data.japan.catalog_url = config.server_info_data_url.clone();
-        self.file_manager.save_json("api_data.json", &api_data)?;
+        match region {
+            "japan" => api_data.japan.catalog_url = catalog_url.to_string(),
+            "global" => {
+                api_data.global.addressable_url = catalog_url.to_string();
+                if let Some(ver) = version {
+                    api_data.global.version = ver.to_string();
+                }
+            }
+            _ => return Err(anyhow::anyhow!("Invalid region: {}", region)),
+        }
 
+        self.file_manager.save_json("api_data.json", &api_data)?;
+        Ok(())
+    }
+
+    pub async fn get_catalog_url(&self, region: &str) -> Result<String> {
+        match region {
+            "japan" => self.get_japan_catalog_url(),
+            "global" => self.get_global_catalog_url().await,
+            _ => Err(anyhow::anyhow!("Invalid region: {}", region)),
+        }
+    }
+
+    fn get_japan_catalog_url(&self) -> Result<String> {
+        let config_data: Vec<u8> = self
+            .find_game_config()?
+            .ok_or_else(|| anyhow::anyhow!("Game config not found"))?;
+
+        let config: GameMainConfig = GameMainConfig::from_bytes(&config_data)?;
+        self.save_catalog_url(&config.server_info_data_url, "japan", None)?;
         Ok(config.server_info_data_url)
+    }
+    
+    async fn get_global_catalog_url(&self) -> Result<String> {
+        let version: String = self.get_global_version().await?;
+        let build_number: &str = version.split('.').last().unwrap();
+        
+        let api_response: ApiResponse = self.client
+            .post(API_URL)
+            .json(&serde_json::json!({
+                "market_game_id": "com.nexon.bluearchive",
+                "market_code": "playstore",
+                "curr_build_version": version,
+                "curr_build_number": build_number
+            }))
+            .send()
+            .await?
+            .json::<ApiResponse>()
+            .await?;
+
+        self.save_catalog_url(&api_response.patch.resource_path, "global", Some(&version))?;
+        Ok(api_response.patch.resource_path)
+    }
+
+    async fn get_global_version(&self) -> Result<String> {
+        let regex_version: Regex = Regex::new(r"\d{1}\.\d{2}\.\d{6}")?;
+        let res: String = self.client.get(PLAYSTORE_URL).send().await?.text().await?;
+        let version: String = regex_version.find(&res).unwrap().as_str().to_string();
+        Ok(version)
     }
 }

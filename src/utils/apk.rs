@@ -5,6 +5,7 @@ use anyhow::{Context, Result, anyhow};
 use regex::Regex;
 use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::{Client, Response};
+use serde::{Deserialize, Serialize};
 use std::fs;
 use std::fs::File;
 use std::io::{self, Cursor, Read, Seek, Write};
@@ -12,39 +13,46 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use zip::ZipArchive;
-use serde::{Deserialize, Serialize};
 
 pub const APK_DOWNLOAD_URL_REGEX: &str = r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))";
 pub const APK_VERSION_REGEX: &str = r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)";
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct ApiData {
-    pub japan: RegionData,
-    pub global: RegionData,
+pub struct RegionData {
+    pub version: String,
+    #[serde(rename = "catalog_url")]
+    pub catalog_url: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct RegionData {
+pub struct GlobalRegionData {
     pub version: String,
-    pub catalog_url: String,
+    #[serde(rename = "addressable_url")]
+    pub addressable_url: String,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ApiData {
+    pub japan: RegionData,
+    pub global: GlobalRegionData,
 }
 
 pub struct ApkConfig {
     pub version_url: String,
-    pub apk_dir: String,
-    pub apk_filename: String,
+    pub apk_path: String,
     pub api_data_filename: String,
     pub asset_filter: String,
+    pub region: String,
 }
 
 impl Default for ApkConfig {
     fn default() -> Self {
         Self {
             version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
-            apk_dir: "apk".to_string(),
-            apk_filename: "BlueArchive.xapk".to_string(),
+            apk_path: "apk/BlueArchive.xapk".to_string(),
             api_data_filename: "api_data.json".to_string(),
             asset_filter: "assets/bin/Data/".to_string(),
+            region: "japan".to_string(),
         }
     }
 }
@@ -78,17 +86,21 @@ impl<'a> ApkParser<'a> {
     }
 
     async fn check_version(&self, force_update: bool) -> Result<Option<String>> {
-        let mut api_data = if self.file_manager.file_exists(&self.config.api_data_filename) {
-            self.file_manager.load_json::<ApiData>(&self.config.api_data_filename)?
+        let mut api_data = if self
+            .file_manager
+            .file_exists(&self.config.api_data_filename)
+        {
+            self.file_manager
+                .load_json::<ApiData>(&self.config.api_data_filename)?
         } else {
             ApiData {
                 japan: RegionData {
                     version: String::new(),
                     catalog_url: String::new(),
                 },
-                global: RegionData {
+                global: GlobalRegionData {
                     version: String::new(),
-                    catalog_url: String::new(),
+                    addressable_url: String::new(),
                 },
             }
         };
@@ -110,13 +122,14 @@ impl<'a> ApkParser<'a> {
         }
 
         api_data.japan.version = new_version.clone();
-        self.file_manager.save_json(&self.config.api_data_filename, &api_data)?;
+        self.file_manager
+            .save_json(&self.config.api_data_filename, &api_data)?;
 
         Ok(Some(new_version))
     }
 
     fn extract_version(&self, body: &str) -> Result<String> {
-    let re_version: Regex = Regex::new(APK_VERSION_REGEX).unwrap();
+        let re_version: Regex = Regex::new(APK_VERSION_REGEX).unwrap();
         re_version
             .find(body)
             .map(|m| m.as_str().to_string())
@@ -134,7 +147,6 @@ impl<'a> ApkParser<'a> {
     async fn prepare_download(&self, url: &str) -> Result<(u64, Response)> {
         let response: Response = self.client.get(url).send().await?;
         let total_size: u64 = response.content_length().unwrap_or(0);
-        println!("Download size: {}", FileManager::format_size(total_size));
         Ok((total_size, response))
     }
 
@@ -165,30 +177,27 @@ impl<'a> ApkParser<'a> {
         Ok(())
     }
 
-    async fn download_file(&self, url: &str, total_size: u64) -> Result<()> {
+    async fn download_file(&self, url: &str, total_size: u64, output_path: &PathBuf) -> Result<()> {
         let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
-        let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_filename);
-        let file: File = File::create(&apk_path)?;
+        let file: File = File::create(output_path)?;
         let file: Arc<Mutex<File>> = Arc::new(Mutex::new(file));
 
         const CHUNK_SIZE: u64 = 1024 * 1024;
         let num_chunks: u64 = (total_size + CHUNK_SIZE - 1) / CHUNK_SIZE;
-        let mut tasks: Vec<tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>>> =
-            Vec::new();
+        let mut tasks: Vec<tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>>> = Vec::new();
 
         for i in 0..num_chunks {
             let start: u64 = i * CHUNK_SIZE;
             let end: u64 = std::cmp::min(start + CHUNK_SIZE, total_size);
-            
+
             let client: Client = self.client.clone();
             let url: String = url.to_string();
             let progress: Arc<DownloadProgress> = Arc::clone(&progress);
             let file: Arc<Mutex<File>> = Arc::clone(&file);
 
-            let task: tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>> =
-                tokio::spawn(async move {
-                    Self::download_chunk(client, url, start, end, progress, file).await
-                });
+            let task: tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>> = tokio::spawn(async move {
+                Self::download_chunk(client, url, start, end, progress, file).await
+            });
 
             tasks.push(task);
         }
@@ -204,17 +213,17 @@ impl<'a> ApkParser<'a> {
     pub async fn download_apk(&self, force_update: bool) -> Result<()> {
         println!("Checking for updates");
 
-        let apk_path = self.file_manager.create_dir(&self.config.apk_dir)?;
+        let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_path);
+        self.file_manager.create_dir(apk_path.parent().unwrap().to_str().unwrap())?;
 
         let new_version: String = match self.check_version(force_update).await? {
             Some(version) => version,
             None => return Ok(()),
         };
 
-        let apk_filepath = apk_path.join(&self.config.apk_filename);
-        if self.file_manager.file_exists(&apk_filepath.to_string_lossy()) {
+        if self.file_manager.file_exists(&apk_path.to_string_lossy()) {
             println!("Removing existing APK...");
-            self.file_manager.delete_file(&apk_filepath.to_string_lossy())?;
+            self.file_manager.delete_file(&apk_path.to_string_lossy())?;
         }
 
         if force_update {
@@ -229,62 +238,64 @@ impl<'a> ApkParser<'a> {
 
         println!("Downloading app");
         let (total_size, _): (u64, Response) = self.prepare_download(&download_url).await?;
-        self.download_file(&download_url, total_size).await?;
+        self.download_file(&download_url, total_size, &apk_path).await?;
 
         println!("Finished downloading app");
         Ok(())
     }
 
     pub fn extract_apk(&self) -> Result<()> {
-    println!("Extracting app");
+        println!("Extracting app");
 
-        let apk_path: PathBuf = self.file_manager.data_path("apk").join(&self.config.apk_filename);
-    let mut archive: ZipArchive<File> = ZipArchive::new(
-        File::open(&apk_path).with_context(|| format!("{} not found", apk_path.display()))?,
-    )
-    .with_context(|| "Failed to open archive")?;
+        let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_path);
+        let mut archive: ZipArchive<File> = ZipArchive::new(
+            File::open(&apk_path).with_context(|| format!("{} not found", apk_path.display()))?,
+        )
+        .with_context(|| "Failed to open archive")?;
 
         let mut data_apk: zip::read::ZipFile<'_> = match archive.by_name("UnityDataAssetPack.apk") {
-        Ok(file) => file,
-        Err(_) => {
-                return Err(anyhow!("UnityDataAssetPack.apk not found in XAPK"));
-        }
-    };
+            Ok(file) => file,
+            Err(_) => {
+                return Err(anyhow!("UnityDataAssetPack.apk not found"));
+            }
+        };
 
-    let mut buf: Vec<u8> = Vec::new();
+        let mut buf: Vec<u8> = Vec::new();
         data_apk
-        .read_to_end(&mut buf)
-        .with_context(|| "Failed to read UnityDataAssetPack")?;
-    let mut cursor: Cursor<Vec<u8>> = Cursor::new(buf);
+            .read_to_end(&mut buf)
+            .with_context(|| "Failed to read UnityDataAssetPack")?;
+        let mut cursor: Cursor<Vec<u8>> = Cursor::new(buf);
 
-    let mut inner_archive: ZipArchive<&mut Cursor<Vec<u8>>> =
-        ZipArchive::new(&mut cursor).with_context(|| "Failed to open UnityDataAssetPack")?;
+        let mut inner_archive: ZipArchive<&mut Cursor<Vec<u8>>> =
+            ZipArchive::new(&mut cursor).with_context(|| "Failed to open UnityDataAssetPack")?;
 
         let output_path: PathBuf = self.file_manager.create_dir("data")?;
 
-    for i in 0..inner_archive.len() {
+        for i in 0..inner_archive.len() {
             let mut file: zip::read::ZipFile<'_> = inner_archive.by_index(i)?;
             if !file.name().starts_with(&self.config.asset_filter) {
-            continue;
-        }
+                continue;
+            }
 
-            let relative_path = file.name().strip_prefix(&self.config.asset_filter)
+            let relative_path = file
+                .name()
+                .strip_prefix(&self.config.asset_filter)
                 .ok_or_else(|| anyhow!("Failed to strip prefix from {}", file.name()))?;
 
             let outpath: PathBuf = output_path.join(relative_path);
 
-        if let Some(p) = outpath.parent() {
-            if !p.exists() {
-                fs::create_dir_all(p).with_context(|| "Failed to create directory")?;
+            if let Some(p) = outpath.parent() {
+                if !p.exists() {
+                    fs::create_dir_all(p).with_context(|| "Failed to create directory")?;
+                }
             }
+
+            let mut outfile: File = File::create(&outpath)
+                .with_context(|| format!("Failed to create file: {}", outpath.display()))?;
+            io::copy(&mut file, &mut outfile).with_context(|| "Failed to copy file")?;
         }
 
-        let mut outfile: File = File::create(&outpath)
-            .with_context(|| format!("Failed to create file: {}", outpath.display()))?;
-        io::copy(&mut file, &mut outfile).with_context(|| "Failed to copy file")?;
-    }
-
-    println!("Finished extracting app");
-    Ok(())
+        println!("Finished extracting app");
+        Ok(())
     }
 }

@@ -16,13 +16,13 @@ async fn main() -> Result<()> {
 
     if args.update {
         let parser: utils::apk::ApkParser<'_> = utils::apk::ApkParser::new(&file_manager)?;
-
-        let catalog_url: String = utils::catalog_fetcher::CatalogFetcher::new(&file_manager).get_catalog_url()?;
-        println!("Catalog URL: {}", catalog_url);
         
         // parser.download_apk(true).await?;
         // parser.extract_apk()?;
 
+        let catalog_fetcher: utils::catalog_fetcher::CatalogFetcher<'_> = utils::catalog_fetcher::CatalogFetcher::new(&file_manager);
+        catalog_fetcher.get_catalog_url("japan").await?;
+        catalog_fetcher.get_catalog_url("global").await?;
 
         return Ok(());
     }
