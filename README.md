@@ -1,9 +1,27 @@
-# BA-AD is getting rusty
+<div align="center">
+  <img src="resources/github/archive.png" width="500px" alt="logo">
+  <h1>Blue Archive - Asset Downloader (Rust)</h1>
+</div>
 
-This is a WIP of porting BA-AD to rust
+This is a WIP port of BA-AD to rust. It will be blazingly fast 🚀*.
 
 
-Currently this doesn't do anything, it just downloads the latest JP apk.
+Currently this doesn't do anything, it just fetches catalogs.
+
+
+## Building
+1. Install [rustup](https://rustup.rs)
+2. Clone this repository
+```sh
+git clone https://github.com/Deathemonic/BA-AD -b rust
+```
+3. Build using `cargo`
+```sh
+cargo build
+```
+
+
+### FAQ
 
 
 Why the switch to rust?

@@ -86,7 +86,7 @@ impl<'a> ApkParser<'a> {
     }
 
     async fn check_version(&self, force_update: bool) -> Result<Option<String>> {
-        let mut api_data = if self
+        let mut api_data: ApiData = if self
             .file_manager
             .file_exists(&self.config.api_data_filename)
         {
