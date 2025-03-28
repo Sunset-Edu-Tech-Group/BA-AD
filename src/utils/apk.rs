@@ -1,9 +1,10 @@
+use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
 use crate::helpers::file::FileManager;
+use crate::helpers::json;
 use crate::helpers::progress::DownloadProgress;
 
 use anyhow::{Context, Result, anyhow};
 use regex::Regex;
-use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::fs;
@@ -14,14 +15,13 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 use zip::ZipArchive;
 
-pub const APK_DOWNLOAD_URL_REGEX: &str = r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))";
-pub const APK_VERSION_REGEX: &str = r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)";
-
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RegionData {
     pub version: String,
     #[serde(rename = "catalog_url")]
     pub catalog_url: String,
+    #[serde(rename = "addressable_url")]
+    pub addressable_url: String,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -37,80 +37,28 @@ pub struct ApiData {
     pub global: GlobalRegionData,
 }
 
-pub struct ApkConfig {
-    pub version_url: String,
-    pub apk_path: String,
-    pub api_data_filename: String,
-    pub asset_filter: String,
-    pub region: String,
-}
-
-impl Default for ApkConfig {
-    fn default() -> Self {
-        Self {
-            version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
-            apk_path: "apk/BlueArchive.xapk".to_string(),
-            api_data_filename: "api_data.json".to_string(),
-            asset_filter: "assets/bin/Data/".to_string(),
-            region: "japan".to_string(),
-        }
-    }
-}
-
-fn http_headers() -> HeaderMap {
-    let mut headers: HeaderMap = HeaderMap::new();
-    headers.insert("x-cv", HeaderValue::from_static("3172501"));
-    headers.insert("x-sv", HeaderValue::from_static("29"));
-    headers.insert(
-        "x-abis",
-        HeaderValue::from_static("arm64-v8a,armeabi-v7a,armeabi"),
-    );
-    headers.insert("x-gp", HeaderValue::from_static("1"));
-    headers
-}
-
 pub struct ApkParser<'a> {
     client: Client,
     file_manager: &'a FileManager,
-    config: ApkConfig,
+    config: RegionConfig,
 }
 
 impl<'a> ApkParser<'a> {
-    pub fn new(file_manager: &'a FileManager) -> Result<Self> {
+    pub fn new(file_manager: &'a FileManager, region: &str) -> Result<Self> {
         let client: Client = Client::builder().default_headers(http_headers()).build()?;
         Ok(Self {
             client,
             file_manager,
-            config: ApkConfig::default(),
+            config: RegionConfig::new(region),
         })
     }
 
     async fn check_version(&self, force_update: bool) -> Result<Option<String>> {
-        let mut api_data: ApiData = if self
-            .file_manager
-            .file_exists(&self.config.api_data_filename)
-        {
-            self.file_manager
-                .load_json::<ApiData>(&self.config.api_data_filename)?
-        } else {
-            ApiData {
-                japan: RegionData {
-                    version: String::new(),
-                    catalog_url: String::new(),
-                },
-                global: GlobalRegionData {
-                    version: String::new(),
-                    addressable_url: String::new(),
-                },
-            }
-        };
+        let api_data = json::get_api_data(self.file_manager)?;
 
         let versions_response: Response = self.client.get(&self.config.version_url).send().await?;
         if !versions_response.status().is_success() {
-            return Err(anyhow!(
-                "Failed to get versions: {}",
-                versions_response.status()
-            ));
+            return Err(anyhow!("Failed to get versions: {}", versions_response.status()));
         }
 
         let body: String = versions_response.text().await?;
@@ -121,9 +69,7 @@ impl<'a> ApkParser<'a> {
             return Ok(None);
         }
 
-        api_data.japan.version = new_version.clone();
-        self.file_manager
-            .save_json(&self.config.api_data_filename, &api_data)?;
+        json::update_japan_version(self.file_manager, &new_version)?;
 
         Ok(Some(new_version))
     }
@@ -195,9 +141,8 @@ impl<'a> ApkParser<'a> {
             let progress: Arc<DownloadProgress> = Arc::clone(&progress);
             let file: Arc<Mutex<File>> = Arc::clone(&file);
 
-            let task: tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>> = tokio::spawn(async move {
-                Self::download_chunk(client, url, start, end, progress, file).await
-            });
+            let task: tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>> =
+                tokio::spawn(async move { Self::download_chunk(client, url, start, end, progress, file).await });
 
             tasks.push(task);
         }
@@ -211,6 +156,11 @@ impl<'a> ApkParser<'a> {
     }
 
     pub async fn download_apk(&self, force_update: bool) -> Result<()> {
+        if self.config.apk_path.is_empty() || self.config.version_url.is_empty() {
+            println!("The {} region doesn't support APK download", self.config.id);
+            return Ok(());
+        }
+
         println!("Checking for updates");
 
         let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_path);
@@ -245,13 +195,18 @@ impl<'a> ApkParser<'a> {
     }
 
     pub fn extract_apk(&self) -> Result<()> {
+        // Skip if this region doesn't have APK or asset filter
+        if self.config.apk_path.is_empty() || self.config.asset_filter.is_empty() {
+            println!("The {} region doesn't support APK extraction", self.config.id);
+            return Ok(());
+        }
+
         println!("Extracting app");
 
         let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_path);
-        let mut archive: ZipArchive<File> = ZipArchive::new(
-            File::open(&apk_path).with_context(|| format!("{} not found", apk_path.display()))?,
-        )
-        .with_context(|| "Failed to open archive")?;
+        let mut archive: ZipArchive<File> =
+            ZipArchive::new(File::open(&apk_path).with_context(|| format!("{} not found", apk_path.display()))?)
+                .with_context(|| "Failed to open archive")?;
 
         let mut data_apk: zip::read::ZipFile<'_> = match archive.by_name("UnityDataAssetPack.apk") {
             Ok(file) => file,
@@ -290,8 +245,8 @@ impl<'a> ApkParser<'a> {
                 }
             }
 
-            let mut outfile: File = File::create(&outpath)
-                .with_context(|| format!("Failed to create file: {}", outpath.display()))?;
+            let mut outfile: File =
+                File::create(&outpath).with_context(|| format!("Failed to create file: {}", outpath.display()))?;
             io::copy(&mut file, &mut outfile).with_context(|| "Failed to copy file")?;
         }
 

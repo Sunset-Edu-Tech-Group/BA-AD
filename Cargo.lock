@@ -124,6 +124,7 @@ dependencies = [
  "base64",
  "byteorder",
  "clap",
+ "crc32fast",
  "indicatif",
  "platform-dirs",
  "rand_mt",

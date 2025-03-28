@@ -8,22 +8,12 @@ use clap::Parser;
 use helpers::args::Cli;
 use helpers::file::FileManager;
 
-
 #[tokio::main]
 async fn main() -> Result<()> {
     let args: Cli = Cli::parse();
-    let file_manager: FileManager = FileManager::new()?;
+    // let file_manager: FileManager = FileManager::new()?;
 
     if args.update {
-        let parser: utils::apk::ApkParser<'_> = utils::apk::ApkParser::new(&file_manager)?;
-        
-        // parser.download_apk(true).await?;
-        // parser.extract_apk()?;
-
-        let catalog_fetcher: utils::catalog_fetcher::CatalogFetcher<'_> = utils::catalog_fetcher::CatalogFetcher::new(&file_manager);
-        catalog_fetcher.get_catalog_url("japan").await?;
-        catalog_fetcher.get_catalog_url("global").await?;
-
         return Ok(());
     }
 

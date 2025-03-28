@@ -77,11 +77,7 @@ pub mod table_encryption_service {
     }
 
     pub fn xor_bytes(value: &[u8], key: &[u8]) -> Vec<u8> {
-        value
-            .iter()
-            .zip(key.iter().cycle())
-            .map(|(v, k)| v ^ k)
-            .collect()
+        value.iter().zip(key.iter().cycle()).map(|(v, k)| v ^ k).collect()
     }
 
     pub fn xor_int32(value: i32, key: &[u8]) -> i32 {
@@ -121,20 +117,12 @@ pub mod table_encryption_service {
     }
 
     pub fn convert_uint(value: u32, key: &[u8]) -> u32 {
-        if value != 0 {
-            xor_uint32(value, key)
-        } else {
-            0
-        }
+        if value != 0 { xor_uint32(value, key) } else { 0 }
     }
 
     #[allow(dead_code)]
     pub fn convert_ulong(value: u64, key: &[u8]) -> u64 {
-        if value != 0 {
-            xor_uint64(value, key)
-        } else {
-            0
-        }
+        if value != 0 { xor_uint64(value, key) } else { 0 }
     }
 
     pub fn convert_float(value: f32, key: &[u8]) -> f32 {
@@ -196,10 +184,7 @@ pub mod table_encryption_service {
         if value.is_empty() || value.len() < 8 {
             return Ok(value.to_string());
         }
-        let mut raw: Vec<u8> = value
-            .encode_utf16()
-            .flat_map(|x| x.to_le_bytes())
-            .collect::<Vec<u8>>();
+        let mut raw: Vec<u8> = value.encode_utf16().flat_map(|x| x.to_le_bytes()).collect::<Vec<u8>>();
         let xor: Vec<u8> = xor_with_key(&mut raw, key);
         Ok(general_purpose::STANDARD.encode(&xor))
     }

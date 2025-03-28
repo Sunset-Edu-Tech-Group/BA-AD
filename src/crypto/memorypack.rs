@@ -3,8 +3,8 @@ use byteorder::{LittleEndian, ReadBytesExt};
 use std::io::{Cursor, Read};
 
 pub fn read_string(cursor: &mut Cursor<&[u8]>) -> Result<String> {
-    let length = read_i32(cursor)? as usize;
-    let mut buffer = vec![0; length];
+    let length: usize = read_i32(cursor)? as usize;
+    let mut buffer: Vec<u8> = vec![0; length];
     cursor.read_exact(&mut buffer).ok();
     Ok(String::from_utf8(buffer).expect("Invalid UTF-8 sequence"))
 }

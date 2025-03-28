@@ -1,6 +1,5 @@
 use anyhow::{Context, Result};
 use platform_dirs::AppDirs;
-use serde::{de::DeserializeOwned, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -13,8 +12,8 @@ pub struct FileManager {
 
 impl FileManager {
     pub fn new() -> Result<Self> {
-        let app_dirs: AppDirs = AppDirs::new(Some(APP_NAME), APP_QUALIFIED)
-            .context("Failed to initialize application directories")?;
+        let app_dirs: AppDirs =
+            AppDirs::new(Some(APP_NAME), APP_QUALIFIED).context("Failed to initialize application directories")?;
 
         fs::create_dir_all(&app_dirs.data_dir).context("Failed to create data directory")?;
 
@@ -34,8 +33,7 @@ impl FileManager {
 
         if let Some(parent) = path.parent() {
             if !parent.exists() {
-                fs::create_dir_all(parent)
-                    .context(format!("Failed to create directory: {}", parent.display()))?;
+                fs::create_dir_all(parent).context(format!("Failed to create directory: {}", parent.display()))?;
             }
         }
 
@@ -61,18 +59,6 @@ impl FileManager {
         ))
     }
 
-    pub fn save_json<T: Serialize>(&self, filename: &str, data: &T) -> Result<()> {
-        let json_string = serde_json::to_string_pretty(data)
-            .context("Failed to serialize data to JSON")?;
-        self.save_text(filename, &json_string)
-    }
-
-    pub fn load_json<T: DeserializeOwned>(&self, filename: &str) -> Result<T> {
-        let json_string = self.load_text(filename)?;
-        serde_json::from_str(&json_string)
-            .with_context(|| format!("Failed to parse JSON from file: {}", filename))
-    }
-
     pub fn file_exists(&self, filename: &str) -> bool {
         self.data_path(filename).exists()
     }
@@ -89,8 +75,7 @@ impl FileManager {
 
     pub fn create_dir(&self, dirname: &str) -> Result<PathBuf> {
         let path: PathBuf = self.data_path(dirname);
-        fs::create_dir_all(&path)
-            .context(format!("Failed to create directory: {}", path.display()))?;
+        fs::create_dir_all(&path).context(format!("Failed to create directory: {}", path.display()))?;
         Ok(path)
     }
 
