@@ -12,3 +12,11 @@ zip = "0.6"
 trauma = "2.2"
 platform-dirs = "0.3.0"
 clap = { version = "4.5.34", features = ["derive"] }
+indicatif = "0.17.11"
+xxhash-rust = { version = "0.8.15", features = ["xxh32"] }
+rand_mt = "5.0.0"
+byteorder = "1.5.0"
+base64 = "0.22.1"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
+walkdir = "2.5.0"

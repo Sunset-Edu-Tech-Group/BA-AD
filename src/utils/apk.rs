@@ -1,25 +1,39 @@
-use anyhow::{anyhow, Context, Result};
-use crate::lib::file::FileManager;
+use crate::helpers::file::FileManager;
+use crate::helpers::progress::DownloadProgress;
+
+use anyhow::{Context, Result, anyhow};
 use regex::Regex;
 use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::{Client, Response};
-use reqwest::Url;
 use std::fs;
 use std::fs::File;
-use std::io::{self, Cursor, Read};
+use std::io::{self, Cursor, Read, Seek, Write};
 use std::path::PathBuf;
-use trauma::download::Download;
-use trauma::downloader::DownloaderBuilder;
+use std::sync::Arc;
+use tokio::sync::Mutex;
 use zip::ZipArchive;
+use serde::{Deserialize, Serialize};
 
 pub const APK_DOWNLOAD_URL_REGEX: &str = r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))";
 pub const APK_VERSION_REGEX: &str = r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)";
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ApiData {
+    pub japan: RegionData,
+    pub global: RegionData,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct RegionData {
+    pub version: String,
+    pub catalog_url: String,
+}
 
 pub struct ApkConfig {
     pub version_url: String,
     pub apk_dir: String,
     pub apk_filename: String,
-    pub version_filename: String,
+    pub api_data_filename: String,
     pub asset_filter: String,
 }
 
@@ -28,8 +42,8 @@ impl Default for ApkConfig {
         Self {
             version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
             apk_dir: "apk".to_string(),
-            apk_filename: "bluearchive.apk".to_string(),
-            version_filename: "version.txt".to_string(),
+            apk_filename: "BlueArchive.xapk".to_string(),
+            api_data_filename: "api_data.json".to_string(),
             asset_filter: "assets/bin/Data/".to_string(),
         }
     }
@@ -47,103 +61,198 @@ fn http_headers() -> HeaderMap {
     headers
 }
 
-pub async fn download_apk(
-    file_manager: &FileManager,
-    version_url: &str, 
-    apk_dir: &str, 
-    apk_filename: &str, 
-    version_filename: &str
-) -> Result<()> {
-    println!("Checking for updates");
-    
-    let output_path: PathBuf = file_manager.create_dir(apk_dir)?;
-    
-    let current_version: String = if file_manager.file_exists(version_filename) {
-        file_manager.load_text(version_filename)?
-    } else {
-        String::new()
-    };
-    
-    let client: Client = Client::builder().default_headers(http_headers()).build()?;
-    let versions_response: Response = client.get(version_url).send().await?;
+pub struct ApkParser<'a> {
+    client: Client,
+    file_manager: &'a FileManager,
+    config: ApkConfig,
+}
 
-    match versions_response.status() {
-        reqwest::StatusCode::OK => {}
-        _ => {
+impl<'a> ApkParser<'a> {
+    pub fn new(file_manager: &'a FileManager) -> Result<Self> {
+        let client: Client = Client::builder().default_headers(http_headers()).build()?;
+        Ok(Self {
+            client,
+            file_manager,
+            config: ApkConfig::default(),
+        })
+    }
+
+    async fn check_version(&self, force_update: bool) -> Result<Option<String>> {
+        let mut api_data = if self.file_manager.file_exists(&self.config.api_data_filename) {
+            self.file_manager.load_json::<ApiData>(&self.config.api_data_filename)?
+        } else {
+            ApiData {
+                japan: RegionData {
+                    version: String::new(),
+                    catalog_url: String::new(),
+                },
+                global: RegionData {
+                    version: String::new(),
+                    catalog_url: String::new(),
+                },
+            }
+        };
+
+        let versions_response: Response = self.client.get(&self.config.version_url).send().await?;
+        if !versions_response.status().is_success() {
             return Err(anyhow!(
                 "Failed to get versions: {}",
                 versions_response.status()
             ));
         }
-    }
 
-    let body: String = versions_response.text().await?;
-    let re_version: Regex = Regex::new(APK_VERSION_REGEX).unwrap();
-    
-    let new_version: &str = match re_version.find(body.as_str()) {
-        Some(m) => m.as_str(),
-        None => return Err(anyhow!("Failed to find version in response")),
-    };
+        let body: String = versions_response.text().await?;
+        let new_version: String = self.extract_version(&body)?;
 
-    if new_version == current_version {
-        println!("App is up to date");
-        return Ok(());
-    }
-
-    let apk_path: String = format!("{}/{}", apk_dir, apk_filename);
-    if file_manager.file_exists(&apk_path) {
-        file_manager.delete_file(&apk_path)?;
-    }
-
-    println!("Latest version: {}", new_version);
-
-    let re_url: Regex = Regex::new(APK_DOWNLOAD_URL_REGEX).unwrap();
-    let download_url: &str = match re_url.captures(body.as_str()) {
-        Some(caps) if caps.len() >= 3 => caps.get(2).unwrap().as_str(),
-        _ => {
-            return Err(anyhow!("Failed to get download url"));
+        if new_version == api_data.japan.version && !force_update {
+            println!("App is up to date");
+            return Ok(None);
         }
-    };
 
-    println!("Downloading app");
-    let downloader: trauma::downloader::Downloader = DownloaderBuilder::new()
-        .directory(output_path)
-        .build();
-    let downloads: Vec<Download> = vec![Download {
-        url: Url::parse(download_url).unwrap(),
-        filename: apk_filename.to_string(),
-    }];
-    downloader.download(&downloads).await;
-    println!("Finished downloading app");
-    
-    file_manager.save_text(version_filename, new_version)?;
-    Ok(())
-}
+        api_data.japan.version = new_version.clone();
+        self.file_manager.save_json(&self.config.api_data_filename, &api_data)?;
 
-pub fn extract_apk(
-    file_manager: &FileManager,
-    apk_filename: &str, 
-    extract_dir: &str, 
-    asset_filter: &str
-) -> Result<()> {
+        Ok(Some(new_version))
+    }
+
+    fn extract_version(&self, body: &str) -> Result<String> {
+    let re_version: Regex = Regex::new(APK_VERSION_REGEX).unwrap();
+        re_version
+            .find(body)
+            .map(|m| m.as_str().to_string())
+            .ok_or_else(|| anyhow!("Failed to find version in response"))
+    }
+
+    fn extract_download_url(&self, body: &str) -> Result<String> {
+        let re_url: Regex = Regex::new(APK_DOWNLOAD_URL_REGEX).unwrap();
+        match re_url.captures(body) {
+            Some(caps) if caps.len() >= 3 => Ok(caps.get(2).unwrap().as_str().to_string()),
+            _ => Err(anyhow!("Failed to get download url")),
+        }
+    }
+
+    async fn prepare_download(&self, url: &str) -> Result<(u64, Response)> {
+        let response: Response = self.client.get(url).send().await?;
+        let total_size: u64 = response.content_length().unwrap_or(0);
+        println!("Download size: {}", FileManager::format_size(total_size));
+        Ok((total_size, response))
+    }
+
+    async fn download_chunk(
+        client: Client,
+        url: String,
+        start: u64,
+        end: u64,
+        progress: Arc<DownloadProgress>,
+        file: Arc<Mutex<File>>,
+    ) -> Result<()> {
+        let mut response: Response = client
+            .get(&url)
+            .header("Range", format!("bytes={}-{}", start, end - 1))
+            .send()
+            .await?;
+
+        let mut buffer = Vec::new();
+        while let Some(chunk) = response.chunk().await? {
+            buffer.extend_from_slice(&chunk);
+            progress.inc(chunk.len() as u64);
+        }
+
+        let mut file = file.lock().await;
+        file.seek(std::io::SeekFrom::Start(start))?;
+        file.write_all(&buffer)?;
+
+        Ok(())
+    }
+
+    async fn download_file(&self, url: &str, total_size: u64) -> Result<()> {
+        let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
+        let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_filename);
+        let file: File = File::create(&apk_path)?;
+        let file: Arc<Mutex<File>> = Arc::new(Mutex::new(file));
+
+        const CHUNK_SIZE: u64 = 1024 * 1024;
+        let num_chunks: u64 = (total_size + CHUNK_SIZE - 1) / CHUNK_SIZE;
+        let mut tasks: Vec<tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>>> =
+            Vec::new();
+
+        for i in 0..num_chunks {
+            let start: u64 = i * CHUNK_SIZE;
+            let end: u64 = std::cmp::min(start + CHUNK_SIZE, total_size);
+            
+            let client: Client = self.client.clone();
+            let url: String = url.to_string();
+            let progress: Arc<DownloadProgress> = Arc::clone(&progress);
+            let file: Arc<Mutex<File>> = Arc::clone(&file);
+
+            let task: tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>> =
+                tokio::spawn(async move {
+                    Self::download_chunk(client, url, start, end, progress, file).await
+                });
+
+            tasks.push(task);
+        }
+
+        for task in tasks {
+            task.await??;
+        }
+
+        progress.finish_with_message("Download complete!");
+        Ok(())
+    }
+
+    pub async fn download_apk(&self, force_update: bool) -> Result<()> {
+        println!("Checking for updates");
+
+        let apk_path = self.file_manager.create_dir(&self.config.apk_dir)?;
+
+        let new_version: String = match self.check_version(force_update).await? {
+            Some(version) => version,
+            None => return Ok(()),
+        };
+
+        let apk_filepath = apk_path.join(&self.config.apk_filename);
+        if self.file_manager.file_exists(&apk_filepath.to_string_lossy()) {
+            println!("Removing existing APK...");
+            self.file_manager.delete_file(&apk_filepath.to_string_lossy())?;
+        }
+
+        if force_update {
+            println!("Force updating to version: {}", new_version);
+        } else {
+            println!("Latest version: {}", new_version);
+        }
+
+        let versions_response: Response = self.client.get(&self.config.version_url).send().await?;
+        let body: String = versions_response.text().await?;
+        let download_url: String = self.extract_download_url(&body)?;
+
+        println!("Downloading app");
+        let (total_size, _): (u64, Response) = self.prepare_download(&download_url).await?;
+        self.download_file(&download_url, total_size).await?;
+
+        println!("Finished downloading app");
+        Ok(())
+    }
+
+    pub fn extract_apk(&self) -> Result<()> {
     println!("Extracting app");
 
-    let apk_path: PathBuf = file_manager.data_path(apk_filename);
+        let apk_path: PathBuf = self.file_manager.data_path("apk").join(&self.config.apk_filename);
     let mut archive: ZipArchive<File> = ZipArchive::new(
-        File::open(&apk_path)
-            .with_context(|| format!("{} not found", apk_path.display()))?,
+        File::open(&apk_path).with_context(|| format!("{} not found", apk_path.display()))?,
     )
     .with_context(|| "Failed to open archive")?;
 
-    let mut unity_apk: zip::read::ZipFile<'_> = match archive.by_name("UnityDataAssetPack.apk") {
+        let mut data_apk: zip::read::ZipFile<'_> = match archive.by_name("UnityDataAssetPack.apk") {
         Ok(file) => file,
         Err(_) => {
-            return Err(anyhow!("UnityDataAssetPack.apk not found"));
+                return Err(anyhow!("UnityDataAssetPack.apk not found in XAPK"));
         }
     };
 
     let mut buf: Vec<u8> = Vec::new();
-    unity_apk
+        data_apk
         .read_to_end(&mut buf)
         .with_context(|| "Failed to read UnityDataAssetPack")?;
     let mut cursor: Cursor<Vec<u8>> = Cursor::new(buf);
@@ -151,29 +260,31 @@ pub fn extract_apk(
     let mut inner_archive: ZipArchive<&mut Cursor<Vec<u8>>> =
         ZipArchive::new(&mut cursor).with_context(|| "Failed to open UnityDataAssetPack")?;
 
-    let output_path: PathBuf = file_manager.create_dir(extract_dir)?;
+        let output_path: PathBuf = self.file_manager.create_dir("data")?;
 
     for i in 0..inner_archive.len() {
-        let mut file = inner_archive.by_index(i)?;
-        if !file.name().starts_with(asset_filter) {
+            let mut file: zip::read::ZipFile<'_> = inner_archive.by_index(i)?;
+            if !file.name().starts_with(&self.config.asset_filter) {
             continue;
         }
-        
-        let outpath: PathBuf = match file.enclosed_name() {
-            Some(path) => output_path.join(path),
-            None => continue,
-        };
-        
+
+            let relative_path = file.name().strip_prefix(&self.config.asset_filter)
+                .ok_or_else(|| anyhow!("Failed to strip prefix from {}", file.name()))?;
+
+            let outpath: PathBuf = output_path.join(relative_path);
+
         if let Some(p) = outpath.parent() {
             if !p.exists() {
                 fs::create_dir_all(p).with_context(|| "Failed to create directory")?;
             }
         }
 
-        let mut outfile: File = File::create(&outpath).with_context(|| format!("Failed to create file: {}", outpath.display()))?;
+        let mut outfile: File = File::create(&outpath)
+            .with_context(|| format!("Failed to create file: {}", outpath.display()))?;
         io::copy(&mut file, &mut outfile).with_context(|| "Failed to copy file")?;
     }
 
     println!("Finished extracting app");
     Ok(())
+    }
 }

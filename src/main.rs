@@ -1,69 +1,45 @@
-use crate::utils::apk;
-use crate::utils::apk::ApkConfig;
-use crate::lib::file::FileManager;
-use anyhow::Result;
-use clap::{Parser, Subcommand};
+mod crypto;
+mod helpers;
+mod utils;
 
-#[derive(Parser)]
-#[command(name = "baad")]
-#[command(author = "Blue Archive Asset Downloader")]
-#[command(version = "0.1.0")]
-#[command(about = "A tool for downloading and extracting Blue Archive APK assets", long_about = None)]
-struct Cli {
-    #[arg(long)]
-    update: bool,
-    
-    #[arg(long)]
-    extract: bool,
-}
+use anyhow::Result;
+use clap::Parser;
+
+use helpers::args::Cli;
+use helpers::file::FileManager;
+
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let cli: Cli = Cli::parse();
-    let config: ApkConfig = ApkConfig::default();
-    
-    println!("BA-AD APK Downloader");
-    
+    let args: Cli = Cli::parse();
     let file_manager: FileManager = FileManager::new()?;
-    println!("Data directory: {}", file_manager.data_dir().display());
-    
-    if cli.update {
-        println!("Downloading the latest APK...");
-        apk::download_apk(
-            &file_manager,
-            &config.version_url,
-            &config.apk_dir,
-            &config.apk_filename,
-            &config.version_filename
-        ).await?;
+
+    if args.update {
+        let parser: utils::apk::ApkParser<'_> = utils::apk::ApkParser::new(&file_manager)?;
+
+        let catalog_url: String = utils::catalog_fetcher::CatalogFetcher::new(&file_manager).get_catalog_url()?;
+        println!("Catalog URL: {}", catalog_url);
+        
+        // parser.download_apk(true).await?;
+        // parser.extract_apk()?;
+
+
+        return Ok(());
     }
-    
-    if cli.extract {
-        let apk_path: String = format!("{}/{}", config.apk_dir, config.apk_filename);
-        if file_manager.file_exists(&apk_path) {
-            println!("Extracting APK assets...");
-            apk::extract_apk(
-                &file_manager,
-                &apk_path,
-                "extracted",
-                &config.asset_filter
-            )?;
-        } else {
-            println!("Error: No APK file found to extract. Run with --update first.");
+
+    if let Some(command) = args.command {
+        match command {
+            helpers::args::Commands::Download(download_args) => {
+                println!("Download command received: {:?}", download_args);
+            }
+            helpers::args::Commands::Search(search_args) => {
+                println!("Search command received: {:?}", search_args);
+            }
+            helpers::args::Commands::Extract(extract_args) => {
+                println!("Extract command received: {:?}", extract_args);
+            }
         }
     }
-    
-    if !cli.update && !cli.extract {
-        println!("No action specified.");
-        println!("Usage:");
-        println!("  baad --update    Download the latest APK");
-        println!("  baad --extract   Extract assets from the downloaded APK");
-        println!("  baad --update --extract   Download and extract in one step");
-    }
-    
-    println!("Done!");
+
     Ok(())
 }
-
-mod utils;
-mod lib;
