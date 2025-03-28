@@ -22,13 +22,13 @@ cargo build
 
 
 ### TODO
-- [/] Add global support
+- [X] Add global support
 - [ ] Add the asset downloader
 - [ ] Add search mode and filter mode
 - [ ] Add extract media zips
 - [ ] Add extract table zips, and db (low priority)
 - [ ] Add extract assetbundle (low priority)
-- [X] Add download old apks
+- [ ] ~Add download old apks~
 
 
 ### FAQ
