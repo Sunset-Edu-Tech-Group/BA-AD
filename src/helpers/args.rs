@@ -25,10 +25,10 @@ pub struct Cli {
 pub enum Commands {
     /// Download game files
     Download(DownloadArgs),
-    
+
     /// Search mode
     Search(SearchArgs),
-    
+
     /// Extract game files
     Extract(ExtractArgs),
 }

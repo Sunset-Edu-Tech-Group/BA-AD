@@ -147,7 +147,7 @@ pub mod table_encryption_service {
             return 0.0;
         }
 
-        let modulus = calculate_modulus(key);
+        let modulus: i32 = calculate_modulus(key);
         if modulus == 1 {
             return value;
         }

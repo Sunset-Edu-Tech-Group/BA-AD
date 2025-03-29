@@ -16,6 +16,7 @@ impl FileManager {
             AppDirs::new(Some(APP_NAME), APP_QUALIFIED).context("Failed to initialize application directories")?;
 
         fs::create_dir_all(&app_dirs.data_dir).context("Failed to create data directory")?;
+        fs::create_dir_all(&app_dirs.cache_dir).context("Failed to create cache directory")?;
 
         Ok(Self { app_dirs })
     }
@@ -26,6 +27,14 @@ impl FileManager {
 
     pub fn data_path(&self, filename: &str) -> PathBuf {
         self.app_dirs.data_dir.join(filename)
+    }
+
+    pub fn cache_dir(&self) -> &Path {
+        &self.app_dirs.cache_dir
+    }
+
+    pub fn cache_path(&self, filename: &str) -> PathBuf {
+        self.app_dirs.cache_dir.join(filename)
     }
 
     pub fn save_file(&self, filename: &str, content: &[u8]) -> Result<()> {
@@ -93,5 +102,72 @@ impl FileManager {
         } else {
             format!("{} B", size)
         }
+    }
+
+    pub fn get_temp_dir(&self) -> Result<PathBuf> {
+        let temp_dir: PathBuf = self.cache_path("temp");
+        if !temp_dir.exists() {
+            std::fs::create_dir_all(&temp_dir).context(format!("Failed to create temp directory: {}", temp_dir.display()))?;
+        }
+        Ok(temp_dir)
+    }
+
+    pub fn create_temp_file(&self, prefix: &str, extension: &str) -> Result<PathBuf> {
+        let temp_dir: PathBuf = self.get_temp_dir()?;
+
+        let timestamp: u128 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_nanos();
+
+        let filename: String = format!("{}_{}.{}", prefix, timestamp, extension);
+        let path: PathBuf = temp_dir.join(filename);
+
+        Ok(path)
+    }
+
+    pub fn cleanup_temp_files(&self) -> Result<()> {
+        let temp_dir: PathBuf = self.cache_path("temp");
+
+        if !temp_dir.exists() {
+            return Ok(());
+        }
+
+        let cutoff: std::time::SystemTime = std::time::SystemTime::now() - std::time::Duration::from_secs(24 * 60 * 60);
+
+        let entries: fs::ReadDir = match std::fs::read_dir(&temp_dir) {
+            Ok(entries) => entries,
+            Err(e) => {
+                eprintln!("Warning: Could not read temp directory: {}", e);
+                return Ok(());
+            }
+        };
+
+        for entry_result in entries {
+            let entry: fs::DirEntry = match entry_result {
+                Ok(entry) => entry,
+                Err(_) => continue,
+            };
+
+            if !entry.file_type().map(|ft| ft.is_file()).unwrap_or(false) {
+                continue;
+            }
+
+            let should_delete: bool = entry
+                .metadata()
+                .ok()
+                .and_then(|m| m.modified().ok())
+                .map(|modified| modified < cutoff)
+                .unwrap_or(false);
+
+            if should_delete {
+                let path: PathBuf = entry.path();
+                if let Err(e) = std::fs::remove_file(&path) {
+                    eprintln!("Warning: Failed to delete temp file {}: {}", path.display(), e);
+                }
+            }
+        }
+
+        Ok(())
     }
 }

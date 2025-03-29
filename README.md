@@ -23,6 +23,7 @@ cargo build
 
 ### TODO
 - [X] Add global support
+- [X] Multithreading download support
 - [ ] Add the asset downloader
 - [ ] Add search mode and filter mode
 - [ ] Add extract media zips

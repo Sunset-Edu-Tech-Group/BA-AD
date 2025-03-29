@@ -1,13 +1,16 @@
 use crate::crypto::catalog::{Catalog, Media, MediaCatalog, TableCatalog};
 use crate::helpers::config::{API_DATA_FILENAME, RegionConfig};
+use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
 use crate::utils::catalog_fetcher::CatalogFetcher;
 
 use anyhow::{Context, Result};
+use rand;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ConnectionGroup {
@@ -85,17 +88,25 @@ pub struct CatalogParser<'a> {
     catalog_url: Option<String>,
     region_config: RegionConfig,
     addressable_url_cache: Option<String>,
+    download_manager: DownloadManager,
 }
 
 impl<'a> CatalogParser<'a> {
     pub fn new(file_manager: &'a FileManager, catalog_url: Option<String>, region: &str) -> Self {
         let client: Client = Client::new();
+        let download_manager = DownloadManager::with_config(
+            client.clone(),
+            512 * 1024, // 512KB chunks for catalog files (usually smaller)
+            4,          // Fewer connections to avoid server throttling
+        );
+
         Self {
             client,
             file_manager,
             catalog_url,
             region_config: RegionConfig::new(region),
             addressable_url_cache: None,
+            download_manager,
         }
     }
 
@@ -108,14 +119,21 @@ impl<'a> CatalogParser<'a> {
     }
 
     async fn fetch_bytes(&self, url: &str) -> Result<Vec<u8>> {
-        self.client
-            .get(url)
-            .send()
-            .await?
-            .bytes()
-            .await
-            .map(|b| b.to_vec())
-            .map_err(Into::into)
+        let temp_path: PathBuf = self.file_manager.create_temp_file("download", "bytes")?;
+
+        self.download_manager
+            .download_file_with_strategy(url, &temp_path, DownloadStrategy::SingleThread)
+            .await?;
+
+        let bytes: Vec<u8> =
+            std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
+        let _ = std::fs::remove_file(temp_path);
+
+        if rand::random::<f32>() < 0.01 {
+            let _ = self.file_manager.cleanup_temp_files();
+        }
+
+        Ok(bytes)
     }
 
     fn get_cached_addressable_url(&self, region: &str) -> Result<String> {

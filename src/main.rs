@@ -7,14 +7,16 @@ use clap::Parser;
 
 use helpers::args::Cli;
 use helpers::file::FileManager;
+use utils::apk::ApkParser;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let args: Cli = Cli::parse();
-    // let file_manager: FileManager = FileManager::new()?;
+    let file_manager: FileManager = FileManager::new()?;
+    let apk_parser: ApkParser = ApkParser::new(&file_manager, "japan")?;
 
     if args.update {
-        return Ok(());
+        return apk_parser.download_apk(true).await;
     }
 
     if let Some(command) = args.command {

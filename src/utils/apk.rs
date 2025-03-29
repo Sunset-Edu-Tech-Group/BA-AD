@@ -1,7 +1,7 @@
 use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
+use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
-use crate::helpers::progress::DownloadProgress;
 
 use anyhow::{Context, Result, anyhow};
 use regex::Regex;
@@ -9,10 +9,8 @@ use reqwest::{Client, Response};
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::fs::File;
-use std::io::{self, Cursor, Read, Seek, Write};
+use std::io::{self, Cursor, Read};
 use std::path::PathBuf;
-use std::sync::Arc;
-use tokio::sync::Mutex;
 use zip::ZipArchive;
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -41,20 +39,24 @@ pub struct ApkParser<'a> {
     client: Client,
     file_manager: &'a FileManager,
     config: RegionConfig,
+    download_manager: DownloadManager,
 }
 
 impl<'a> ApkParser<'a> {
     pub fn new(file_manager: &'a FileManager, region: &str) -> Result<Self> {
         let client: Client = Client::builder().default_headers(http_headers()).build()?;
+        let download_manager: DownloadManager = DownloadManager::with_config(client.clone(), 2 * 1024 * 1024, 10);
+
         Ok(Self {
             client,
             file_manager,
             config: RegionConfig::new(region),
+            download_manager,
         })
     }
 
     async fn check_version(&self, force_update: bool) -> Result<Option<String>> {
-        let api_data = json::get_api_data(self.file_manager)?;
+        let api_data: ApiData = json::get_api_data(self.file_manager)?;
 
         let versions_response: Response = self.client.get(&self.config.version_url).send().await?;
         if !versions_response.status().is_success() {
@@ -90,71 +92,6 @@ impl<'a> ApkParser<'a> {
         }
     }
 
-    async fn prepare_download(&self, url: &str) -> Result<(u64, Response)> {
-        let response: Response = self.client.get(url).send().await?;
-        let total_size: u64 = response.content_length().unwrap_or(0);
-        Ok((total_size, response))
-    }
-
-    async fn download_chunk(
-        client: Client,
-        url: String,
-        start: u64,
-        end: u64,
-        progress: Arc<DownloadProgress>,
-        file: Arc<Mutex<File>>,
-    ) -> Result<()> {
-        let mut response: Response = client
-            .get(&url)
-            .header("Range", format!("bytes={}-{}", start, end - 1))
-            .send()
-            .await?;
-
-        let mut buffer = Vec::new();
-        while let Some(chunk) = response.chunk().await? {
-            buffer.extend_from_slice(&chunk);
-            progress.inc(chunk.len() as u64);
-        }
-
-        let mut file = file.lock().await;
-        file.seek(std::io::SeekFrom::Start(start))?;
-        file.write_all(&buffer)?;
-
-        Ok(())
-    }
-
-    async fn download_file(&self, url: &str, total_size: u64, output_path: &PathBuf) -> Result<()> {
-        let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
-        let file: File = File::create(output_path)?;
-        let file: Arc<Mutex<File>> = Arc::new(Mutex::new(file));
-
-        const CHUNK_SIZE: u64 = 1024 * 1024;
-        let num_chunks: u64 = (total_size + CHUNK_SIZE - 1) / CHUNK_SIZE;
-        let mut tasks: Vec<tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>>> = Vec::new();
-
-        for i in 0..num_chunks {
-            let start: u64 = i * CHUNK_SIZE;
-            let end: u64 = std::cmp::min(start + CHUNK_SIZE, total_size);
-
-            let client: Client = self.client.clone();
-            let url: String = url.to_string();
-            let progress: Arc<DownloadProgress> = Arc::clone(&progress);
-            let file: Arc<Mutex<File>> = Arc::clone(&file);
-
-            let task: tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>> =
-                tokio::spawn(async move { Self::download_chunk(client, url, start, end, progress, file).await });
-
-            tasks.push(task);
-        }
-
-        for task in tasks {
-            task.await??;
-        }
-
-        progress.finish_with_message("Download complete!");
-        Ok(())
-    }
-
     pub async fn download_apk(&self, force_update: bool) -> Result<()> {
         if self.config.apk_path.is_empty() || self.config.version_url.is_empty() {
             println!("The {} region doesn't support APK download", self.config.id);
@@ -187,15 +124,16 @@ impl<'a> ApkParser<'a> {
         let download_url: String = self.extract_download_url(&body)?;
 
         println!("Downloading app");
-        let (total_size, _): (u64, Response) = self.prepare_download(&download_url).await?;
-        self.download_file(&download_url, total_size, &apk_path).await?;
+
+        self.download_manager
+            .download_file_with_strategy(&download_url, &apk_path, DownloadStrategy::MultiThread { chunk_count: 0 })
+            .await?;
 
         println!("Finished downloading app");
         Ok(())
     }
 
     pub fn extract_apk(&self) -> Result<()> {
-        // Skip if this region doesn't have APK or asset filter
         if self.config.apk_path.is_empty() || self.config.asset_filter.is_empty() {
             println!("The {} region doesn't support APK extraction", self.config.id);
             return Ok(());
