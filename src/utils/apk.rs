@@ -43,14 +43,14 @@ pub struct ApkParser<'a> {
 }
 
 impl<'a> ApkParser<'a> {
-    pub fn new(file_manager: &'a FileManager, region: &str) -> Result<Self> {
+    pub fn new(file_manager: &'a FileManager, config: &RegionConfig) -> Result<Self> {
         let client: Client = Client::builder().default_headers(http_headers()).build()?;
         let download_manager: DownloadManager = DownloadManager::with_config(client.clone(), 2 * 1024 * 1024, 10);
 
         Ok(Self {
             client,
             file_manager,
-            config: RegionConfig::new(region),
+            config: config.clone(),
             download_manager,
         })
     }
@@ -126,7 +126,7 @@ impl<'a> ApkParser<'a> {
         println!("Downloading app");
 
         self.download_manager
-            .download_file_with_strategy(&download_url, &apk_path, DownloadStrategy::MultiThread { chunk_count: 0 })
+            .download_file_with_strategy(&download_url, &apk_path, DownloadStrategy::MultiThread { thread_count: 0 })
             .await?;
 
         println!("Finished downloading app");

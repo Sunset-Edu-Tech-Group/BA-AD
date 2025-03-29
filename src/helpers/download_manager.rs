@@ -1,6 +1,7 @@
 use crate::helpers::progress::DownloadProgress;
 
 use anyhow::{Context, Result};
+use futures::TryStreamExt;
 use reqwest::{Client, Response};
 use std::cmp;
 use std::fs::File;
@@ -12,7 +13,7 @@ use tokio::sync::Mutex;
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DownloadStrategy {
     SingleThread,
-    MultiThread { chunk_count: usize },
+    MultiThread { thread_count: usize },
     Auto,
 }
 
@@ -57,9 +58,9 @@ impl DownloadManager {
                 if total_size < 5 * 1024 * 1024 {
                     DownloadStrategy::SingleThread
                 } else {
-                    let optimal_chunks = cmp::min((total_size / self.chunk_size) as usize, self.max_connections);
+                    let optimal_chunks: usize = cmp::min((total_size / self.chunk_size) as usize, self.max_connections);
                     DownloadStrategy::MultiThread {
-                        chunk_count: cmp::max(optimal_chunks, 1),
+                        thread_count: cmp::max(optimal_chunks, 1),
                     }
                 }
             }
@@ -68,11 +69,11 @@ impl DownloadManager {
 
         match actual_strategy {
             DownloadStrategy::SingleThread => self.download_single_thread(url, total_size, output_path).await,
-            DownloadStrategy::MultiThread { chunk_count } => {
-                let chunks: usize = if chunk_count == 0 {
+            DownloadStrategy::MultiThread { thread_count } => {
+                let chunks: usize = if thread_count == 0 {
                     cmp::min((total_size / self.chunk_size) as usize, self.max_connections)
                 } else {
-                    chunk_count
+                    thread_count
                 };
                 self.download_multi_thread(url, total_size, chunks, output_path).await
             }
@@ -81,33 +82,43 @@ impl DownloadManager {
     }
 
     pub async fn download_file(&self, url: &str, total_size: u64, output_path: &PathBuf) -> Result<()> {
-        let chunk_count: usize = cmp::min((total_size / self.chunk_size) as usize, self.max_connections);
-        self.download_multi_thread(url, total_size, chunk_count, output_path).await
+        let thread_count: usize = cmp::min((total_size / self.chunk_size) as usize, self.max_connections);
+        self.download_multi_thread(url, total_size, thread_count, output_path).await
     }
 
     async fn download_single_thread(&self, url: &str, total_size: u64, output_path: &PathBuf) -> Result<()> {
         let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
-        let mut file: File = File::create(output_path)?;
+        let file: Arc<Mutex<File>> = Arc::new(Mutex::new(File::create(output_path)?));
+        let response: Response = self.client.get(url).send().await?;
 
-        let mut response: Response = self.client.get(url).send().await?;
-
-        while let Some(chunk) = response.chunk().await? {
-            file.write_all(&chunk)?;
-            progress.inc(chunk.len() as u64);
-        }
+        let p_clone: Arc<DownloadProgress> = Arc::clone(&progress);
+        response
+            .bytes_stream()
+            .map_err(anyhow::Error::from)
+            .try_for_each(|chunk| {
+                let p: Arc<DownloadProgress> = Arc::clone(&p_clone);
+                let file_clone: Arc<Mutex<File>> = Arc::clone(&file);
+                async move {
+                    let mut file_guard: tokio::sync::MutexGuard<'_, File> = file_clone.lock().await;
+                    file_guard.write_all(&chunk)?;
+                    p.inc(chunk.len() as u64);
+                    Ok(())
+                }
+            })
+            .await?;
 
         progress.finish_with_message("Download complete!");
         Ok(())
     }
 
-    async fn download_multi_thread(&self, url: &str, total_size: u64, chunk_count: usize, output_path: &PathBuf) -> Result<()> {
+    async fn download_multi_thread(&self, url: &str, total_size: u64, thread_count: usize, output_path: &PathBuf) -> Result<()> {
         let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
         let file: Arc<Mutex<File>> = Arc::new(Mutex::new(File::create(output_path)?));
-        let mut tasks: Vec<tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>>> = Vec::with_capacity(chunk_count);
+        let mut tasks: Vec<tokio::task::JoinHandle<std::result::Result<(), anyhow::Error>>> = Vec::with_capacity(thread_count);
 
-        let chunk_size: u64 = (total_size + chunk_count as u64 - 1) / chunk_count as u64;
+        let chunk_size: u64 = (total_size + thread_count as u64 - 1) / thread_count as u64;
 
-        for i in 0..chunk_count {
+        for i in 0..thread_count {
             let start: u64 = i as u64 * chunk_size;
             let end: u64 = cmp::min(start + chunk_size, total_size);
 
@@ -115,10 +126,10 @@ impl DownloadManager {
                 continue;
             }
 
-            let client = self.client.clone();
-            let url = url.to_string();
-            let progress = Arc::clone(&progress);
-            let file = Arc::clone(&file);
+            let client: Client = self.client.clone();
+            let url: String = url.to_string();
+            let progress: Arc<DownloadProgress> = Arc::clone(&progress);
+            let file: Arc<Mutex<File>> = Arc::clone(&file);
 
             tasks.push(tokio::spawn(async move {
                 Self::download_chunk(client, &url, start, end, progress, file).await
@@ -141,7 +152,7 @@ impl DownloadManager {
         progress: Arc<DownloadProgress>,
         file: Arc<Mutex<File>>,
     ) -> Result<()> {
-        let mut response = client
+        let response = client
             .get(url)
             .header("Range", format!("bytes={}-{}", start, end - 1))
             .send()
@@ -149,12 +160,17 @@ impl DownloadManager {
 
         let estimated_size: u64 = end - start;
         let initial_capacity: usize = cmp::min(estimated_size, 1024 * 1024) as usize;
-        let mut buffer: Vec<u8> = Vec::with_capacity(initial_capacity);
 
-        while let Some(chunk) = response.chunk().await? {
-            buffer.extend_from_slice(&chunk);
-            progress.inc(chunk.len() as u64);
-        }
+        let buffer: Vec<u8> = response
+            .bytes_stream()
+            .map_err(anyhow::Error::from)
+            .try_fold(Vec::with_capacity(initial_capacity), |mut buffer, chunk| {
+                let len = chunk.len() as u64;
+                buffer.extend_from_slice(&chunk);
+                progress.inc(len);
+                async move { Ok(buffer) }
+            })
+            .await?;
 
         let mut file_guard: tokio::sync::MutexGuard<'_, File> = file.lock().await;
         file_guard.seek(std::io::SeekFrom::Start(start))?;

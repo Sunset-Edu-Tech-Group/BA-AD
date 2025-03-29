@@ -92,7 +92,7 @@ pub struct CatalogParser<'a> {
 }
 
 impl<'a> CatalogParser<'a> {
-    pub fn new(file_manager: &'a FileManager, catalog_url: Option<String>, region: &str) -> Self {
+    pub fn new(file_manager: &'a FileManager, catalog_url: Option<String>, config: &RegionConfig) -> Self {
         let client: Client = Client::new();
         let download_manager = DownloadManager::with_config(
             client.clone(),
@@ -104,7 +104,7 @@ impl<'a> CatalogParser<'a> {
             client,
             file_manager,
             catalog_url,
-            region_config: RegionConfig::new(region),
+            region_config: config.clone(),
             addressable_url_cache: None,
             download_manager,
         }

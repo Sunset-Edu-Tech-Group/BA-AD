@@ -170,4 +170,27 @@ impl FileManager {
 
         Ok(())
     }
+
+    pub fn clean_directory(&self, dir_path: &str) -> Result<PathBuf> {
+        let path: PathBuf = self.data_path(dir_path);
+
+        if path.exists() {
+            println!("Removing directory: {}", dir_path);
+            fs::remove_dir_all(&path).with_context(|| format!("Failed to remove directory: {}", path.display()))?;
+        }
+
+        self.create_dir(dir_path)
+    }
+
+    pub fn clean_region_directories(&self, region: &str) -> Result<()> {
+        println!("Cleaning directories for {} region...", region);
+
+        self.clean_directory("data")?;
+
+        let region_catalog_path = format!("catalogs/{}", region);
+        self.clean_directory(&region_catalog_path)?;
+
+        println!("Directories cleaned successfully");
+        Ok(())
+    }
 }
