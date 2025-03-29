@@ -8,19 +8,25 @@ use std::fs::File;
 use std::io::{Seek, Write};
 use std::path::PathBuf;
 use std::sync::Arc;
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, Semaphore};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DownloadStrategy {
     SingleThread,
     MultiThread { thread_count: usize },
+    
+    #[allow(dead_code)]
     Auto,
 }
 
+#[derive(Clone)]
 pub struct DownloadManager {
     client: Client,
     chunk_size: u64,
     max_connections: usize,
+    connection_semaphore: Arc<Semaphore>,
+    max_single_thread_downloads: usize,
+    single_thread_semaphore: Arc<Semaphore>,
 }
 
 impl DownloadManager {
@@ -29,6 +35,9 @@ impl DownloadManager {
             client,
             chunk_size: 1024 * 1024,
             max_connections: 8,
+            connection_semaphore: Arc::new(Semaphore::new(8)),
+            max_single_thread_downloads: 0,
+            single_thread_semaphore: Arc::new(Semaphore::new(1000)),
         }
     }
 
@@ -37,7 +46,37 @@ impl DownloadManager {
             client,
             chunk_size,
             max_connections,
+            connection_semaphore: Arc::new(Semaphore::new(max_connections)),
+            max_single_thread_downloads: 0,
+            single_thread_semaphore: Arc::new(Semaphore::new(1000)),
         }
+    }
+    
+    pub fn with_full_config(client: Client, chunk_size: u64, max_connections: usize, max_single_thread_downloads: usize) -> Self {
+        let single_thread_limit = if max_single_thread_downloads == 0 {
+            1000 // Effectively unlimited but within tokio's MAX_PERMITS limit
+        } else {
+            max_single_thread_downloads
+        };
+        
+        Self {
+            client,
+            chunk_size,
+            max_connections,
+            connection_semaphore: Arc::new(Semaphore::new(max_connections)),
+            max_single_thread_downloads,
+            single_thread_semaphore: Arc::new(Semaphore::new(single_thread_limit)),
+        }
+    }
+    
+    pub fn set_max_single_thread_downloads(&mut self, limit: usize) {
+        self.max_single_thread_downloads = limit;
+        let new_limit = if limit == 0 {
+            1000 // Use a reasonable maximum instead of std::usize::MAX
+        } else {
+            limit
+        };
+        self.single_thread_semaphore = Arc::new(Semaphore::new(new_limit));
     }
 
     pub async fn prepare_download(&self, url: &str) -> Result<(u64, Response)> {
@@ -87,6 +126,8 @@ impl DownloadManager {
     }
 
     async fn download_single_thread(&self, url: &str, total_size: u64, output_path: &PathBuf) -> Result<()> {
+        let _permit = self.single_thread_semaphore.acquire().await?;
+        
         let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
         let file: Arc<Mutex<File>> = Arc::new(Mutex::new(File::create(output_path)?));
         let response: Response = self.client.get(url).send().await?;
@@ -130,9 +171,12 @@ impl DownloadManager {
             let url: String = url.to_string();
             let progress: Arc<DownloadProgress> = Arc::clone(&progress);
             let file: Arc<Mutex<File>> = Arc::clone(&file);
+            let semaphore: Arc<Semaphore> = Arc::clone(&self.connection_semaphore);
 
             tasks.push(tokio::spawn(async move {
-                Self::download_chunk(client, &url, start, end, progress, file).await
+                let _permit = semaphore.acquire().await?;
+                let result = Self::download_chunk(client, &url, start, end, progress, file).await;
+                result
             }));
         }
 
@@ -144,19 +188,8 @@ impl DownloadManager {
         Ok(())
     }
 
-    async fn download_chunk(
-        client: Client,
-        url: &str,
-        start: u64,
-        end: u64,
-        progress: Arc<DownloadProgress>,
-        file: Arc<Mutex<File>>,
-    ) -> Result<()> {
-        let response = client
-            .get(url)
-            .header("Range", format!("bytes={}-{}", start, end - 1))
-            .send()
-            .await?;
+    async fn download_chunk(client: Client, url: &str, start: u64, end: u64, progress: Arc<DownloadProgress>, file: Arc<Mutex<File>>) -> Result<()> {
+        let response: Response = client.get(url).header("Range", format!("bytes={}-{}", start, end - 1)).send().await?;
 
         let estimated_size: u64 = end - start;
         let initial_capacity: usize = cmp::min(estimated_size, 1024 * 1024) as usize;

@@ -40,15 +40,15 @@ pub struct DownloadArgs {
     pub mode: DownloadMode,
 
     /// Download the assetbundles
-    #[arg(long = "assets")]
+    #[arg(long = "assets", short = 'b')]
     pub assets: bool,
 
     /// Download the tablebundles
-    #[arg(long = "tables")]
+    #[arg(long = "tables", short = 't')]
     pub tables: bool,
 
     /// Download the mediaresources
-    #[arg(long = "media")]
+    #[arg(long = "media", short = 'm')]
     pub media: bool,
 
     /// Download all game files
@@ -56,12 +56,16 @@ pub struct DownloadArgs {
     pub all: bool,
 
     /// Output directory for the downloaded files
-    #[arg(long = "output", default_value = "./output")]
+    #[arg(long = "output", short = 'o', default_value = "./output")]
     pub output: String,
 
-    /// Set a limit for the download limit
-    #[arg(long = "limit", default_value = "5")]
+    /// Set a limit for concurrent downloads
+    #[arg(long = "limit", short = 'l', default_value = "0")]
     pub limit: u32,
+
+    /// Set the number of threads for multithreaded downloads
+    #[arg(long = "multithread", short = 'r', default_value = "0")]
+    pub multithread: u32,
 
     /// Filter by name
     #[arg(long = "filter")]

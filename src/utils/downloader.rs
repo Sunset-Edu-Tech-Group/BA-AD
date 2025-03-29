@@ -1,16 +1,15 @@
 use crate::crypto::hash;
 use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
-use crate::utils::apk::ApkParser;
 use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
 
-use anyhow::Result;
+use anyhow::{Error, Result};
 use reqwest::Client;
+use tokio::task::JoinHandle;
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::sync::Arc;
-use tokio::sync::Semaphore;
+
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ResourceCategory {
@@ -43,6 +42,8 @@ pub struct ResourceDownloader<'a> {
     client: Client,
     download_manager: DownloadManager,
     max_concurrent_downloads: usize,
+    update: bool,
+    thread_count: usize,
 }
 
 impl<'a> ResourceDownloader<'a> {
@@ -53,7 +54,13 @@ impl<'a> ResourceDownloader<'a> {
         output_path: Option<&Path>,
     ) -> Result<Self> {
         let client: Client = Client::new();
-        let download_manager: DownloadManager = DownloadManager::with_config(client.clone(), 1024 * 1024, 8);
+        let max_concurrent_downloads = 5; // Default value
+        let download_manager: DownloadManager = DownloadManager::with_full_config(
+            client.clone(), 
+            1024 * 1024, // 1MB chunk size
+            8,           // Max connections per download
+            max_concurrent_downloads
+        );
 
         let output: PathBuf = match output_path {
             Some(path) => path.to_path_buf(),
@@ -67,16 +74,38 @@ impl<'a> ResourceDownloader<'a> {
             region,
             client,
             download_manager,
-            max_concurrent_downloads: 5,
+            max_concurrent_downloads,
+            update: false,
+            thread_count: 0,
         })
     }
 
     pub fn set_max_concurrent_downloads(&mut self, limit: usize) {
         self.max_concurrent_downloads = limit;
+        self.download_manager.set_max_single_thread_downloads(limit);
     }
 
     pub fn with_concurrent_downloads(mut self, limit: usize) -> Self {
         self.max_concurrent_downloads = limit;
+        self.download_manager.set_max_single_thread_downloads(limit);
+        self
+    }
+
+    pub fn set_update(&mut self, update: bool) {
+        self.update = update;
+    }
+
+    pub fn with_update(mut self, update: bool) -> Self {
+        self.update = update;
+        self
+    }
+
+    pub fn set_thread_count(&mut self, thread_count: usize) {
+        self.thread_count = thread_count;
+    }
+
+    pub fn with_thread_count(mut self, thread_count: usize) -> Self {
+        self.thread_count = thread_count;
         self
     }
 
@@ -156,11 +185,9 @@ impl<'a> ResourceDownloader<'a> {
     }
 
     async fn download_jp_category(&self, files: &[crate::utils::catalog_parser::JPGameFile], base_path: &Path) -> Result<()> {
-        let semaphore: Arc<Semaphore> = Arc::new(Semaphore::new(self.max_concurrent_downloads));
-
         fs::create_dir_all(base_path)?;
 
-        let mut download_tasks = Vec::with_capacity(files.len());
+        let mut download_tasks: Vec<JoinHandle<Result<(), Error>>> = Vec::with_capacity(files.len());
 
         for file in files {
             let url = file.url.clone();
@@ -171,7 +198,6 @@ impl<'a> ResourceDownloader<'a> {
             let output_path = base_path.join(&path);
             let crc = file.crc;
             let size = file.size;
-            let sem = Arc::clone(&semaphore);
             let dm = self.download_manager.clone();
 
             if let Some(parent) = output_path.parent() {
@@ -189,10 +215,11 @@ impl<'a> ResourceDownloader<'a> {
                 }
             }
 
+            let thread_count = self.thread_count;
             download_tasks.push(tokio::spawn(async move {
-                let _permit = sem.acquire().await?;
-
-                let strategy = if size.unwrap_or(0) > 5 * 1024 * 1024 {
+                let strategy = if thread_count > 0 {
+                    DownloadStrategy::MultiThread { thread_count }
+                } else if size.unwrap_or(0) > 5 * 1024 * 1024 {
                     DownloadStrategy::MultiThread { thread_count: 4 }
                 } else {
                     DownloadStrategy::SingleThread
@@ -229,11 +256,9 @@ impl<'a> ResourceDownloader<'a> {
         files: &[crate::utils::catalog_parser::GlobalGameFile],
         base_path: &Path,
     ) -> Result<()> {
-        let semaphore = Arc::new(Semaphore::new(self.max_concurrent_downloads));
-
         fs::create_dir_all(base_path)?;
 
-        let mut download_tasks = Vec::with_capacity(files.len());
+        let mut download_tasks: Vec<JoinHandle<Result<(), Error>>> = Vec::with_capacity(files.len());
 
         for file in files {
             let url = file.url.clone();
@@ -241,7 +266,6 @@ impl<'a> ResourceDownloader<'a> {
             let output_path = base_path.join(&path);
             let hash = file.hash.clone();
             let size = file.size;
-            let sem = Arc::clone(&semaphore);
             let dm = self.download_manager.clone();
 
             if let Some(parent) = output_path.parent() {
@@ -259,10 +283,11 @@ impl<'a> ResourceDownloader<'a> {
                 }
             }
 
+            let thread_count = self.thread_count;
             download_tasks.push(tokio::spawn(async move {
-                let _permit = sem.acquire().await?;
-
-                let strategy = if size > 5 * 1024 * 1024 {
+                let strategy = if thread_count > 0 {
+                    DownloadStrategy::MultiThread { thread_count }
+                } else if size > 5 * 1024 * 1024 {
                     DownloadStrategy::MultiThread { thread_count: 4 }
                 } else {
                     DownloadStrategy::SingleThread
@@ -351,32 +376,11 @@ impl<'a> ResourceDownloader<'a> {
         Ok(())
     }
 
-    pub async fn fetch_catalog_url(&self) -> Result<String> {
-        if let Some(url) = &self.catalog_url {
-            println!("Using provided catalog URL: {}", url);
-            return Ok(url.clone());
-        }
-
-        if self.update && self.region == Region::Japan {
-            println!("Updating APK...");
-            let apk_parser = ApkParser::new(self.file_manager, self.region.as_str())?;
-            apk_parser.download_apk(true).await?;
-        }
-
-        println!("Fetching catalog URL...");
-        let catalog_fetcher = crate::utils::catalog_fetcher::CatalogFetcher::new(self.file_manager);
-        let url = catalog_fetcher.get_catalog_url(self.region.as_str()).await?;
-        println!("Catalog URL fetched: {}", url);
-
-        Ok(url)
-    }
-
     pub async fn download(&self, categories: &[ResourceCategory]) -> Result<()> {
         fs::create_dir_all(&self.output_path)?;
 
-        self.fetch_catalog_url().await?;
-
-        let mut catalog_parser = CatalogParser::new(self.file_manager, self.catalog_url.clone(), self.region.as_str());
+        let region_config = crate::helpers::config::RegionConfig::new(self.region.as_str());
+        let mut catalog_parser: CatalogParser<'_> = CatalogParser::new(self.file_manager, self.catalog_url.clone(), &region_config);
 
         println!("Fetching catalogs...");
         catalog_parser.fetch_catalogs().await?;
@@ -397,11 +401,11 @@ impl<'a> ResourceDownloader<'a> {
 
         match self.region {
             Region::Japan => {
-                let game_files = catalog_parser.get_game_jp_files().await?;
+                let game_files: JPGameFiles = catalog_parser.get_game_jp_files().await?;
                 self.download_jp_categories(&game_files, &effective_categories).await?;
             }
             Region::Global => {
-                let game_files = catalog_parser.get_game_global_files().await?;
+                let game_files: GlobalGameFiles = catalog_parser.get_game_global_files().await?;
                 self.download_global_categories(&game_files, &effective_categories).await?;
             }
         }

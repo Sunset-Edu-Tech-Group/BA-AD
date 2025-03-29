@@ -6,9 +6,6 @@
 This is a WIP port of BA-AD to rust. It will be blazingly fast 🚀*.
 
 
-Currently this doesn't do anything, it just fetches catalogs.
-
-
 ## Building
 1. Install [rustup](https://rustup.rs)
 2. Clone this repository
@@ -24,7 +21,7 @@ cargo build
 ### TODO
 - [X] Add global support
 - [X] Multithreading download support
-- [ ] Add the asset downloader
+- [X] Add the asset downloader
 - [ ] Add search mode and filter mode
 - [ ] Add extract media zips
 - [ ] Add extract table zips, and db (low priority)
