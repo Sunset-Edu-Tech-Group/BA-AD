@@ -2,6 +2,7 @@ use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionCo
 use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
+use crate::helpers::logs::{info, warn};
 
 use anyhow::{Context, Result, anyhow};
 use regex::Regex;
@@ -86,7 +87,7 @@ impl<'a> ApkParser<'a> {
     }
 
     async fn check_apk(&self, download_url: &str, apk_path: &PathBuf) -> Result<bool> {
-        if !self.file_manager.file_exists(&apk_path.to_string_lossy()) {
+        if !self.file_manager.data_path(&apk_path.to_string_lossy()).exists() {
             return Ok(true);
         }
 
@@ -113,7 +114,7 @@ impl<'a> ApkParser<'a> {
         };
 
         if remote_size == 0 || local_size != remote_size {
-            println!("APK is outdated");
+            warn("APK is outdated");
             return Ok(true);
         }
 
@@ -122,29 +123,30 @@ impl<'a> ApkParser<'a> {
 
     pub async fn download_apk(&self, force_update: bool) -> Result<()> {
         if self.config.apk_path.is_empty() || self.config.version_url.is_empty() {
-            println!("The {} region doesn't support APK download", self.config.id);
+            warn(&format!("The {} region doesn't support APK download", self.config.id));
             return Ok(());
         }
 
-        println!("Checking for updates");
+        info("Checking for updates");
 
         let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_path);
-        self.file_manager.create_dir(apk_path.parent().unwrap().to_str().unwrap())?;
+        let apk_dir: PathBuf = apk_path.parent().unwrap().to_path_buf();
+        self.file_manager.create_dir(&apk_dir)?;
 
         let new_version: String = match self.check_version().await? {
             Some(version) => version,
             None => return Ok(()),
         };
 
-        if force_update && self.file_manager.file_exists(&apk_path.to_string_lossy()) {
-            println!("Removing existing APK");
-            self.file_manager.delete_file(&apk_path.to_string_lossy())?;
+        if force_update && self.file_manager.data_path(&apk_path.to_string_lossy()).exists() {
+            info("Removing existing APK");
+            self.file_manager.clean_directory(&apk_path)?;
         }
 
         if force_update {
-            println!("Force updating to version: {}", new_version);
+            info(&format!("Force updating to version: {}", new_version));
         } else {
-            println!("Latest version: {}", new_version);
+            info(&format!("Latest version: {}", new_version));
         }
 
         let versions_response: Response = self.client.get(&self.config.version_url).send().await?;
@@ -154,26 +156,26 @@ impl<'a> ApkParser<'a> {
         let need_download: bool = force_update || self.check_apk(&download_url, &apk_path).await?;
 
         if need_download {
-            println!("Downloading apk");
+            info("Downloading apk");
 
             self.download_manager
                 .download_file_with_strategy(&download_url, &apk_path, DownloadStrategy::MultiThread { thread_count: 0 })
                 .await?;
 
-            println!("Finished downloading apk");
+            info("Finished downloading apk");
         } else {
-            println!("Skipping download - APK is up to date");
+            info("Skipping download - APK is up to date");
         }
         Ok(())
     }
 
     pub fn extract_apk(&self) -> Result<()> {
         if self.config.apk_path.is_empty() || self.config.asset_filter.is_empty() {
-            println!("The {} region doesn't support APK extraction", self.config.id);
+            warn(&format!("The {} region doesn't support APK extraction", self.config.id));
             return Ok(());
         }
 
-        println!("Extracting app");
+        info("Extracting app");
 
         let apk_path: PathBuf = self.file_manager.data_path(&self.config.apk_path);
         let mut archive: ZipArchive<File> = ZipArchive::new(File::open(&apk_path).with_context(|| format!("{} not found", apk_path.display()))?)
@@ -193,7 +195,8 @@ impl<'a> ApkParser<'a> {
         let mut inner_archive: ZipArchive<&mut Cursor<Vec<u8>>> =
             ZipArchive::new(&mut cursor).with_context(|| "Failed to open UnityDataAssetPack")?;
 
-        let output_path: PathBuf = self.file_manager.create_dir("data")?;
+        let data_path: PathBuf = self.file_manager.data_path("data");
+        let output_path: PathBuf = self.file_manager.create_dir(&data_path)?;
 
         for i in 0..inner_archive.len() {
             let mut file: zip::read::ZipFile<'_> = inner_archive.by_index(i)?;
@@ -218,7 +221,7 @@ impl<'a> ApkParser<'a> {
             io::copy(&mut file, &mut outfile).with_context(|| "Failed to copy file")?;
         }
 
-        println!("Finished extracting app");
+        info("Finished extracting app");
         Ok(())
     }
 }

@@ -1,15 +1,17 @@
-use crate::crypto::hash;
-use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
-use crate::helpers::file::FileManager;
-use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
-
-use anyhow::{Error, Result};
-use reqwest::Client;
-use tokio::task::JoinHandle;
 use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use anyhow::{Error, Result};
+use reqwest::Client;
+use tokio::task::JoinHandle;
+
+use crate::crypto::hash;
+use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
+use crate::helpers::file::FileManager;
+use crate::helpers::logs::{debug, error, info, warn};
+use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
+use crate::utils::catalog_parser::{GlobalGameFile, JPGameFile};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ResourceCategory {
@@ -24,6 +26,10 @@ pub enum Region {
     Japan,
     Global,
 }
+pub enum GameFiles<'a> {
+    JP(&'a JPGameFiles),
+    Global(&'a GlobalGameFiles),
+}
 
 impl Region {
     pub fn as_str(&self) -> &'static str {
@@ -31,6 +37,58 @@ impl Region {
             Region::Japan => "japan",
             Region::Global => "global",
         }
+    }
+}
+
+trait GameFile {
+    fn get_url(&self) -> &str;
+    fn get_path(&self) -> Option<&str>;
+    fn get_crc(&self) -> Option<i64>;
+    fn get_hash(&self) -> Option<&str>;
+    fn get_size(&self) -> Option<i64>;
+}
+
+impl GameFile for JPGameFile {
+    fn get_url(&self) -> &str {
+        &self.url
+    }
+
+    fn get_path(&self) -> Option<&str> {
+        self.path.as_deref()
+    }
+
+    fn get_crc(&self) -> Option<i64> {
+        Some(self.crc)
+    }
+
+    fn get_hash(&self) -> Option<&str> {
+        None
+    }
+
+    fn get_size(&self) -> Option<i64> {
+        self.size
+    }
+}
+
+impl GameFile for GlobalGameFile {
+    fn get_url(&self) -> &str {
+        &self.url
+    }
+
+    fn get_path(&self) -> Option<&str> {
+        Some(&self.path)
+    }
+
+    fn get_crc(&self) -> Option<i64> {
+        None
+    }
+
+    fn get_hash(&self) -> Option<&str> {
+        Some(&self.hash)
+    }
+
+    fn get_size(&self) -> Option<i64> {
+        Some(self.size)
     }
 }
 
@@ -47,24 +105,15 @@ pub struct ResourceDownloader<'a> {
 }
 
 impl<'a> ResourceDownloader<'a> {
-    pub fn new(
-        file_manager: &'a FileManager,
-        region: Region,
-        catalog_url: Option<String>,
-        output_path: Option<&Path>,
-    ) -> Result<Self> {
+    pub fn new(file_manager: &'a FileManager, region: Region, catalog_url: Option<String>, output_path: Option<&Path>) -> Result<Self> {
         let client: Client = Client::new();
-        let max_concurrent_downloads = 5; // Default value
-        let download_manager: DownloadManager = DownloadManager::with_full_config(
-            client.clone(), 
-            1024 * 1024, // 1MB chunk size
-            8,           // Max connections per download
-            max_concurrent_downloads
-        );
-
+        let thread_count = 0;
+        let max_concurrent_downloads = 5;
+        let download_manager: DownloadManager =
+            DownloadManager::with_full_config(client.clone(), 1024 * 1024, thread_count, max_concurrent_downloads);
         let output: PathBuf = match output_path {
             Some(path) => path.to_path_buf(),
-            None => file_manager.data_path("downloads"),
+            None => file_manager.download_dir().to_path_buf(),
         };
 
         Ok(Self {
@@ -76,7 +125,7 @@ impl<'a> ResourceDownloader<'a> {
             download_manager,
             max_concurrent_downloads,
             update: false,
-            thread_count: 0,
+            thread_count,
         })
     }
 
@@ -109,7 +158,7 @@ impl<'a> ResourceDownloader<'a> {
         self
     }
 
-    fn get_file_path(&self, file_info: &HashMap<String, serde_json::Value>) -> PathBuf {
+    pub fn get_file_path(&self, file_info: &HashMap<String, serde_json::Value>) -> PathBuf {
         if let Some(path) = file_info.get("path").and_then(|v| v.as_str()).filter(|s| !s.is_empty()) {
             return PathBuf::from(path);
         }
@@ -121,7 +170,14 @@ impl<'a> ResourceDownloader<'a> {
         PathBuf::from("unknown_file")
     }
 
-    async fn check_existing_file(&self, file_path: &Path, crc: Option<i64>, md5: Option<&str>) -> Result<bool> {
+    pub fn get_base_path(&self) -> PathBuf {
+        match self.region {
+            Region::Japan => self.output_path.join("JP"),
+            Region::Global => self.output_path.join("Global"),
+        }
+    }
+
+    async fn check_file(&self, file_path: &Path, crc: Option<i64>, md5: Option<&str>) -> Result<bool> {
         if !file_path.exists() {
             return Ok(false);
         }
@@ -133,14 +189,16 @@ impl<'a> ResourceDownloader<'a> {
             (Some(crc_value), None) => {
                 let file_crc: u32 = hash::calculate_crc32(file_path.to_path_buf())?;
                 if file_crc != crc_value as u32 {
-                    println!("CRC mismatch for {}, will re-download", file_path.display());
+                    let filename = self.file_manager.get_filename(file_path);
+                    warn(&format!("CRC mismatch for {}, will re-download", filename));
                     return Ok(false);
                 }
             }
             (None, Some(md5_value)) => {
                 let file_md5: String = hash::calculate_md5(file_path.to_path_buf())?;
                 if file_md5 != md5_value {
-                    println!("MD5 mismatch for {}, will re-download", file_path.display());
+                    let filename = self.file_manager.get_filename(file_path);
+                    warn(&format!("MD5 mismatch for {}, will re-download", filename));
                     return Ok(false);
                 }
             }
@@ -149,18 +207,20 @@ impl<'a> ResourceDownloader<'a> {
             }
         }
 
-        println!("Skipping {}, already downloaded", file_path.display());
+        let filename = self.file_manager.get_filename(file_path);
+        warn(&format!("Skipping {}, already downloaded", filename));
+
         Ok(true)
     }
 
-    async fn download_file(&self, url: String, output_path: PathBuf, crc: Option<i64>, md5: Option<String>) -> Result<()> {
+    async fn download_file(&self, url: String, output_path: PathBuf, crc: Option<i64>, md5: Option<String>, mode: DownloadStrategy) -> Result<()> {
         let parent: Option<&Path> = output_path.parent();
         if parent.is_some() && !parent.unwrap().exists() {
             fs::create_dir_all(parent.unwrap())?;
         }
 
         let crc_match: bool = match crc {
-            Some(crc_val) => self.check_existing_file(&output_path, Some(crc_val), None).await?,
+            Some(crc_val) => self.check_file(&output_path, Some(crc_val), None).await?,
             None => false,
         };
         if crc_match {
@@ -168,225 +228,95 @@ impl<'a> ResourceDownloader<'a> {
         }
 
         let md5_match: bool = match md5 {
-            Some(ref md5_val) => self.check_existing_file(&output_path, None, Some(md5_val)).await?,
+            Some(ref md5_val) => self.check_file(&output_path, None, Some(md5_val)).await?,
             None => false,
         };
         if md5_match {
             return Ok(());
         }
 
-        println!("Downloading: {}", output_path.display());
-
-        self.download_manager
-            .download_file_with_strategy(&url, &output_path, DownloadStrategy::Auto)
-            .await?;
+        self.download_manager.download_file_with_strategy(&url, &output_path, mode).await?;
 
         Ok(())
     }
 
-    async fn download_jp_category(&self, files: &[crate::utils::catalog_parser::JPGameFile], base_path: &Path) -> Result<()> {
+    async fn download_category<T: GameFile>(&self, files: &[T], base_path: &Path) -> Result<()> {
         fs::create_dir_all(base_path)?;
 
-        let mut download_tasks: Vec<JoinHandle<Result<(), Error>>> = Vec::with_capacity(files.len());
+        debug(&format!("{}", base_path.display()));
 
         for file in files {
-            let url = file.url.clone();
-            let path = match &file.path {
-                Some(p) => p.clone(),
-                None => file.url.split('/').last().unwrap_or("unknown").to_string(),
-            };
-            let output_path = base_path.join(&path);
-            let crc = file.crc;
-            let size = file.size;
-            let dm = self.download_manager.clone();
-
-            if let Some(parent) = output_path.parent() {
-                if !parent.exists() {
-                    fs::create_dir_all(parent)?;
-                }
-            }
-
-            if output_path.exists() && crc != 0 {
-                if let Ok(existing_crc) = hash::calculate_crc32(output_path.clone()) {
-                    if existing_crc == crc as u32 {
-                        println!("Skipping {}, already downloaded", output_path.display());
-                        continue;
-                    }
-                }
-            }
-
-            let thread_count = self.thread_count;
-            download_tasks.push(tokio::spawn(async move {
-                let strategy = if thread_count > 0 {
-                    DownloadStrategy::MultiThread { thread_count }
-                } else if size.unwrap_or(0) > 5 * 1024 * 1024 {
-                    DownloadStrategy::MultiThread { thread_count: 4 }
-                } else {
-                    DownloadStrategy::SingleThread
-                };
-
-                println!("Downloading: {}", output_path.display());
-                dm.download_file_with_strategy(&url, &output_path, strategy).await?;
-
-                if crc != 0 {
-                    let downloaded_crc = hash::calculate_crc32(output_path.clone())?;
-                    if downloaded_crc != crc as u32 {
-                        println!("CRC mismatch for {}", output_path.display());
-                    } else {
-                        println!("Successfully verified: {}", output_path.display());
-                    }
-                }
-
-                Ok::<_, anyhow::Error>(())
-            }));
+            println!("{}", file.get_url());
         }
 
-        for task in download_tasks {
-            let result = task.await?;
-            if let Err(e) = result {
-                eprintln!("Download error: {}", e);
+        tokio::time::sleep(std::time::Duration::from_secs(60)).await;
+
+        Ok(())
+    }
+
+    async fn process_category(&self, game_files: &GameFiles<'_>, category: ResourceCategory, path: &Path) -> Result<()> {
+        match game_files {
+            GameFiles::JP(jp_files) => match category {
+                ResourceCategory::AssetBundles => self.download_category(&jp_files.asset_bundles, path).await?,
+                ResourceCategory::TableBundles => self.download_category(&jp_files.table_bundles, path).await?,
+                ResourceCategory::MediaResources => self.download_category(&jp_files.media_resources, path).await?,
+                ResourceCategory::All => {}
+            },
+            GameFiles::Global(global_files) => match category {
+                ResourceCategory::AssetBundles => self.download_category(&global_files.asset_bundles, path).await?,
+                ResourceCategory::TableBundles => self.download_category(&global_files.table_bundles, path).await?,
+                ResourceCategory::MediaResources => self.download_category(&global_files.media_resources, path).await?,
+                ResourceCategory::All => {}
+            },
+        }
+
+        Ok(())
+    }
+
+    async fn fetch_category(&self, game_files: &GameFiles<'_>, category: ResourceCategory, base_path: &Path) -> Result<()> {
+        match category {
+            ResourceCategory::AssetBundles => {
+                info("Downloading AssetBundles...");
+                let category_path = base_path.join("AssetBundles");
+                self.process_category(game_files, category, &category_path).await?;
+            }
+            ResourceCategory::TableBundles => {
+                info("Downloading TableBundles...");
+                let category_path = base_path.join("TableBundles");
+                self.process_category(game_files, category, &category_path).await?;
+            }
+            ResourceCategory::MediaResources => {
+                info("Downloading MediaResources...");
+                let category_path = base_path.join("MediaResources");
+                self.process_category(game_files, category, &category_path).await?;
+            }
+            ResourceCategory::All => {
+                // This case should be handled in the calling function
             }
         }
 
         Ok(())
     }
 
-    async fn download_global_category(
-        &self,
-        files: &[crate::utils::catalog_parser::GlobalGameFile],
-        base_path: &Path,
-    ) -> Result<()> {
-        fs::create_dir_all(base_path)?;
-
-        let mut download_tasks: Vec<JoinHandle<Result<(), Error>>> = Vec::with_capacity(files.len());
-
-        for file in files {
-            let url = file.url.clone();
-            let path = file.path.clone();
-            let output_path = base_path.join(&path);
-            let hash = file.hash.clone();
-            let size = file.size;
-            let dm = self.download_manager.clone();
-
-            if let Some(parent) = output_path.parent() {
-                if !parent.exists() {
-                    fs::create_dir_all(parent)?;
-                }
-            }
-
-            if output_path.exists() {
-                if let Ok(existing_hash) = hash::calculate_md5(output_path.clone()) {
-                    if existing_hash == hash {
-                        println!("Skipping {}, already downloaded", output_path.display());
-                        continue;
-                    }
-                }
-            }
-
-            let thread_count = self.thread_count;
-            download_tasks.push(tokio::spawn(async move {
-                let strategy = if thread_count > 0 {
-                    DownloadStrategy::MultiThread { thread_count }
-                } else if size > 5 * 1024 * 1024 {
-                    DownloadStrategy::MultiThread { thread_count: 4 }
-                } else {
-                    DownloadStrategy::SingleThread
-                };
-
-                println!("Downloading: {}", output_path.display());
-                dm.download_file_with_strategy(&url, &output_path, strategy).await?;
-
-                let downloaded_hash = hash::calculate_md5(output_path.clone())?;
-                if downloaded_hash != hash {
-                    println!("MD5 mismatch for {}", output_path.display());
-                } else {
-                    println!("Successfully verified: {}", output_path.display());
-                }
-
-                Ok::<_, anyhow::Error>(())
-            }));
-        }
-
-        for task in download_tasks {
-            let result = task.await?;
-            if let Err(e) = result {
-                eprintln!("Download error: {}", e);
-            }
-        }
-
-        Ok(())
-    }
-
-    async fn download_jp_categories(&self, game_files: &JPGameFiles, categories: &[ResourceCategory]) -> Result<()> {
-        let base_path = &self.output_path;
+    async fn initialize_categories(&self, game_files: &GameFiles<'_>, categories: &[ResourceCategory]) -> Result<()> {
+        let base_path = self.get_base_path();
 
         for category in categories {
-            match category {
-                ResourceCategory::AssetBundles => {
-                    println!("Downloading Asset Bundles...");
-                    let asset_path = base_path.join("AssetBundles");
-                    self.download_jp_category(&game_files.asset_bundles, &asset_path).await?;
-                }
-                ResourceCategory::TableBundles => {
-                    println!("Downloading Table Bundles...");
-                    let table_path = base_path.join("TableBundles");
-                    self.download_jp_category(&game_files.table_bundles, &table_path).await?;
-                }
-                ResourceCategory::MediaResources => {
-                    println!("Downloading Media Resources...");
-                    let media_path = base_path.join("MediaResources");
-                    self.download_jp_category(&game_files.media_resources, &media_path).await?;
-                }
-                ResourceCategory::All => {
-                    continue;
-                }
+            if *category == ResourceCategory::All {
+                continue;
             }
-        }
 
-        Ok(())
-    }
-
-    async fn download_global_categories(&self, game_files: &GlobalGameFiles, categories: &[ResourceCategory]) -> Result<()> {
-        let base_path = &self.output_path;
-
-        for category in categories {
-            match category {
-                ResourceCategory::AssetBundles => {
-                    println!("Downloading Global Asset Bundles...");
-                    let asset_path = base_path.join("AssetBundles");
-                    self.download_global_category(&game_files.asset_bundles, &asset_path).await?;
-                }
-                ResourceCategory::TableBundles => {
-                    println!("Downloading Global Table Bundles...");
-                    let table_path = base_path.join("TableBundles");
-                    self.download_global_category(&game_files.table_bundles, &table_path).await?;
-                }
-                ResourceCategory::MediaResources => {
-                    println!("Downloading Global Media Resources...");
-                    let media_path = base_path.join("MediaResources");
-                    self.download_global_category(&game_files.media_resources, &media_path)
-                        .await?;
-                }
-                ResourceCategory::All => {
-                    continue;
-                }
-            }
+            self.fetch_category(game_files, *category, &base_path).await?;
         }
 
         Ok(())
     }
 
     pub async fn download(&self, categories: &[ResourceCategory]) -> Result<()> {
-        fs::create_dir_all(&self.output_path)?;
-
         let region_config = crate::helpers::config::RegionConfig::new(self.region.as_str());
         let mut catalog_parser: CatalogParser<'_> = CatalogParser::new(self.file_manager, self.catalog_url.clone(), &region_config);
 
-        println!("Fetching catalogs...");
-        catalog_parser.fetch_catalogs().await?;
-
-        let download_all = categories.contains(&ResourceCategory::All);
-        let effective_categories = if download_all {
+        let selected_categories = if categories.contains(&ResourceCategory::All) {
             vec![
                 ResourceCategory::AssetBundles,
                 ResourceCategory::TableBundles,
@@ -396,21 +326,17 @@ impl<'a> ResourceDownloader<'a> {
             categories.to_vec()
         };
 
-        println!("Saving game files information...");
-        catalog_parser.save_game_files().await?;
-
         match self.region {
             Region::Japan => {
                 let game_files: JPGameFiles = catalog_parser.get_game_jp_files().await?;
-                self.download_jp_categories(&game_files, &effective_categories).await?;
+                self.initialize_categories(&GameFiles::JP(&game_files), &selected_categories).await?;
             }
             Region::Global => {
                 let game_files: GlobalGameFiles = catalog_parser.get_game_global_files().await?;
-                self.download_global_categories(&game_files, &effective_categories).await?;
+                self.initialize_categories(&GameFiles::Global(&game_files), &selected_categories).await?;
             }
         }
 
-        println!("Download complete!");
         Ok(())
     }
 }

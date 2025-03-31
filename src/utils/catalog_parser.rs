@@ -125,8 +125,7 @@ impl<'a> CatalogParser<'a> {
             .download_file_with_strategy(url, &temp_path, DownloadStrategy::SingleThread)
             .await?;
 
-        let bytes: Vec<u8> =
-            std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
+        let bytes: Vec<u8> = std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
         let _ = std::fs::remove_file(temp_path);
 
         if rand::random::<f32>() < 0.01 {
@@ -179,7 +178,8 @@ impl<'a> CatalogParser<'a> {
     }
 
     pub async fn fetch_catalogs(&mut self) -> Result<()> {
-        self.file_manager.create_dir(&format!("catalogs/{}", self.region_config.id))?;
+        let catalog_path: PathBuf = self.file_manager.data_path(&format!("catalogs/{}", self.region_config.id));
+        self.file_manager.create_dir(&catalog_path)?;
 
         match self.region_config.id.as_str() {
             "global" => {
@@ -191,18 +191,10 @@ impl<'a> CatalogParser<'a> {
             _ => {
                 let addressable_url: String = self.fetch_addressable_url().await?;
 
-                let bundle_data: BundleDownloadInfo = self
-                    .fetch_data(&format!("{}/Android/bundleDownloadInfo.json", addressable_url))
-                    .await?;
-                json::save_json(
-                    self.file_manager,
-                    &self.get_file_path("bundleDownloadInfo.json"),
-                    &bundle_data,
-                )?;
+                let bundle_data: BundleDownloadInfo = self.fetch_data(&format!("{}/Android/bundleDownloadInfo.json", addressable_url)).await?;
+                json::save_json(self.file_manager, &self.get_file_path("bundleDownloadInfo.json"), &bundle_data)?;
 
-                let table_data: Vec<u8> = self
-                    .fetch_bytes(&format!("{}/TableBundles/TableCatalog.bytes", addressable_url))
-                    .await?;
+                let table_data: Vec<u8> = self.fetch_bytes(&format!("{}/TableBundles/TableCatalog.bytes", addressable_url)).await?;
                 let table_catalog = TableCatalog::deserialize(&table_data, &addressable_url)?;
                 table_catalog.to_json(self.file_manager, &self.get_file_path("TableCatalog.json"))?;
 
@@ -228,15 +220,13 @@ impl<'a> CatalogParser<'a> {
 
         let bundle_data: BundleDownloadInfo = json::load_json(self.file_manager, &self.get_file_path("bundleDownloadInfo.json"))?;
 
-        let table_catalog: HashMap<String, serde_json::Value> =
-            json::load_json(self.file_manager, &self.get_file_path("TableCatalog.json"))?;
+        let table_catalog: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, &self.get_file_path("TableCatalog.json"))?;
         let table_data: &serde_json::Map<String, serde_json::Value> = table_catalog
             .get("Table")
             .and_then(|v| v.as_object())
             .context("Failed to find Table field in TableCatalog")?;
 
-        let media_catalog: HashMap<String, serde_json::Value> =
-            json::load_json(self.file_manager, &self.get_file_path("MediaCatalog.json"))?;
+        let media_catalog: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, &self.get_file_path("MediaCatalog.json"))?;
         let media_data: &serde_json::Map<String, serde_json::Value> = media_catalog
             .get("Table")
             .and_then(|v| v.as_object())
@@ -312,15 +302,9 @@ impl<'a> CatalogParser<'a> {
         let mut media_resources: Vec<GlobalGameFile> = Vec::with_capacity(capacity);
 
         for resource in resources {
-            let path: &str = resource["resource_path"]
-                .as_str()
-                .context("Failed to find resource_path in resource")?;
-            let size: i64 = resource["resource_size"]
-                .as_i64()
-                .context("Failed to find resource_size in resource")?;
-            let hash: &str = resource["resource_hash"]
-                .as_str()
-                .context("Failed to find resource_hash in resource")?;
+            let path: &str = resource["resource_path"].as_str().context("Failed to find resource_path in resource")?;
+            let size: i64 = resource["resource_size"].as_i64().context("Failed to find resource_size in resource")?;
+            let hash: &str = resource["resource_hash"].as_str().context("Failed to find resource_hash in resource")?;
 
             let game_file: GlobalGameFile = GlobalGameFile {
                 url: format!("{}/{}", addressable_url, path),

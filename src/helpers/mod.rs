@@ -2,5 +2,7 @@ pub mod args;
 pub mod config;
 pub mod download_manager;
 pub mod file;
+pub mod interface;
 pub mod json;
+pub mod logs;
 pub mod progress;
