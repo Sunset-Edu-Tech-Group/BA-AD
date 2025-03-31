@@ -2,14 +2,13 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use anyhow::{Error, Result};
+use anyhow::Result;
 use reqwest::Client;
-use tokio::task::JoinHandle;
 
 use crate::crypto::hash;
 use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
-use crate::helpers::logs::{debug, error, info, warn};
+use crate::helpers::logs::{info, warn};
 use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
 use crate::utils::catalog_parser::{GlobalGameFile, JPGameFile};
 
@@ -213,7 +212,7 @@ impl<'a> ResourceDownloader<'a> {
         Ok(true)
     }
 
-    async fn download_file(&self, url: String, output_path: PathBuf, crc: Option<i64>, md5: Option<String>, mode: DownloadStrategy) -> Result<()> {
+    async fn download_file(&self, url: String, output_path: PathBuf, crc: Option<i64>, md5: Option<&str>, mode: DownloadStrategy) -> Result<()> {
         let parent: Option<&Path> = output_path.parent();
         if parent.is_some() && !parent.unwrap().exists() {
             fs::create_dir_all(parent.unwrap())?;
@@ -237,24 +236,36 @@ impl<'a> ResourceDownloader<'a> {
 
         self.download_manager.download_file_with_strategy(&url, &output_path, mode).await?;
 
+        let file_name = self.file_manager.get_filename(&output_path);
+        info(&format!("Downloaded {}", file_name));
+
         Ok(())
     }
 
-    async fn download_category<T: GameFile>(&self, files: &[T], base_path: &Path) -> Result<()> {
+    async fn download_category<T: GameFile>(&self, files: &[T], base_path: &PathBuf) -> Result<()> {
         fs::create_dir_all(base_path)?;
 
-        debug(&format!("{}", base_path.display()));
-
+        let output_dir = self.file_manager.canonical_path(base_path)?;
         for file in files {
-            println!("{}", file.get_url());
+            let file_path = match file.get_path() {
+                Some(p) => p.to_string(),
+                None => file.get_url().split('/').last().unwrap_or("unknown").to_string(),
+            };
+            let output_path = output_dir.join(&file_path);
+
+            self.download_file(
+                file.get_url().to_string(),
+                output_path,
+                file.get_crc(),
+                file.get_hash(),
+                DownloadStrategy::Auto,
+            )
+            .await?;
         }
-
-        tokio::time::sleep(std::time::Duration::from_secs(60)).await;
-
         Ok(())
     }
 
-    async fn process_category(&self, game_files: &GameFiles<'_>, category: ResourceCategory, path: &Path) -> Result<()> {
+    async fn process_category(&self, game_files: &GameFiles<'_>, category: ResourceCategory, path: &PathBuf) -> Result<()> {
         match game_files {
             GameFiles::JP(jp_files) => match category {
                 ResourceCategory::AssetBundles => self.download_category(&jp_files.asset_bundles, path).await?,

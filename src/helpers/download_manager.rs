@@ -13,8 +13,10 @@ use tokio::sync::{Mutex, Semaphore};
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum DownloadStrategy {
     SingleThread,
-    MultiThread { thread_count: usize },
-    
+    MultiThread {
+        thread_count: usize,
+    },
+
     #[allow(dead_code)]
     Auto,
 }
@@ -51,14 +53,14 @@ impl DownloadManager {
             single_thread_semaphore: Arc::new(Semaphore::new(1000)),
         }
     }
-    
+
     pub fn with_full_config(client: Client, chunk_size: u64, max_connections: usize, max_single_thread_downloads: usize) -> Self {
         let single_thread_limit = if max_single_thread_downloads == 0 {
             1000 // Effectively unlimited but within tokio's MAX_PERMITS limit
         } else {
             max_single_thread_downloads
         };
-        
+
         Self {
             client,
             chunk_size,
@@ -68,7 +70,7 @@ impl DownloadManager {
             single_thread_semaphore: Arc::new(Semaphore::new(single_thread_limit)),
         }
     }
-    
+
     pub fn set_max_single_thread_downloads(&mut self, limit: usize) {
         self.max_single_thread_downloads = limit;
         let new_limit = if limit == 0 {
@@ -127,7 +129,7 @@ impl DownloadManager {
 
     async fn download_single_thread(&self, url: &str, total_size: u64, output_path: &PathBuf) -> Result<()> {
         let _permit = self.single_thread_semaphore.acquire().await?;
-        
+
         let progress: Arc<DownloadProgress> = Arc::new(DownloadProgress::new(total_size));
         let file: Arc<Mutex<File>> = Arc::new(Mutex::new(File::create(output_path)?));
         let response: Response = self.client.get(url).send().await?;
@@ -148,7 +150,6 @@ impl DownloadManager {
             })
             .await?;
 
-        progress.finish_with_message("Download complete!");
         Ok(())
     }
 
@@ -184,7 +185,6 @@ impl DownloadManager {
             task.await??;
         }
 
-        progress.finish_with_message("Download complete!");
         Ok(())
     }
 

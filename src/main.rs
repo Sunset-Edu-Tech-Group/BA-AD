@@ -22,7 +22,7 @@ async fn main() -> Result<()> {
     let args: Cli = Cli::parse();
     let file_manager: FileManager = FileManager::new()?;
 
-    // interface::init_ui()?;
+    interface::init_ui()?;
 
     if args.clean && args.update {
         error("Cannot use both --clean and --update");
@@ -40,7 +40,7 @@ async fn main() -> Result<()> {
         Ok(())
     };
 
-    // interface::shutdown_ui()?;
+    interface::shutdown_ui()?;
 
     result
 }

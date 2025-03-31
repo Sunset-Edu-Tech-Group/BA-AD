@@ -173,6 +173,25 @@ impl FileManager {
         path.file_name().and_then(|name| name.to_str()).unwrap_or("unknown file").to_string()
     }
 
+    pub fn canonical_path(&self, path: &PathBuf) -> Result<PathBuf> {
+        match std::fs::canonicalize(path) {
+            Ok(canonical) => Ok(canonical),
+            Err(e) => {
+                warn(&format!("Failed to canonicalize path {}: {}", path.display(), e));
+
+                let absolute_path = if path.is_absolute() {
+                    path.clone()
+                } else {
+                    std::env::current_dir()?.join(path)
+                };
+
+                fs::create_dir_all(&absolute_path)?;
+
+                Ok(absolute_path)
+            }
+        }
+    }
+
     pub fn format_size(&self, size: u64) -> String {
         const KB: u64 = 1024;
         const MB: u64 = KB * 1024;
