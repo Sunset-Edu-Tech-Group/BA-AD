@@ -47,6 +47,7 @@ impl FileManager {
         &self.user_dirs.download_dir
     }
 
+    #[allow(dead_code)]
     pub fn download_path(&self, filename: &str) -> PathBuf {
         self.user_dirs.download_dir.join(filename)
     }
@@ -61,6 +62,7 @@ impl FileManager {
         Ok(temp_dir)
     }
 
+    #[allow(dead_code)]
     pub fn temp_path(&self, filename: &str) -> PathBuf {
         self.temp_dir().unwrap().join(filename)
     }
@@ -148,7 +150,7 @@ impl FileManager {
         Ok(())
     }
 
-    pub fn clean_directory(&self, path: &PathBuf) -> Result<PathBuf> {
+    pub fn clean_dir(&self, path: &PathBuf) -> Result<PathBuf> {
         match path.exists() {
             true => {
                 info(&format!("Removing directory: {}", path.display()));
@@ -160,11 +162,19 @@ impl FileManager {
         self.create_dir(path)
     }
 
+    pub fn clean_path_dir(&self, path: &PathBuf) -> Result<PathBuf> {
+        if let Some(parent) = path.parent() {
+            self.clean_dir(&parent.to_path_buf())
+        } else {
+            Err(anyhow::anyhow!("Failed to get parent directory for path: {}", path.display()))
+        }
+    }
+
     pub fn clean_region_directories(&self, region: &str) -> Result<()> {
-        self.clean_directory(&self.data_path("data"))?;
+        self.clean_dir(&self.data_path("data"))?;
 
         let region_catalog_path = format!("catalogs/{}", region);
-        self.clean_directory(&self.data_path(&region_catalog_path))?;
+        self.clean_dir(&self.data_path(&region_catalog_path))?;
 
         Ok(())
     }
@@ -189,22 +199,6 @@ impl FileManager {
 
                 Ok(absolute_path)
             }
-        }
-    }
-
-    pub fn format_size(&self, size: u64) -> String {
-        const KB: u64 = 1024;
-        const MB: u64 = KB * 1024;
-        const GB: u64 = MB * 1024;
-
-        if size >= GB {
-            format!("{:.2} GB", size as f64 / GB as f64)
-        } else if size >= MB {
-            format!("{:.2} MB", size as f64 / MB as f64)
-        } else if size >= KB {
-            format!("{:.2} KB", size as f64 / KB as f64)
-        } else {
-            format!("{} B", size)
         }
     }
 }

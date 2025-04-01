@@ -8,6 +8,7 @@ use reqwest::Client;
 use crate::crypto::hash;
 use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
+use crate::helpers::interface::{reset_download_progress, start_simple_progress};
 use crate::helpers::logs::{info, warn};
 use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
 use crate::utils::catalog_parser::{GlobalGameFile, JPGameFile};
@@ -96,7 +97,6 @@ pub struct ResourceDownloader<'a> {
     catalog_url: Option<String>,
     output_path: PathBuf,
     region: Region,
-    client: Client,
     download_manager: DownloadManager,
     max_concurrent_downloads: usize,
     update: bool,
@@ -120,7 +120,6 @@ impl<'a> ResourceDownloader<'a> {
             catalog_url,
             output_path: output,
             region,
-            client,
             download_manager,
             max_concurrent_downloads,
             update: false,
@@ -245,6 +244,16 @@ impl<'a> ResourceDownloader<'a> {
     async fn download_category<T: GameFile>(&self, files: &[T], base_path: &PathBuf) -> Result<()> {
         fs::create_dir_all(base_path)?;
 
+        let mut total_size: u64 = 0;
+        for file in files {
+            if let Some(size) = file.get_size() {
+                total_size += size as u64;
+            }
+        }
+
+        start_simple_progress(files.len());
+        self.download_manager.init_batch_download(files.len(), total_size).await;
+
         let output_dir = self.file_manager.canonical_path(base_path)?;
         for file in files {
             let file_path = match file.get_path() {
@@ -262,6 +271,8 @@ impl<'a> ResourceDownloader<'a> {
             )
             .await?;
         }
+
+        reset_download_progress();
         Ok(())
     }
 
@@ -302,7 +313,7 @@ impl<'a> ResourceDownloader<'a> {
                 self.process_category(game_files, category, &category_path).await?;
             }
             ResourceCategory::All => {
-                // This case should be handled in the calling function
+                info("Downloading Everything...");
             }
         }
 
@@ -324,6 +335,9 @@ impl<'a> ResourceDownloader<'a> {
     }
 
     pub async fn download(&self, categories: &[ResourceCategory]) -> Result<()> {
+        // Reset any existing progress before starting new downloads
+        reset_download_progress();
+
         let region_config = crate::helpers::config::RegionConfig::new(self.region.as_str());
         let mut catalog_parser: CatalogParser<'_> = CatalogParser::new(self.file_manager, self.catalog_url.clone(), &region_config);
 
@@ -347,6 +361,9 @@ impl<'a> ResourceDownloader<'a> {
                 self.initialize_categories(&GameFiles::Global(&game_files), &selected_categories).await?;
             }
         }
+
+        // Reset progress display at the end of all downloads
+        reset_download_progress();
 
         Ok(())
     }

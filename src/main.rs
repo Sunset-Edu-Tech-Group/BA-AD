@@ -199,7 +199,7 @@ async fn process_apk(file_manager: &FileManager, config: &RegionConfig, apk_pars
 
     let data_path: PathBuf = file_manager.data_path("data");
     if !data_path.exists() {
-        let _ = file_manager.clean_directory(&data_path);
+        let _ = file_manager.clean_dir(&data_path);
     }
 
     apk_parser.extract_apk()?;

@@ -1,32 +1,189 @@
-// use indicatif::{ProgressBar, ProgressStyle};
-// use std::time::Duration;
-use crate::helpers::logs::info;
+use std::time::Duration;
 
-pub struct DownloadProgress {
-    // pub progress_bar: ProgressBar,
+use ratatui::prelude::*;
+use ratatui::style::{Color, Style};
+use ratatui::widgets::{Block, Borders, Gauge, Paragraph};
+
+use crate::helpers::network::{format_elapsed, format_size};
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProgressState {
+    Empty,
+    Simple,
+    Detailed,
 }
 
-impl DownloadProgress {
-    pub fn new(total_size: u64) -> Self {
-        // let progress_bar: ProgressBar = ProgressBar::new(total_size);
-        // progress_bar.set_style(
-        //     ProgressStyle::default_bar()
-        //         .template("{spinner:} [{elapsed_precise}] {bar:40} {bytes:>}/{total_bytes:<} {bytes_per_sec:>} eta {eta}")
-        //         .unwrap()
-        //         .progress_chars("━╾╴─"),
-        // );
+impl Default for ProgressState {
+    fn default() -> Self {
+        ProgressState::Empty
+    }
+}
 
-        // progress_bar.enable_steady_tick(Duration::from_millis(100));
+#[derive(Debug, Clone)]
+pub struct ProgressData {
+    pub state: ProgressState,
+    pub elapsed: Duration,
+    pub downloaded_files: usize,
+    pub total_files: usize,
+    pub downloaded_size: u64,
+    pub total_size: u64,
+    pub speed_kbps: u64,
+    pub current_file: String,
+}
 
-        Self { /* progress_bar */ }
+impl Default for ProgressData {
+    fn default() -> Self {
+        Self {
+            state: ProgressState::default(),
+            elapsed: Duration::from_secs(0),
+            downloaded_files: 0,
+            total_files: 0,
+            downloaded_size: 0,
+            total_size: 0,
+            speed_kbps: 0,
+            current_file: String::new(),
+        }
+    }
+}
+
+impl ProgressData {
+    pub fn progress_ratio(&self) -> f64 {
+        match self.state {
+            ProgressState::Empty => 0.0,
+            ProgressState::Simple => {
+                if self.total_files == 0 {
+                    0.0
+                } else {
+                    self.downloaded_files as f64 / self.total_files as f64
+                }
+            }
+            ProgressState::Detailed => {
+                if self.total_size == 0 {
+                    0.0
+                } else {
+                    self.downloaded_size as f64 / self.total_size as f64
+                }
+            }
+        }
     }
 
-    pub fn inc(&self, n: u64) {
-        // self.progress_bar.inc(n);
+    pub fn update_from_download(
+        &mut self,
+        downloaded_files: usize,
+        total_files: usize,
+        downloaded_size: u64,
+        total_size: u64,
+        speed_kbps: u64,
+        current_file: Option<String>,
+    ) {
+        self.downloaded_files = downloaded_files;
+        self.total_files = total_files;
+        self.downloaded_size = downloaded_size;
+        self.total_size = total_size;
+        self.speed_kbps = speed_kbps;
+
+        if let Some(file) = current_file {
+            self.current_file = file;
+        }
     }
 
-    pub fn finish_with_message(&self, msg: &str) {
-        // self.progress_bar.finish_with_message(msg.to_string());
-        info(msg);  // Use the logging system instead of direct println
+    pub fn start_timer(&mut self) {
+        self.elapsed = Duration::from_secs(0);
+    }
+
+    pub fn update_elapsed(&mut self, elapsed: Duration) {
+        self.elapsed = elapsed;
+    }
+
+    pub fn set_empty(&mut self) {
+        self.state = ProgressState::Empty;
+        self.reset();
+    }
+
+    pub fn set_simple(&mut self) {
+        self.state = ProgressState::Simple;
+    }
+
+    pub fn set_detailed(&mut self) {
+        self.state = ProgressState::Detailed;
+    }
+
+    fn reset(&mut self) {
+        self.downloaded_files = 0;
+        self.total_files = 0;
+        self.downloaded_size = 0;
+        self.total_size = 0;
+        self.speed_kbps = 0;
+        self.current_file = String::new();
+    }
+}
+
+pub fn draw_progress(frame: &mut Frame<'_>, area: Rect, progress_data: &ProgressData) {
+    let block = Block::default()
+        .title("Progress")
+        .borders(Borders::ALL)
+        .border_style(Style::default().fg(Color::Yellow));
+
+    match progress_data.state {
+        ProgressState::Empty => {
+            let text = Paragraph::new("No downloads in progress")
+                .block(block)
+                .alignment(Alignment::Center)
+                .style(Style::default().fg(Color::Gray));
+
+            frame.render_widget(text, area);
+        }
+        ProgressState::Simple => {
+            let percent = (progress_data.progress_ratio() * 100.0) as u16;
+            let elapsed = format_elapsed(progress_data.elapsed);
+
+            let label = if !progress_data.current_file.is_empty() {
+                format!(
+                    "{} | {} kbps | {}% | {}/{} | {}",
+                    elapsed, progress_data.speed_kbps, percent, progress_data.downloaded_files, progress_data.total_files, progress_data.current_file
+                )
+            } else {
+                format!(
+                    "{} | {} kbps | {}% | {}/{}",
+                    elapsed, progress_data.speed_kbps, percent, progress_data.downloaded_files, progress_data.total_files
+                )
+            };
+
+            let gauge = Gauge::default()
+                .block(block)
+                .gauge_style(Style::default().fg(Color::Blue).bg(Color::Black))
+                .ratio(progress_data.progress_ratio())
+                .label(label)
+                .use_unicode(true);
+
+            frame.render_widget(gauge, area);
+        }
+        ProgressState::Detailed => {
+            let percent = (progress_data.progress_ratio() * 100.0) as u16;
+            let elapsed = format_elapsed(progress_data.elapsed);
+            let downloaded_size = format_size(progress_data.downloaded_size);
+            let total_size = format_size(progress_data.total_size);
+
+            let label = if !progress_data.current_file.is_empty() {
+                format!(
+                    "{} | {}/{} | {} kbps | {}% | {}",
+                    elapsed, downloaded_size, total_size, progress_data.speed_kbps, percent, progress_data.current_file
+                )
+            } else {
+                format!(
+                    "{} | {}/{} | {} kbps | {}%",
+                    elapsed, downloaded_size, total_size, progress_data.speed_kbps, percent
+                )
+            };
+
+            let gauge = Gauge::default()
+                .block(block)
+                .gauge_style(Style::default().fg(Color::Green).bg(Color::Black))
+                .ratio(progress_data.progress_ratio())
+                .label(label)
+                .use_unicode(true);
+
+            frame.render_widget(gauge, area);
+        }
     }
 }

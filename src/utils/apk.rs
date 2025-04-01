@@ -1,8 +1,10 @@
 use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
 use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
 use crate::helpers::file::FileManager;
+use crate::helpers::interface::{reset_download_progress, start_detailed_progress};
 use crate::helpers::json;
 use crate::helpers::logs::{info, warn};
+use crate::helpers::network::get_content_length;
 
 use anyhow::{Context, Result, anyhow};
 use regex::Regex;
@@ -140,7 +142,7 @@ impl<'a> ApkParser<'a> {
 
         if force_update && self.file_manager.data_path(&apk_path.to_string_lossy()).exists() {
             info("Removing existing APK");
-            self.file_manager.clean_directory(&apk_path)?;
+            self.file_manager.clean_path_dir(&apk_path)?;
         }
 
         if force_update {
@@ -152,16 +154,26 @@ impl<'a> ApkParser<'a> {
         let versions_response: Response = self.client.get(&self.config.version_url).send().await?;
         let body: String = versions_response.text().await?;
         let download_url: String = self.extract_download_url(&body)?;
-
         let need_download: bool = force_update || self.check_apk(&download_url, &apk_path).await?;
+        let remote_size: u64 = get_content_length(&self.client, &download_url).await?;
 
         if need_download {
             info("Downloading apk");
 
+            start_detailed_progress(remote_size);
+
+            self.download_manager.init_batch_download(1, remote_size).await;
             self.download_manager
-                .download_file_with_strategy(&download_url, &apk_path, DownloadStrategy::MultiThread { thread_count: 0 })
+                .download_file_with_strategy(
+                    &download_url,
+                    &apk_path,
+                    DownloadStrategy::MultiThread {
+                        thread_count: self.download_manager.get_optimal_threads(remote_size),
+                    },
+                )
                 .await?;
 
+            reset_download_progress();
             info("Finished downloading apk");
         } else {
             info("Skipping download - APK is up to date");

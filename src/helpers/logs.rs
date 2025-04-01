@@ -25,7 +25,7 @@ pub struct Logger {
 
 impl Default for Logger {
     fn default() -> Self {
-        Self::new(100) // Default to storing 100 messages
+        Self::new(100)
     }
 }
 
@@ -44,11 +44,9 @@ impl Logger {
             message: message.to_string(),
         };
 
-        // Store message for UI display in chronological order (append to end)
         let mut messages = self.messages.lock().unwrap();
         messages.push(log_message);
 
-        // If we exceed max messages, remove the oldest ones (from the beginning)
         let messages_length: usize = messages.len();
         if messages_length > self.max_messages {
             let to_remove = messages_length - self.max_messages;
@@ -83,12 +81,10 @@ impl Logger {
     }
 }
 
-// Global logger instance
 lazy_static::lazy_static! {
     static ref LOGGER: Logger = Logger::default();
 }
 
-// Public interface for logging
 pub fn info(message: &str) {
     LOGGER.info(message);
 }

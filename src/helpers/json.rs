@@ -1,9 +1,9 @@
+use anyhow::{Context, Result};
+use serde::{Serialize, de::DeserializeOwned};
+
 use crate::helpers::config::API_DATA_FILENAME;
 use crate::helpers::file::FileManager;
 use crate::utils::apk::{ApiData, GlobalRegionData, RegionData};
-
-use anyhow::{Context, Result};
-use serde::{Serialize, de::DeserializeOwned};
 
 pub fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename: &str) -> Result<T> {
     let json_data: String = file_manager.load_text(filename)?;
