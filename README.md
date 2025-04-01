@@ -7,6 +7,8 @@ This is a WIP port of BA-AD to rust. It will be blazingly fast 🚀*.
 
 
 ## Building
+> If you want to try it out you can build it yourself. Note that this still a work in progress and something will break.
+
 1. Install [rustup](https://rustup.rs)
 2. Clone this repository
 ```sh
@@ -22,6 +24,7 @@ cargo build
 - [X] Add global support
 - [X] Multithreading download support
 - [X] Add the asset downloader
+- [X] UI and colorful messages
 - [ ] Add search mode and filter mode
 - [ ] Add extract media zips
 - [ ] Add extract table zips, and db (low priority)
