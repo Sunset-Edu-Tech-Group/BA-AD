@@ -13,6 +13,14 @@ pub const API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
 
 pub const API_DATA_FILENAME: &str = "api_data.json";
 
+// Temporary will make a auto chunk algorithm later
+pub const APK_DOWNLOAD_CHUNK_SIZE: u64 = 5 * 1024 * 1024;
+pub const RESOURCE_DOWNLOAD_CHUNK_SIZE: u64 = 1024 * 1024;
+pub const CATALOG_DOWNLOAD_CHUNK_SIZE: u64 = 512 * 1024;
+
+pub const DEFAULT_CHUNK_SIZE: u64 = 1024 * 1024;
+pub const DEFAULT_TTL_TIME: u64 = 300;
+
 #[derive(Clone)]
 pub struct RegionConfig {
     pub id: String,
@@ -32,8 +40,7 @@ impl RegionConfig {
             },
             _ => Self {
                 id: "japan".to_string(),
-                version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive"
-                    .to_string(),
+                version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
                 apk_path: "apk/BlueArchive.xapk".to_string(),
                 asset_filter: "assets/bin/Data/".to_string(),
             },

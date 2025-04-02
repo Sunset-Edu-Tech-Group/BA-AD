@@ -1,5 +1,3 @@
-use anyhow::Result;
-use crossterm::style::{Color, Stylize};
 use std::sync::{Arc, Mutex};
 use std::time::SystemTime;
 

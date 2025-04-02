@@ -149,13 +149,18 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
     downloader.set_update(args.update);
 
     if download_args.multithread > 0 {
-        info(&format!("Using multithreaded downloads with {} threads", download_args.multithread));
-        downloader.set_thread_count(download_args.multithread as usize);
+        info(&format!("Using {} cores for downloads", download_args.multithread));
+        downloader.set_thread_count(download_args.multithread);
+    }
+
+    if download_args.connections > 0 {
+        info(&format!("Using {} connections per file", download_args.connections));
+        downloader.set_connections(download_args.connections);
     }
 
     if download_args.limit > 0 {
-        info(&format!("Setting concurrent download limit to {}", download_args.limit));
-        downloader.set_max_concurrent_downloads(download_args.limit as usize);
+        info(&format!("Setting parallel download limit to {}", download_args.limit));
+        downloader.set_max_concurrent_downloads(download_args.limit);
     }
 
     info(&format!("Starting download to {}", output_path.display()));

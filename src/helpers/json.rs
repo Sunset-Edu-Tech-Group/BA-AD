@@ -47,6 +47,7 @@ pub fn update_japan_catalog_url(file_manager: &FileManager, catalog_url: &str) -
     save_api_data(file_manager, &api_data)
 }
 
+#[allow(dead_code)]
 pub fn update_japan_addressable_url(file_manager: &FileManager, addressable_url: &str) -> Result<()> {
     let mut api_data = get_api_data(file_manager)?;
     api_data.japan.addressable_url = addressable_url.to_string();
@@ -65,6 +66,7 @@ pub fn update_global_addressable_url(file_manager: &FileManager, addressable_url
     save_api_data(file_manager, &api_data)
 }
 
+#[allow(dead_code)]
 pub fn update_global_version(file_manager: &FileManager, version: &str) -> Result<()> {
     let mut api_data = get_api_data(file_manager)?;
     api_data.global.version = version.to_string();

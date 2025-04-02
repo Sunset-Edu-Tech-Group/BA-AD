@@ -1,6 +1,6 @@
 use crate::crypto::catalog::{Catalog, Media, MediaCatalog, TableCatalog};
-use crate::helpers::config::{API_DATA_FILENAME, RegionConfig};
-use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
+use crate::helpers::config::{API_DATA_FILENAME, CATALOG_DOWNLOAD_CHUNK_SIZE, RegionConfig};
+use crate::helpers::download_manager::DownloadManager;
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
 use crate::utils::catalog_fetcher::CatalogFetcher;
@@ -94,11 +94,8 @@ pub struct CatalogParser<'a> {
 impl<'a> CatalogParser<'a> {
     pub fn new(file_manager: &'a FileManager, catalog_url: Option<String>, config: &RegionConfig) -> Self {
         let client: Client = Client::new();
-        let download_manager = DownloadManager::with_config(
-            client.clone(),
-            512 * 1024, // 512KB chunks for catalog files (usually smaller)
-            4,          // Fewer connections to avoid server throttling
-        );
+
+        let download_manager = DownloadManager::new(client.clone(), CATALOG_DOWNLOAD_CHUNK_SIZE);
 
         Self {
             client,
@@ -121,9 +118,7 @@ impl<'a> CatalogParser<'a> {
     async fn fetch_bytes(&self, url: &str) -> Result<Vec<u8>> {
         let temp_path: PathBuf = self.file_manager.create_temp_file("download", "bytes")?;
 
-        self.download_manager
-            .download_file_with_strategy(url, &temp_path, DownloadStrategy::SingleThread)
-            .await?;
+        self.download_manager.download(url, &temp_path, false, 4, 0, 1).await?;
 
         let bytes: Vec<u8> = std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
         let _ = std::fs::remove_file(temp_path);

@@ -52,20 +52,24 @@ pub struct DownloadArgs {
     pub media: bool,
 
     /// Download all game files
-    #[arg(short = 'a', long = "all")]
+    #[arg(long = "all", short = 'a')]
     pub all: bool,
 
     /// Output directory for the downloaded files
     #[arg(long = "output", short = 'o', default_value = "./output")]
     pub output: String,
 
-    /// Set a limit for concurrent downloads
-    #[arg(long = "limit", short = 'l', default_value = "0")]
-    pub limit: u32,
+    /// Set how many connections to use to download the files
+    #[arg(long = "connections", default_value = "0")]
+    pub connections: usize,
 
-    /// Set the number of threads for multithreaded downloads
-    #[arg(long = "multithread", short = 'r', default_value = "0")]
-    pub multithread: u32,
+    /// Set a limit for concurrent downloads
+    #[arg(long = "limit", default_value = "0")]
+    pub limit: usize,
+
+    /// Set the number of threads/cores used
+    #[arg(long = "multithread", default_value = "0")]
+    pub multithread: usize,
 
     /// Filter by name
     #[arg(long = "filter")]

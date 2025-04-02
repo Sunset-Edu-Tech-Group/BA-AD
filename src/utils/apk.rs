@@ -1,10 +1,9 @@
-use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
-use crate::helpers::download_manager::{DownloadManager, DownloadStrategy};
+use crate::helpers::config::{APK_DOWNLOAD_CHUNK_SIZE, APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
+use crate::helpers::download_manager::DownloadManager;
 use crate::helpers::file::FileManager;
 use crate::helpers::interface::{reset_download_progress, start_detailed_progress};
 use crate::helpers::json;
 use crate::helpers::logs::{info, warn};
-use crate::helpers::network::get_content_length;
 
 use anyhow::{Context, Result, anyhow};
 use regex::Regex;
@@ -48,7 +47,7 @@ pub struct ApkParser<'a> {
 impl<'a> ApkParser<'a> {
     pub fn new(file_manager: &'a FileManager, config: &RegionConfig) -> Result<Self> {
         let client: Client = Client::builder().default_headers(http_headers()).build()?;
-        let download_manager: DownloadManager = DownloadManager::with_config(client.clone(), 2 * 1024 * 1024, 10);
+        let download_manager = DownloadManager::new(client.clone(), APK_DOWNLOAD_CHUNK_SIZE);
 
         Ok(Self {
             client,
@@ -155,23 +154,9 @@ impl<'a> ApkParser<'a> {
         let body: String = versions_response.text().await?;
         let download_url: String = self.extract_download_url(&body)?;
         let need_download: bool = force_update || self.check_apk(&download_url, &apk_path).await?;
-        let remote_size: u64 = get_content_length(&self.client, &download_url).await?;
 
         if need_download {
-            info("Downloading apk");
-
-            start_detailed_progress(remote_size);
-
-            self.download_manager.init_batch_download(1, remote_size).await;
-            self.download_manager
-                .download_file_with_strategy(
-                    &download_url,
-                    &apk_path,
-                    DownloadStrategy::MultiThread {
-                        thread_count: self.download_manager.get_optimal_threads(remote_size),
-                    },
-                )
-                .await?;
+            self.download_manager.download(&download_url, &apk_path, true, 0, 0, 0).await?;
 
             reset_download_progress();
             info("Finished downloading apk");

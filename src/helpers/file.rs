@@ -178,27 +178,27 @@ impl FileManager {
 
         Ok(())
     }
+}
 
-    pub fn get_filename(&self, path: &Path) -> String {
-        path.file_name().and_then(|name| name.to_str()).unwrap_or("unknown file").to_string()
-    }
+pub fn get_filename(path: &Path) -> String {
+    path.file_name().and_then(|name| name.to_str()).unwrap_or("unknown file").to_string()
+}
 
-    pub fn canonical_path(&self, path: &PathBuf) -> Result<PathBuf> {
-        match std::fs::canonicalize(path) {
-            Ok(canonical) => Ok(canonical),
-            Err(e) => {
-                warn(&format!("Failed to canonicalize path {}: {}", path.display(), e));
+pub fn canonical_path(path: &PathBuf) -> Result<PathBuf> {
+    match std::fs::canonicalize(path) {
+        Ok(canonical) => Ok(canonical),
+        Err(e) => {
+            warn(&format!("Failed to canonicalize path {}: {}", path.display(), e));
 
-                let absolute_path = if path.is_absolute() {
-                    path.clone()
-                } else {
-                    std::env::current_dir()?.join(path)
-                };
+            let absolute_path = if path.is_absolute() {
+                path.clone()
+            } else {
+                std::env::current_dir()?.join(path)
+            };
 
-                fs::create_dir_all(&absolute_path)?;
+            fs::create_dir_all(&absolute_path)?;
 
-                Ok(absolute_path)
-            }
+            Ok(absolute_path)
         }
     }
 }
