@@ -7,7 +7,7 @@ use helpers::config::RegionConfig;
 use helpers::file::FileManager;
 use helpers::interface;
 use helpers::json;
-use helpers::logs::{debug, error, info, warn};
+use helpers::logs;
 use utils::apk::ApkParser;
 use utils::catalog_fetcher::CatalogFetcher;
 use utils::catalog_parser::CatalogParser;
@@ -20,18 +20,23 @@ use std::path::PathBuf;
 #[tokio::main]
 async fn main() -> Result<()> {
     let args: Cli = Cli::parse();
-    let file_manager: FileManager = FileManager::new()?;
+    let file_manager: FileManager = FileManager::new().await?;
+
+    logs::set_verbose_mode(args.verbose);
+    if args.verbose {
+        info!("Verbose logging enabled");
+    }
 
     interface::init_ui()?;
 
     if args.clean && args.update {
-        error("Cannot use both --clean and --update");
+        error!("Cannot use both --clean and --update");
         let err = anyhow::anyhow!("Cannot use both --clean and --update");
         shutdown_and_return_error(err)?;
     }
 
     let result = if args.clean {
-        clean_operation(&file_manager)
+        clean_operation(&file_manager).await
     } else if args.command.is_none() && args.update {
         update_operation(&args, &file_manager).await
     } else if let Some(ref command) = args.command {
@@ -50,21 +55,21 @@ fn shutdown_and_return_error(err: anyhow::Error) -> Result<()> {
     Err(err)
 }
 
-fn clean_operation(file_manager: &FileManager) -> Result<()> {
-    info("Cleaning data and cache directories...");
+async fn clean_operation(file_manager: &FileManager) -> Result<()> {
+    info!("Cleaning data and cache directories...");
 
     fs::remove_dir_all(file_manager.data_dir()).ok();
     fs::remove_dir_all(file_manager.cache_dir()).ok();
     fs::create_dir_all(file_manager.data_dir())?;
     fs::create_dir_all(file_manager.cache_dir())?;
 
-    info("Directories cleaned successfully");
+    info!("Directories cleaned successfully");
 
     return Ok(());
 }
 
 async fn update_operation(args: &Cli, file_manager: &FileManager) -> Result<()> {
-    info("Starting APK update process");
+    info!("Starting APK update process");
 
     let apk_parser: &ApkParser<'_> = &ApkParser::new(file_manager, &RegionConfig::new("japan"))?;
     fetch_apk(args, apk_parser).await?;
@@ -78,23 +83,18 @@ async fn handle_command(command: &Commands, args: &Cli, file_manager: &FileManag
             download_command(download_args, args, file_manager).await?;
         }
         Commands::Search(_) => {
-            warn("Search command not implemented yet");
+            warn!("Search command not implemented yet");
         }
         Commands::Extract(_) => {
-            warn("Extract command not implemented yet");
+            warn!("Extract command not implemented yet");
         }
     }
     Ok(())
 }
 
 async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager: &FileManager) -> Result<()> {
-    if download_args.multithread > 0 && download_args.limit > 0 {
-        error("Cannot use both --multithread and --limit options together");
-        return Err(anyhow::anyhow!("Cannot use both --multithread and --limit options together"));
-    }
-
     if download_args.all && (download_args.assets || download_args.tables || download_args.media) {
-        error("Cannot use --all with specific resource type options");
+        error!("Cannot use --all with specific resource type options");
         return Err(anyhow::anyhow!("Cannot use --all with specific resource type options"));
     }
 
@@ -108,7 +108,7 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
     let apk_parser: ApkParser<'_> = ApkParser::new(file_manager, &config)?;
 
     if args.clean {
-        file_manager.clean_region_directories(&config.id)?;
+        file_manager.clean_region_directories(&config.id).await?;
     }
 
     if args.update {
@@ -149,21 +149,16 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
     downloader.set_update(args.update);
 
     if download_args.multithread > 0 {
-        info(&format!("Using {} cores for downloads", download_args.multithread));
-        downloader.set_thread_count(download_args.multithread);
-    }
-
-    if download_args.connections > 0 {
-        info(&format!("Using {} connections per file", download_args.connections));
-        downloader.set_connections(download_args.connections);
+        info!("Using {} cores for downloads", download_args.multithread);
+        downloader.set_threads(download_args.multithread);
     }
 
     if download_args.limit > 0 {
-        info(&format!("Setting parallel download limit to {}", download_args.limit));
-        downloader.set_max_concurrent_downloads(download_args.limit);
+        info!("Setting parallel download limit to {}", download_args.limit);
+        downloader.set_limit(download_args.limit);
     }
 
-    info(&format!("Starting download to {}", output_path.display()));
+    info!("Starting download to {}", output_path.display());
     downloader.download(&categories).await?;
 
     Ok(())
@@ -186,7 +181,7 @@ async fn handle_region(args: &Cli, file_manager: &FileManager, config: &RegionCo
             }
         }
         _ => {
-            error(&format!("Invalid region: {}", config.id));
+            error!("Invalid region: {}", config.id);
             return Err(anyhow::anyhow!("Invalid region: {}", config.id));
         }
     }
@@ -200,14 +195,14 @@ async fn fetch_apk(args: &Cli, apk_parser: &ApkParser<'_>) -> Result<()> {
 }
 
 async fn process_apk(file_manager: &FileManager, config: &RegionConfig, apk_parser: &ApkParser<'_>) -> Result<()> {
-    info("Extracting APK...");
+    info!("Extracting APK...");
 
     let data_path: PathBuf = file_manager.data_path("data");
     if !data_path.exists() {
         let _ = file_manager.clean_dir(&data_path);
     }
 
-    apk_parser.extract_apk()?;
+    apk_parser.extract_apk().await?;
     fetch_japan_catalogs(file_manager, config).await?;
 
     Ok(())
@@ -220,7 +215,7 @@ async fn check_apk_update(args: &Cli, file_manager: &FileManager, config: &Regio
     fetch_apk(args, &apk_parser).await?;
 
     if !data_dir.exists() {
-        info("APK not extracted, extracting...");
+        info!("APK not extracted, extracting...");
 
         process_apk(file_manager, config, &apk_parser).await?;
 
@@ -228,7 +223,7 @@ async fn check_apk_update(args: &Cli, file_manager: &FileManager, config: &Regio
     }
 
     if !data_dir.join(game_files_path).exists() {
-        info("GameFiles.json doesn't exist, fetching...");
+        info!("GameFiles.json doesn't exist, fetching...");
 
         fetch_japan_catalogs(file_manager, config).await?;
         return Ok(());
@@ -238,16 +233,16 @@ async fn check_apk_update(args: &Cli, file_manager: &FileManager, config: &Regio
 }
 
 async fn fetch_japan_catalogs(file_manager: &FileManager, config: &RegionConfig) -> Result<()> {
-    info("Fetching catalog URL...");
+    info!("Fetching catalog URL...");
     let catalog_fetcher: CatalogFetcher<'_> = CatalogFetcher::new(file_manager);
     let catalog_url: String = catalog_fetcher.get_catalog_url(&config.id).await?;
 
-    info("Fetching and processing catalogs...");
+    info!("Fetching and processing catalogs...");
     let mut catalog_parser: CatalogParser<'_> = CatalogParser::new(file_manager, Some(catalog_url), config);
     catalog_parser.fetch_catalogs().await?;
     catalog_parser.save_game_files().await?;
 
-    info("Catalogs processed successfully");
+    info!("Catalogs processed successfully");
     Ok(())
 }
 
@@ -256,10 +251,10 @@ async fn check_global_catalogs(file_manager: &FileManager, config: &RegionConfig
     let resources_path_json: String = config.catalog_file_path("resources_path.json");
 
     if !file_manager.data_path(game_files_path.as_str()).exists() || !file_manager.data_path(resources_path_json.as_str()).exists() {
-        info("Global catalogs don't exist, fetching...");
+        info!("Global catalogs don't exist, fetching...");
         fetch_global_catalogs(file_manager, config).await?;
     } else {
-        info("Using existing global catalogs");
+        info!("Using existing global catalogs");
     }
 
     Ok(())
@@ -267,9 +262,9 @@ async fn check_global_catalogs(file_manager: &FileManager, config: &RegionConfig
 
 async fn fetch_global_catalogs(file_manager: &FileManager, config: &RegionConfig) -> Result<()> {
     let catalogs_path: PathBuf = file_manager.data_path(config.catalogs_path().as_str());
-    file_manager.create_dir(&catalogs_path)?;
+    file_manager.create_dir(&catalogs_path).await?;
 
-    let should_fetch: bool = match json::get_api_data(file_manager) {
+    let should_fetch: bool = match json::get_api_data(file_manager).await {
         Ok(api_data) => {
             let catalog_fetcher: CatalogFetcher<'_> = CatalogFetcher::new(file_manager);
             let current_url: String = catalog_fetcher.get_catalog_url(&config.id).await?;
@@ -280,21 +275,21 @@ async fn fetch_global_catalogs(file_manager: &FileManager, config: &RegionConfig
     };
 
     if should_fetch {
-        info("Fetching new global catalogs...");
+        info!("Fetching new global catalogs...");
         let mut catalog_parser: CatalogParser<'_> = CatalogParser::new(file_manager, None, config);
         catalog_parser.fetch_catalogs().await?;
         catalog_parser.save_game_files().await?;
-        info("Global catalogs updated successfully");
+        info!("Global catalogs updated successfully");
     } else {
-        info("Using existing global catalogs (addressable URL unchanged)");
+        info!("Using existing global catalogs (addressable URL unchanged)");
 
         let resources_path_json: String = config.catalog_file_path("resources_path.json");
         if !file_manager.data_path(resources_path_json.as_str()).exists() {
-            info("resources_path.json doesn't exist, fetching catalogs...");
+            info!("resources_path.json doesn't exist, fetching catalogs...");
             let mut catalog_parser: CatalogParser<'_> = CatalogParser::new(file_manager, None, config);
             catalog_parser.fetch_catalogs().await?;
             catalog_parser.save_game_files().await?;
-            info("Global catalogs fetched successfully");
+            info!("Global catalogs fetched successfully");
         }
     }
 

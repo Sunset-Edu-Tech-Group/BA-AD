@@ -5,5 +5,6 @@ pub mod file;
 pub mod interface;
 pub mod json;
 pub mod logs;
+pub mod macros;
 pub mod network;
 pub mod progress;

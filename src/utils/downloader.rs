@@ -1,19 +1,18 @@
 use std::collections::HashMap;
-use std::fs;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use reqwest::Client;
+use tokio::fs;
 
 use crate::crypto::hash;
-use crate::helpers::config::RESOURCE_DOWNLOAD_CHUNK_SIZE;
 use crate::helpers::download_manager::DownloadManager;
 use crate::helpers::file;
 use crate::helpers::file::FileManager;
 use crate::helpers::interface::{reset_download_progress, start_simple_progress};
-use crate::helpers::logs::{info, warn};
 use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
 use crate::utils::catalog_parser::{GlobalGameFile, JPGameFile};
+use crate::{debug, info, warn};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum ResourceCategory {
@@ -99,24 +98,19 @@ pub struct ResourceDownloader<'a> {
     catalog_url: Option<String>,
     output_path: PathBuf,
     region: Region,
-    download_manager: DownloadManager,
-    connections: usize,
-    cores: usize,
+    threads: usize,
     limit: usize,
     update: bool,
-    chunk_size: u64,
+    download_manager: DownloadManager,
 }
 
 impl<'a> ResourceDownloader<'a> {
     pub fn new(file_manager: &'a FileManager, region: Region, catalog_url: Option<String>, output_path: Option<&Path>) -> Result<Self> {
         let client: Client = Client::new();
-
-        let connections = 0;
-        let cores = 0;
+        let threads = 0;
         let limit = 1;
-        let chunk_size = RESOURCE_DOWNLOAD_CHUNK_SIZE;
 
-        let download_manager = DownloadManager::new(client, chunk_size);
+        let download_manager = DownloadManager::new(client, threads, limit);
 
         let output: PathBuf = match output_path {
             Some(path) => path.to_path_buf(),
@@ -128,20 +122,19 @@ impl<'a> ResourceDownloader<'a> {
             catalog_url,
             output_path: output,
             region,
-            download_manager,
-            connections,
-            cores,
+            threads,
             limit,
             update: false,
-            chunk_size,
+            download_manager,
         })
     }
 
-    pub fn set_max_concurrent_downloads(&mut self, limit: usize) {
+    pub fn set_limit(&mut self, limit: usize) {
         self.limit = limit;
+        self.download_manager = DownloadManager::new(reqwest::Client::new(), self.threads, limit);
     }
 
-    pub fn with_concurrent_downloads(mut self, limit: usize) -> Self {
+    pub fn with_limit(mut self, limit: usize) -> Self {
         self.limit = limit;
         self
     }
@@ -155,30 +148,13 @@ impl<'a> ResourceDownloader<'a> {
         self
     }
 
-    pub fn set_thread_count(&mut self, cores: usize) {
-        self.cores = cores;
+    pub fn set_threads(&mut self, threads: usize) {
+        self.threads = threads;
+        self.download_manager = DownloadManager::new(reqwest::Client::new(), threads, self.limit);
     }
 
-    pub fn with_thread_count(mut self, cores: usize) -> Self {
-        self.cores = cores;
-        self
-    }
-
-    pub fn set_connections(&mut self, connections: usize) {
-        self.connections = connections;
-    }
-
-    pub fn with_connections(mut self, connections: usize) -> Self {
-        self.connections = connections;
-        self
-    }
-
-    pub fn set_chunk_size(&mut self, chunk_size: u64) {
-        self.chunk_size = chunk_size;
-    }
-
-    pub fn with_chunk_size(mut self, chunk_size: u64) -> Self {
-        self.chunk_size = chunk_size;
+    pub fn with_threads(mut self, threads: usize) -> Self {
+        self.threads = threads;
         self
     }
 
@@ -214,7 +190,7 @@ impl<'a> ResourceDownloader<'a> {
                 let file_crc: u32 = hash::calculate_crc32(file_path.to_path_buf())?;
                 if file_crc != crc_value as u32 {
                     let filename = file::get_filename(file_path);
-                    warn(&format!("CRC mismatch for {}, will re-download", filename));
+                    warn!("CRC mismatch for {}, will re-download", filename);
                     return Ok(false);
                 }
             }
@@ -222,7 +198,7 @@ impl<'a> ResourceDownloader<'a> {
                 let file_md5: String = hash::calculate_md5(file_path.to_path_buf())?;
                 if file_md5 != md5_value {
                     let filename = file::get_filename(file_path);
-                    warn(&format!("MD5 mismatch for {}, will re-download", filename));
+                    warn!("MD5 mismatch for {}, will re-download", filename);
                     return Ok(false);
                 }
             }
@@ -232,45 +208,13 @@ impl<'a> ResourceDownloader<'a> {
         }
 
         let filename = file::get_filename(file_path);
-        warn(&format!("Skipping {}, already downloaded", filename));
+        warn!("Skipping {}, already downloaded", filename);
 
         Ok(true)
     }
 
-    async fn download_file(&self, url: String, output_path: PathBuf, crc: Option<i64>, md5: Option<&str>) -> Result<()> {
-        let parent: Option<&Path> = output_path.parent();
-        if parent.is_some() && !parent.unwrap().exists() {
-            fs::create_dir_all(parent.unwrap())?;
-        }
-
-        let crc_match: bool = match crc {
-            Some(crc_val) => self.check_file(&output_path, Some(crc_val), None).await?,
-            None => false,
-        };
-        if crc_match {
-            return Ok(());
-        }
-
-        let md5_match: bool = match md5 {
-            Some(ref md5_val) => self.check_file(&output_path, None, Some(md5_val)).await?,
-            None => false,
-        };
-        if md5_match {
-            return Ok(());
-        }
-
-        self.download_manager
-            .download(&url, &output_path, false, self.connections, self.cores, self.limit)
-            .await?;
-
-        let file_name = file::get_filename(&output_path);
-        info(&format!("Downloaded {}", file_name));
-
-        Ok(())
-    }
-
     async fn download_category<T: GameFile>(&self, files: &[T], base_path: &PathBuf) -> Result<()> {
-        fs::create_dir_all(base_path)?;
+        fs::create_dir_all(base_path).await?;
 
         let mut total_size: u64 = 0;
         for file in files {
@@ -280,13 +224,16 @@ impl<'a> ResourceDownloader<'a> {
         }
 
         start_simple_progress(files.len());
-        self.download_manager.init_batch_download(files.len(), total_size).await;
 
-        let output_dir = match std::fs::canonicalize(base_path) {
+        let output_dir = match fs::canonicalize(base_path).await {
             Ok(path) => path,
             Err(_) => base_path.clone(),
         };
 
+        debug!("Using {} threads", self.threads);
+        debug!("Using {} limit", self.limit);
+
+        let mut url_path = Vec::new();
         for file in files {
             let file_path = match file.get_path() {
                 Some(p) => p.to_string(),
@@ -294,8 +241,42 @@ impl<'a> ResourceDownloader<'a> {
             };
             let output_path = output_dir.join(&file_path);
 
-            self.download_file(file.get_url().to_string(), output_path, file.get_crc(), file.get_hash())
-                .await?;
+            debug!("File Path: {}", file_path);
+
+            let crc_match: bool = match file.get_crc() {
+                Some(crc_val) => self.check_file(&output_path, Some(crc_val), None).await?,
+                None => false,
+            };
+
+            let md5_match: bool = match file.get_hash() {
+                Some(hash_val) => self.check_file(&output_path, None, Some(hash_val)).await?,
+                None => false,
+            };
+
+            debug!("CRC {:?} Match: {}", file.get_crc(), crc_match);
+            debug!("MD5 {:?} Match: {}", file.get_hash(), md5_match);
+
+            if !crc_match && !md5_match {
+                let url = file.get_url().to_string();
+
+                debug!("URL: {}", url);
+                debug!("Output Path {}", output_path.display());
+
+                url_path.push((url, output_path));
+            }
+        }
+
+        if !url_path.is_empty() {
+            info!("Downloading {} files", url_path.len());
+            let results = self.download_manager.download_files(url_path).await;
+
+            for result in results {
+                if let Err(e) = result {
+                    warn!("Error downloading file: {}", e);
+                }
+            }
+        } else {
+            info!("No files to download");
         }
 
         reset_download_progress();
@@ -324,22 +305,22 @@ impl<'a> ResourceDownloader<'a> {
     async fn fetch_category(&self, game_files: &GameFiles<'_>, category: ResourceCategory, base_path: &Path) -> Result<()> {
         match category {
             ResourceCategory::AssetBundles => {
-                info("Downloading AssetBundles...");
+                info!("Downloading AssetBundles...");
                 let category_path = base_path.join("AssetBundles");
                 self.process_category(game_files, category, &category_path).await?;
             }
             ResourceCategory::TableBundles => {
-                info("Downloading TableBundles...");
+                info!("Downloading TableBundles...");
                 let category_path = base_path.join("TableBundles");
                 self.process_category(game_files, category, &category_path).await?;
             }
             ResourceCategory::MediaResources => {
-                info("Downloading MediaResources...");
+                info!("Downloading MediaResources...");
                 let category_path = base_path.join("MediaResources");
                 self.process_category(game_files, category, &category_path).await?;
             }
             ResourceCategory::All => {
-                info("Downloading Everything...");
+                info!("Downloading Everything...");
             }
         }
 
@@ -361,7 +342,6 @@ impl<'a> ResourceDownloader<'a> {
     }
 
     pub async fn download(&self, categories: &[ResourceCategory]) -> Result<()> {
-        // Reset any existing progress before starting new downloads
         reset_download_progress();
 
         let region_config = crate::helpers::config::RegionConfig::new(self.region.as_str());
@@ -388,7 +368,6 @@ impl<'a> ResourceDownloader<'a> {
             }
         }
 
-        // Reset progress display at the end of all downloads
         reset_download_progress();
 
         Ok(())

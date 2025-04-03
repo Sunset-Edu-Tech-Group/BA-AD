@@ -20,17 +20,36 @@ pub async fn get_content_length(client: &Client, download_url: &str) -> Result<u
     Ok(remote_size)
 }
 
-pub fn format_size(size: u64) -> String {
-    const KB: u64 = 1024;
-    const MB: u64 = KB * 1024;
-    const GB: u64 = MB * 1024;
+pub fn format_speed(speed_kbps: u64) -> String {
+    if speed_kbps >= 1024 * 1024 {
+        format!("{:.2} Gbps", speed_kbps as f64 / (1024.0 * 1024.0))
+    } else if speed_kbps >= 1024 {
+        format!("{:.2} Mbps", speed_kbps as f64 / 1024.0)
+    } else if speed_kbps > 0 {
+        format!("{} kbps", speed_kbps)
+    } else {
+        "0 kbps".to_string()
+    }
+}
 
-    if size >= GB {
-        format!("{:.2} GB", size as f64 / GB as f64)
-    } else if size >= MB {
-        format!("{:.2} MB", size as f64 / MB as f64)
-    } else if size >= KB {
-        format!("{:.2} KB", size as f64 / KB as f64)
+pub fn format_size(size: u64) -> String {
+    const KB: f64 = 1024.0;
+    const MB: f64 = KB * 1024.0;
+    const GB: f64 = MB * 1024.0;
+    const TB: f64 = GB * 1024.0;
+
+    let size_f64 = size as f64;
+
+    if size_f64 >= TB {
+        format!("{:.2} TB", size_f64 / TB)
+    } else if size_f64 >= GB {
+        format!("{:.2} GB", size_f64 / GB)
+    } else if size_f64 >= MB {
+        format!("{:.2} MB", size_f64 / MB)
+    } else if size_f64 >= KB {
+        format!("{:.2} KB", size_f64 / KB)
+    } else if size == 0 {
+        "0 B".to_string()
     } else {
         format!("{} B", size)
     }

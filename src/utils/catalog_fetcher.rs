@@ -97,8 +97,7 @@ impl<'a> CatalogFetcher<'a> {
             .filter_map(Result::ok)
             .filter(|e| e.file_type().is_file())
         {
-            let content: Vec<u8> =
-                std::fs::read(entry.path()).with_context(|| format!("Failed to read file: {}", entry.path().display()))?;
+            let content: Vec<u8> = std::fs::read(entry.path()).with_context(|| format!("Failed to read file: {}", entry.path().display()))?;
 
             if let Some(start_index) = content
                 .windows(GAME_CONFIG_PATTERN.len())
@@ -116,52 +115,47 @@ impl<'a> CatalogFetcher<'a> {
         Ok(None)
     }
 
-    pub fn save_catalog_url(&self, catalog_url: &str, region: &str, version: Option<&str>) -> Result<()> {
+    pub async fn save_catalog_url(&self, catalog_url: &str, region: &str, version: Option<&str>) -> Result<()> {
         match region {
-            "japan" => json::update_japan_catalog_url(self.file_manager, catalog_url),
+            "japan" => json::update_japan_catalog_url(self.file_manager, catalog_url).await,
             "global" => {
                 if let Some(ver) = version {
-                    json::update_region_data(self.file_manager, region, None, Some(catalog_url), Some(ver))
+                    json::update_region_data(self.file_manager, region, None, Some(catalog_url), Some(ver)).await
                 } else {
-                    json::update_global_addressable_url(self.file_manager, catalog_url)
+                    json::update_global_addressable_url(self.file_manager, catalog_url).await
                 }
             }
             _ => Err(anyhow::anyhow!("Invalid region: {}", region)),
         }
     }
 
-    pub fn save_addressable_url(&self, addressable_url: &str, region: &str) -> Result<()> {
+    pub async fn save_addressable_url(&self, addressable_url: &str, region: &str) -> Result<()> {
         match region {
-            "japan" => json::update_japan_addressable_url(self.file_manager, addressable_url),
-            "global" => json::update_global_addressable_url(self.file_manager, addressable_url),
+            "japan" => json::update_japan_addressable_url(self.file_manager, addressable_url).await,
+            "global" => json::update_global_addressable_url(self.file_manager, addressable_url).await,
             _ => Err(anyhow::anyhow!("Invalid region: {}", region)),
         }
     }
 
     pub async fn get_catalog_url(&self, region: &str) -> Result<String> {
         match region {
-            "japan" => self.get_jp_catalog_url(),
+            "japan" => self.get_jp_catalog_url().await,
             "global" => self.get_global_catalog_url().await,
             _ => Err(anyhow::anyhow!("Invalid region: {}", region)),
         }
     }
 
-    fn get_jp_catalog_url(&self) -> Result<String> {
-        let config_data: Vec<u8> = self
-            .find_game_config()?
-            .ok_or_else(|| anyhow::anyhow!("Game config not found"))?;
+    async fn get_jp_catalog_url(&self) -> Result<String> {
+        let config_data: Vec<u8> = self.find_game_config()?.ok_or_else(|| anyhow::anyhow!("Game config not found"))?;
 
         let config: GameMainConfig = GameMainConfig::from_bytes(&config_data)?;
-        self.save_catalog_url(&config.server_info_data_url, "japan", None)?;
+        self.save_catalog_url(&config.server_info_data_url, "japan", None).await?;
         Ok(config.server_info_data_url)
     }
 
     async fn get_global_catalog_url(&self) -> Result<String> {
         let version: String = self.get_global_version().await?;
-        let build_number: &str = version
-            .split('.')
-            .last()
-            .ok_or_else(|| anyhow::anyhow!("Invalid version format"))?;
+        let build_number: &str = version.split('.').last().ok_or_else(|| anyhow::anyhow!("Invalid version format"))?;
 
         let api_response: ApiResponse = self
             .client
@@ -177,7 +171,7 @@ impl<'a> CatalogFetcher<'a> {
             .json::<ApiResponse>()
             .await?;
 
-        self.save_catalog_url(&api_response.patch.resource_path, "global", Some(&version))?;
+        self.save_catalog_url(&api_response.patch.resource_path, "global", Some(&version)).await?;
         Ok(api_response.patch.resource_path)
     }
 

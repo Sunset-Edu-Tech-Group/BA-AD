@@ -5,26 +5,26 @@ use crate::helpers::config::API_DATA_FILENAME;
 use crate::helpers::file::FileManager;
 use crate::utils::apk::{ApiData, GlobalRegionData, RegionData};
 
-pub fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename: &str) -> Result<T> {
-    let json_data: String = file_manager.load_text(filename)?;
+pub async fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename: &str) -> Result<T> {
+    let json_data: String = file_manager.load_text(filename).await?;
     serde_json::from_str(&json_data).with_context(|| format!("Failed to parse JSON from file: {}", filename))
 }
 
-pub fn save_json<T: Serialize>(file_manager: &FileManager, filename: &str, data: &T) -> Result<()> {
+pub async fn save_json<T: Serialize>(file_manager: &FileManager, filename: &str, data: &T) -> Result<()> {
     let json_data: String = serde_json::to_string_pretty(data).context("Failed to serialize data to JSON")?;
-    file_manager.save_text(filename, &json_data)
+    file_manager.save_text(filename, &json_data).await
 }
 
-pub fn get_api_data(file_manager: &FileManager) -> Result<ApiData> {
+pub async fn get_api_data(file_manager: &FileManager) -> Result<ApiData> {
     if file_manager.data_path(API_DATA_FILENAME).exists() {
-        load_json(file_manager, API_DATA_FILENAME)
+        load_json(file_manager, API_DATA_FILENAME).await
     } else {
         Ok(create_default_api_data())
     }
 }
 
-pub fn save_api_data(file_manager: &FileManager, api_data: &ApiData) -> Result<()> {
-    save_json(file_manager, API_DATA_FILENAME, api_data)
+pub async fn save_api_data(file_manager: &FileManager, api_data: &ApiData) -> Result<()> {
+    save_json(file_manager, API_DATA_FILENAME, api_data).await
 }
 
 pub fn create_default_api_data() -> ApiData {
@@ -41,46 +41,46 @@ pub fn create_default_api_data() -> ApiData {
     }
 }
 
-pub fn update_japan_catalog_url(file_manager: &FileManager, catalog_url: &str) -> Result<()> {
-    let mut api_data = get_api_data(file_manager)?;
+pub async fn update_japan_catalog_url(file_manager: &FileManager, catalog_url: &str) -> Result<()> {
+    let mut api_data = get_api_data(file_manager).await?;
     api_data.japan.catalog_url = catalog_url.to_string();
-    save_api_data(file_manager, &api_data)
+    save_api_data(file_manager, &api_data).await
 }
 
 #[allow(dead_code)]
-pub fn update_japan_addressable_url(file_manager: &FileManager, addressable_url: &str) -> Result<()> {
-    let mut api_data = get_api_data(file_manager)?;
+pub async fn update_japan_addressable_url(file_manager: &FileManager, addressable_url: &str) -> Result<()> {
+    let mut api_data = get_api_data(file_manager).await?;
     api_data.japan.addressable_url = addressable_url.to_string();
-    save_api_data(file_manager, &api_data)
+    save_api_data(file_manager, &api_data).await
 }
 
-pub fn update_japan_version(file_manager: &FileManager, version: &str) -> Result<()> {
-    let mut api_data = get_api_data(file_manager)?;
+pub async fn update_japan_version(file_manager: &FileManager, version: &str) -> Result<()> {
+    let mut api_data = get_api_data(file_manager).await?;
     api_data.japan.version = version.to_string();
-    save_api_data(file_manager, &api_data)
+    save_api_data(file_manager, &api_data).await
 }
 
-pub fn update_global_addressable_url(file_manager: &FileManager, addressable_url: &str) -> Result<()> {
-    let mut api_data = get_api_data(file_manager)?;
+pub async fn update_global_addressable_url(file_manager: &FileManager, addressable_url: &str) -> Result<()> {
+    let mut api_data = get_api_data(file_manager).await?;
     api_data.global.addressable_url = addressable_url.to_string();
-    save_api_data(file_manager, &api_data)
+    save_api_data(file_manager, &api_data).await
 }
 
 #[allow(dead_code)]
-pub fn update_global_version(file_manager: &FileManager, version: &str) -> Result<()> {
-    let mut api_data = get_api_data(file_manager)?;
+pub async fn update_global_version(file_manager: &FileManager, version: &str) -> Result<()> {
+    let mut api_data = get_api_data(file_manager).await?;
     api_data.global.version = version.to_string();
-    save_api_data(file_manager, &api_data)
+    save_api_data(file_manager, &api_data).await
 }
 
-pub fn update_region_data(
+pub async fn update_region_data(
     file_manager: &FileManager,
     region: &str,
     catalog_url: Option<&str>,
     addressable_url: Option<&str>,
     version: Option<&str>,
 ) -> Result<()> {
-    let mut api_data: ApiData = get_api_data(file_manager)?;
+    let mut api_data: ApiData = get_api_data(file_manager).await?;
 
     match region {
         "japan" => {
@@ -105,5 +105,5 @@ pub fn update_region_data(
         _ => return Err(anyhow::anyhow!("Invalid region: {}", region)),
     }
 
-    save_api_data(file_manager, &api_data)
+    save_api_data(file_manager, &api_data).await
 }

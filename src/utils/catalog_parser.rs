@@ -1,6 +1,6 @@
 use crate::crypto::catalog::{Catalog, Media, MediaCatalog, TableCatalog};
-use crate::helpers::config::{API_DATA_FILENAME, CATALOG_DOWNLOAD_CHUNK_SIZE, RegionConfig};
-use crate::helpers::download_manager::DownloadManager;
+use crate::debug;
+use crate::helpers::config::{API_DATA_FILENAME, RegionConfig};
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
 use crate::utils::catalog_fetcher::CatalogFetcher;
@@ -88,14 +88,13 @@ pub struct CatalogParser<'a> {
     catalog_url: Option<String>,
     region_config: RegionConfig,
     addressable_url_cache: Option<String>,
-    download_manager: DownloadManager,
 }
 
 impl<'a> CatalogParser<'a> {
     pub fn new(file_manager: &'a FileManager, catalog_url: Option<String>, config: &RegionConfig) -> Self {
         let client: Client = Client::new();
 
-        let download_manager = DownloadManager::new(client.clone(), CATALOG_DOWNLOAD_CHUNK_SIZE);
+        // let download_manager = DownloadManager::new(client.clone(), CATALOG_DOWNLOAD_CHUNK_SIZE);
 
         Self {
             client,
@@ -103,7 +102,6 @@ impl<'a> CatalogParser<'a> {
             catalog_url,
             region_config: config.clone(),
             addressable_url_cache: None,
-            download_manager,
         }
     }
 
@@ -116,22 +114,25 @@ impl<'a> CatalogParser<'a> {
     }
 
     async fn fetch_bytes(&self, url: &str) -> Result<Vec<u8>> {
-        let temp_path: PathBuf = self.file_manager.create_temp_file("download", "bytes")?;
+        let temp_path: PathBuf = self.file_manager.create_temp_file("download", "bytes").await?;
+        let filename = url.split('/').last().unwrap_or("catalog");
 
-        self.download_manager.download(url, &temp_path, false, 4, 0, 1).await?;
+        debug!("Fetching catalog file: {}", filename);
+
+        // self.download_manager.download(url, &temp_path, false, 4, 0, 1).await?;
 
         let bytes: Vec<u8> = std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
         let _ = std::fs::remove_file(temp_path);
 
         if rand::random::<f32>() < 0.01 {
-            let _ = self.file_manager.cleanup_temp_files();
+            let _ = self.file_manager.cleanup_temp_files().await;
         }
 
         Ok(bytes)
     }
 
-    fn get_cached_addressable_url(&self, region: &str) -> Result<String> {
-        let api_data: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, API_DATA_FILENAME)?;
+    async fn get_cached_addressable_url(&self, region: &str) -> Result<String> {
+        let api_data: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, API_DATA_FILENAME).await?;
 
         let url: &str = api_data
             .get(region)
@@ -143,7 +144,7 @@ impl<'a> CatalogParser<'a> {
     }
 
     pub async fn save_addressable_url(&self, addressable_url: &str) -> Result<()> {
-        json::update_region_data(self.file_manager, &self.region_config.id, None, Some(addressable_url), None)
+        json::update_region_data(self.file_manager, &self.region_config.id, None, Some(addressable_url), None).await
     }
 
     pub async fn fetch_addressable_url(&mut self) -> Result<String> {
@@ -174,30 +175,30 @@ impl<'a> CatalogParser<'a> {
 
     pub async fn fetch_catalogs(&mut self) -> Result<()> {
         let catalog_path: PathBuf = self.file_manager.data_path(&format!("catalogs/{}", self.region_config.id));
-        self.file_manager.create_dir(&catalog_path)?;
+        self.file_manager.create_dir(&catalog_path).await?;
 
         match self.region_config.id.as_str() {
             "global" => {
                 let catalog_fetcher: CatalogFetcher<'_> = CatalogFetcher::new(self.file_manager);
                 let global_url: String = catalog_fetcher.get_catalog_url("global").await?;
                 let resources_data: serde_json::Value = self.fetch_data(&global_url).await?;
-                json::save_json(self.file_manager, &self.get_file_path("resources_path.json"), &resources_data)?;
+                json::save_json(self.file_manager, &self.get_file_path("resources_path.json"), &resources_data).await?;
             }
             _ => {
                 let addressable_url: String = self.fetch_addressable_url().await?;
 
                 let bundle_data: BundleDownloadInfo = self.fetch_data(&format!("{}/Android/bundleDownloadInfo.json", addressable_url)).await?;
-                json::save_json(self.file_manager, &self.get_file_path("bundleDownloadInfo.json"), &bundle_data)?;
+                json::save_json(self.file_manager, &self.get_file_path("bundleDownloadInfo.json"), &bundle_data).await?;
 
                 let table_data: Vec<u8> = self.fetch_bytes(&format!("{}/TableBundles/TableCatalog.bytes", addressable_url)).await?;
                 let table_catalog = TableCatalog::deserialize(&table_data, &addressable_url)?;
-                table_catalog.to_json(self.file_manager, &self.get_file_path("TableCatalog.json"))?;
+                table_catalog.to_json(self.file_manager, &self.get_file_path("TableCatalog.json")).await?;
 
                 let media_data: Vec<u8> = self
                     .fetch_bytes(&format!("{}/MediaResources/Catalog/MediaCatalog.bytes", addressable_url))
                     .await?;
                 let media_catalog: Catalog<Media> = MediaCatalog::deserialize(&media_data, &addressable_url)?;
-                media_catalog.to_json(self.file_manager, &self.get_file_path("MediaCatalog.json"))?;
+                media_catalog.to_json(self.file_manager, &self.get_file_path("MediaCatalog.json")).await?;
             }
         }
 
@@ -207,21 +208,21 @@ impl<'a> CatalogParser<'a> {
     pub async fn get_game_jp_files(&mut self) -> Result<JPGameFiles> {
         let addressable_url: String = match &self.addressable_url_cache {
             Some(url) => url.clone(),
-            None => match self.get_cached_addressable_url("japan") {
+            None => match self.get_cached_addressable_url("japan").await {
                 Ok(url) => url,
                 Err(_) => self.fetch_addressable_url().await?,
             },
         };
 
-        let bundle_data: BundleDownloadInfo = json::load_json(self.file_manager, &self.get_file_path("bundleDownloadInfo.json"))?;
+        let bundle_data: BundleDownloadInfo = json::load_json(self.file_manager, &self.get_file_path("bundleDownloadInfo.json")).await?;
 
-        let table_catalog: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, &self.get_file_path("TableCatalog.json"))?;
+        let table_catalog: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, &self.get_file_path("TableCatalog.json")).await?;
         let table_data: &serde_json::Map<String, serde_json::Value> = table_catalog
             .get("Table")
             .and_then(|v| v.as_object())
             .context("Failed to find Table field in TableCatalog")?;
 
-        let media_catalog: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, &self.get_file_path("MediaCatalog.json"))?;
+        let media_catalog: HashMap<String, serde_json::Value> = json::load_json(self.file_manager, &self.get_file_path("MediaCatalog.json")).await?;
         let media_data: &serde_json::Map<String, serde_json::Value> = media_catalog
             .get("Table")
             .and_then(|v| v.as_object())
@@ -280,9 +281,9 @@ impl<'a> CatalogParser<'a> {
     }
 
     pub async fn get_game_global_files(&self) -> Result<GlobalGameFiles> {
-        let resources_data: serde_json::Value = json::load_json(self.file_manager, &self.get_file_path("resources_path.json"))?;
+        let resources_data: serde_json::Value = json::load_json(self.file_manager, &self.get_file_path("resources_path.json")).await?;
 
-        let addressable_url: String = match self.get_cached_addressable_url("global") {
+        let addressable_url: String = match self.get_cached_addressable_url("global").await {
             Ok(url) => url.replace("/resource-data.json", ""),
             Err(_) => return Err(anyhow::anyhow!("Global addressable URL not found")),
         };
@@ -328,11 +329,11 @@ impl<'a> CatalogParser<'a> {
         match self.region_config.id.as_str() {
             "global" => {
                 let global_files: GlobalGameFiles = self.get_game_global_files().await?;
-                json::save_json(self.file_manager, &self.get_file_path("GameFiles.json"), &global_files)?;
+                json::save_json(self.file_manager, &self.get_file_path("GameFiles.json"), &global_files).await?;
             }
             _ => {
                 let jp_files: JPGameFiles = self.get_game_jp_files().await?;
-                json::save_json(self.file_manager, &self.get_file_path("GameFiles.json"), &jp_files)?;
+                json::save_json(self.file_manager, &self.get_file_path("GameFiles.json"), &jp_files).await?;
             }
         }
 

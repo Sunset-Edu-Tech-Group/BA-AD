@@ -19,6 +19,10 @@ pub struct Cli {
     /// Force update the apk
     #[arg(short = 'u', long = "update", global = true)]
     pub update: bool,
+
+    /// Enable verbose logging (debug messages)
+    #[arg(short = 'v', long = "verbose", global = true)]
+    pub verbose: bool,
 }
 
 #[derive(Debug, Subcommand)]
@@ -59,12 +63,8 @@ pub struct DownloadArgs {
     #[arg(long = "output", short = 'o', default_value = "./output")]
     pub output: String,
 
-    /// Set how many connections to use to download the files
-    #[arg(long = "connections", default_value = "0")]
-    pub connections: usize,
-
     /// Set a limit for concurrent downloads
-    #[arg(long = "limit", default_value = "0")]
+    #[arg(long = "limit", default_value = "50")]
     pub limit: usize,
 
     /// Set the number of threads/cores used

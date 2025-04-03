@@ -54,8 +54,8 @@ impl<T: Serialize + for<'de> Deserialize<'de> + Clone> Catalog<T> {
         }
     }
 
-    pub fn to_json(&self, file_manager: &FileManager, filename: &str) -> Result<()> {
-        json::save_json(file_manager, filename, self)
+    pub async fn to_json(&self, file_manager: &FileManager, filename: &str) -> Result<()> {
+        json::save_json(file_manager, filename, self).await
     }
 
     pub fn get_table(&self) -> &HashMap<String, T> {
