@@ -1,10 +1,10 @@
 pub mod table_encryption_service {
-    use crate::crypto::xxhash;
-
     use anyhow::Result;
     use base64::{Engine, engine::general_purpose};
     use byteorder::{ByteOrder, LittleEndian};
     use rand_mt::Mt;
+
+    use crate::crypto::xxhash;
 
     fn gen_int31(rng: &mut Mt) -> u32 {
         rng.next_u32() >> 1
@@ -170,10 +170,7 @@ pub mod table_encryption_service {
     pub fn convert_string(value: &str, key: &[u8]) -> Result<String> {
         let mut raw: Vec<u8> = general_purpose::STANDARD.decode(value.as_bytes())?;
         let bytes: Vec<u8> = xor_with_key(&mut raw, key);
-        let utf16_bytes: Vec<u16> = bytes
-            .chunks_exact(2)
-            .map(|x| u16::from_le_bytes([x[0], x[1]]))
-            .collect::<Vec<u16>>();
+        let utf16_bytes: Vec<u16> = bytes.chunks_exact(2).map(|x| u16::from_le_bytes([x[0], x[1]])).collect::<Vec<u16>>();
         match String::from_utf16(&utf16_bytes) {
             Ok(s) => Ok(s),
             Err(_) => Ok(bytes.iter().map(|x| *x as char).collect::<String>()),

@@ -1,19 +1,20 @@
+use std::fs;
+use std::fs::File;
+use std::io::{self, Cursor, Read};
+use std::path::PathBuf;
+
+use anyhow::{Context, Result, anyhow};
+use regex::Regex;
+use reqwest::{Client, Response};
+use serde::{Deserialize, Serialize};
+use zip::ZipArchive;
+
 use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
 use crate::helpers::download_manager::DownloadManager;
 use crate::helpers::file::FileManager;
 use crate::helpers::interface::{reset_download_progress, start_detailed_progress};
 use crate::helpers::json;
 use crate::{info, warn};
-
-use anyhow::{Context, Result, anyhow};
-use regex::Regex;
-use reqwest::{Client, Response};
-use serde::{Deserialize, Serialize};
-use std::fs;
-use std::fs::File;
-use std::io::{self, Cursor, Read};
-use std::path::PathBuf;
-use zip::ZipArchive;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RegionData {

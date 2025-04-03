@@ -1,15 +1,16 @@
-use crate::crypto::table_encryption::table_encryption_service;
-use crate::helpers::config::{API_URL, GAME_CONFIG_PATTERN, PLAYSTORE_URL};
-use crate::helpers::file::FileManager;
-use crate::helpers::json;
+use std::collections::HashMap;
+use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use base64::{Engine, engine::general_purpose};
 use regex::Regex;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::path::PathBuf;
+
+use crate::crypto::table_encryption::table_encryption_service;
+use crate::helpers::config::{API_URL, GAME_CONFIG_PATTERN, PLAYSTORE_URL};
+use crate::helpers::file::FileManager;
+use crate::helpers::json;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "PascalCase")]

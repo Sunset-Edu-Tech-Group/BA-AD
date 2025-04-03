@@ -1,6 +1,7 @@
+use std::path::PathBuf;
+
 use anyhow::Result;
 use md5::{Digest, Md5};
-use std::path::PathBuf;
 
 pub fn calculate_crc32(path: PathBuf) -> Result<u32> {
     let data: Vec<u8> = std::fs::read(path)?;

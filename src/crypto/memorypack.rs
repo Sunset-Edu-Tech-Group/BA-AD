@@ -1,6 +1,7 @@
+use std::io::{Cursor, Read};
+
 use anyhow::Result;
 use byteorder::{LittleEndian, ReadBytesExt};
-use std::io::{Cursor, Read};
 
 pub fn read_string(cursor: &mut Cursor<&[u8]>) -> Result<String> {
     let length: usize = read_i32(cursor)? as usize;
