@@ -290,11 +290,11 @@ pub fn reset_download_progress() {
 }
 
 pub fn init_ui() -> Result<()> {
-    // let ui: TerminalUI = TerminalUI::new()?;
-    // let handle: UiHandle = ui.start_in_background();
+    let ui: TerminalUI = TerminalUI::new()?;
+    let handle: UiHandle = ui.start_in_background();
 
-    // let mut ui_handle = UI_HANDLE.lock().unwrap();
-    // *ui_handle = Some(handle);
+    let mut ui_handle = UI_HANDLE.lock().unwrap();
+    *ui_handle = Some(handle);
 
     Ok(())
 }
@@ -305,9 +305,9 @@ pub fn is_ui_running() -> bool {
     ui_handle.as_ref().map_or(false, |handle| handle.is_running())
 }
 pub fn shutdown_ui() -> Result<()> {
-    // let mut ui_handle = UI_HANDLE.lock().unwrap();
-    // if let Some(mut handle) = ui_handle.take() {
-    //     handle.stop()?;
-    // }
+    let mut ui_handle = UI_HANDLE.lock().unwrap();
+    if let Some(mut handle) = ui_handle.take() {
+        handle.stop()?;
+    }
     Ok(())
 }

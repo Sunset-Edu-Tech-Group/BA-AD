@@ -1,16 +1,18 @@
-use crate::crypto::catalog::{Catalog, Media, MediaCatalog, TableCatalog};
-use crate::debug;
-use crate::helpers::config::{API_DATA_FILENAME, RegionConfig};
-use crate::helpers::file::FileManager;
-use crate::helpers::json;
-use crate::utils::catalog_fetcher::CatalogFetcher;
+use std::collections::HashMap;
+use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 use rand;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::path::PathBuf;
+
+use crate::crypto::catalog::{Catalog, Media, MediaCatalog, TableCatalog};
+use crate::debug;
+use crate::helpers::config::{API_DATA_FILENAME, RegionConfig};
+use crate::helpers::download_manager::DownloadManager;
+use crate::helpers::file::FileManager;
+use crate::helpers::json;
+use crate::utils::catalog_fetcher::CatalogFetcher;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ConnectionGroup {
@@ -88,13 +90,14 @@ pub struct CatalogParser<'a> {
     catalog_url: Option<String>,
     region_config: RegionConfig,
     addressable_url_cache: Option<String>,
+    download_manager: DownloadManager,
 }
 
 impl<'a> CatalogParser<'a> {
     pub fn new(file_manager: &'a FileManager, catalog_url: Option<String>, config: &RegionConfig) -> Self {
         let client: Client = Client::new();
 
-        // let download_manager = DownloadManager::new(client.clone(), CATALOG_DOWNLOAD_CHUNK_SIZE);
+        let download_manager = DownloadManager::new(client.clone(), 0, 1);
 
         Self {
             client,
@@ -102,6 +105,7 @@ impl<'a> CatalogParser<'a> {
             catalog_url,
             region_config: config.clone(),
             addressable_url_cache: None,
+            download_manager,
         }
     }
 
@@ -119,7 +123,7 @@ impl<'a> CatalogParser<'a> {
 
         debug!("Fetching catalog file: {}", filename);
 
-        // self.download_manager.download(url, &temp_path, false, 4, 0, 1).await?;
+        self.download_manager.download_file(url, &temp_path).await?;
 
         let bytes: Vec<u8> = std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
         let _ = std::fs::remove_file(temp_path);

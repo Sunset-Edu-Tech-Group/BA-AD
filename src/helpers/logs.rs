@@ -31,15 +31,15 @@ pub fn is_verbose_enabled() -> bool {
 }
 
 pub fn log(level: LogLevel, message: String) {
-    // if level == LogLevel::Debug && !is_verbose_enabled() {
-    //     return;
-    // }
+    if level == LogLevel::Debug && !is_verbose_enabled() {
+        return;
+    }
 
-    // let log_message = LogMessage { level, message };
+    let log_message = LogMessage { level, message };
 
-    // if let Ok(mut logs) = LOGS.lock() {
-    //     logs.push(log_message);
-    // }
+    if let Ok(mut logs) = LOGS.lock() {
+        logs.push(log_message);
+    }
 }
 
 pub fn get_log_messages() -> Vec<LogMessage> {

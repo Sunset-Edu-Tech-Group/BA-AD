@@ -41,17 +41,19 @@ pub struct ApkParser<'a> {
     client: Client,
     file_manager: &'a FileManager,
     config: RegionConfig,
+    download_manager: DownloadManager,
 }
 
 impl<'a> ApkParser<'a> {
     pub fn new(file_manager: &'a FileManager, config: &RegionConfig) -> Result<Self> {
         let client: Client = Client::builder().default_headers(http_headers()).build()?;
-        // let download_manager = DownloadManager::new(client.clone(), 0);
+        let download_manager = DownloadManager::new(client.clone(), 0, 1);
 
         Ok(Self {
             client,
             file_manager,
             config: config.clone(),
+            download_manager,
         })
     }
 
@@ -155,7 +157,7 @@ impl<'a> ApkParser<'a> {
 
         if need_download {
             info!("Downloading APK...");
-            // self.download_manager.download(&download_url, &apk_path, true, 0, 0, 0).await?;
+            self.download_manager.download_large_file(&download_url, &apk_path).await?;
 
             reset_download_progress();
             info!("Finished downloading apk");
