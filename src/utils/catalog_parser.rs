@@ -1,15 +1,17 @@
 use std::collections::HashMap;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 use rand;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
+use tokio::fs;
 
 use crate::crypto::catalog::{Catalog, Media, MediaCatalog, TableCatalog};
 use crate::debug;
 use crate::helpers::config::{API_DATA_FILENAME, RegionConfig};
 use crate::helpers::download_manager::DownloadManager;
+use crate::helpers::file;
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
 use crate::utils::catalog_fetcher::CatalogFetcher;
@@ -118,15 +120,17 @@ impl<'a> CatalogParser<'a> {
     }
 
     async fn fetch_bytes(&self, url: &str) -> Result<Vec<u8>> {
-        let temp_path: PathBuf = self.file_manager.create_temp_file("download", "bytes").await?;
-        let filename = url.split('/').last().unwrap_or("catalog");
+        let filename: String = file::get_filename(Path::new(url));
+        let temp_path: PathBuf = self.file_manager.create_temp_file(&filename, "bytes").await?;
 
         debug!("Fetching catalog file: {}", filename);
 
-        self.download_manager.download_file(url, &temp_path).await?;
+        self.download_manager.download_large_file(url, &temp_path).await?;
 
-        let bytes: Vec<u8> = std::fs::read(&temp_path).with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
-        let _ = std::fs::remove_file(temp_path);
+        let bytes: Vec<u8> = fs::read(&temp_path)
+            .await
+            .with_context(|| format!("Failed to read temporary file: {}", temp_path.display()))?;
+        let _ = fs::remove_file(&temp_path).await;
 
         if rand::random::<f32>() < 0.01 {
             let _ = self.file_manager.cleanup_temp_files().await;

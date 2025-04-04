@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::time::Duration;
 
 use anyhow::Result;
@@ -20,15 +22,17 @@ pub async fn get_content_length(client: &Client, download_url: &str) -> Result<u
     Ok(remote_size)
 }
 
-pub fn format_speed(speed_kbps: u64) -> String {
-    if speed_kbps >= 1024 * 1024 {
-        format!("{:.2} Gbps", speed_kbps as f64 / (1024.0 * 1024.0))
-    } else if speed_kbps >= 1024 {
-        format!("{:.2} Mbps", speed_kbps as f64 / 1024.0)
-    } else if speed_kbps > 0 {
-        format!("{} kbps", speed_kbps)
+pub fn format_speed(bytes_per_sec: u64) -> String {
+    if bytes_per_sec >= 1_000_000_000 {
+        format!("{:.2} GB/s", bytes_per_sec as f64 / 1_000_000_000.0)
+    } else if bytes_per_sec >= 1_000_000 {
+        format!("{:.2} MB/s", bytes_per_sec as f64 / 1_000_000_000.0 * 1000.0)
+    } else if bytes_per_sec >= 1_000 {
+        format!("{:.2} KB/s", bytes_per_sec as f64 / 1_000.0)
+    } else if bytes_per_sec > 0 {
+        format!("{} B/s", bytes_per_sec)
     } else {
-        "0 kbps".to_string()
+        "0 B/s".to_string()
     }
 }
 

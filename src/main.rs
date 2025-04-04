@@ -164,6 +164,7 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
     Ok(())
 }
 
+#[allow(dead_code)]
 async fn handle_region(args: &Cli, file_manager: &FileManager, config: &RegionConfig, apk_parser: &ApkParser<'_>) -> Result<()> {
     match config.id.as_str() {
         "japan" => {

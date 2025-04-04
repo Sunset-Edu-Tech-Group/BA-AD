@@ -1,10 +1,9 @@
 <div align="center">
   <img src="resources/github/archive.png" width="500px" alt="logo">
-  <h1>Blue Archive - Asset Downloader (Rust)</h1>
+  <h1>Blue Archive - Asset Downloader</h1>
 </div>
 
-This is a WIP port of BA-AD to rust. It will be blazingly fast 🚀*.
-
+A tool that downloads and extracts **Blue Archive** Global and Japan `AssetBundles`, `TableBundles`, and `MediaResources`.
 
 ## Building
 > If you want to try it out you can build it yourself. Note that this still a work in progress and something will break.

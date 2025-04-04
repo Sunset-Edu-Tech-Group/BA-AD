@@ -12,7 +12,7 @@ use zip::ZipArchive;
 use crate::helpers::config::{APK_DOWNLOAD_URL_REGEX, APK_VERSION_REGEX, RegionConfig, http_headers};
 use crate::helpers::download_manager::DownloadManager;
 use crate::helpers::file::FileManager;
-use crate::helpers::interface::{reset_download_progress, start_detailed_progress};
+use crate::helpers::interface::reset_download_progress;
 use crate::helpers::json;
 use crate::{info, warn};
 

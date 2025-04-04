@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::io::{self, Stdout};
 use std::sync::{Arc, Mutex};
 use std::thread::{self, JoinHandle};
@@ -238,47 +240,6 @@ impl Drop for TerminalUI {
         let _ = disable_raw_mode();
         let _ = execute!(self.terminal.backend_mut(), LeaveAlternateScreen);
     }
-}
-
-pub fn start_download_progress(total_files: usize, total_size: u64) {
-    let mut progress_data = PROGRESS_DATA.lock().unwrap();
-    progress_data.start_timer();
-    progress_data.update_from_download(0, total_files, 0, total_size, 0, None);
-
-    let mut start_time = DOWNLOAD_START_TIME.lock().unwrap();
-    *start_time = Some(Instant::now());
-}
-
-pub fn update_download_progress(
-    downloaded_files: usize,
-    total_files: usize,
-    downloaded_size: u64,
-    total_size: u64,
-    speed_kbps: u64,
-    current_file: Option<String>,
-) {
-    let mut progress_data = PROGRESS_DATA.lock().unwrap();
-    progress_data.update_from_download(downloaded_files, total_files, downloaded_size, total_size, speed_kbps, current_file);
-}
-
-pub fn start_detailed_progress(total_size: u64) {
-    let mut progress_data = PROGRESS_DATA.lock().unwrap();
-    progress_data.set_detailed();
-    progress_data.start_timer();
-    progress_data.update_from_download(0, 1, 0, total_size, 0, None);
-
-    let mut start_time = DOWNLOAD_START_TIME.lock().unwrap();
-    *start_time = Some(Instant::now());
-}
-
-pub fn start_simple_progress(total_files: usize) {
-    let mut progress_data = PROGRESS_DATA.lock().unwrap();
-    progress_data.set_simple();
-    progress_data.start_timer();
-    progress_data.update_from_download(0, total_files, 0, 0, 0, None);
-
-    let mut start_time = DOWNLOAD_START_TIME.lock().unwrap();
-    *start_time = Some(Instant::now());
 }
 
 pub fn reset_download_progress() {

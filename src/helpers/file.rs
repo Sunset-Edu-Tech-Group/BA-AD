@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use std::path::{Path, PathBuf};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
@@ -51,7 +53,6 @@ impl FileManager {
         &self.user_dirs.download_dir
     }
 
-    #[allow(dead_code)]
     pub fn download_path(&self, filename: &str) -> PathBuf {
         self.user_dirs.download_dir.join(filename)
     }
@@ -66,7 +67,6 @@ impl FileManager {
         Ok(temp_dir)
     }
 
-    #[allow(dead_code)]
     pub async fn temp_path(&self, filename: &str) -> PathBuf {
         self.temp_dir().await.unwrap().join(filename)
     }

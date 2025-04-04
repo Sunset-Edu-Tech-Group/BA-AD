@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
@@ -9,7 +8,7 @@ use crate::crypto::hash;
 use crate::helpers::download_manager::DownloadManager;
 use crate::helpers::file;
 use crate::helpers::file::FileManager;
-use crate::helpers::interface::{reset_download_progress, start_simple_progress};
+use crate::helpers::interface::reset_download_progress;
 use crate::utils::catalog_parser::{CatalogParser, GlobalGameFiles, JPGameFiles};
 use crate::utils::catalog_parser::{GlobalGameFile, JPGameFile};
 use crate::{debug, info, warn};
@@ -46,6 +45,8 @@ trait GameFile {
     fn get_path(&self) -> Option<&str>;
     fn get_crc(&self) -> Option<i64>;
     fn get_hash(&self) -> Option<&str>;
+
+    #[allow(dead_code)]
     fn get_size(&self) -> Option<i64>;
 }
 
@@ -66,6 +67,7 @@ impl GameFile for JPGameFile {
         None
     }
 
+    #[allow(dead_code)]
     fn get_size(&self) -> Option<i64> {
         self.size
     }
@@ -88,6 +90,7 @@ impl GameFile for GlobalGameFile {
         Some(&self.hash)
     }
 
+    #[allow(dead_code)]
     fn get_size(&self) -> Option<i64> {
         Some(self.size)
     }
@@ -134,6 +137,7 @@ impl<'a> ResourceDownloader<'a> {
         self.download_manager = DownloadManager::new(reqwest::Client::new(), self.threads, limit);
     }
 
+    #[allow(dead_code)]
     pub fn with_limit(mut self, limit: usize) -> Self {
         self.limit = limit;
         self
@@ -143,6 +147,7 @@ impl<'a> ResourceDownloader<'a> {
         self.update = update;
     }
 
+    #[allow(dead_code)]
     pub fn with_update(mut self, update: bool) -> Self {
         self.update = update;
         self
@@ -153,21 +158,10 @@ impl<'a> ResourceDownloader<'a> {
         self.download_manager = DownloadManager::new(reqwest::Client::new(), threads, self.limit);
     }
 
+    #[allow(dead_code)]
     pub fn with_threads(mut self, threads: usize) -> Self {
         self.threads = threads;
         self
-    }
-
-    pub fn get_file_path(&self, file_info: &HashMap<String, serde_json::Value>) -> PathBuf {
-        if let Some(path) = file_info.get("path").and_then(|v| v.as_str()).filter(|s| !s.is_empty()) {
-            return PathBuf::from(path);
-        }
-
-        if let Some(url_str) = file_info.get("url").and_then(|v| v.as_str()) {
-            return PathBuf::from(url_str.split('/').last().unwrap_or("unknown_file"));
-        }
-
-        PathBuf::from("unknown_file")
     }
 
     pub fn get_base_path(&self) -> PathBuf {
@@ -216,15 +210,6 @@ impl<'a> ResourceDownloader<'a> {
     async fn download_category<T: GameFile>(&self, files: &[T], base_path: &PathBuf) -> Result<()> {
         fs::create_dir_all(base_path).await?;
 
-        let mut total_size: u64 = 0;
-        for file in files {
-            if let Some(size) = file.get_size() {
-                total_size += size as u64;
-            }
-        }
-
-        start_simple_progress(files.len());
-
         let output_dir = match fs::canonicalize(base_path).await {
             Ok(path) => path,
             Err(_) => base_path.clone(),
@@ -268,7 +253,7 @@ impl<'a> ResourceDownloader<'a> {
 
         if !url_path.is_empty() {
             info!("Downloading {} files", url_path.len());
-            let results = self.download_manager.download_files(url_path).await;
+            let results = self.download_manager.download_files_with_progress(url_path).await;
 
             for result in results {
                 if let Err(e) = result {

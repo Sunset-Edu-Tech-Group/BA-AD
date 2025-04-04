@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 pub mod table_encryption_service {
     use anyhow::Result;
     use base64::{Engine, engine::general_purpose};

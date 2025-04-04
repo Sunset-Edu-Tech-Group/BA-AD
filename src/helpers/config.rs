@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use reqwest::header::{HeaderMap, HeaderValue};
 
 pub const APK_DOWNLOAD_URL_REGEX: &str =
@@ -12,6 +14,8 @@ pub const PLAYSTORE_URL: &str = "https://play.google.com/store/apps/details?id=c
 pub const API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
 
 pub const API_DATA_FILENAME: &str = "api_data.json";
+
+pub const USE_CHUNKED_DOWNLOAD: bool = false;
 
 #[derive(Clone)]
 pub struct RegionConfig {

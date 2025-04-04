@@ -130,6 +130,7 @@ impl<'a> CatalogFetcher<'a> {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn save_addressable_url(&self, addressable_url: &str, region: &str) -> Result<()> {
         match region {
             "japan" => json::update_japan_addressable_url(self.file_manager, addressable_url).await,

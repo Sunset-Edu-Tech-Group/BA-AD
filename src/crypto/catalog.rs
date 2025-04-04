@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 use super::memorypack;
 use crate::helpers::file::FileManager;
 use crate::helpers::json;
