@@ -256,7 +256,7 @@ impl<'a> CatalogParser<'a> {
             let size: Option<i64> = asset.get("Size").and_then(|s| s.as_i64());
 
             table_bundles.push(JPGameFile {
-                url: format!("{}/TableBundles/{}", addressable_url, key),
+                url: format!("{}/TableBundles/{}", addressable_url, name),
                 crc,
                 path: None,
                 size,
