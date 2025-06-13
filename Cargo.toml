@@ -3,6 +3,14 @@ name = "baad"
 version = "1.0.0"
 edition = "2024"
 
+[lib]
+name = "baad"
+path = "src/lib.rs"
+
+[[bin]]
+name = "baad"
+path = "src/main.rs"
+
 [dependencies]
 anyhow = "1.0"
 reqwest = { version = "0.12", features = ["json", "stream"] }

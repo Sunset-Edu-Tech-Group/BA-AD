@@ -8,9 +8,10 @@ use helpers::file::FileManager;
 use helpers::interface;
 use helpers::json;
 use helpers::logs;
-use utils::apk::ApkParser;
+use utils::apk::{ApkParser, ExtractionConfig, ExtractionRule};
 use utils::catalog_fetcher::CatalogFetcher;
 use utils::catalog_parser::CatalogParser;
+use utils::downloader;
 
 use anyhow::Result;
 use clap::Parser;
@@ -50,6 +51,20 @@ async fn main() -> Result<()> {
     result
 }
 
+fn create_default_extraction_config(config: &RegionConfig) -> ExtractionConfig {
+    let mut extraction_config = ExtractionConfig::new();
+    extraction_config.preserve_original = true;
+    
+    extraction_config.add_rule(ExtractionRule::new(
+        "UnityDataAssetPack.apk",
+        &config.asset_filter,
+        "",
+        true
+    ));
+    
+    extraction_config
+}
+
 fn shutdown_and_return_error(err: anyhow::Error) -> Result<()> {
     interface::shutdown_ui()?;
     Err(err)
@@ -71,8 +86,11 @@ async fn clean_operation(file_manager: &FileManager) -> Result<()> {
 async fn update_operation(args: &Cli, file_manager: &FileManager) -> Result<()> {
     info!("Starting APK update process");
 
-    let apk_parser: &ApkParser<'_> = &ApkParser::new(file_manager, &RegionConfig::new("japan"))?;
-    fetch_apk(args, apk_parser).await?;
+    let config = RegionConfig::new("japan");
+    let mut apk_parser = ApkParser::new(file_manager, &config)?;
+    apk_parser.set_extraction_config(create_default_extraction_config(&config));
+    
+    fetch_apk(args, &apk_parser).await?;
 
     return Ok(());
 }
@@ -99,13 +117,14 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
     }
 
     let region = match download_args.mode {
-        DownloadMode::Japan => utils::downloader::Region::Japan,
-        DownloadMode::Global => utils::downloader::Region::Global,
+        DownloadMode::Japan => downloader::Region::Japan,
+        DownloadMode::Global => downloader::Region::Global,
     };
 
     let config_str: &str = region.as_str();
     let config: RegionConfig = RegionConfig::new(config_str);
-    let apk_parser: ApkParser<'_> = ApkParser::new(file_manager, &config)?;
+    let mut apk_parser = ApkParser::new(file_manager, &config)?;
+    apk_parser.set_extraction_config(create_default_extraction_config(&config));
 
     if args.clean {
         file_manager.clean_region_directories(&config.id).await?;
@@ -113,38 +132,38 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
 
     if args.update {
         match region {
-            utils::downloader::Region::Japan => fetch_apk(args, &apk_parser).await?,
-            utils::downloader::Region::Global => fetch_global_catalogs(file_manager, &config).await?,
+            downloader::Region::Japan => fetch_apk(args, &apk_parser).await?,
+            downloader::Region::Global => fetch_global_catalogs(file_manager, &config).await?,
         }
     } else {
         match region {
-            utils::downloader::Region::Japan => check_apk_update(args, file_manager, &config, &apk_parser).await?,
-            utils::downloader::Region::Global => check_global_catalogs(file_manager, &config).await?,
+            downloader::Region::Japan => check_apk_update(args, file_manager, &config, &apk_parser).await?,
+            downloader::Region::Global => check_global_catalogs(file_manager, &config).await?,
         }
     }
 
     let mut categories = Vec::new();
     if download_args.all {
-        categories.push(utils::downloader::ResourceCategory::All);
+        categories.push(downloader::ResourceCategory::All);
     } else {
         if download_args.assets {
-            categories.push(utils::downloader::ResourceCategory::AssetBundles);
+            categories.push(downloader::ResourceCategory::AssetBundles);
         }
         if download_args.tables {
-            categories.push(utils::downloader::ResourceCategory::TableBundles);
+            categories.push(downloader::ResourceCategory::TableBundles);
         }
         if download_args.media {
-            categories.push(utils::downloader::ResourceCategory::MediaResources);
+            categories.push(downloader::ResourceCategory::MediaResources);
         }
     }
 
     if categories.is_empty() {
-        categories.push(utils::downloader::ResourceCategory::All);
+        categories.push(downloader::ResourceCategory::All);
     }
 
     let output_path: PathBuf = PathBuf::from(&download_args.output);
 
-    let mut downloader = utils::downloader::ResourceDownloader::new(file_manager, region, None, Some(&output_path))?;
+    let mut downloader = downloader::ResourceDownloader::new(file_manager, region, None, Some(&output_path))?;
 
     downloader.set_update(args.update);
 
@@ -164,34 +183,9 @@ async fn download_command(download_args: &DownloadArgs, args: &Cli, file_manager
     Ok(())
 }
 
-#[allow(dead_code)]
-async fn handle_region(args: &Cli, file_manager: &FileManager, config: &RegionConfig, apk_parser: &ApkParser<'_>) -> Result<()> {
-    match config.id.as_str() {
-        "japan" => {
-            if args.update {
-                fetch_apk(args, &apk_parser).await?
-            } else {
-                check_apk_update(args, file_manager, config, apk_parser).await?
-            }
-        }
-        "global" => {
-            if args.update {
-                fetch_global_catalogs(file_manager, config).await?
-            } else {
-                check_global_catalogs(file_manager, config).await?
-            }
-        }
-        _ => {
-            error!("Invalid region: {}", config.id);
-            return Err(anyhow::anyhow!("Invalid region: {}", config.id));
-        }
-    }
-
-    Ok(())
-}
-
 async fn fetch_apk(args: &Cli, apk_parser: &ApkParser<'_>) -> Result<()> {
     apk_parser.download_apk(args.update).await?;
+    apk_parser.extract_apk().await?;
     Ok(())
 }
 
@@ -217,15 +211,12 @@ async fn check_apk_update(args: &Cli, file_manager: &FileManager, config: &Regio
 
     if !data_dir.exists() {
         info!("APK not extracted, extracting...");
-
         process_apk(file_manager, config, &apk_parser).await?;
-
         return Ok(());
     }
 
     if !data_dir.join(game_files_path).exists() {
         info!("GameFiles.json doesn't exist, fetching...");
-
         fetch_japan_catalogs(file_manager, config).await?;
         return Ok(());
     }
