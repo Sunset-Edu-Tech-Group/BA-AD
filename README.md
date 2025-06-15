@@ -3,7 +3,7 @@
   <h1>Blue Archive - Asset Downloader</h1>
 </div>
 
-A tool that downloads and extracts **Blue Archive** Global and Japan `AssetBundles`, `TableBundles`, and `MediaResources`.
+A CLI and Library on downloading **Blue Archive** assets.
 
 ## Building
 > If you want to try it out you can build it yourself. Note that this still a work in progress and something will break.
@@ -18,21 +18,31 @@ git clone https://github.com/Deathemonic/BA-AD -b rust
 cargo build
 ```
 
+## Using as a library
+> Just add this line in your `Cargo.toml`
+```toml
+baad = { git = "https://github.com/Deathemonic", branch = "rust" }
+```
+
 
 ### TODO
 - [X] Add global support
 - [X] Multithreading download support
 - [X] Add the asset downloader
-- [X] UI and colorful messages
+- [X] ~UI and colorful messages~
 - [ ] Add search mode and filter mode
-- [ ] Add extract media zips
-- [ ] Add extract table zips, and db (low priority)
-- [ ] Add extract assetbundle (low priority)
+- [ ] ~Add extract media zips~
+- [ ] ~Add extract table zips, and db (low priority)~
+- [ ] ~Add extract assetbundle (low priority)~
 - [ ] ~Add download old apks~
+- [ ] Replace download manager with another library
+- [ ] Restructure codebase as a asset downloader only
+- [ ] Expose functions to act as a library
+- [ ] Remove the UI
+- [ ] Add CLI stuff
 
 
 ### FAQ
-
 
 Why the switch to rust?
 - baad is getting slow, and I want to learn rust so I decided to make baad in rust and might as well add new stuff that I didn't add before like Global asset download.
