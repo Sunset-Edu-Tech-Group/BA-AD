@@ -30,7 +30,7 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 - [X] Multithreading download support
 - [X] Add the asset downloader
 - [X] ~UI and colorful messages~
-- [ ] Add search mode and filter mode
+- [ ] Add ~search mode~ and filter mode
 - [ ] ~Add extract media zips~
 - [ ] ~Add extract table zips, and db (low priority)~
 - [ ] ~Add extract assetbundle (low priority)~
