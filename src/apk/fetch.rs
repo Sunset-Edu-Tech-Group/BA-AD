@@ -1,6 +1,8 @@
 use crate::helpers::config::{apk_headers, ServerConfig, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION};
 use crate::utils::file::FileManager;
 use crate::utils::json;
+use crate::warn;
+
 use anyhow::{anyhow, Result};
 use regex::Regex;
 use reqwest::{Client, Response};
@@ -97,7 +99,7 @@ impl ApkFetcher {
         };
 
         if remote_size == 0 || local_size != remote_size {
-            // warn!("APK is outdated or incomplete");
+            warn!("APK is outdated or incomplete");
             return Ok(true);
         }
 
@@ -106,7 +108,7 @@ impl ApkFetcher {
 
     pub async fn download_apk(&self) -> Result<()> {
         if self.config.apk_path.is_empty() || self.config.version_url.is_empty() {
-            // warn!("The {} server doesn't support APK download", self.config.id);
+            warn!("The {} server doesn't support APK download", self.config.id);
             return Ok(());
         }
 

@@ -3,4 +3,6 @@ mod catalog;
 mod helpers;
 mod utils;
 
-fn main() {}
+
+fn main() {
+}
