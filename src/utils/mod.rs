@@ -1,4 +1,4 @@
 mod download;
 mod cli;
-mod file;
-mod json;
+pub mod file;
+pub mod json;
