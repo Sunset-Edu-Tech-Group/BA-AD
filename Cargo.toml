@@ -1,6 +1,6 @@
 [package]
 name = "baad"
-version = "1.0.0"
+version = "2.0.0"
 edition = "2024"
 
 [lib]
@@ -12,27 +12,7 @@ name = "baad"
 path = "src/main.rs"
 
 [dependencies]
-anyhow = "1.0"
-reqwest = { version = "0.12", features = ["json", "stream"] }
-tokio = { version = "1", features = ["full"] }
-regex = "1.10"
-zip = "0.6"
-platform-dirs = "0.3.0"
-clap = { version = "4.5.34", features = ["derive"] }
-xxhash-rust = { version = "0.8.15", features = ["xxh32"] }
-rand_mt = "5.0.0"
-byteorder = "1.5.0"
-base64 = "0.22.1"
-serde = { version = "1.0.219", features = ["derive"] }
-serde_json = "1.0.140"
-walkdir = "2.5.0"
-crc32fast = "1.4.2"
-rand = "0.9.0"
-futures = "0.3.31"
-md-5 = "0.10.6"
-color-eyre = "0.6.3"
-crossterm = "0.28.1"
-signal-hook = "0.3.17"
-ratatui = "0.29.0"
-lazy_static = "1.4.0"
-sysinfo = "0.34.2"
+reqwest = "0.12.20"
+regex = "1.11.1"
+anyhow = "1.0.98"
+

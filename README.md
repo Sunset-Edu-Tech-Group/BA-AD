@@ -1,12 +1,12 @@
 <div align="center">
-  <img src="resources/github/archive.png" width="500px" alt="logo">
+  <img src=".github/resources/archive.png" width="4062" alt="logo">
   <h1>Blue Archive - Asset Downloader</h1>
 </div>
 
-A CLI and Library on downloading **Blue Archive** assets.
+A tool that downloads the latest **Blue Archive** assets.
 
 ## Building
-> If you want to try it out you can build it yourself. Note that this still a work in progress and something will break.
+> If you want to try it out, you can build it yourself. Note that this is still a work in progress and something will break.
 
 1. Install [rustup](https://rustup.rs)
 2. Clone this repository
@@ -19,7 +19,7 @@ cargo build
 ```
 
 ## Using as a library
-> Just add this line in your `Cargo.toml`
+> Add this line in your `Cargo.toml`
 ```toml
 baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 ```
@@ -36,7 +36,7 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 - [ ] ~Add extract assetbundle (low priority)~
 - [ ] ~Add download old apks~
 - [ ] Replace download manager with another library
-- [ ] Restructure codebase as a asset downloader only
+- [ ] Restructure codebase as an asset downloader only
 - [ ] Expose functions to act as a library
 - [ ] Remove the UI
 - [ ] Add CLI stuff
@@ -45,4 +45,4 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 ### FAQ
 
 Why the switch to rust?
-- baad is getting slow, and I want to learn rust so I decided to make baad in rust and might as well add new stuff that I didn't add before like Global asset download.
+- baad is getting slow, and I want to learn rust, so I decided to make baad in rust and might as well add new stuff that I didn't add before like Global asset download.
