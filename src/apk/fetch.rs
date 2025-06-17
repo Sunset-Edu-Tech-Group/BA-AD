@@ -1,28 +1,38 @@
 use crate::helpers::config::{apk_headers, ServerConfig, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION};
+use crate::helpers::network::get_content_length;
 use crate::utils::file::FileManager;
 use crate::utils::json;
-use crate::warn;
+use crate::{debug, info, warn};
 
 use anyhow::{anyhow, Result};
 use regex::Regex;
-use reqwest::{Client, Response};
+use reqwest::{Client, Response, Url};
 use std::path::PathBuf;
 use tokio::fs;
+use trauma::download::Download;
+use trauma::downloader::{Downloader, DownloaderBuilder};
 
 pub struct ApkFetcher {
     client: Client,
     config: ServerConfig,
     file_manager: FileManager,
+    downloader: Downloader
 }
 
 impl ApkFetcher {
-    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+    pub fn new(file_manager: FileManager, config: ServerConfig) -> Result<Self> {
         let client: Client = Client::builder().default_headers(apk_headers()).build()?;
+        
+        let downloader = DownloaderBuilder::new()
+            .directory(file_manager.get_data_dir().to_path_buf())
+            .headers(apk_headers())
+            .build();
 
         Ok(Self {
             client,
             config: config.clone(),
             file_manager: file_manager.clone(),
+            downloader
         })
     }
 
@@ -86,18 +96,7 @@ impl ApkFetcher {
             return Err(anyhow!("Failed to get file info: {}", response.status()));
         }
 
-        let remote_size: u64 = if let Some(content_range) = response.headers().get("Content-Range")
-        {
-            content_range
-                .to_str()
-                .ok()
-                .and_then(|range| range.split('/').last())
-                .and_then(|size| size.parse::<u64>().ok())
-                .unwrap_or(0)
-        } else {
-            response.content_length().unwrap_or(0).saturating_add(1)
-        };
-
+        let remote_size: u64 = get_content_length(&response);
         if remote_size == 0 || local_size != remote_size {
             warn!("APK is outdated or incomplete");
             return Ok(true);
@@ -111,11 +110,25 @@ impl ApkFetcher {
             warn!("The {} server doesn't support APK download", self.config.id);
             return Ok(());
         }
+        
+        let new_version = match self.check_version().await? {
+            Some(version) => version,
+            None => return Ok(()),
+        };
+        
+        debug!("Using version <b><u><yellow>{}</>", new_version);
 
         let response = self.client.get(&self.config.version_url).send().await?;
         let body = response.text().await?;
         let download_url = self.extract_url(&body)?;
 
+        info!("Downloading APK...");
+        let apk = vec![ Download {
+            url: Url::parse(download_url.as_str())?,
+            filename: "BlueArchive.apk".to_string(),
+        }];
+        self.downloader.download(&apk).await;
+        
         Ok(())
     }
 }

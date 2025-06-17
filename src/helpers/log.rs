@@ -6,6 +6,13 @@ macro_rules! info {
 }
 
 #[macro_export]
+macro_rules! debug {
+    ($($arg:tt)*) => {
+        paris::output::format_stdout(format!("<cyan>[DEBUG]</> {}", format!($($arg)*)), "\n")
+    }
+}
+
+#[macro_export]
 macro_rules! success {
     ($($arg:tt)*) => {
         paris::output::format_stdout(format!("<green>[SUCCESS]</> {}", format!($($arg)*)), "\n")
