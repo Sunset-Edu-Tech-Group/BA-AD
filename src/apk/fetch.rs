@@ -12,6 +12,7 @@ use tokio::fs;
 use trauma::download::Download;
 use trauma::downloader::{Downloader, DownloaderBuilder};
 
+#[derive(Clone)]
 pub struct ApkFetcher {
     client: Client,
     config: ServerConfig,
@@ -20,20 +21,33 @@ pub struct ApkFetcher {
 }
 
 impl ApkFetcher {
-    pub fn new(file_manager: FileManager, config: ServerConfig) -> Result<Self> {
+    pub fn new(server: &str, file_manager: FileManager) -> Result<Self> {
+        let config = ServerConfig::new(server)?;
         let client: Client = Client::builder().default_headers(apk_headers()).build()?;
         
         let downloader = DownloaderBuilder::new()
             .directory(file_manager.get_data_dir().to_path_buf())
             .headers(apk_headers())
+            .use_range_for_content_length(true)
+            .single_file_progress(true)
             .build();
 
         Ok(Self {
             client,
-            config: config.clone(),
-            file_manager: file_manager.clone(),
+            config,
+            file_manager,
             downloader
         })
+    }
+
+    pub async fn get_current_version(&self) -> Result<String> {
+        let response: Response = self.client.get(&self.config.version_url).send().await?;
+        if !response.status().is_success() {
+            return Err(anyhow!("Failed to get versions: {}", response.status()));
+        }
+
+        let body: String = response.text().await?;
+        self.extract_version(&body)
     }
 
     fn extract_version(&self, body: &str) -> Result<String> {
@@ -105,30 +119,26 @@ impl ApkFetcher {
         Ok(false)
     }
 
-    pub async fn download_apk(&self) -> Result<()> {
-        if self.config.apk_path.is_empty() || self.config.version_url.is_empty() {
-            warn!("The {} server doesn't support APK download", self.config.id);
-            return Ok(());
+    pub async fn download_apk(&self) -> Result<(String, PathBuf)> {
+        if self.config.version_url.is_empty() {
+            return Err(anyhow!("Invalid configuration: missing version_url or you are using an unsupported server"));
         }
         
-        let new_version = match self.check_version().await? {
-            Some(version) => version,
-            None => return Ok(()),
-        };
-        
+        let new_version = self.get_current_version().await?;
         debug!("Using version <b><u><yellow>{}</>", new_version);
 
         let response = self.client.get(&self.config.version_url).send().await?;
         let body = response.text().await?;
         let download_url = self.extract_url(&body)?;
+        
+        debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
 
-        info!("Downloading APK...");
-        let apk = vec![ Download {
+        let apk = vec![Download {
             url: Url::parse(download_url.as_str())?,
-            filename: "BlueArchive.apk".to_string(),
+            filename: self.config.apk_path.clone(),
         }];
         self.downloader.download(&apk).await;
         
-        Ok(())
+        Ok((new_version, self.file_manager.get_data_path(&self.config.apk_path)))
     }
 }

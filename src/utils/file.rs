@@ -7,6 +7,13 @@ use std::path::PathBuf;
 const APP_NAME: &str = env!("CARGO_CRATE_NAME");
 
 #[derive(Clone)]
+pub struct FileManagerConfig {
+    pub data_dir: Option<PathBuf>,
+    pub cache_dir: Option<PathBuf>,
+    pub app_name: Option<String>,
+}
+
+#[derive(Clone)]
 pub struct FileManager {
     cache_dir: PathBuf,
     data_dir: PathBuf,
@@ -14,14 +21,29 @@ pub struct FileManager {
 
 impl FileManager {
     pub fn new() -> Result<Self> {
-        let app_dirs: AppDirs = AppDirs::new(Some(APP_NAME), true).unwrap();
-        
-        fs::create_dir_all(&app_dirs.cache_dir)?;
-        fs::create_dir_all(&app_dirs.data_dir)?;
+        Self::with_config(FileManagerConfig {
+            data_dir: None,
+            cache_dir: None,
+            app_name: Some(APP_NAME.to_string()),
+        })
+    }
+
+    pub fn with_config(config: FileManagerConfig) -> Result<Self> {
+        let app_dirs = if let Some(app_name) = config.app_name {
+            AppDirs::new(Some(&app_name), true).unwrap()
+        } else {
+            AppDirs::new(None, true).unwrap()
+        };
+
+        let data_dir = config.data_dir.unwrap_or(app_dirs.data_dir);
+        let cache_dir = config.cache_dir.unwrap_or(app_dirs.cache_dir);
+
+        fs::create_dir_all(&data_dir)?;
+        fs::create_dir_all(&cache_dir)?;
         
         Ok(Self {
-            cache_dir: app_dirs.cache_dir,
-            data_dir: app_dirs.data_dir,
+            cache_dir,
+            data_dir,
         })
     }
     

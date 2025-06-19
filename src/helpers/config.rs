@@ -22,7 +22,7 @@ pub const GAME_CONFIG_PATTERN: &[u8] = &[
 pub struct ServerConfig {
     pub id: String,
     pub version_url: String,
-    pub apk_path: String,
+    pub apk_path: String
 }
 
 impl ServerConfig {
