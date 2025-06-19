@@ -24,8 +24,8 @@ pub struct ApkExtractor {
 impl ApkExtractor {
     pub fn new(file_manager: FileManager, config: ServerConfig) -> Self {
         Self {
-            config: config.clone(),
-            file_manager: file_manager.clone(),
+            config,
+            file_manager,
         }
     }
 

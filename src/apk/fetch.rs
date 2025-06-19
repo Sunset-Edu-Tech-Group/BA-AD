@@ -21,8 +21,7 @@ pub struct ApkFetcher {
 }
 
 impl ApkFetcher {
-    pub fn new(server: &str, file_manager: FileManager) -> Result<Self> {
-        let config = ServerConfig::new(server)?;
+    pub fn new(file_manager: FileManager, config: ServerConfig) -> Result<Self> {
         let client: Client = Client::builder().default_headers(apk_headers()).build()?;
         
         let downloader = DownloaderBuilder::new()
@@ -133,6 +132,7 @@ impl ApkFetcher {
         
         debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
 
+        info!("Downloading APK...");
         let apk = vec![Download {
             url: Url::parse(download_url.as_str())?,
             filename: self.config.apk_path.clone(),
