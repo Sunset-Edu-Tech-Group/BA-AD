@@ -1,2 +1,2 @@
-mod fetch;
-mod parse;
+pub mod fetch;
+pub mod parse;

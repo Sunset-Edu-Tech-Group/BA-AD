@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::apk::api::{ApiData, GlobalData, JapanData};
+use crate::helpers::api::{ApiData, GlobalData, JapanData};
 use crate::helpers::config::API_FILENAME;
 use crate::utils::file::FileManager;
 
@@ -13,6 +13,8 @@ pub async fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename
 
 pub async fn save_json<T: Serialize>(file_manager: &FileManager, filename: &str, data: &T) -> Result<()> {
     let json_data = serde_json::to_string_pretty(data).context("Failed to serialize data to JSON")?;
+    let file_path = file_manager.get_data_path(filename);
+    FileManager::create_parent_dir(&file_path)?;
     file_manager.save_file(filename, json_data.as_bytes())
 }
 
@@ -46,11 +48,10 @@ pub fn create_default_api_data() -> ApiData {
         },
         global: GlobalData {
             version: String::new(),
-            addressable_url: String::new(),
+            catalog_url: String::new(),
         },
     }
 }
-
 
 pub async fn update_server_data(
     file_manager: &FileManager,
@@ -74,8 +75,8 @@ pub async fn update_server_data(
             }
         }
         "global" => {
-            if let Some(url) = addressable_url {
-                api_data.global.addressable_url = url.to_string();
+            if let Some(url) = catalog_url {
+                api_data.global.catalog_url = url.to_string();
             }
             if let Some(ver) = version {
                 api_data.global.version = ver.to_string();
