@@ -35,10 +35,10 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 - [ ] ~Add extract table zips, and db (low priority)~
 - [ ] ~Add extract assetbundle (low priority)~
 - [ ] ~Add download old apks~
-- [ ] Replace download manager with another library
+- [X] Replace the download manager with another library
 - [ ] Restructure codebase as an asset downloader only
 - [ ] Expose functions to act as a library
-- [ ] Remove the UI
+- [X] Remove the UI
 - [ ] Add CLI stuff
 
 
@@ -46,3 +46,13 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 
 Why the switch to rust?
 - baad is getting slow, and I want to learn rust, so I decided to make baad in rust and might as well add new stuff that I didn't add before like Global asset download.
+
+Why a library?
+- This helps the process of porting baad to another project.
+Instead of rewriting or passing as an executable, this exposes functions so you can implement the functions easily.
+This also helps when porting to another language because you can bind it with `Cdylib` 
+
+Why no UI?
+- It just makes the project more complex.
+The main goal is to make a simple CLI/Library to download Blue Archive assets.
+The UI can be implemented on another project like BA-AD-GUI.

@@ -29,9 +29,7 @@ impl ApkFetcher {
             .use_range_for_content_length(true)
             .single_file_progress(true)
             .build();
-
-        debug!("Using server: <b><u><bright-blue>{}</>", config.id);
-
+        
         Ok(Self {
             client,
             config: config.clone(),

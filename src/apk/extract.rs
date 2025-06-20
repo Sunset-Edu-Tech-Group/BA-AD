@@ -3,6 +3,7 @@ use crate::utils::file::FileManager;
 use crate::{error, info};
 
 use anyhow::{anyhow, Context, Result};
+use regex::Regex;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};
 use std::path::{Path, PathBuf};
@@ -22,11 +23,11 @@ pub struct ApkExtractor {
 }
 
 impl ApkExtractor {
-    pub fn new(file_manager: FileManager, config: ServerConfig) -> Self {
-        Self {
-            config,
-            file_manager,
-        }
+    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+        Ok(Self {
+            config: config.clone(),
+            file_manager: file_manager.clone(),
+        })
     }
 
     fn check_extract_support(&self) -> Result<bool> {
@@ -99,13 +100,14 @@ impl ApkExtractor {
             }
         }
 
-        if !file_path.to_string_lossy().ends_with(&rule.pattern) {
-            return Ok(false);
-        }
+        let file_name = file_path.file_name()
+            .and_then(|n| n.to_str())
+            .unwrap_or("");
+        
 
-        Ok(true)
+        Ok(matches_glob(&rule.pattern, file_name)?)
     }
-
+    
     pub fn extract_data(&self) -> Result<()> {
         if !self.check_extract_support()? {
             return Ok(());
@@ -154,4 +156,19 @@ impl ApkExtractor {
 
         Ok(())
     }
+}
+
+fn matches_glob(pattern: &str, text: &str) -> Result<bool> {
+    let regex_pattern = pattern
+        .replace(".", r"\.")
+        .replace("*", ".*")
+        .replace("?", ".");
+    
+    let full_pattern = format!("^{}$", regex_pattern);
+    
+    let regex = Regex::new(&full_pattern)
+        .map(|re| re.is_match(text))
+        .unwrap_or(false);
+    
+    Ok(regex)
 }
