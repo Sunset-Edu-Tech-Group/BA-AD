@@ -3,12 +3,12 @@ mod catalog;
 mod helpers;
 mod utils;
 
-use crate::apk::fetch::ApkFetcher;
 use crate::apk::extract::ApkExtractor;
-use crate::catalog::parse::CatalogParser;
+use crate::apk::fetch::ApkFetcher;
 use crate::catalog::fetch::CatalogFetcher;
-use crate::utils::file::FileManager;
+use crate::catalog::parse::CatalogParser;
 use crate::helpers::config::ServerConfig;
+use crate::utils::file::FileManager;
 
 /// Testing purposes only not to be run
 #[tokio::main]
@@ -28,9 +28,12 @@ async fn main() -> anyhow::Result<()> {
     // let _ = catalog_fetcher.global_resources().await?;
     // let _ = catalog_parser.global_catalogs().await?;
     // let jp_addressable = catalog_fetcher.japan_addressable().await?;
-    let jp_catalog = catalog_fetcher.japan_catalog().await?;
-    
-    info!("{jp_catalog}");
+    // let jp_catalog = catalog_fetcher.japan_catalog().await?;
+    let jp_catalogs = catalog_parser.japan_catalogs().await?;
+
+    // info!("{}");
+
+    // info!("{jp_catalog}");
     // info!("{jp_catalog}");
     
     Ok(())

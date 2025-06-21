@@ -161,7 +161,7 @@ impl CatalogFetcher {
             .json::<GlobalCatalog>()
             .await?;
 
-        save_json(&self.file_manager, "catalog/data/Resources.json", &catalog).await?;
+        save_json(&self.file_manager, "catalog/global/Resources.json", &catalog).await?;
 
         update_api_data(&self.file_manager, |data| {
             data.global.catalog_url = addressable.patch.resource_path;
