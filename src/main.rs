@@ -27,9 +27,11 @@ async fn main() -> anyhow::Result<()> {
     // let _ = catalog_fetcher.global_addressable().await?;
     // let _ = catalog_fetcher.global_resources().await?;
     // let _ = catalog_parser.global_catalogs().await?;
-    let jp_catalog = catalog_fetcher.japan_addressable().await?;
+    // let jp_addressable = catalog_fetcher.japan_addressable().await?;
+    let jp_catalog = catalog_fetcher.japan_catalog().await?;
     
     info!("{jp_catalog}");
+    // info!("{jp_catalog}");
     
     Ok(())
 }

@@ -21,7 +21,7 @@ pub struct ApiData {
 }
 
 #[derive(Deserialize, Serialize)]
-pub struct GlobalApi {
+pub struct GlobalAddressable {
     pub api_version: String,
     pub market_game_id: String,
     pub latest_build_version: String,
@@ -106,31 +106,31 @@ pub struct TableResources {
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-pub struct JapanCatalog {
-    connection_groups: Vec<ConnectionGroup>
+pub struct JapanAddressable {
+    pub connection_groups: Vec<ConnectionGroup>
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ConnectionGroup {
-    name: String,
-    management_data_url: String,
-    is_production_addressables: bool,
-    api_url: String,
-    gateway_url: String,
-    kibana_log_url: String,
-    prohibited_word_black_list_uri: String,
-    prohibited_word_white_list_uri: String,
-    customer_service_url: String,
-    override_connection_groups: Vec<OverrideConnectionGroup>,
-    bundle_version: String
+    pub name: String,
+    pub management_data_url: String,
+    pub is_production_addressables: bool,
+    pub api_url: String,
+    pub gateway_url: String,
+    pub kibana_log_url: String,
+    pub prohibited_word_black_list_uri: String,
+    pub prohibited_word_white_list_uri: String,
+    pub customer_service_url: String,
+    pub override_connection_groups: Vec<OverrideConnectionGroup>,
+    pub bundle_version: String
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct OverrideConnectionGroup {
-    name: String,
-    addressables_catalog_url_root: String
+    pub name: String,
+    pub addressables_catalog_url_root: String
 }
 
 #[derive(Serialize, Deserialize)]

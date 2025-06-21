@@ -1,12 +1,12 @@
 use crate::apk::fetch::ApkFetcher;
-use crate::helpers::api::{GlobalApi, GlobalCatalog, JapanCatalog};
-use crate::helpers::config::{GAME_CONFIG_PATTERN, GLOBAL_API_URL, ServerConfig};
+use crate::helpers::api::{GlobalAddressable, GlobalCatalog, JapanAddressable};
+use crate::helpers::config::{ServerConfig, GAME_CONFIG_PATTERN, GLOBAL_API_URL};
 use crate::utils::file::FileManager;
-use crate::utils::json::{load_json, save_json};
+use crate::utils::json::{load_json, save_json, update_api_data};
 
-use anyhow::{Result, anyhow};
-use base64::{Engine, engine::general_purpose};
-use bacy::table_encryption_service::{create_key, convert_string, new_encrypt_string};
+use anyhow::{anyhow, Result};
+use bacy::table_encryption_service::{convert_string, create_key, new_encrypt_string};
+use base64::{engine::general_purpose, Engine};
 use reqwest::Client;
 use serde_json::{to_string_pretty, Value};
 use std::fs;
@@ -61,48 +61,74 @@ impl CatalogFetcher {
 
     pub fn decrypt_game_config(&self, data: &[u8]) -> Result<String> {
         let encoded_data = general_purpose::STANDARD.encode(data);
-        
+
         let game_config = create_key(b"GameMainConfig");
         let server_data = create_key(b"ServerInfoDataUrl");
-        
+
         let decrypted_data = convert_string(&encoded_data, &game_config)?;
         let loaded_data: Value = serde_json::from_str(&decrypted_data)?;
-        
+
         let decrypted_key = new_encrypt_string("ServerInfoDataUrl", &server_data)?;
         let decrypted_value = loaded_data
             .get(&decrypted_key)
             .and_then(|v| v.as_str())
             .ok_or_else(|| anyhow!("Key '{}' not found in JSON", decrypted_key))?;
-        
+
         convert_string(decrypted_value, &server_data)
     }
-    
+
     pub async fn japan_addressable(&self) -> Result<String> {
         let api_url = self.decrypt_game_config(self.find_game_config()?.as_slice())?;
-        
-        let japan_catalog = self
+
+        let catalog = self
             .client
             .get(&api_url)
             .send()
             .await?
-            .json::<JapanCatalog>()
+            .json::<JapanAddressable>()
             .await?;
-        
+
         save_json(
             &self.file_manager,
             "catalog/JapanAddressables.json",
-            &japan_catalog,
+            &catalog,
         )
         .await?;
-        
-        Ok(to_string_pretty(&japan_catalog)?)
+
+        update_api_data(&self.file_manager, |data| {
+            data.japan.addressable_url = api_url;
+        })
+        .await?;
+
+        Ok(to_string_pretty(&catalog)?)
+    }
+
+    pub async fn japan_catalog(&self) -> Result<String> {
+        self.japan_addressable().await?;
+
+        let addressable: JapanAddressable =
+            load_json(&self.file_manager, "catalog/JapanAddressables.json").await?;
+
+        let catalog_url = addressable
+            .connection_groups
+            .first()
+            .and_then(|group| group.override_connection_groups.get(1))
+            .map(|override_group| &override_group.addressables_catalog_url_root)
+            .ok_or_else(|| anyhow!("Second override connection group not found"))?;
+
+        update_api_data(&self.file_manager, |data| {
+            data.japan.catalog_url = catalog_url.to_string();
+        })
+        .await?;
+
+        Ok(catalog_url.to_string())
     }
 
     pub async fn global_addressable(&self) -> Result<String> {
         let version = self.apk_fetcher.check_version().await?.unwrap();
         let build_number = version.split('.').last().unwrap();
 
-        let api_response = self
+        let api = self
             .client
             .post(GLOBAL_API_URL)
             .json(&serde_json::json!({
@@ -113,40 +139,35 @@ impl CatalogFetcher {
             }))
             .send()
             .await?
-            .json::<GlobalApi>()
+            .json::<GlobalAddressable>()
             .await?;
 
-        save_json(
-            &self.file_manager,
-            "catalog/GlobalAddressables.json",
-            &api_response,
-        )
-        .await?;
+        save_json(&self.file_manager, "catalog/GlobalAddressables.json", &api).await?;
 
-        Ok(to_string_pretty(&api_response)?)
+        Ok(to_string_pretty(&api)?)
     }
 
     pub async fn global_resources(&self) -> Result<String> {
         self.global_addressable().await?;
 
-        let api_response: GlobalApi =
+        let addressable: GlobalAddressable =
             load_json(&self.file_manager, "catalog/GlobalAddressables.json").await?;
 
-        let catalog_response = self
+        let catalog = self
             .client
-            .get(&api_response.patch.resource_path)
+            .get(&addressable.patch.resource_path)
             .send()
             .await?
             .json::<GlobalCatalog>()
             .await?;
 
-        save_json(
-            &self.file_manager,
-            "catalog/data/Resources.json",
-            &catalog_response,
-        )
+        save_json(&self.file_manager, "catalog/data/Resources.json", &catalog).await?;
+
+        update_api_data(&self.file_manager, |data| {
+            data.global.catalog_url = addressable.patch.resource_path;
+        })
         .await?;
 
-        Ok(to_string_pretty(&catalog_response)?)
+        Ok(to_string_pretty(&catalog)?)
     }
 }
