@@ -1,4 +1,7 @@
-use crate::helpers::config::{apk_headers, ServerConfig, GLOBAL_REGEX_VERSION, GLOBAL_URL, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION};
+use crate::helpers::config::{
+    apk_headers, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION, GLOBAL_URL,
+    JAPAN_REGEX_URL, JAPAN_REGEX_VERSION,
+};
 use crate::helpers::network::get_content_length;
 use crate::utils::file::FileManager;
 use crate::utils::json;
@@ -16,25 +19,25 @@ pub struct ApkFetcher {
     client: Client,
     config: ServerConfig,
     file_manager: FileManager,
-    downloader: Downloader
+    downloader: Downloader,
 }
 
 impl ApkFetcher {
     pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
         let client = Client::builder().default_headers(apk_headers()).build()?;
-        
+
         let downloader = DownloaderBuilder::new()
             .directory(file_manager.get_data_dir().to_path_buf())
             .headers(apk_headers())
             .use_range_for_content_length(true)
             .single_file_progress(true)
             .build();
-        
+
         Ok(Self {
             client,
             config: config.clone(),
             file_manager: file_manager.clone(),
-            downloader
+            downloader,
         })
     }
 
@@ -65,37 +68,40 @@ impl ApkFetcher {
     }
 
     pub async fn check_version(&self) -> Result<Option<String>> {
-        if self.config.id == "global" {
-            let version = Regex::new(GLOBAL_REGEX_VERSION)?;
-            let re_url = self.client.get(GLOBAL_URL).send().await?.text().await?;
-            let new_version = version
-                .find(&re_url)
-                .ok_or_else(|| anyhow!("Failed to get version"))?
-                .as_str()
-                .to_string();
+        match &self.config.region {
+            ServerRegion::Global => {
+                let version = Regex::new(GLOBAL_REGEX_VERSION)?;
+                let re_url = self.client.get(GLOBAL_URL).send().await?.text().await?;
+                let new_version = version
+                    .find(&re_url)
+                    .ok_or_else(|| anyhow!("Failed to get version"))?
+                    .as_str()
+                    .to_string();
 
-            json::update_api_data(&self.file_manager, |data| {
-                data.global.version = new_version.to_string();
-            })
-            .await?;
+                json::update_api_data(&self.file_manager, |data| {
+                    data.global.version = new_version.to_string();
+                })
+                .await?;
 
-            return Ok(Some(new_version));
+                Ok(Some(new_version))
+            }
+            ServerRegion::Japan => {
+                let response = self.client.get(&self.config.version_url).send().await?;
+                if !response.status().is_success() {
+                    return Err(anyhow!("Failed to get version: {}", response.status()));
+                }
+
+                let body = response.text().await?;
+                let new_version = self.extract_version(&body)?;
+
+                json::update_api_data(&self.file_manager, |data| {
+                    data.japan.version = new_version.to_string();
+                })
+                .await?;
+
+                Ok(Some(new_version))
+            }
         }
-
-        let response = self.client.get(&self.config.version_url).send().await?;
-        if !response.status().is_success() {
-            return Err(anyhow!("Failed to get version: {}", response.status()));
-        }
-
-        let body = response.text().await?;
-        let new_version = self.extract_version(&body)?;
-
-        json::update_api_data(&self.file_manager, |data| {
-            data.japan.version = new_version.to_string();
-        })
-        .await?;
-
-        Ok(Some(new_version))
     }
 
     async fn check_apk(&self, download_url: &str, apk_path: &PathBuf) -> Result<bool> {
@@ -136,16 +142,18 @@ impl ApkFetcher {
 
     pub async fn download_apk(&self) -> Result<(String, PathBuf)> {
         if self.config.version_url.is_empty() {
-            return Err(anyhow!("Invalid configuration: missing version_url or you are using an unsupported server"));
+            return Err(anyhow!(
+                "Invalid configuration: missing version_url or you are using an unsupported server"
+            ));
         }
-        
+
         let new_version = self.get_current_version().await?;
         debug!("Using version <b><u><yellow>{}</>", new_version);
 
         let response = self.client.get(&self.config.version_url).send().await?;
         let body = response.text().await?;
         let download_url = self.extract_url(&body)?;
-        
+
         debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
 
         info!("Downloading APK...");
@@ -154,7 +162,10 @@ impl ApkFetcher {
             filename: self.config.apk_path.clone(),
         }];
         self.downloader.download(&apk).await;
-        
-        Ok((new_version, self.file_manager.get_data_path(&self.config.apk_path)))
+
+        Ok((
+            new_version,
+            self.file_manager.get_data_path(&self.config.apk_path),
+        ))
     }
 }

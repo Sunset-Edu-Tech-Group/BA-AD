@@ -1,4 +1,4 @@
-use crate::helpers::config::ServerConfig;
+use crate::helpers::config::{ServerConfig, ServerRegion};
 use crate::utils::file::FileManager;
 use crate::{error, info};
 
@@ -31,12 +31,15 @@ impl ApkExtractor {
     }
 
     fn check_extract_support(&self) -> Result<bool> {
-        if self.config.apk_path.is_empty() {
-            error!("{} server doesn't support APK extraction", self.config.id);
-            return Ok(false);
+        match &self.config.region { 
+            ServerRegion::Global => {
+                error!("Global server doesn't support APK extraction");
+                Ok(false)
+            }
+            ServerRegion::Japan => {
+                Ok(true)
+            }
         }
-        
-        Ok(true)
     }
 
     pub fn extract(&self, rule: ExtractionRule) -> Result<()> {

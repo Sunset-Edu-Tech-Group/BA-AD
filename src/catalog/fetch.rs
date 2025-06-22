@@ -1,6 +1,6 @@
 use crate::apk::fetch::ApkFetcher;
 use crate::helpers::api::{GlobalAddressable, GlobalCatalog, JapanAddressable};
-use crate::helpers::config::{ServerConfig, GAME_CONFIG_PATTERN, GLOBAL_API_URL};
+use crate::helpers::config::{ServerConfig, ServerRegion, GAME_CONFIG_PATTERN, GLOBAL_API_URL};
 use crate::utils::file::FileManager;
 use crate::utils::json::{load_json, save_json, update_api_data};
 
@@ -77,7 +77,7 @@ impl CatalogFetcher {
         convert_string(decrypted_value, &server_data)
     }
 
-    pub async fn japan_addressable(&self) -> Result<String> {
+    async fn japan_addressable(&self) -> Result<String> {
         let api_url = self.decrypt_game_config(self.find_game_config()?.as_slice())?;
 
         let catalog = self
@@ -103,7 +103,7 @@ impl CatalogFetcher {
         Ok(to_string_pretty(&catalog)?)
     }
 
-    pub async fn japan_catalog(&self) -> Result<String> {
+    async fn japan_catalog(&self) -> Result<String> {
         self.japan_addressable().await?;
 
         let addressable: JapanAddressable =
@@ -124,7 +124,7 @@ impl CatalogFetcher {
         Ok(catalog_url.to_string())
     }
 
-    pub async fn global_addressable(&self) -> Result<String> {
+    async fn global_addressable(&self) -> Result<String> {
         let version = self.apk_fetcher.check_version().await?.unwrap();
         let build_number = version.split('.').last().unwrap();
 
@@ -147,7 +147,7 @@ impl CatalogFetcher {
         Ok(to_string_pretty(&api)?)
     }
 
-    pub async fn global_resources(&self) -> Result<String> {
+    async fn global_resources(&self) -> Result<String> {
         self.global_addressable().await?;
 
         let addressable: GlobalAddressable =
@@ -169,5 +169,27 @@ impl CatalogFetcher {
         .await?;
 
         Ok(to_string_pretty(&catalog)?)
+    }
+    
+    pub async fn get_catalogs(&self) -> Result<String> {
+        match &self.config.region {
+            ServerRegion::Japan => {
+                Ok(self.japan_catalog().await?)
+            },
+            ServerRegion::Global => {
+                Ok(self.global_resources().await?)
+            },
+        }
+    }
+    
+    pub async fn get_addressable(&self) -> Result<String> {
+        match &self.config.region {
+            ServerRegion::Japan => {
+                Ok(self.japan_addressable().await?)
+            },
+            ServerRegion::Global => {
+                Ok(self.global_addressable().await?)
+            }
+        }
     }
 }

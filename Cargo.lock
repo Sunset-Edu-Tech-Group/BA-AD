@@ -111,8 +111,8 @@ dependencies = [
 
 [[package]]
 name = "bacy"
-version = "1.3.0"
-source = "git+https://github.com/Deathemonic/BA-CY#f3000e5d09c4d4e059b6ef9deb51b50da64afe89"
+version = "1.3.2"
+source = "git+https://github.com/Deathemonic/BA-CY#de947e4ac66eba1d5aa325aa0fc5eb6292975f73"
 dependencies = [
  "anyhow",
  "base64",
@@ -1773,6 +1773,7 @@ version = "1.0.140"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "20068b6e96dc6c9bd23e01df8827e6c7e1f2fddd43c21810382803c136b99373"
 dependencies = [
+ "indexmap",
  "itoa",
  "memchr",
  "ryu",

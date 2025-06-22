@@ -1,5 +1,6 @@
-use std::collections::HashMap;
+use bacy::Asset;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize)]
 pub struct JapanData {
@@ -78,7 +79,7 @@ pub struct CategoryMapping {
     pub paths: Vec<String>
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Resource {
     pub group: String,
     pub resource_path: String,
@@ -112,6 +113,12 @@ pub struct JapanAddressable {
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
+pub struct BundleDownloadInfo {
+    pub bundle_files: Vec<Asset>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct ConnectionGroup {
     pub name: String,
     pub management_data_url: String,
@@ -140,4 +147,21 @@ pub struct GameMainConfig {
     pub default_connection_group: String,
     pub skip_tutorial: String,
     pub language: String
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum HashValue {
+    Crc(i64),
+    Md5(String),
+}
+
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct GameFiles {
+    pub url: String,
+    pub path: String,
+    pub hash: HashValue,
+    pub size: i64
 }

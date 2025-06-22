@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use anyhow::{anyhow, Error, Result};
+use anyhow::{Error, Result};
 use reqwest::header::{HeaderMap, HeaderValue};
 
 pub const JAPAN_REGEX_URL: &str = r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))";
@@ -19,27 +19,32 @@ pub const GAME_CONFIG_PATTERN: &[u8] = &[
     0x92, 0x03, 0x00, 0x00,
 ];
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ServerRegion {
+    Global,
+    Japan,
+}
+
 #[derive(Clone)]
 pub struct ServerConfig {
-    pub id: String,
+    pub region: ServerRegion,
     pub version_url: String,
     pub apk_path: String
 }
 
 impl ServerConfig {
-    pub fn new(server: &str) -> Result<Self, Error> {
+    pub fn new(server: ServerRegion) -> Result<Self, Error> {
         match server {
-            "global" => Ok(Self {
-                id: "global".to_string(),
+            ServerRegion::Global => Ok(Self {
+                region: server,
                 version_url: String::new(),
                 apk_path: String::new(),
             }),
-            "japan" => Ok(Self {
-                id: "japan".to_string(),
+            ServerRegion::Japan => Ok(Self {
+                region: server,
                 version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
                 apk_path: "apk/BlueArchive.xapk".to_string(),
             }),
-            _ => Err(anyhow!("Invalid server: {}", server))
         }
     }
 }
