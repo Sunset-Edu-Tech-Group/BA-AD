@@ -1,3 +1,5 @@
+use crate::helpers::{ErrorContext, ErrorExt};
+
 use anyhow::Result;
 use glob::Pattern as GlobPattern;
 use lazy_regex::Regex;
@@ -33,10 +35,15 @@ impl ResourceFilter {
 
         match method {
             FilterMethod::Regex => {
-                filter.compiled_regex = Some(Regex::new(pattern)?);
+                filter.compiled_regex = Some(Regex::new(pattern).error_context(&format!("Invalid regex pattern: '{}'", pattern))?);
             }
             FilterMethod::Fuzzy => {
                 filter.fuzzy_matcher = Some(Matcher::new(Config::DEFAULT));
+            }
+            FilterMethod::Glob => {
+                GlobPattern::new(pattern)
+                    .handle_errors()
+                    .error_context(&format!("Invalid glob pattern: '{}'", pattern))?;
             }
             _ => {}
         }

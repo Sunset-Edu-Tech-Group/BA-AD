@@ -1,8 +1,8 @@
-use crate::helpers::{ServerConfig, ServerRegion};
+use crate::helpers::{ErrorExt, ServerConfig, ServerRegion};
 use crate::utils::FileManager;
 use crate::{error, info};
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::{Context, Result};
 use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};
@@ -50,38 +50,32 @@ impl ApkExtractor {
         info!("Extracting apk...");
 
         let apk_path = self.file_manager.get_data_path(&self.config.apk_path);
-        let mut archive = ZipArchive::new(File::open(&apk_path)
-            .with_context(|| format!("{} not found", apk_path.display()))?
-        ).with_context(|| "Failed to open archive")?;
+        let mut archive = ZipArchive::new(
+            File::open(&apk_path)
+                .handle_errors()?
+        ).handle_errors()?;
 
-        let mut target_apk = match archive.by_name(&rule.apk) {
-            Ok(file) => file,
-            Err(_) => {
-                return Err(anyhow!("{} not found", rule.apk));
-            }
-        };
+
+        let mut target_apk = archive.by_name(&rule.apk).handle_errors()?;
+
 
         let mut buf = Vec::new();
-        target_apk.read_to_end(&mut buf)
-            .with_context(|| format!("Failed to read {}", rule.apk))?;
+        target_apk.read_to_end(&mut buf).handle_errors()?;
         let mut cursor = Cursor::new(buf);
 
-        let mut inner_archive = ZipArchive::new(&mut cursor)
-            .with_context(|| format!("Failed to open {}", rule.apk))?;
+        let mut inner_archive = ZipArchive::new(&mut cursor).handle_errors()?;
 
         fs::create_dir_all(&rule.output)?;
 
         for i in 0..inner_archive.len() {
-            let mut file = inner_archive.by_index(i)?;
+            let mut file = inner_archive.by_index(i).handle_errors()?;
             let file_path = PathBuf::from(file.name());
             
             if self.matches_rule(&file_path, &rule)? {
                 let out = rule.output.join(file_path.file_name().unwrap());
                 
-                let mut outfile = File::create(&out)
-                    .with_context(|| format!("Failed to create file: {}", out.display()))?;
-                io::copy(&mut file, &mut outfile)
-                    .with_context(|| "Failed to copy file")?;
+                let mut outfile = File::create(&out).handle_errors()?;
+                io::copy(&mut file, &mut outfile).handle_errors()?;
             }
         }
 
@@ -107,7 +101,7 @@ impl ApkExtractor {
             .and_then(|n| n.to_str())
             .unwrap_or("");
 
-        let pattern = Pattern::new(&rule.pattern)?;
+        let pattern = Pattern::new(&rule.pattern).handle_errors()?;
 
         Ok(pattern.matches(file_name))
     }

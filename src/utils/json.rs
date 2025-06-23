@@ -1,21 +1,24 @@
-use crate::helpers::{ApiData, GlobalData, JapanData, API_FILENAME};
+use crate::helpers::{ApiData, ErrorContext, ErrorExt, GlobalData, JapanData, API_FILENAME};
 use crate::utils::FileManager;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use serde::{de::DeserializeOwned, Serialize};
 
 pub async fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename: &str) -> Result<T> {
-    let bytes = file_manager.load_file(filename)?;
-    let json_data = String::from_utf8(bytes).context("Failed to convert file content to UTF-8")?;
-    serde_json::from_str(&json_data).with_context(|| format!("Failed to parse JSON from file: {}", filename))
+    let bytes = file_manager.load_file(filename).handle_errors()?;
+    let json_data = String::from_utf8(bytes)
+        .error_context("Failed to convert file content to UTF-8")?;
+    serde_json::from_str(&json_data).handle_errors()
 }
 
+
 pub async fn save_json<T: Serialize>(file_manager: &FileManager, filename: &str, data: &T) -> Result<()> {
-    let json_data = serde_json::to_string_pretty(data).context("Failed to serialize data to JSON")?;
+    let json_data = serde_json::to_string_pretty(data).handle_errors()?;
     let file_path = file_manager.get_data_path(filename);
-    FileManager::create_parent_dir(&file_path)?;
-    file_manager.save_file(filename, json_data.as_bytes())
+    FileManager::create_parent_dir(&file_path).handle_errors()?;
+    file_manager.save_file(filename, json_data.as_bytes()).handle_errors()
 }
+
 
 pub async fn get_api_data(file_manager: &FileManager) -> Result<ApiData> {
     if file_manager.get_data_path(API_FILENAME).exists() {
@@ -50,39 +53,4 @@ pub fn create_default_api_data() -> ApiData {
             catalog_url: String::new(),
         },
     }
-}
-
-pub async fn update_server_data(
-    file_manager: &FileManager,
-    server: &str,
-    catalog_url: Option<&str>,
-    addressable_url: Option<&str>,
-    version: Option<&str>,
-) -> Result<()> {
-    let mut api_data: ApiData = get_api_data(file_manager).await?;
-
-    match server {
-        "japan" => {
-            if let Some(url) = catalog_url {
-                api_data.japan.catalog_url = url.to_string();
-            }
-            if let Some(url) = addressable_url {
-                api_data.japan.addressable_url = url.to_string();
-            }
-            if let Some(ver) = version {
-                api_data.japan.version = ver.to_string();
-            }
-        }
-        "global" => {
-            if let Some(url) = catalog_url {
-                api_data.global.catalog_url = url.to_string();
-            }
-            if let Some(ver) = version {
-                api_data.global.version = ver.to_string();
-            }
-        }
-        _ => return Err(anyhow::anyhow!("Invalid server: {}", server)),
-    }
-
-    save_api_data(file_manager, &api_data).await
 }

@@ -1,12 +1,14 @@
 use crate::apk::ApkFetcher;
 use crate::helpers::{
-    GlobalAddressable, GlobalCatalog, JapanAddressable,
-    ServerConfig, ServerRegion, GAME_CONFIG_PATTERN, GLOBAL_API_URL
+    ErrorContext, ErrorExt, GlobalAddressable,
+    GlobalCatalog, JapanAddressable, ServerConfig, ServerRegion,
+    GAME_CONFIG_PATTERN, GLOBAL_API_URL
 };
+
 use crate::utils::json::{load_json, save_json, update_api_data};
 use crate::utils::FileManager;
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use bacy::table_encryption_service::{convert_string, create_key, new_encrypt_string};
 use base64::{engine::general_purpose, Engine};
 use reqwest::Client;
@@ -38,12 +40,12 @@ impl CatalogFetcher {
         let data = self.file_manager.get_data_path("data");
 
         for entry in WalkDir::new(data) {
-            let entry = entry?;
+            let entry = entry.handle_errors()?;
             if !entry.file_type().is_file() {
                 continue;
             }
 
-            let buffer = fs::read(entry.path())?;
+            let buffer = fs::read(entry.path()).handle_errors()?;
 
             if let Some(pos) = buffer
                 .windows(GAME_CONFIG_PATTERN.len())
@@ -58,7 +60,7 @@ impl CatalogFetcher {
             }
         }
 
-        Err(anyhow!("Game config not found"))
+        None.error_context("Game config not found")
     }
 
     pub fn decrypt_game_config(&self, data: &[u8]) -> Result<String> {
@@ -67,16 +69,16 @@ impl CatalogFetcher {
         let game_config = create_key(b"GameMainConfig");
         let server_data = create_key(b"ServerInfoDataUrl");
 
-        let decrypted_data = convert_string(&encoded_data, &game_config)?;
-        let loaded_data: Value = serde_json::from_str(&decrypted_data)?;
+        let decrypted_data = convert_string(&encoded_data, &game_config).handle_errors()?;
+        let loaded_data: Value = serde_json::from_str(&decrypted_data).handle_errors()?;
 
-        let decrypted_key = new_encrypt_string("ServerInfoDataUrl", &server_data)?;
+        let decrypted_key = new_encrypt_string("ServerInfoDataUrl", &server_data).handle_errors()?;
         let decrypted_value = loaded_data
             .get(&decrypted_key)
             .and_then(|v| v.as_str())
-            .ok_or_else(|| anyhow!("Key '{}' not found in JSON", decrypted_key))?;
+            .error_context(&format!("Key '{}' not found in JSON", decrypted_key))?;
 
-        convert_string(decrypted_value, &server_data)
+        convert_string(decrypted_value, &server_data).handle_errors()
     }
 
     async fn japan_addressable(&self) -> Result<String> {
@@ -86,9 +88,11 @@ impl CatalogFetcher {
             .client
             .get(&api_url)
             .send()
-            .await?
+            .await
+            .handle_errors()?
             .json::<JapanAddressable>()
-            .await?;
+            .await
+            .handle_errors()?;
 
         save_json(
             &self.file_manager,
@@ -102,7 +106,7 @@ impl CatalogFetcher {
         })
         .await?;
 
-        Ok(to_string_pretty(&catalog)?)
+        Ok(to_string_pretty(&catalog).handle_errors()?)
     }
 
     async fn japan_catalog(&self) -> Result<String> {
@@ -116,7 +120,7 @@ impl CatalogFetcher {
             .first()
             .and_then(|group| group.override_connection_groups.get(1))
             .map(|override_group| &override_group.addressables_catalog_url_root)
-            .ok_or_else(|| anyhow!("Second override connection group not found"))?;
+            .error_context("Second override connection group not found")?;
 
         update_api_data(&self.file_manager, |data| {
             data.japan.catalog_url = catalog_url.to_string();
@@ -127,8 +131,10 @@ impl CatalogFetcher {
     }
 
     async fn global_addressable(&self) -> Result<String> {
-        let version = self.apk_fetcher.check_version().await?.unwrap();
-        let build_number = version.split('.').last().unwrap();
+        let version = self.apk_fetcher.check_version().await?
+            .error_context("Failed to get version")?;
+        let build_number = version.split('.').last()
+            .error_context("Invalid version format - missing build number")?;
 
         let api = self
             .client
@@ -140,13 +146,16 @@ impl CatalogFetcher {
                 "curr_build_number": build_number
             }))
             .send()
-            .await?
+            .await
+            .handle_errors()?
             .json::<GlobalAddressable>()
-            .await?;
+            .await
+            .handle_errors()?;
+
 
         save_json(&self.file_manager, "catalog/GlobalAddressables.json", &api).await?;
 
-        Ok(to_string_pretty(&api)?)
+        Ok(to_string_pretty(&api).handle_errors()?)
     }
 
     async fn global_resources(&self) -> Result<String> {
@@ -159,9 +168,12 @@ impl CatalogFetcher {
             .client
             .get(&addressable.patch.resource_path)
             .send()
-            .await?
+            .await
+            .handle_errors()?
             .json::<GlobalCatalog>()
-            .await?;
+            .await
+            .handle_errors()?;
+
 
         save_json(&self.file_manager, "catalog/global/Resources.json", &catalog).await?;
 
@@ -170,7 +182,7 @@ impl CatalogFetcher {
         })
         .await?;
 
-        Ok(to_string_pretty(&catalog)?)
+        Ok(to_string_pretty(&catalog).handle_errors()?)
     }
     
     pub async fn get_catalogs(&self) -> Result<String> {

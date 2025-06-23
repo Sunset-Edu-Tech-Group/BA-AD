@@ -1,5 +1,5 @@
 use crate::download::ResourceFilter;
-use crate::helpers::{GameResources, HashValue, ServerConfig, ServerRegion};
+use crate::helpers::{ErrorContext, ErrorExt, GameResources, HashValue, ServerConfig, ServerRegion};
 use crate::utils::json::load_json;
 use crate::utils::FileManager;
 use crate::{error, info, success, warn};
@@ -56,7 +56,9 @@ impl ResourceDownloader {
             ServerRegion::Japan => "catalog/japan/GameFiles.json",
         };
 
-        let game_resources: GameResources = load_json(&self.file_manager, game_files_path).await?;
+        let game_resources: GameResources = load_json(&self.file_manager, game_files_path)
+            .await
+            .error_context("Failed to load game resources - run CatalogParser first")?;
 
         let category = category.unwrap_or(ResourceCategory::All);
 
@@ -143,9 +145,23 @@ impl ResourceDownloadBuilder {
     }
 
     pub fn build(self) -> Result<ResourceDownloader> {
+        if self.retries == 0 {
+            return None.error_context("Retry count cannot be zero");
+        }
+
+        if self.timeout == 0 {
+            return None.error_context("Timeout cannot be zero");
+        }
+
+        if self.limit == 0 {
+            return None.error_context("Download limit cannot be zero");
+        }
+
+
         let client = Client::builder()
             .timeout(Duration::from_secs(self.timeout))
-            .build()?;
+            .build()
+            .handle_errors()?;
 
         let style = StyleOptions::new(
             ProgressBarOpts::hidden(),

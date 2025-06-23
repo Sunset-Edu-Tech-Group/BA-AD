@@ -1,7 +1,7 @@
 use crate::helpers::network::get_content_length;
 use crate::helpers::{
-    apk_headers, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION, GLOBAL_URL,
-    JAPAN_REGEX_URL, JAPAN_REGEX_VERSION,
+    apk_headers, ErrorContext, ErrorExt, ServerConfig, ServerRegion,
+    GLOBAL_REGEX_VERSION, GLOBAL_URL, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION
 };
 use crate::utils::file::FileManager;
 use crate::utils::json;
@@ -23,7 +23,7 @@ pub struct ApkFetcher {
 
 impl ApkFetcher {
     pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
-        let client = Client::builder().default_headers(apk_headers()).build()?;
+        let client = Client::builder().default_headers(apk_headers()).build().handle_errors()?;
 
         let downloader = DownloaderBuilder::new()
             .directory(file_manager.get_data_dir().to_path_buf())
@@ -41,38 +41,32 @@ impl ApkFetcher {
     }
 
     pub async fn get_current_version(&self) -> Result<String> {
-        let response = self.client.get(&self.config.version_url).send().await?;
-        if !response.status().is_success() {
-            return Err(anyhow!("Failed to get versions: {}", response.status()));
-        }
-
-        let body: String = response.text().await?;
+        let response = self.client.get(&self.config.version_url).send().await.handle_errors()?;
+        let body: String = response.text().await.handle_errors()?;
         self.extract_version(&body)
     }
 
     fn extract_version(&self, body: &str) -> Result<String> {
-        // Use the lazy static from config
         JAPAN_REGEX_VERSION
             .find(body)
             .map(|m| m.as_str().to_string())
-            .ok_or_else(|| anyhow!("Failed to find version in response"))
+            .error_context("Failed to extract version from server response")
     }
 
     fn extract_url(&self, body: &str) -> Result<String> {
-        // Use the lazy static from config with captures
         match JAPAN_REGEX_URL.captures(body) {
             Some(caps) if caps.len() >= 3 => Ok(caps.get(2).unwrap().as_str().to_string()),
-            _ => Err(anyhow!("Failed to get download url")),
+            _ => None.error_context("Failed to get download url"),
         }
     }
 
     pub async fn check_version(&self) -> Result<Option<String>> {
         match &self.config.region {
             ServerRegion::Global => {
-                let re_url = self.client.get(GLOBAL_URL).send().await?.text().await?;
+                let re_url = self.client.get(GLOBAL_URL).send().await.handle_errors()?.text().await.handle_errors()?;
                 let new_version = GLOBAL_REGEX_VERSION
                     .find(&re_url)
-                    .ok_or_else(|| anyhow!("Failed to get version"))?
+                    .error_context("Failed to get version")?
                     .as_str()
                     .to_string();
 
@@ -84,12 +78,8 @@ impl ApkFetcher {
                 Ok(Some(new_version))
             }
             ServerRegion::Japan => {
-                let response = self.client.get(&self.config.version_url).send().await?;
-                if !response.status().is_success() {
-                    return Err(anyhow!("Failed to get version: {}", response.status()));
-                }
-
-                let body = response.text().await?;
+                let response = self.client.get(&self.config.version_url).send().await.handle_errors()?;
+                let body = response.text().await.handle_errors()?;
                 let new_version = self.extract_version(&body)?;
 
                 json::update_api_data(&self.file_manager, |data| {
@@ -103,11 +93,7 @@ impl ApkFetcher {
     }
 
     async fn check_apk(&self, download_url: &str, apk_path: &PathBuf) -> Result<bool> {
-        if !self
-            .file_manager
-            .get_data_path(&apk_path.to_string_lossy())
-            .exists()
-        {
+        if !apk_path.exists() {
             return Ok(true);
         }
 
@@ -121,7 +107,8 @@ impl ApkFetcher {
             .get(download_url)
             .header("Range", "bytes=0-0")
             .send()
-            .await?;
+            .await
+            .handle_errors()?;
 
         if !response.status().is_success()
             && response.status() != reqwest::StatusCode::PARTIAL_CONTENT
@@ -140,26 +127,39 @@ impl ApkFetcher {
 
     pub async fn download_apk(&self) -> Result<(String, PathBuf)> {
         if self.config.region == ServerRegion::Global {
-            return Err(anyhow!("Global server is not supported"));
+            return None.error_context("Global server APK download is not supported");
         }
 
         let new_version = self.get_current_version().await?;
         debug!("Using version <b><u><yellow>{}</>", new_version);
 
-        let response = self.client.get(&self.config.version_url).send().await?;
-        let body = response.text().await?;
+        let apk_path = self.file_manager.get_data_path(&self.config.apk_path);
+        
+        let response = self.client.get(&self.config.version_url).send().await.handle_errors()?;
+        let body = response.text().await.handle_errors()?;
         let download_url = self.extract_url(&body)?;
 
-        debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
+        let needs_download = self.check_apk(&download_url, &apk_path).await?;
+        if needs_download {
+            if !apk_path.exists() {
+                info!("APK doesn't exist, downloading...");
+            } else {
+                warn!("APK is outdated or incomplete, downloading...");
+            }
 
-        info!("Downloading APK...");
-        let apk = vec![Download {
-            url: Url::parse(download_url.as_str())?,
-            filename: self.config.apk_path.clone(),
-            hash: None
-        }];
-        self.downloader.download(&apk).await;
+            debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
 
+            info!("Downloading APK...");
+            let apk = vec![Download {
+                url: Url::parse(download_url.as_str())?,
+                filename: self.config.apk_path.clone(),
+                hash: None
+            }];
+            self.downloader.download(&apk).await;
+        } else {
+            info!("APK is up to date, skipping download");
+        }
+        
         Ok((
             new_version,
             self.file_manager.get_data_path(&self.config.apk_path),

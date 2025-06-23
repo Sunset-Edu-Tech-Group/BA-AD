@@ -1,6 +1,6 @@
 use crate::helpers::{
-    ApiData, AssetBundle, BundleDownloadInfo, GameFiles, GameResources, GlobalCatalog, HashValue,
-    MediaResources, Resource, ServerConfig, ServerRegion, TableResources
+    ApiData, AssetBundle, BundleDownloadInfo, ErrorContext, ErrorExt, GameFiles, GameResources, GlobalCatalog,
+    HashValue, MediaResources, Resource, ServerConfig, ServerRegion, TableResources
 };
 use crate::utils::json::{load_json, save_json};
 use crate::utils::FileManager;
@@ -29,9 +29,12 @@ impl CatalogParser {
             .client
             .get(format!("{}/Android/bundleDownloadInfo.json", catalog_url))
             .send()
-            .await?
+            .await
+            .handle_errors()?
             .json::<BundleDownloadInfo>()
-            .await?;
+            .await
+            .handle_errors()?;
+
 
         save_json(
             &self.file_manager,
@@ -47,10 +50,12 @@ impl CatalogParser {
                 catalog_url
             ))
             .send()
-            .await?
+            .await
+            .handle_errors()?
             .bytes()
-            .await?;
-        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url)?;
+            .await
+            .handle_errors()?;
+        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url).handle_errors()?;
 
         save_json(
             &self.file_manager,
@@ -63,10 +68,12 @@ impl CatalogParser {
             .client
             .get(format!("{}/TableBundles/TableCatalog.bytes", catalog_url))
             .send()
-            .await?
+            .await
+            .handle_errors()?
             .bytes()
-            .await?;
-        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url)?;
+            .await
+            .handle_errors()?;
+        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).handle_errors()?;
 
         save_json(
             &self.file_manager,
@@ -230,6 +237,11 @@ impl CatalogParser {
         match self.config.region {
             ServerRegion::Japan => {
                 let catalog_url = &api_data.japan.catalog_url;
+
+                if catalog_url.is_empty() {
+                    return None.error_context("Japan catalog URL is empty - run CatalogFetcher first");
+                }
+
                 self.japan_data(catalog_url).await?;
                 self.japan_gamefiles(catalog_url).await?;
             }
@@ -240,6 +252,10 @@ impl CatalogParser {
                     .global
                     .catalog_url
                     .trim_end_matches("/resource-data.json");
+
+                if catalog_url.is_empty() {
+                    return None.error_context("Global catalog URL is empty - run CatalogFetcher first");
+                }
 
                 self.global_data(&resources.resources).await?;
                 self.global_gamefiles(catalog_url, &resources.resources)
