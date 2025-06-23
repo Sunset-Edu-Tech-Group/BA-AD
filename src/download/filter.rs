@@ -1,0 +1,140 @@
+use anyhow::Result;
+use glob::Pattern as GlobPattern;
+use lazy_regex::Regex;
+use nucleo::{Config, Matcher, Utf32Str};
+
+#[derive(Debug, Clone)]
+pub enum FilterMethod {
+    Exact,
+    Contains,
+    Regex,
+    Fuzzy,
+    Glob,
+    ContainsIgnoreCase,
+    StartsWith,
+    EndsWith,
+}
+
+pub struct ResourceFilter {
+    pattern: String,
+    method: FilterMethod,
+    compiled_regex: Option<Regex>,
+    fuzzy_matcher: Option<Matcher>,
+}
+
+impl ResourceFilter {
+    pub fn new(pattern: &str, method: FilterMethod) -> Result<Self> {
+        let mut filter = Self {
+            pattern: pattern.to_string(),
+            method: method.clone(),
+            compiled_regex: None,
+            fuzzy_matcher: None,
+        };
+
+        match method {
+            FilterMethod::Regex => {
+                filter.compiled_regex = Some(Regex::new(pattern)?);
+            }
+            FilterMethod::Fuzzy => {
+                filter.fuzzy_matcher = Some(Matcher::new(Config::DEFAULT));
+            }
+            _ => {}
+        }
+
+        Ok(filter)
+    }
+
+    fn match_exact(&self, path: &str) -> bool {
+        path == self.pattern
+    }
+
+    fn match_contains(&self, path: &str) -> bool {
+        path.contains(&self.pattern)
+    }
+
+    fn match_contains_ignore_case(&self, path: &str) -> bool {
+        path.to_lowercase().contains(&self.pattern.to_lowercase())
+    }
+
+    fn match_starts_with(&self, path: &str) -> bool {
+        path.starts_with(&self.pattern)
+    }
+
+    fn match_ends_with(&self, path: &str) -> bool {
+        path.ends_with(&self.pattern)
+    }
+
+    fn match_regex(&self, path: &str) -> bool {
+        self.compiled_regex
+            .as_ref()
+            .map(|r| r.is_match(path))
+            .unwrap_or(false)
+    }
+
+    fn match_fuzzy(&self, path: &str) -> bool {
+        if let Some(mut matcher) = self.fuzzy_matcher.clone() {
+            let mut pattern_buf = Vec::new();
+            let mut haystack_buf = Vec::new();
+
+            let pattern = Utf32Str::new(&self.pattern, &mut pattern_buf);
+            let haystack = Utf32Str::new(path, &mut haystack_buf);
+
+            matcher.fuzzy_match(haystack, pattern).is_some()
+        } else {
+            path.contains(&self.pattern)
+        }
+    }
+
+    fn match_glob(&self, path: &str) -> bool {
+        GlobPattern::new(&self.pattern)
+            .map(|pattern| pattern.matches(path))
+            .unwrap_or(false)
+    }
+
+    pub fn matches(&self, path: &str) -> bool {
+        match self.method {
+            FilterMethod::Exact => self.match_exact(path),
+            FilterMethod::Contains => self.match_contains(path),
+            FilterMethod::ContainsIgnoreCase => self.match_contains_ignore_case(path),
+            FilterMethod::StartsWith => self.match_starts_with(path),
+            FilterMethod::EndsWith => self.match_ends_with(path),
+            FilterMethod::Regex => self.match_regex(path),
+            FilterMethod::Fuzzy => self.match_fuzzy(path),
+            FilterMethod::Glob => self.match_glob(path),
+        }
+    }
+}
+
+impl ResourceFilter {
+    pub fn glob(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::Glob)
+    }
+    
+    pub fn regex(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::Regex)
+    }
+
+    pub fn contains(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::Contains)
+    }
+
+    pub fn exact(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::Exact)
+    }
+
+    pub fn starts_with(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::StartsWith)
+    }
+
+    pub fn ends_with(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::EndsWith)
+    }
+
+    pub fn contains_ignore_case(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::ContainsIgnoreCase)
+    }
+
+    pub fn fuzzy(pattern: &str) -> Result<Self> {
+        Self::new(pattern, FilterMethod::Fuzzy)
+    }
+}

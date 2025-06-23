@@ -1,3 +1,4 @@
+use crate::download::filter::ResourceFilter;
 use crate::helpers::api::{GameResources, HashValue};
 use crate::helpers::config::{ServerConfig, ServerRegion};
 use crate::utils::file::FileManager;
@@ -38,7 +39,7 @@ impl ResourceDownloader {
             .build()
     }
 
-    pub async fn download(&self) -> Result<()> {
+    pub async fn download(&self, filter: Option<ResourceFilter>) -> Result<()> {
         let game_files_path = match &self.config.region {
             ServerRegion::Global => "catalog/global/GameFiles.json",
             ServerRegion::Japan => "catalog/japan/GameFiles.json",
@@ -46,7 +47,7 @@ impl ResourceDownloader {
 
         let game_resources: GameResources = load_json(&self.file_manager, game_files_path).await?;
 
-        let downloads: Vec<Download> = [
+        let mut downloads: Vec<Download> = [
             &game_resources.asset_bundles,
             &game_resources.table_bundles,
             &game_resources.media_resources,
@@ -54,6 +55,17 @@ impl ResourceDownloader {
         .into_iter()
         .flat_map(|v| v.iter())
         .filter_map(|files| {
+            if let Some(ref filter) = filter {
+                let filename = Path::new(&files.path)
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .unwrap_or(&files.path);
+
+                if !filter.matches(filename) {
+                    return None;
+                }
+            }
+            
             Download::try_from(files.url.as_str())
                 .map(|mut download| {
                     download.filename = files.path.clone();
@@ -68,7 +80,10 @@ impl ResourceDownloader {
         .collect();
 
         if !downloads.is_empty() {
+            info!("Filtered {} files for download", downloads.len());
             self.downloader.download(&downloads).await;
+        } else {
+            warn!("No files matched the filter criteria");
         }
 
         Ok(())

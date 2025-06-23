@@ -3,4 +3,4 @@ pub mod args;
 pub mod log;
 pub mod network;
 pub mod api;
-mod error;
+pub mod error;
