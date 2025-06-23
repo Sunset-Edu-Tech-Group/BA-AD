@@ -165,3 +165,11 @@ pub struct GameFiles {
     pub hash: HashValue,
     pub size: i64
 }
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct GameResources {
+    pub asset_bundles: Vec<GameFiles>,
+    pub table_bundles: Vec<GameFiles>,
+    pub media_resources: Vec<GameFiles>,
+}

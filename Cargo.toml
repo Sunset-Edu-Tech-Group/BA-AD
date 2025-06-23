@@ -21,7 +21,7 @@ serde_json = { version = "1.0.140", features = ["preserve_order"] }
 serde = { version = "1.0.219", features = ["derive"] }
 tokio = { version = "1.45.1", features = ["full"] }
 paris = { version = "1.5.15", features = ["timestamps", "macros"] }
-trauma = { git = "https://github.com/RZinth/trauma" }  # Using a custom trauma to support ApkPure
+trauma = { git = "https://github.com/RZinth/trauma", features = ["rustls"] }  # Using a custom trauma
 walkdir = "2.5.0"
 zip = "4.1.0"
 base64 = "0.22.1"

@@ -1,7 +1,7 @@
-use anyhow::Result;
+use anyhow::{Error, Result};
 use platform_dirs::AppDirs;
-use std::fs;
 use std::path::PathBuf;
+use std::{env, fs};
 
 #[allow(dead_code)]
 const APP_NAME: &str = env!("CARGO_CRATE_NAME");
@@ -64,6 +64,17 @@ impl FileManager {
             fs::create_dir_all(parent)?;
         }
         Ok(())
+    }
+
+    pub fn get_output_dir(path: Option<PathBuf>) -> Result<PathBuf, Error> {
+        let output_dir = match path {
+            Some(path) => path,
+            None => env::current_dir()?.join("output"),
+        };
+
+        fs::create_dir_all(&output_dir)?;
+
+        Ok(output_dir)
     }
     
     pub fn get_data_dir(&self) -> &PathBuf {

@@ -141,10 +141,8 @@ impl ApkFetcher {
     }
 
     pub async fn download_apk(&self) -> Result<(String, PathBuf)> {
-        if self.config.version_url.is_empty() {
-            return Err(anyhow!(
-                "Invalid configuration: missing version_url or you are using an unsupported server"
-            ));
+        if self.config.region == ServerRegion::Global {
+            return Err(anyhow!("Global server is not supported"));
         }
 
         let new_version = self.get_current_version().await?;
@@ -160,6 +158,7 @@ impl ApkFetcher {
         let apk = vec![Download {
             url: Url::parse(download_url.as_str())?,
             filename: self.config.apk_path.clone(),
+            hash: None
         }];
         self.downloader.download(&apk).await;
 
