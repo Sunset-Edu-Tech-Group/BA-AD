@@ -12,6 +12,14 @@ use std::time::Duration;
 use trauma::download::{Download, Status};
 use trauma::downloader::{Downloader, DownloaderBuilder, ProgressBarOpts, StyleOptions};
 
+#[derive(Debug, Clone)]
+pub enum ResourceCategory {
+    Assets,
+    Tables,
+    Media,
+    All,
+}
+
 pub struct ResourceDownloader {
     client: Client,
     downloader: Downloader,
@@ -39,7 +47,11 @@ impl ResourceDownloader {
             .build()
     }
 
-    pub async fn download(&self, filter: Option<ResourceFilter>) -> Result<()> {
+    pub async fn download(
+        &self, 
+        category: Option<ResourceCategory>, 
+        filter: Option<ResourceFilter>
+    ) -> Result<()> {
         let game_files_path = match &self.config.region {
             ServerRegion::Global => "catalog/global/GameFiles.json",
             ServerRegion::Japan => "catalog/japan/GameFiles.json",
@@ -47,43 +59,52 @@ impl ResourceDownloader {
 
         let game_resources: GameResources = load_json(&self.file_manager, game_files_path).await?;
 
-        let mut downloads: Vec<Download> = [
-            &game_resources.asset_bundles,
-            &game_resources.table_bundles,
-            &game_resources.media_resources,
-        ]
-        .into_iter()
-        .flat_map(|v| v.iter())
-        .filter_map(|files| {
-            if let Some(ref filter) = filter {
-                let filename = Path::new(&files.path)
-                    .file_name()
-                    .and_then(|name| name.to_str())
-                    .unwrap_or(&files.path);
+        let category = category.unwrap_or(ResourceCategory::All);
 
-                if !filter.matches(filename) {
-                    return None;
+        let collections: Vec<&Vec<_>> = match category {
+            ResourceCategory::Assets => vec![&game_resources.asset_bundles],
+            ResourceCategory::Tables => vec![&game_resources.table_bundles],
+            ResourceCategory::Media => vec![&game_resources.media_resources],
+            ResourceCategory::All => vec![
+                &game_resources.asset_bundles,
+                &game_resources.table_bundles,
+                &game_resources.media_resources,
+            ],
+        };
+
+        let downloads: Vec<Download> = collections
+            .into_iter()
+            .flat_map(|v| v.iter())
+            .filter_map(|files| {
+                if let Some(ref filter) = filter {
+                    let filename = Path::new(&files.path)
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .unwrap_or(&files.path);
+
+                    if !filter.matches(filename) {
+                        return None;
+                    }
                 }
-            }
-            
-            Download::try_from(files.url.as_str())
-                .map(|mut download| {
-                    download.filename = files.path.clone();
-                    download.hash = Some(match &files.hash {
-                        HashValue::Crc(crc) => crc.to_string(),
-                        HashValue::Md5(md5) => md5.clone(),
-                    });
-                    download
-                })
-                .ok()
-        })
-        .collect();
+                
+                Download::try_from(files.url.as_str())
+                    .map(|mut download| {
+                        download.filename = files.path.clone();
+                        download.hash = Some(match &files.hash {
+                            HashValue::Crc(crc) => crc.to_string(),
+                            HashValue::Md5(md5) => md5.clone(),
+                        });
+                        download
+                    })
+                    .ok()
+            })
+            .collect();
 
         if !downloads.is_empty() {
-            info!("Filtered {} files for download", downloads.len());
+            info!("Found {} files for download (category: {:?})", downloads.len(), category);
             self.downloader.download(&downloads).await;
         } else {
-            warn!("No files matched the filter criteria");
+            warn!("No files matched the filter criteria for category: {:?}", category);
         }
 
         Ok(())

@@ -37,7 +37,7 @@ async fn main() -> anyhow::Result<()> {
     // let _ = catalog_fetcher.get_addressable().await?;
     // let _ = catalog_fetcher.get_catalogs().await?;
     // let _ = catalog_parser.process_catalogs().await?;
-    let _ = resource_downloader.download(Some(filter)).await?;
+    let _ = resource_downloader.download(None, Some(filter)).await?;
 
     Ok(())
 }
