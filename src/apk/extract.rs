@@ -2,7 +2,7 @@ use crate::helpers::{ErrorExt, ServerConfig, ServerRegion};
 use crate::utils::FileManager;
 use crate::{error, info};
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};

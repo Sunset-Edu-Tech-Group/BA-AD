@@ -4,7 +4,6 @@ use crate::helpers::{
     GlobalCatalog, JapanAddressable, ServerConfig, ServerRegion,
     GAME_CONFIG_PATTERN, GLOBAL_API_URL
 };
-
 use crate::utils::json::{load_json, save_json, update_api_data};
 use crate::utils::FileManager;
 

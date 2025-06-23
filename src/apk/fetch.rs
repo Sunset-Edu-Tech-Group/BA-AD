@@ -1,10 +1,10 @@
-use crate::helpers::network::get_content_length;
 use crate::helpers::{
     apk_headers, ErrorContext, ErrorExt, ServerConfig, ServerRegion,
     GLOBAL_REGEX_VERSION, GLOBAL_URL, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION
 };
 use crate::utils::file::FileManager;
 use crate::utils::json;
+use crate::utils::network::get_content_length;
 use crate::{debug, info, warn};
 
 use anyhow::{anyhow, Result};

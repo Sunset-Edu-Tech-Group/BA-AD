@@ -3,6 +3,7 @@ mod catalog;
 mod download;
 mod helpers;
 mod utils;
+pub mod cli;
 
 use crate::apk::ApkFetcher;
 use crate::helpers::{ServerConfig, ServerRegion};
