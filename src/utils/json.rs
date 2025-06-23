@@ -1,9 +1,8 @@
+use crate::helpers::{ApiData, GlobalData, JapanData, API_FILENAME};
+use crate::utils::FileManager;
+
 use anyhow::{Context, Result};
 use serde::{de::DeserializeOwned, Serialize};
-
-use crate::helpers::api::{ApiData, GlobalData, JapanData};
-use crate::helpers::config::API_FILENAME;
-use crate::utils::file::FileManager;
 
 pub async fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename: &str) -> Result<T> {
     let bytes = file_manager.load_file(filename)?;

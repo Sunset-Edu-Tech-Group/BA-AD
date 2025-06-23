@@ -37,7 +37,7 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 - [ ] ~Add download old apks~
 - [X] Replace the download manager with another library
 - [ ] Restructure codebase as an asset downloader only
-- [ ] Expose functions to act as a library
+- [X] Expose functions to act as a library
 - [X] Remove the UI
 - [ ] Add CLI stuff
 

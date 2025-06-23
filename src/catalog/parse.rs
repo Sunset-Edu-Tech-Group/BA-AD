@@ -1,10 +1,9 @@
-use crate::helpers::api::{
+use crate::helpers::{
     ApiData, AssetBundle, BundleDownloadInfo, GameFiles, GameResources, GlobalCatalog, HashValue,
-    MediaResources, Resource, TableResources,
+    MediaResources, Resource, ServerConfig, ServerRegion, TableResources
 };
-use crate::helpers::config::{ServerConfig, ServerRegion};
-use crate::utils::file::FileManager;
 use crate::utils::json::{load_json, save_json};
+use crate::utils::FileManager;
 
 use anyhow::Result;
 use bacy::{MediaCatalog, TableCatalog};

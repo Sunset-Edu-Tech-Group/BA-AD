@@ -4,15 +4,11 @@ mod download;
 mod helpers;
 mod utils;
 
-use crate::apk::extract::ApkExtractor;
-use crate::apk::fetch::ApkFetcher;
-use crate::catalog::fetch::CatalogFetcher;
-use crate::catalog::parse::CatalogParser;
-use crate::download::downloader::ResourceDownloader;
-use crate::download::filter::{FilterMethod, ResourceFilter};
-use crate::helpers::config::ServerConfig;
-use crate::helpers::config::ServerRegion;
-use crate::utils::file::FileManager;
+use crate::apk::{ApkExtractor, ApkFetcher};
+use crate::catalog::{CatalogFetcher, CatalogParser};
+use crate::download::{FilterMethod, ResourceDownloader, ResourceFilter};
+use crate::helpers::{ServerConfig, ServerRegion};
+use crate::utils::FileManager;
 
 /// Testing purposes only not to be run
 #[tokio::main]

@@ -1,8 +1,10 @@
-use crate::apk::fetch::ApkFetcher;
-use crate::helpers::api::{GlobalAddressable, GlobalCatalog, JapanAddressable};
-use crate::helpers::config::{ServerConfig, ServerRegion, GAME_CONFIG_PATTERN, GLOBAL_API_URL};
-use crate::utils::file::FileManager;
+use crate::apk::ApkFetcher;
+use crate::helpers::{
+    GlobalAddressable, GlobalCatalog, JapanAddressable,
+    ServerConfig, ServerRegion, GAME_CONFIG_PATTERN, GLOBAL_API_URL
+};
 use crate::utils::json::{load_json, save_json, update_api_data};
+use crate::utils::FileManager;
 
 use anyhow::{anyhow, Result};
 use bacy::table_encryption_service::{convert_string, create_key, new_encrypt_string};
