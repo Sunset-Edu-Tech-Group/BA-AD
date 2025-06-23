@@ -1,13 +1,14 @@
 #![allow(dead_code)]
 
 use anyhow::{Error, Result};
+use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};
 
-pub const JAPAN_REGEX_URL: &str = r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))";
-pub const JAPAN_REGEX_VERSION: &str = r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)";
+pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
+pub static JAPAN_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)");
+pub static GLOBAL_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d{1}\.\d{2}\.\d{6}");
 
 pub const GLOBAL_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
-pub const GLOBAL_REGEX_VERSION: &str = r"\d{1}\.\d{2}\.\d{6}";
 pub const GLOBAL_API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
 
 pub const API_FILENAME: &str = "api_data.json";

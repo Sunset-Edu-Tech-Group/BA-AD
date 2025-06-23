@@ -8,7 +8,6 @@ use crate::utils::json;
 use crate::{debug, info, warn};
 
 use anyhow::{anyhow, Result};
-use regex::Regex;
 use reqwest::{Client, Url};
 use std::path::PathBuf;
 use tokio::fs;
@@ -52,16 +51,16 @@ impl ApkFetcher {
     }
 
     fn extract_version(&self, body: &str) -> Result<String> {
-        let version = Regex::new(JAPAN_REGEX_VERSION)?;
-        version
+        // Use the lazy static from config
+        JAPAN_REGEX_VERSION
             .find(body)
             .map(|m| m.as_str().to_string())
             .ok_or_else(|| anyhow!("Failed to find version in response"))
     }
 
     fn extract_url(&self, body: &str) -> Result<String> {
-        let re_url: Regex = Regex::new(JAPAN_REGEX_URL)?;
-        match re_url.captures(body) {
+        // Use the lazy static from config with captures
+        match JAPAN_REGEX_URL.captures(body) {
             Some(caps) if caps.len() >= 3 => Ok(caps.get(2).unwrap().as_str().to_string()),
             _ => Err(anyhow!("Failed to get download url")),
         }
@@ -70,9 +69,8 @@ impl ApkFetcher {
     pub async fn check_version(&self) -> Result<Option<String>> {
         match &self.config.region {
             ServerRegion::Global => {
-                let version = Regex::new(GLOBAL_REGEX_VERSION)?;
                 let re_url = self.client.get(GLOBAL_URL).send().await?.text().await?;
-                let new_version = version
+                let new_version = GLOBAL_REGEX_VERSION
                     .find(&re_url)
                     .ok_or_else(|| anyhow!("Failed to get version"))?
                     .as_str()

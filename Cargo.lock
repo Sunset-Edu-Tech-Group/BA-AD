@@ -87,7 +87,6 @@ dependencies = [
  "nucleo",
  "paris",
  "platform-dirs",
- "regex",
  "reqwest",
  "serde",
  "serde_json",
