@@ -10,7 +10,11 @@ macro_rules! info {
 macro_rules! debug {
     ($($arg:tt)*) => {
         #[cfg(feature = "debug")]
-        paris::output::format_stdout(format!("<cyan>[DEBUG]</> {}", format!($($arg)*)), "\n")
+        {
+            if $crate::VERBOSE.load(std::sync::atomic::Ordering::Relaxed) {
+                paris::output::format_stdout(format!("<cyan>[DEBUG]</> {}", format!($($arg)*)), "\n")
+            }
+        }
     }
 }
 

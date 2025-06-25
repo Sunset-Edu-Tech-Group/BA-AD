@@ -5,14 +5,16 @@ mod helpers;
 mod utils;
 mod cli;
 
-use crate::cli::parse;
-use crate::cli::Args;
+use baad::cli::{parse, Args};
+use baad::VERBOSE;
 
 use anyhow::Result;
 use clap::Parser;
+use std::sync::atomic::Ordering;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
+    VERBOSE.store(args.verbose, Ordering::Relaxed);
     parse::run(args)
 }

@@ -10,7 +10,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "baad"
 path = "src/main.rs"
-required-features = ["logs"]
+required-features = ["logs", "debug"]
 
 [features]
 default = []
