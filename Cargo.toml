@@ -11,6 +11,12 @@ path = "src/lib.rs"
 name = "baad"
 path = "src/main.rs"
 
+[features]
+default = []
+logs = []
+debug = ["logs"]
+no_error = []
+
 [dependencies]
 bacy = { git = "https://github.com/Deathemonic/BA-CY" }
 reqwest = { version = "0.12.20", features = ["json"] }
