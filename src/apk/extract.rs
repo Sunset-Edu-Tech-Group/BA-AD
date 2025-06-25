@@ -1,4 +1,8 @@
-use crate::helpers::{ErrorExt, ServerConfig, ServerRegion};
+use crate::helpers::{ErrorExt, ServerConfig, ServerRegion,
+                     ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN,
+                     LIBIL2CPP_PATH, LIBIL2CPP_PATTERN,
+                     METADATA_PATH, METADATA_PATTERN
+};
 use crate::utils::FileManager;
 use crate::{error, info};
 
@@ -7,29 +11,30 @@ use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};
 use std::path::{Path, PathBuf};
+use std::rc::Rc;
 use zip::ZipArchive;
 
-#[derive(Clone)]
-pub struct ExtractionRule {
-    pub apk: String,
-    pub path: Vec<String>,
-    pub pattern: String,
+pub struct ExtractionRule<'a> {
+    pub apk: &'a str,
+    pub path: &'a [&'a str],
+    pub pattern: &'a str,
     pub output: PathBuf,
 }
 
+
 pub struct ApkExtractor {
-    config: ServerConfig,
-    file_manager: FileManager,
+    config: Rc<ServerConfig>,
+    file_manager: Rc<FileManager>,
 }
 
 impl ApkExtractor {
-    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
         Ok(Self {
-            config: config.clone(),
-            file_manager: file_manager.clone(),
+            config,
+            file_manager,
         })
     }
-
+    
     fn check_extract_support(&self) -> Result<bool> {
         match &self.config.region { 
             ServerRegion::Global => {
@@ -54,10 +59,8 @@ impl ApkExtractor {
             File::open(&apk_path)
                 .handle_errors()?
         ).handle_errors()?;
-
-
+        
         let mut target_apk = archive.by_name(&rule.apk).handle_errors()?;
-
 
         let mut buf = Vec::new();
         target_apk.read_to_end(&mut buf).handle_errors()?;
@@ -114,9 +117,9 @@ impl ApkExtractor {
         info!("Extracting game data...");
         
         let rule = ExtractionRule {
-            apk: "UnityDataAssetPack.apk".to_string(),
-            path: vec!["assets".to_string(), "bin".to_string(), "Data".to_string()],
-            pattern: "*".to_string(),
+            apk: ASSET_APK,
+            path: DATA_PATH,
+            pattern: DATA_PATTERN,
             output: self.file_manager.get_data_path("data")
         };
 
@@ -130,24 +133,19 @@ impl ApkExtractor {
 
         info!("Extracting IL2CPP files...");
         
+        
         let lib_rule = ExtractionRule {
-            apk: "config.arm64_v8a.apk".to_string(),
-            path: vec!["lib".to_string(), "arm64-v8a".to_string()],
-            pattern: "libil2cpp.so".to_string(),
+            apk: CONFIG_APK,
+            path: LIBIL2CPP_PATH,
+            pattern: LIBIL2CPP_PATTERN,
             output: self.file_manager.get_data_path("il2cpp"),
         };
         self.extract(lib_rule)?;
 
         let metadata_rule = ExtractionRule {
-            apk: "UnityDataAssetPack.apk".to_string(),
-            path: vec![
-                "assets".to_string(),
-                "bin".to_string(),
-                "Data".to_string(),
-                "Managed".to_string(),
-                "Metadata".to_string(),
-            ],
-            pattern: "metadata.dat".to_string(),
+            apk: ASSET_APK,
+            path: METADATA_PATH,
+            pattern: METADATA_PATTERN,
             output: self.file_manager.get_data_path("il2cpp"),
         };
         self.extract(metadata_rule)?;

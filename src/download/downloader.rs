@@ -7,6 +7,7 @@ use crate::{error, info, success, warn};
 use anyhow::Result;
 use reqwest::Client;
 use std::path::{Path, PathBuf};
+use std::rc::Rc;
 use std::time::Duration;
 use trauma::download::{Download, Status};
 use trauma::downloader::{Downloader, DownloaderBuilder, ProgressBarOpts, StyleOptions};
@@ -22,8 +23,8 @@ pub enum ResourceCategory {
 pub struct ResourceDownloader {
     client: Client,
     downloader: Downloader,
-    config: ServerConfig,
-    file_manager: FileManager,
+    config: Rc<ServerConfig>,
+    file_manager: Rc<FileManager>,
 }
 
 pub struct ResourceDownloadBuilder {
@@ -31,15 +32,15 @@ pub struct ResourceDownloadBuilder {
     retries: u32,
     timeout: u64,
     limit: u64,
-    file_manager: FileManager,
-    config: ServerConfig,
+    file_manager: Rc<FileManager>,
+    config: Rc<ServerConfig>,
 }
 
 impl ResourceDownloader {
     pub fn new(
         output: Option<PathBuf>,
-        file_manager: &FileManager,
-        config: &ServerConfig,
+        file_manager: Rc<FileManager>,
+        config: Rc<ServerConfig>,
     ) -> Result<Self> {
         ResourceDownloadBuilder::new(file_manager, config)?
             .output(output)
@@ -113,14 +114,14 @@ impl ResourceDownloader {
 }
 
 impl ResourceDownloadBuilder {
-    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
         Ok(Self {
             output: None,
             retries: 10,
             timeout: 60,
             limit: 10,
-            file_manager: file_manager.clone(),
-            config: config.clone(),
+            file_manager,
+            config,
         })
     }
 

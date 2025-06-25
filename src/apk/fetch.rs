@@ -7,22 +7,23 @@ use crate::utils::json;
 use crate::utils::network::get_content_length;
 use crate::{debug, info, warn};
 
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use reqwest::{Client, Url};
 use std::path::PathBuf;
+use std::rc::Rc;
 use tokio::fs;
 use trauma::download::Download;
 use trauma::downloader::{Downloader, DownloaderBuilder};
 
 pub struct ApkFetcher {
     client: Client,
-    config: ServerConfig,
-    file_manager: FileManager,
+    config: Rc<ServerConfig>,
+    file_manager: Rc<FileManager>,
     downloader: Downloader,
 }
 
 impl ApkFetcher {
-    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
         let client = Client::builder().default_headers(apk_headers()).build().handle_errors()?;
 
         let downloader = DownloaderBuilder::new()
@@ -34,8 +35,8 @@ impl ApkFetcher {
 
         Ok(Self {
             client,
-            config: config.clone(),
-            file_manager: file_manager.clone(),
+            config,
+            file_manager,
             downloader,
         })
     }
@@ -113,7 +114,7 @@ impl ApkFetcher {
         if !response.status().is_success()
             && response.status() != reqwest::StatusCode::PARTIAL_CONTENT
         {
-            return Err(anyhow!("Failed to get file info: {}", response.status()));
+            return None.error_context("Failed to get APK info");
         }
 
         let remote_size = get_content_length(&response);
@@ -144,7 +145,7 @@ impl ApkFetcher {
             if !apk_path.exists() {
                 info!("APK doesn't exist, downloading...");
             } else {
-                warn!("APK is outdated or incomplete, downloading...");
+                warn!("APK is outdated, downloading...");
             }
 
             debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
@@ -159,7 +160,7 @@ impl ApkFetcher {
         } else {
             info!("APK is up to date, skipping download");
         }
-        
+
         Ok((
             new_version,
             self.file_manager.get_data_path(&self.config.apk_path),

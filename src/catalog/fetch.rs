@@ -13,25 +13,25 @@ use base64::{engine::general_purpose, Engine};
 use reqwest::Client;
 use serde_json::{to_string_pretty, Value};
 use std::fs;
+use std::rc::Rc;
 use walkdir::WalkDir;
 
 pub struct CatalogFetcher {
     client: Client,
-    apk_fetcher: ApkFetcher,
-    config: ServerConfig,
-    file_manager: FileManager,
+    apk_fetcher: Rc<ApkFetcher>,
+    config: Rc<ServerConfig>,
+    file_manager: Rc<FileManager>,
 }
 
 impl CatalogFetcher {
-    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>, apk_fetcher: Rc<ApkFetcher>) -> Result<Self> {
         let client = Client::new();
-        let apk_fetcher = ApkFetcher::new(&file_manager, &config);
 
         Ok(Self {
             client,
-            apk_fetcher: apk_fetcher?,
-            config: config.clone(),
-            file_manager: file_manager.clone(),
+            apk_fetcher,
+            config,
+            file_manager,
         })
     }
 

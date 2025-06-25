@@ -8,19 +8,20 @@ use crate::utils::FileManager;
 use anyhow::Result;
 use bacy::{MediaCatalog, TableCatalog};
 use reqwest::Client;
+use std::rc::Rc;
 
 pub struct CatalogParser {
     client: Client,
-    file_manager: FileManager,
-    config: ServerConfig,
+    file_manager: Rc<FileManager>,
+    config: Rc<ServerConfig>,
 }
 
 impl CatalogParser {
-    pub fn new(file_manager: &FileManager, config: &ServerConfig) -> Result<Self> {
+    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
         Ok(Self {
             client: Client::new(),
-            config: config.clone(),
-            file_manager: file_manager.clone(),
+            config,
+            file_manager,
         })
     }
 

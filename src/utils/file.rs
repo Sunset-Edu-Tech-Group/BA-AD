@@ -3,31 +3,31 @@ use crate::helpers::{ErrorContext, ErrorExt};
 use anyhow::{Error, Result};
 use platform_dirs::AppDirs;
 use std::path::PathBuf;
+use std::rc::Rc;
 use std::{env, fs};
 
 #[allow(dead_code)]
 const APP_NAME: &str = env!("CARGO_CRATE_NAME");
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct FileManagerConfig {
     pub data_dir: Option<PathBuf>,
     pub cache_dir: Option<PathBuf>,
     pub app_name: Option<String>,
 }
 
-#[derive(Clone)]
 pub struct FileManager {
     cache_dir: PathBuf,
     data_dir: PathBuf,
 }
 
 impl FileManager {
-    pub fn new() -> Result<Self> {
-        Self::with_config(FileManagerConfig {
+    pub fn new() -> Result<Rc<Self>> {
+        Ok(Rc::new(Self::with_config(FileManagerConfig {
             data_dir: None,
             cache_dir: None,
             app_name: Some(APP_NAME.to_string()),
-        })
+        })?))
     }
 
     pub fn with_config(config: FileManagerConfig) -> Result<Self> {
