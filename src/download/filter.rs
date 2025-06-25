@@ -1,19 +1,23 @@
 use crate::helpers::{ErrorContext, ErrorExt};
 
 use anyhow::Result;
+use clap::ValueEnum;
 use glob::Pattern as GlobPattern;
 use lazy_regex::Regex;
 use nucleo::{Config, Matcher, Utf32Str};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, ValueEnum)]
 pub enum FilterMethod {
     Exact,
     Contains,
     Regex,
     Fuzzy,
     Glob,
+    #[value(name = "contains-ignore-case")]
     ContainsIgnoreCase,
+    #[value(name = "starts-with")]
     StartsWith,
+    #[value(name = "ends-with")]
     EndsWith,
 }
 

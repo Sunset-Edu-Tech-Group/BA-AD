@@ -10,6 +10,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "baad"
 path = "src/main.rs"
+required-features = ["logs"]
 
 [features]
 default = []
@@ -33,3 +34,4 @@ base64 = "0.22.1"
 lazy-regex = "3.4.1"
 glob = "0.3.2"
 nucleo = "0.5.0"
+clap = { version = "4.5.40", features = ["derive"] }

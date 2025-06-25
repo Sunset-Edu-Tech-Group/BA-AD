@@ -39,7 +39,7 @@ baad = { git = "https://github.com/Deathemonic", branch = "rust" }
 - [ ] Restructure codebase as an asset downloader only
 - [X] Expose functions to act as a library
 - [X] Remove the UI
-- [ ] Add CLI stuff
+- [X] Add CLI stuff
 
 
 ### FAQ
