@@ -105,7 +105,7 @@ impl CatalogFetcher {
         })
         .await?;
 
-        Ok(to_string_pretty(&catalog).handle_errors()?)
+        to_string_pretty(&catalog).handle_errors()
     }
 
     async fn japan_catalog(&self) -> Result<String> {
@@ -132,7 +132,7 @@ impl CatalogFetcher {
     async fn global_addressable(&self) -> Result<String> {
         let version = self.apk_fetcher.check_version().await?
             .error_context("Failed to get version")?;
-        let build_number = version.split('.').last()
+        let build_number = version.split('.').next_back()
             .error_context("Invalid version format - missing build number")?;
 
         let api = self
@@ -154,7 +154,7 @@ impl CatalogFetcher {
 
         save_json(&self.file_manager, "catalog/GlobalAddressables.json", &api).await?;
 
-        Ok(to_string_pretty(&api).handle_errors()?)
+        to_string_pretty(&api).handle_errors()
     }
 
     async fn global_resources(&self) -> Result<String> {
@@ -181,7 +181,7 @@ impl CatalogFetcher {
         })
         .await?;
 
-        Ok(to_string_pretty(&catalog).handle_errors()?)
+        to_string_pretty(&catalog).handle_errors()
     }
     
     pub async fn get_catalogs(&self) -> Result<String> {

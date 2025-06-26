@@ -257,7 +257,7 @@ impl<T> ErrorExt<T, reqwest::Error> for reqwest::Result<T> {
 
 impl<T> ErrorExt<T, Error> for Result<T> {
     fn handle_errors(self) -> Result<T> {
-        self.map_err(|err| {
+        self.inspect_err(|err| {
             if err.to_string().contains("UTF-8") || err.to_string().contains("utf8") {
                 #[cfg(not(feature = "no_error"))]
                 error!("File contains invalid text encoding");
@@ -270,7 +270,6 @@ impl<T> ErrorExt<T, Error> for Result<T> {
             } else {
                 //
             }
-            err
         })
     }
 }

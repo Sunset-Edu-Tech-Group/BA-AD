@@ -60,7 +60,7 @@ impl ApkExtractor {
                 .handle_errors()?
         ).handle_errors()?;
         
-        let mut target_apk = archive.by_name(&rule.apk).handle_errors()?;
+        let mut target_apk = archive.by_name(rule.apk).handle_errors()?;
 
         let mut buf = Vec::new();
         target_apk.read_to_end(&mut buf).handle_errors()?;
@@ -104,7 +104,7 @@ impl ApkExtractor {
             .and_then(|n| n.to_str())
             .unwrap_or("");
 
-        let pattern = Pattern::new(&rule.pattern).handle_errors()?;
+        let pattern = Pattern::new(rule.pattern).handle_errors()?;
 
         Ok(pattern.matches(file_name))
     }
