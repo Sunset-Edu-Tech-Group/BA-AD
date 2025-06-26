@@ -26,7 +26,18 @@ pub struct Args {
 #[derive(Subcommand)]
 pub enum Commands {
     /// Download game files
-    Download(DownloadArgs),
+    Download {
+        #[command(subcommand)]
+        region: RegionCommands,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum RegionCommands {
+    /// Download from Global server
+    Global(DownloadArgs),
+    /// Download from Japan server
+    Japan(DownloadArgs),
 }
 
 #[derive(Parser)]
@@ -47,7 +58,7 @@ pub struct DownloadArgs {
     #[arg(long, default_value = "./output")]
     pub output: String,
 
-    /// Set a limit on the download limit
+    /// Set a limit on the concurrent downloads
     #[arg(long, default_value = "10")]
     pub limit: u32,
 
@@ -60,10 +71,9 @@ pub struct DownloadArgs {
     pub filter: Option<String>,
 
     /// Filter method to use
-    #[arg(long, default_value = "contains")]
+    #[arg(long, value_enum, default_value = "contains")]
     pub filter_method: FilterMethod,
 }
 
 impl DownloadArgs {
-
 }

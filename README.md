@@ -1,58 +1,83 @@
 <div align="center">
   <img src=".github/resources/archive.png" width="4062" alt="logo">
-  <h1>Blue Archive - Asset Downloader</h1>
 </div>
 
-A tool that downloads the latest **Blue Archive** assets.
+# Blue Archive - Asset Downloader
+A tool and library that downloads the latest **Blue Archive** assets.
+
+## Install
+
+### Release
+You can download the latest pre-build binaries at [Releases]()
+
+[Windows]() | [Linux]() | [MacOS]() 
+
+### Cargo
+```shell
+cargo install --git "https://github.com/Deathemonic/BA-AD" --locked
+```
+
+## Usage
+> WIP
+
+```shell
+...
+```
+
 
 ## Building
-> If you want to try it out, you can build it yourself. Note that this is still a work in progress and something will break.
 
 1. Install [rustup](https://rustup.rs)
 2. Clone this repository
 ```sh
-git clone https://github.com/Deathemonic/BA-AD -b rust
+git clone https://github.com/Deathemonic/BA-AD
+cd BA-AD
 ```
 3. Build using `cargo`
 ```sh
-cargo build
+cargo build --features "logs,debug"
 ```
 
-## Using as a library
-> Add this line in your `Cargo.toml`
+## Library
 ```toml
-baad = { git = "https://github.com/Deathemonic", branch = "rust" }
+baad = { git = "https://github.com/Deathemonic/BA-AD" }
 ```
+
+### Other Projects
+
+- [BA-CY](https://github.com/Deathemonic/BA-CY): Library for handling **Blue Archive** catalogs, tables, serialization/deserialization, encryption, and hashing.
+
+
+### Contributing
+Don't like my [shitty code](https://www.reddit.com/r/programminghorror) and what to change it? Feel free to contribute by submitting a pull request or issue. Always appreciate the help.
+
+
+### Acknowledgement
+- [hdk5/MoeXCOM](https://github.com/hdk5/MoeXCOM)
+- [respectZ/blue-archive-viewer](https://github.com/respectZ/blue-archive-viewer)
+- [fiseleo/Blue-Archive-JP-Downloader](https://github.com/fiseleo/Blue-Archive-JP-Downloader)
+- [K0lb3/Blue-Archive---Asset-Downloader](https://github.com/K0lb3/Blue-Archive---Asset-Downloader)
+- [lwd-temp/blue-archive-spine-production](https://github.com/lwd-temp/blue-archive-spine-production)
+- [aelurum/AssetStudio](https://github.com/aelurum/AssetStudio)
+
+### Copyright
+Blue Archive is a registered trademark of NAT GAMES Co., Ltd., NEXON Korea Corp., and Yostar, Inc.
+This project is not affiliated with, endorsed by, or connected to NAT GAMES Co., Ltd., NEXON Korea Corp., NEXON GAMES Co., Ltd., IODivision, Yostar, Inc., or any of their subsidiaries or affiliates.
+All game assets, content, and materials are copyrighted by their respective owners and are used for informational and educational purposes only.
 
 
 ### TODO
 - [X] Add global support
-- [X] Multithreading download support
+- [X] ~Multithreading download support~
 - [X] Add the asset downloader
-- [X] ~UI and colorful messages~
-- [ ] Add ~search mode~ and filter mode
+- [X] ~UI and~ colorful logs
+- [X] Add ~search mode~ and filter mode
 - [ ] ~Add extract media zips~
 - [ ] ~Add extract table zips, and db (low priority)~
 - [ ] ~Add extract assetbundle (low priority)~
 - [ ] ~Add download old apks~
 - [X] Replace the download manager with another library
-- [ ] Restructure codebase as an asset downloader only
+- [X] Restructure codebase as an asset downloader only
 - [X] Expose functions to act as a library
 - [X] Remove the UI
 - [X] Add CLI stuff
-
-
-### FAQ
-
-Why the switch to rust?
-- baad is getting slow, and I want to learn rust, so I decided to make baad in rust and might as well add new stuff that I didn't add before like Global asset download.
-
-Why a library?
-- This helps the process of porting baad to another project.
-Instead of rewriting or passing as an executable, this exposes functions so you can implement the functions easily.
-This also helps when porting to another language because you can bind it with `Cdylib` 
-
-Why no UI?
-- It just makes the project more complex.
-The main goal is to make a simple CLI/Library to download Blue Archive assets.
-The UI can be implemented on another project like BA-AD-GUI.
