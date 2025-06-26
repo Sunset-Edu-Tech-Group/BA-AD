@@ -1,14 +1,12 @@
 use crate::download::ResourceFilter;
-use crate::helpers::{ErrorContext, ErrorExt, GameResources, HashValue, ServerConfig, ServerRegion};
+use crate::helpers::{ErrorContext, GameResources, HashValue, ServerConfig, ServerRegion};
 use crate::utils::json::load_json;
 use crate::utils::FileManager;
 use crate::{error, info, success, warn};
 
 use anyhow::Result;
-use reqwest::Client;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
-use std::time::Duration;
 use trauma::download::{Download, Status};
 use trauma::downloader::{Downloader, DownloaderBuilder, ProgressBarOpts, StyleOptions};
 
@@ -21,7 +19,6 @@ pub enum ResourceCategory {
 }
 
 pub struct ResourceDownloader {
-    client: Client,
     downloader: Downloader,
     config: Rc<ServerConfig>,
     file_manager: Rc<FileManager>,
@@ -157,12 +154,7 @@ impl ResourceDownloadBuilder {
         if self.limit == 0 {
             return None.error_context("Download limit cannot be zero");
         }
-
-
-        let client = Client::builder()
-            .timeout(Duration::from_secs(self.timeout))
-            .build()
-            .handle_errors()?;
+        
 
         let style = StyleOptions::new(
             ProgressBarOpts::hidden(),
@@ -201,7 +193,6 @@ impl ResourceDownloadBuilder {
             .build();
 
         Ok(ResourceDownloader {
-            client,
             downloader,
             config: self.config,
             file_manager: self.file_manager,
