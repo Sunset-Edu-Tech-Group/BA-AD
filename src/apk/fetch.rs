@@ -15,6 +15,7 @@ use tokio::fs;
 use trauma::download::Download;
 use trauma::downloader::{Downloader, DownloaderBuilder};
 
+#[derive(Clone)]
 pub struct ApkFetcher {
     client: Client,
     config: Rc<ServerConfig>,

@@ -16,5 +16,5 @@ use std::sync::atomic::Ordering;
 async fn main() -> Result<()> {
     let args = Args::parse();
     VERBOSE.store(args.verbose, Ordering::Relaxed);
-    parse::run(args)
+    parse::run(args).await
 }

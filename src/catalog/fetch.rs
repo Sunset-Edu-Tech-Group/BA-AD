@@ -24,12 +24,12 @@ pub struct CatalogFetcher {
 }
 
 impl CatalogFetcher {
-    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>, apk_fetcher: Rc<ApkFetcher>) -> Result<Self> {
+    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>, apk_fetcher: ApkFetcher) -> Result<Self> {
         let client = Client::new();
 
         Ok(Self {
             client,
-            apk_fetcher,
+            apk_fetcher: Rc::new(apk_fetcher),
             config,
             file_manager,
         })

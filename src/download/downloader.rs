@@ -1,5 +1,7 @@
 use crate::download::ResourceFilter;
-use crate::helpers::{ErrorContext, GameResources, HashValue, ServerConfig, ServerRegion};
+use crate::helpers::{
+    ErrorContext, GameFiles, GameResources, HashValue, ServerConfig, ServerRegion,
+};
 use crate::utils::json::load_json;
 use crate::utils::FileManager;
 use crate::{error, info, success, warn};
@@ -16,6 +18,13 @@ pub enum ResourceCategory {
     Tables,
     Media,
     All,
+    Multiple(Vec<Box<ResourceCategory>>),
+}
+
+impl ResourceCategory {
+    pub fn multiple(categories: Vec<ResourceCategory>) -> Self {
+        ResourceCategory::Multiple(categories.into_iter().map(Box::new).collect())
+    }
 }
 
 pub struct ResourceDownloader {
@@ -33,21 +42,13 @@ pub struct ResourceDownloadBuilder {
 }
 
 impl ResourceDownloader {
-    pub fn new(
-        output: Option<PathBuf>,
-        file_manager: Rc<FileManager>,
-        config: Rc<ServerConfig>,
-    ) -> Result<Self> {
+    pub fn new(output: Option<PathBuf>, file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
         ResourceDownloadBuilder::new(file_manager, config)?
             .output(output)
             .build()
     }
 
-    pub async fn download(
-        &self, 
-        category: ResourceCategory, 
-        filter: Option<ResourceFilter>
-    ) -> Result<()> {
+    pub async fn download(&self, category: ResourceCategory, filter: Option<ResourceFilter>) -> Result<()> {
         let game_files_path = match &self.config.region {
             ServerRegion::Global => "catalog/global/GameFiles.json",
             ServerRegion::Japan => "catalog/japan/GameFiles.json",
@@ -56,17 +57,8 @@ impl ResourceDownloader {
         let game_resources: GameResources = load_json(&self.file_manager, game_files_path)
             .await
             .error_context("Failed to load game resources - run CatalogParser first")?;
-        
-        let collections: Vec<&Vec<_>> = match category {
-            ResourceCategory::Assets => vec![&game_resources.asset_bundles],
-            ResourceCategory::Tables => vec![&game_resources.table_bundles],
-            ResourceCategory::Media => vec![&game_resources.media_resources],
-            ResourceCategory::All => vec![
-                &game_resources.asset_bundles,
-                &game_resources.table_bundles,
-                &game_resources.media_resources,
-            ],
-        };
+
+        let collections = self.get_collections(&category, &game_resources);
 
         let downloads: Vec<Download> = collections
             .into_iter()
@@ -82,7 +74,7 @@ impl ResourceDownloader {
                         return None;
                     }
                 }
-                
+
                 Download::try_from(files.url.as_str())
                     .map(|mut download| {
                         download.filename = files.path.clone();
@@ -96,14 +88,41 @@ impl ResourceDownloader {
             })
             .collect();
 
-        if !downloads.is_empty() {
-            info!("Found {} files for download (category: {:?})", downloads.len(), category);
-            self.downloader.download(&downloads).await;
-        } else {
+        if downloads.is_empty() {
             warn!("No files matched the filter criteria for category: {:?}", category);
+            return Ok(());
         }
 
+        info!("Found {} files for download (category: {:?})", downloads.len(), category);
+        self.downloader.download(&downloads).await;
+
         Ok(())
+    }
+
+    fn get_collections<'a>(&self, category: &ResourceCategory, game_resources: &'a GameResources, ) -> Vec<&'a Vec<GameFiles>> {
+        match category {
+            ResourceCategory::Assets => vec![&game_resources.asset_bundles],
+            ResourceCategory::Tables => vec![&game_resources.table_bundles],
+            ResourceCategory::Media => vec![&game_resources.media_resources],
+            ResourceCategory::All => vec![
+                &game_resources.asset_bundles,
+                &game_resources.table_bundles,
+                &game_resources.media_resources,
+            ],
+            
+            ResourceCategory::Multiple(categories) => {
+                let mut collections = Vec::new();
+                
+                for cat in categories {
+                    let nested_collections = self.get_collections(cat, game_resources);
+                    collections.extend(nested_collections);
+                }
+                
+                collections.sort_by_key(|c| c.as_ptr());
+                collections.dedup_by_key(|c| c.as_ptr());
+                collections
+            }
+        }
     }
 }
 
@@ -137,16 +156,12 @@ impl ResourceDownloadBuilder {
         if self.retries == 0 {
             return None.error_context("Retry count cannot be zero");
         }
-        
+
         if self.limit == 0 {
             return None.error_context("Download limit cannot be zero");
         }
-        
 
-        let style = StyleOptions::new(
-            ProgressBarOpts::hidden(),
-            ProgressBarOpts::hidden(),
-        );
+        let style = StyleOptions::new(ProgressBarOpts::hidden(), ProgressBarOpts::hidden());
 
         let downloader = DownloaderBuilder::new()
             .directory(FileManager::get_output_dir(self.output)?)
@@ -164,7 +179,10 @@ impl ResourceDownloadBuilder {
                         success!("Downloaded <u><green>{}</>", filename);
                     }
                     Status::Fail(error) => {
-                        error!("Failed to download <u><red>{}</> Error: {}",filename, error);
+                        error!(
+                            "Failed to download <u><red>{}</> Error: {}",
+                            filename, error
+                        );
                     }
                     Status::Skipped(reason) => {
                         warn!("Skipped <u><yellow>{}</> - {}", filename, reason);

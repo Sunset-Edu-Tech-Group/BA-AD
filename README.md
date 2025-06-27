@@ -64,20 +64,3 @@ Don't like my [shitty code](https://www.reddit.com/r/programminghorror) and what
 Blue Archive is a registered trademark of NAT GAMES Co., Ltd., NEXON Korea Corp., and Yostar, Inc.
 This project is not affiliated with, endorsed by, or connected to NAT GAMES Co., Ltd., NEXON Korea Corp., NEXON GAMES Co., Ltd., IODivision, Yostar, Inc., or any of their subsidiaries or affiliates.
 All game assets, content, and materials are copyrighted by their respective owners and are used for informational and educational purposes only.
-
-
-### TODO
-- [X] Add global support
-- [X] ~Multithreading download support~
-- [X] Add the asset downloader
-- [X] ~UI and~ colorful logs
-- [X] Add ~search mode~ and filter mode
-- [ ] ~Add extract media zips~
-- [ ] ~Add extract table zips, and db (low priority)~
-- [ ] ~Add extract assetbundle (low priority)~
-- [ ] ~Add download old apks~
-- [X] Replace the download manager with another library
-- [X] Restructure codebase as an asset downloader only
-- [X] Expose functions to act as a library
-- [X] Remove the UI
-- [X] Add CLI stuff
