@@ -99,7 +99,7 @@ impl CommandHandler {
     }
 
     async fn handle_global(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
-        let catalogs_empty = file_manager.is_dir_empty("catalogs");
+        let catalogs_empty = file_manager.is_dir_empty("catalog");
 
         if catalogs_empty || self.args.update {
             return Ok(true);
