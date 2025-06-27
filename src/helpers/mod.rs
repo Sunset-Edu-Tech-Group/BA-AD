@@ -1,10 +1,8 @@
-pub mod args;
 pub mod config;
-pub mod download_manager;
-pub mod file;
-pub mod interface;
-pub mod json;
-pub mod logs;
-pub mod macros;
-pub mod network;
-pub mod progress;
+pub mod log;
+pub mod api;
+pub mod error;
+
+pub use api::*;
+pub use config::*;
+pub use error::{ErrorContext, ErrorExt};

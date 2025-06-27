@@ -1,4 +1,5 @@
-pub mod apk;
-pub mod catalog_fetcher;
-pub mod catalog_parser;
-pub mod downloader;
+pub mod file;
+pub mod json;
+pub mod network;
+
+pub use file::FileManager;
