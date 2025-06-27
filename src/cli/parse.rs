@@ -75,6 +75,7 @@ impl CommandHandler {
         };
 
         if should_process_catalogs {
+            apk_fetcher.check_version().await?;
             self.process_catalogs(&file_manager, &server_config, &apk_fetcher).await?;
         }
 
@@ -89,7 +90,7 @@ impl CommandHandler {
 
     async fn handle_japan(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
         let data_empty = file_manager.is_dir_empty("data");
-        let catalogs_empty = file_manager.is_dir_empty("catalogs");
+        let catalogs_empty = file_manager.is_dir_empty("catalog");
 
         if data_empty || catalogs_empty || self.args.update {
             return Ok(true);
