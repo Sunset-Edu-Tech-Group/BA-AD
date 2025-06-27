@@ -1,10 +1,3 @@
-mod apk;
-mod catalog;
-mod download;
-mod helpers;
-mod utils;
-mod cli;
-
 use baad::cli::{parse, Args};
 use baad::VERBOSE;
 

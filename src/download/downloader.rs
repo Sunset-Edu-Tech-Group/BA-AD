@@ -187,14 +187,14 @@ impl ResourceDownloadBuilder {
                             filename, error
                         );
                     }
-                    Status::Skipped(reason) => {
-                        warn!("Skipped <u><yellow>{}</> - {}", filename, reason);
+                    Status::Skipped(_reason) => {
+                        warn!("Skipped <u><yellow>{}</> - {}", filename, _reason);
                     }
                     Status::NotStarted => {
                         info!("Downloading <u><blue>{}</>", filename);
                     }
-                    Status::HashMismatch(reason) => {
-                        warn!("Outdated <u><yellow>{}</> - {}", filename, reason);
+                    Status::HashMismatch(_reason) => {
+                        warn!("Outdated <u><yellow>{}</> - {}", filename, _reason);
                     }
                 }
             })
