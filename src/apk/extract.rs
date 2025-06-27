@@ -1,5 +1,5 @@
 use crate::helpers::{ErrorExt, ServerConfig, ServerRegion,
-                     ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN,
+                     ASSET_APK, CONFIG_APK, DATA_APK, DATA_PATH, DATA_PATTERN,
                      LIBIL2CPP_PATH, LIBIL2CPP_PATTERN,
                      METADATA_PATH, METADATA_PATTERN
 };
@@ -143,7 +143,7 @@ impl ApkExtractor {
         self.extract(lib_rule)?;
 
         let metadata_rule = ExtractionRule {
-            apk: ASSET_APK,
+            apk: DATA_APK,
             path: METADATA_PATH,
             pattern: METADATA_PATTERN,
             output: self.file_manager.get_data_path("il2cpp"),

@@ -25,10 +25,11 @@ pub const CONFIG_APK: &str = "config.arm64_v8a.apk";
 pub const LIBIL2CPP_PATH: &[&str] = &["lib", "arm64-v8a"];
 pub const LIBIL2CPP_PATTERN: &str = "libil2cpp.so";
 pub const ASSET_APK: &str = "UnityDataAssetPack.apk";
+pub const DATA_APK: &str = "com.YostarJP.BlueArchive.apk";
 pub const DATA_PATH: &[&str] = &["assets", "bin", "Data"];
 pub const METADATA_PATH: &[&str] = &["assets", "bin", "Data", "Managed", "Metadata"];
 pub const DATA_PATTERN: &str = "*";
-pub const METADATA_PATTERN: &str = "metadata.dat";
+pub const METADATA_PATTERN: &str = "global-metadata.dat";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServerRegion {

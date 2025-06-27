@@ -27,7 +27,6 @@ pub struct ResourceDownloader {
 pub struct ResourceDownloadBuilder {
     output: Option<PathBuf>,
     retries: u32,
-    timeout: u64,
     limit: u64,
     file_manager: Rc<FileManager>,
     config: Rc<ServerConfig>,
@@ -46,7 +45,7 @@ impl ResourceDownloader {
 
     pub async fn download(
         &self, 
-        category: Option<ResourceCategory>, 
+        category: ResourceCategory, 
         filter: Option<ResourceFilter>
     ) -> Result<()> {
         let game_files_path = match &self.config.region {
@@ -57,9 +56,7 @@ impl ResourceDownloader {
         let game_resources: GameResources = load_json(&self.file_manager, game_files_path)
             .await
             .error_context("Failed to load game resources - run CatalogParser first")?;
-
-        let category = category.unwrap_or(ResourceCategory::All);
-
+        
         let collections: Vec<&Vec<_>> = match category {
             ResourceCategory::Assets => vec![&game_resources.asset_bundles],
             ResourceCategory::Tables => vec![&game_resources.table_bundles],
@@ -115,7 +112,6 @@ impl ResourceDownloadBuilder {
         Ok(Self {
             output: None,
             retries: 10,
-            timeout: 60,
             limit: 10,
             file_manager,
             config,
@@ -132,11 +128,6 @@ impl ResourceDownloadBuilder {
         self
     }
 
-    pub fn timeout(mut self, timeout: u64) -> Self {
-        self.timeout = timeout;
-        self
-    }
-
     pub fn limit(mut self, limit: u64) -> Self {
         self.limit = limit;
         self
@@ -146,11 +137,7 @@ impl ResourceDownloadBuilder {
         if self.retries == 0 {
             return None.error_context("Retry count cannot be zero");
         }
-
-        if self.timeout == 0 {
-            return None.error_context("Timeout cannot be zero");
-        }
-
+        
         if self.limit == 0 {
             return None.error_context("Download limit cannot be zero");
         }

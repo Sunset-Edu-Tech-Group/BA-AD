@@ -74,6 +74,3 @@ pub struct DownloadArgs {
     #[arg(long, value_enum, default_value = "contains")]
     pub filter_method: FilterMethod,
 }
-
-impl DownloadArgs {
-}
