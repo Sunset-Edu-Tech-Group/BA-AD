@@ -108,7 +108,6 @@ impl CommandHandler {
         apk_fetcher.needs_catalog_update().await
     }
 
-
     async fn process_catalogs(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
         let catalog_fetcher = CatalogFetcher::new(
             file_manager.clone(),
@@ -163,8 +162,7 @@ impl CommandHandler {
             ]),
         }
     }
-
-
+    
     fn resource_filter(&self, args: &DownloadArgs) -> Result<Option<ResourceFilter>> {
         let Some(filter_pattern) = &args.filter else {
             if !matches!(args.filter_method, FilterMethod::Contains) {

@@ -48,6 +48,32 @@ impl ResourceDownloader {
             .build()
     }
 
+    fn get_collections<'a>(category: &ResourceCategory, game_resources: &'a GameResources, ) -> Vec<&'a Vec<GameFiles>> {
+        match category {
+            ResourceCategory::Assets => vec![&game_resources.asset_bundles],
+            ResourceCategory::Tables => vec![&game_resources.table_bundles],
+            ResourceCategory::Media => vec![&game_resources.media_resources],
+            ResourceCategory::All => vec![
+                &game_resources.asset_bundles,
+                &game_resources.table_bundles,
+                &game_resources.media_resources,
+            ],
+
+            ResourceCategory::Multiple(categories) => {
+                let mut collections = Vec::new();
+
+                for cat in categories {
+                    let nested_collections = Self::get_collections(cat, game_resources);
+                    collections.extend(nested_collections);
+                }
+
+                collections.sort_by_key(|c| c.as_ptr());
+                collections.dedup_by_key(|c| c.as_ptr());
+                collections
+            }
+        }
+    }
+
     pub async fn download(&self, category: ResourceCategory, filter: Option<ResourceFilter>) -> Result<()> {
         let game_files_path = match &self.config.region {
             ServerRegion::Global => "catalog/global/GameFiles.json",
@@ -59,7 +85,7 @@ impl ResourceDownloader {
             .error_context("Failed to load game resources - run CatalogParser first")?;
 
         let collections = Self::get_collections(&category, &game_resources);
-        
+
         info!("Downloading Assets...");
         debug!("Using catalog: <b><u><blue>{}</>", collections.len());
 
@@ -100,32 +126,6 @@ impl ResourceDownloader {
         self.downloader.download(&downloads).await;
 
         Ok(())
-    }
-
-    fn get_collections<'a>(category: &ResourceCategory, game_resources: &'a GameResources, ) -> Vec<&'a Vec<GameFiles>> {
-        match category {
-            ResourceCategory::Assets => vec![&game_resources.asset_bundles],
-            ResourceCategory::Tables => vec![&game_resources.table_bundles],
-            ResourceCategory::Media => vec![&game_resources.media_resources],
-            ResourceCategory::All => vec![
-                &game_resources.asset_bundles,
-                &game_resources.table_bundles,
-                &game_resources.media_resources,
-            ],
-
-            ResourceCategory::Multiple(categories) => {
-                let mut collections = Vec::new();
-
-                for cat in categories {
-                    let nested_collections = Self::get_collections(cat, game_resources);
-                    collections.extend(nested_collections);
-                }
-
-                collections.sort_by_key(|c| c.as_ptr());
-                collections.dedup_by_key(|c| c.as_ptr());
-                collections
-            }
-        }
     }
 }
 
