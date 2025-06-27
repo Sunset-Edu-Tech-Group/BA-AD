@@ -1,4 +1,4 @@
-<div align="center">
+<div>
   <img src=".github/resources/archive.png" width="4062" alt="logo">
 </div>
 
