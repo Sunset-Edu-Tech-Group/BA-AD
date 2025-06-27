@@ -92,6 +92,26 @@ impl FileManager {
     }
 
     pub fn get_cache_path(&self, filename: &str) -> PathBuf {
-        self.data_dir.join(filename)
+        self.cache_dir.join(filename)
+    }
+
+    pub fn clear_all(&self) -> Result<()> {
+        if self.data_dir.exists() {
+            fs::remove_dir_all(&self.data_dir).handle_errors()?;
+            fs::create_dir_all(&self.data_dir).handle_errors()?;
+        }
+
+        if self.cache_dir.exists() {
+            fs::remove_dir_all(&self.cache_dir).handle_errors()?;
+            fs::create_dir_all(&self.cache_dir).handle_errors()?;
+        }
+
+        Ok(())
+    }
+
+    pub fn is_dir_empty(&self, path: &str) -> bool {
+        let dir_path = self.data_dir.join(path);
+        !dir_path.exists() || 
+            dir_path.read_dir().map_or(true, |mut entries| entries.next().is_none())
     }
 }

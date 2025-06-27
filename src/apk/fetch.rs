@@ -127,7 +127,24 @@ impl ApkFetcher {
         Ok(false)
     }
 
-    pub async fn download_apk(&self) -> Result<(String, PathBuf)> {
+    pub async fn needs_update(&self, download_url: &str, apk_path: &PathBuf) -> Result<bool> {
+        let needs_download = self.check_apk(download_url, apk_path).await?;
+        
+        if !needs_download {
+            info!("APK is up to date, skipping download");
+            return Ok(false);
+        }
+
+        if !apk_path.exists() {
+            warn!("APK doesn't exist, downloading...");
+        } else {
+            warn!("APK is outdated, downloading...");
+        }
+
+        Ok(true)
+    }
+
+    pub async fn download_apk(&self, force: bool) -> Result<(String, PathBuf, bool)> {
         if self.config.region == ServerRegion::Global {
             return None.error_context("Global server APK download is not supported");
         }
@@ -141,19 +158,11 @@ impl ApkFetcher {
         let body = response.text().await.handle_errors()?;
         let download_url = self.extract_url(&body)?;
 
-        let needs_download = self.check_apk(&download_url, &apk_path).await?;
-        if !needs_download {
-            info!("APK is up to date, skipping download");
-            return Ok((new_version, apk_path));
-        }
-
-        if !apk_path.exists() {
-            warn!("APK doesn't exist, downloading...");
-        } else {
-            warn!("APK is outdated, downloading...");
-        }
-
         debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
+
+        if !force && !self.needs_update(&download_url, &apk_path).await? {
+            return Ok((new_version, apk_path, false));
+        }
 
         info!("Downloading APK...");
         let apk = vec![Download {
@@ -165,6 +174,6 @@ impl ApkFetcher {
         
         success!("APK downloaded");
 
-        Ok((new_version, apk_path))
+        Ok((new_version, apk_path, true))
     }
 }

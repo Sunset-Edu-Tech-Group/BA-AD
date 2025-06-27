@@ -21,10 +21,9 @@ pub async fn save_json<T: Serialize>(file_manager: &FileManager, filename: &str,
 
 
 pub async fn get_api_data(file_manager: &FileManager) -> Result<ApiData> {
-    if file_manager.get_data_path(API_FILENAME).exists() {
-        load_json(file_manager, API_FILENAME).await
-    } else {
-        Ok(create_default_api_data())
+    match file_manager.get_data_path(API_FILENAME).exists() {
+        true => load_json(file_manager, API_FILENAME).await,
+        false => Ok(create_default_api_data()),
     }
 }
 

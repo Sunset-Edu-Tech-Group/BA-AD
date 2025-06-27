@@ -4,8 +4,10 @@ use crate::cli::args::{Args, Commands, DownloadArgs, RegionCommands};
 use crate::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
 use crate::helpers::{ErrorContext, ServerConfig, ServerRegion};
 use crate::utils::FileManager;
+use crate::{error, info, success, warn};
 
 use anyhow::Result;
+use std::rc::Rc;
 
 pub struct CommandHandler { args: Args }
 
@@ -13,17 +15,26 @@ impl CommandHandler {
     pub fn new(args: Args) -> Result<Self> { Ok(Self { args }) }
 
     pub async fn handle(&self) -> Result<()> {
+        if self.args.clean {
+            info!("Cleaning data...");
+
+            let file_manager = FileManager::new()?;
+            file_manager.clear_all()?;
+
+            success!("Data cleared");
+        }
+        
         match &self.args.command {
             Some(Commands::Download { region }) => {
                 self.handle_download(region).await
             }
             None => {
-                if self.args.clean {
-                    println!("Cleaning cache...");
-                }
                 if self.args.update {
-                    println!("Forcing update...");
+                    self.handle_update().await?;
+                } else if !self.args.clean {
+                    error!("No command specified. Use --help for usage information.");
                 }
+
                 Ok(())
             }
         }
@@ -40,18 +51,84 @@ impl CommandHandler {
         }
     }
 
+    async fn handle_update(&self) -> Result<()> {
+        info!("Forcing update...");
+
+        let server_config = ServerConfig::new(ServerRegion::Japan)?;
+        let file_manager = FileManager::new()?;
+        let apk_fetcher = ApkFetcher::new(file_manager.clone(), server_config.clone())?;
+
+        apk_fetcher.download_apk(true).await?;
+        
+        Ok(())
+    }
+
+
     async fn execute_download(&self, region: ServerRegion, args: &DownloadArgs) -> Result<()> {
         let server_config = ServerConfig::new(region)?;
         let file_manager = FileManager::new()?;
         let apk_fetcher = ApkFetcher::new(file_manager.clone(), server_config.clone())?;
-        let apk_extractor = ApkExtractor::new(file_manager.clone(), server_config.clone())?;
+
+        let should_process_catalogs = match region {
+            ServerRegion::Japan => self.handle_japan(&file_manager, &apk_fetcher, &server_config).await?,
+            ServerRegion::Global => self.handle_global(&file_manager, &apk_fetcher).await?,
+        };
+
+        if should_process_catalogs {
+            self.process_catalogs(&file_manager, &server_config, &apk_fetcher).await?;
+        }
+
+        if !should_process_catalogs {
+            info!("Catalog files exist and are up to date, skipping catalog processing");
+        }
+
+        self.download_resources(&file_manager, &server_config, args).await?;
+
+        Ok(())
+    }
+
+    async fn handle_japan(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher, server_config: &Rc<ServerConfig>) -> Result<bool> {
+        let data_empty = file_manager.is_dir_empty("data");
+        let catalogs_empty = file_manager.is_dir_empty("catalogs");
+
+        let (_, _, downloaded) = apk_fetcher.download_apk(self.args.update).await?;
+
+        let should_extract = data_empty || downloaded;
+        if should_extract {
+            info!("Extracting APK...");
+            let apk_extractor = ApkExtractor::new(file_manager.clone(), server_config.clone())?;
+            apk_extractor.extract_data()?;
+        }
+
+        if !should_extract {
+            warn!("Data exists and APK is up to date, skipping extraction");
+        }
+
+        Ok(should_extract || catalogs_empty)
+    }
+
+    async fn handle_global(&self, file_manager: &Rc<FileManager>, _apk_fetcher: &ApkFetcher) -> Result<bool> {
+        let catalogs_empty = file_manager.is_dir_empty("catalogs");
+        
+        Ok(catalogs_empty || self.args.update)
+    }
+
+    async fn process_catalogs(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
         let catalog_fetcher = CatalogFetcher::new(
             file_manager.clone(),
             server_config.clone(),
-            apk_fetcher,
-        );
+            apk_fetcher.clone(),
+        )?;
         let catalog_parser = CatalogParser::new(file_manager.clone(), server_config.clone())?;
 
+        catalog_fetcher.get_addressable().await?;
+        catalog_fetcher.get_catalogs().await?;
+        catalog_parser.process_catalogs().await?;
+
+        Ok(())
+    }
+
+    async fn download_resources(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, args: &DownloadArgs) -> Result<()> {
         let resource_downloader = ResourceDownloadBuilder::new(file_manager.clone(), server_config.clone())?
             .limit(args.limit as u64)
             .retries(args.retries)
