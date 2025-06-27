@@ -50,13 +50,4 @@ Options:
       --filter <FILTER>                Filter by name
       --filter-method <FILTER_METHOD>  Filter method to use [default: contains] [possible values: exact, contains, regex, fuzzy, glob, contains-ignore-case, starts-with, ends-with]
   -h, --help                           Print help
-
-~/Documents/Rust/BA-AD/target/release on rs-2.0.0 [!+]
-% >....                                                                                                                                                                                                                             
-      --output <OUTPUT>                Output directory for the downloaded files [default: ./output]
-      --limit <LIMIT>                  Set a limit on the concurrent downloads [default: 10]      
-      --retries <RETRIES>              Number of retry attempts for failed downloads [default: 10]
-      --filter <FILTER>                Filter by name                                                                                                                               
-      --filter-method <FILTER_METHOD>  Filter method to use [default: contains] [possible values: exact, contains, regex, fuzzy, glob, contains-ignore-case, starts-with, ends-with]
-  -h, --help                           Print help
 ```
