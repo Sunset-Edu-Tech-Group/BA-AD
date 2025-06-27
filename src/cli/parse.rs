@@ -1,4 +1,4 @@
-use crate::apk::ApkFetcher;
+use crate::apk::{ApkFetcher, ApkExtractor};
 use crate::catalog::{CatalogFetcher, CatalogParser};
 use crate::cli::args::{Args, Commands, DownloadArgs, RegionCommands};
 use crate::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
@@ -70,7 +70,18 @@ impl CommandHandler {
         let apk_fetcher = ApkFetcher::new(file_manager.clone(), server_config.clone())?;
 
         let should_process_catalogs = match region {
-            ServerRegion::Japan => self.handle_japan(&file_manager, &apk_fetcher).await?,
+            ServerRegion::Japan => {
+                let should_process = self.handle_japan(&file_manager, &apk_fetcher).await?;
+
+                if should_process {
+                    apk_fetcher.download_apk(self.args.update).await?;
+
+                    let apk_extractor = ApkExtractor::new(file_manager.clone(), server_config.clone())?;
+                    apk_extractor.extract_data()?;
+                }
+
+                should_process
+            },
             ServerRegion::Global => self.handle_global(&file_manager, &apk_fetcher).await?,
         };
 
