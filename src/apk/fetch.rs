@@ -5,7 +5,7 @@ use crate::helpers::{
 use crate::utils::file::FileManager;
 use crate::utils::json;
 use crate::utils::network::get_content_length;
-use crate::{debug, info, warn};
+use crate::{debug, info, success, warn};
 
 use anyhow::Result;
 use reqwest::{Client, Url};
@@ -142,29 +142,29 @@ impl ApkFetcher {
         let download_url = self.extract_url(&body)?;
 
         let needs_download = self.check_apk(&download_url, &apk_path).await?;
-        if needs_download {
-            if !apk_path.exists() {
-                info!("APK doesn't exist, downloading...");
-            } else {
-                warn!("APK is outdated, downloading...");
-            }
-
-            debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
-
-            info!("Downloading APK...");
-            let apk = vec![Download {
-                url: Url::parse(download_url.as_str())?,
-                filename: self.config.apk_path.clone(),
-                hash: None
-            }];
-            self.downloader.download(&apk).await;
-        } else {
+        if !needs_download {
             info!("APK is up to date, skipping download");
+            return Ok((new_version, apk_path));
         }
 
-        Ok((
-            new_version,
-            self.file_manager.get_data_path(&self.config.apk_path),
-        ))
+        if !apk_path.exists() {
+            warn!("APK doesn't exist, downloading...");
+        } else {
+            warn!("APK is outdated, downloading...");
+        }
+
+        debug!("Download URL: <b><u><bright-blue>{}</>", download_url);
+
+        info!("Downloading APK...");
+        let apk = vec![Download {
+            url: Url::parse(download_url.as_str())?,
+            filename: self.config.apk_path.clone(),
+            hash: None
+        }];
+        self.downloader.download(&apk).await;
+        
+        success!("APK downloaded");
+
+        Ok((new_version, apk_path))
     }
 }

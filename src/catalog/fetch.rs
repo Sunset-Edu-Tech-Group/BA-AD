@@ -6,6 +6,7 @@ use crate::helpers::{
 };
 use crate::utils::json::{load_json, save_json, update_api_data};
 use crate::utils::FileManager;
+use crate::{debug, info, success};
 
 use anyhow::Result;
 use bacy::table_encryption_service::{convert_string, create_key, new_encrypt_string};
@@ -37,6 +38,8 @@ impl CatalogFetcher {
 
     pub fn find_game_config(&self) -> Result<Vec<u8>> {
         let data = self.file_manager.get_data_path("data");
+        
+        info!("Searching for game config...");
 
         for entry in WalkDir::new(data) {
             let entry = entry.handle_errors()?;
@@ -63,25 +66,38 @@ impl CatalogFetcher {
     }
 
     pub fn decrypt_game_config(&self, data: &[u8]) -> Result<String> {
+        info!("Decrypting game config...");
+        
         let encoded_data = general_purpose::STANDARD.encode(data);
+        debug!("Encoded data: <b><u><blue>{}</>", encoded_data);
 
         let game_config = create_key(b"GameMainConfig");
+        debug!("Game config: <b><u><blue>{:?}</>", game_config);
+        
         let server_data = create_key(b"ServerInfoDataUrl");
+        debug!("Server data: <b><u><blue>{:?}</>", server_data);
 
         let decrypted_data = convert_string(&encoded_data, &game_config).handle_errors()?;
+        debug!("Decrypted data: <b><u><blue>{}</>", decrypted_data);
+        
         let loaded_data: Value = serde_json::from_str(&decrypted_data).handle_errors()?;
+        debug!("Loaded data: <b><u><blue>{:?}</>", loaded_data);
 
         let decrypted_key = new_encrypt_string("ServerInfoDataUrl", &server_data).handle_errors()?;
+        debug!("Decrypted key: <b><u><blue>{}</>", decrypted_key);
+        
         let decrypted_value = loaded_data
             .get(&decrypted_key)
             .and_then(|v| v.as_str())
             .error_context(&format!("Key '{}' not found in JSON", decrypted_key))?;
+        debug!("Decrypted value: <b><u><blue>{}</>", decrypted_value);
 
         convert_string(decrypted_value, &server_data).handle_errors()
     }
 
     async fn japan_addressable(&self) -> Result<String> {
         let api_url = self.decrypt_game_config(self.find_game_config()?.as_slice())?;
+        debug!("API URL: <b><u><bright-blue>{}</>", api_url);
 
         let catalog = self
             .client
@@ -105,6 +121,8 @@ impl CatalogFetcher {
         })
         .await?;
 
+        success!("Saved addressables info");
+
         to_string_pretty(&catalog).handle_errors()
     }
 
@@ -126,14 +144,19 @@ impl CatalogFetcher {
         })
         .await?;
 
+        success!("Saved catalog info");
+
         Ok(catalog_url.to_string())
     }
 
     async fn global_addressable(&self) -> Result<String> {
         let version = self.apk_fetcher.check_version().await?
             .error_context("Failed to get version")?;
+        debug!("Version: <b><u><yellow>{}</>", version);
+        
         let build_number = version.split('.').next_back()
             .error_context("Invalid version format - missing build number")?;
+        debug!("Build number: <b><u><yellow>{}</>", build_number);
 
         let api = self
             .client
@@ -153,6 +176,8 @@ impl CatalogFetcher {
 
 
         save_json(&self.file_manager, "catalog/GlobalAddressables.json", &api).await?;
+        
+        success!("Saved addressables info");
 
         to_string_pretty(&api).handle_errors()
     }
@@ -181,10 +206,14 @@ impl CatalogFetcher {
         })
         .await?;
 
+        success!("Saved catalogs info");
+
         to_string_pretty(&catalog).handle_errors()
     }
     
     pub async fn get_catalogs(&self) -> Result<String> {
+        info!("Fetching catalogs...");
+        
         match &self.config.region {
             ServerRegion::Japan => {
                 Ok(self.japan_catalog().await?)
@@ -196,6 +225,8 @@ impl CatalogFetcher {
     }
     
     pub async fn get_addressable(&self) -> Result<String> {
+        info!("Fetching addressables...");
+        
         match &self.config.region {
             ServerRegion::Japan => {
                 Ok(self.japan_addressable().await?)

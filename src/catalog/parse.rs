@@ -4,6 +4,7 @@ use crate::helpers::{
 };
 use crate::utils::json::{load_json, save_json};
 use crate::utils::FileManager;
+use crate::{info, success};
 
 use anyhow::Result;
 use bacy::{MediaCatalog, TableCatalog};
@@ -44,6 +45,8 @@ impl CatalogParser {
         )
         .await?;
 
+        success!("Saved AssetBundles catalog");
+
         let media_bytes = self
             .client
             .get(format!(
@@ -65,6 +68,8 @@ impl CatalogParser {
         )
         .await?;
 
+        success!("Saved MediaResources catalog");
+
         let table_bytes = self
             .client
             .get(format!("{}/TableBundles/TableCatalog.bytes", catalog_url))
@@ -82,6 +87,8 @@ impl CatalogParser {
             &table_data,
         )
         .await?;
+
+        success!("Saved TableBundles catalog");
 
         Ok(())
     }
@@ -138,6 +145,9 @@ impl CatalogParser {
             &game_resources,
         )
         .await?;
+
+        success!("Saved GameFiles");
+        
         Ok(())
     }
 
@@ -154,12 +164,13 @@ impl CatalogParser {
             .cloned()
             .collect();
 
+
         let table_bundles: Vec<Resource> = resources
             .iter()
             .filter(|r| r.resource_path.contains("/TableBundles/"))
             .cloned()
             .collect();
-
+        
         if !asset_bundles.is_empty() {
             let asset_data = AssetBundle { asset_bundles };
             save_json(
@@ -168,6 +179,8 @@ impl CatalogParser {
                 &asset_data,
             )
             .await?;
+
+            success!("Saved AssetBundles catalog");
         }
 
         if !media_resources.is_empty() {
@@ -178,6 +191,8 @@ impl CatalogParser {
                 &media_data,
             )
             .await?;
+            
+            success!("Saved MediaResources catalog");
         }
 
         if !table_bundles.is_empty() {
@@ -188,6 +203,8 @@ impl CatalogParser {
                 &table_data,
             )
             .await?;
+
+            success!("Saved TableBundles catalog");
         }
 
         Ok(())
@@ -198,19 +215,19 @@ impl CatalogParser {
             asset_bundles: resources
                 .iter()
                 .filter(|r| r.resource_path.contains("/Android/"))
-                .map(|r| self.resource_to_gamefile(r, catalog_url, "AssetBundles"))
+                .map(|r| self.resource_to_gamefiles(r, catalog_url, "AssetBundles"))
                 .collect(),
 
             table_bundles: resources
                 .iter()
                 .filter(|r| r.resource_path.contains("/TableBundles/"))
-                .map(|r| self.resource_to_gamefile(r, catalog_url, "TableBundles"))
+                .map(|r| self.resource_to_gamefiles(r, catalog_url, "TableBundles"))
                 .collect(),
 
             media_resources: resources
                 .iter()
                 .filter(|r| r.resource_path.contains("/MediaResources/"))
-                .map(|r| self.resource_to_gamefile(r, catalog_url, "MediaResources"))
+                .map(|r| self.resource_to_gamefiles(r, catalog_url, "MediaResources"))
                 .collect(),
         };
 
@@ -218,12 +235,14 @@ impl CatalogParser {
             &self.file_manager,
             "catalog/global/GameFiles.json",
             &game_resources,
-        )
-            .await?;
+        ).await?;
+
+        success!("Saved GameFiles");
+        
         Ok(())
     }
 
-    fn resource_to_gamefile(&self, resource: &Resource, catalog_url: &str, prefix: &str) -> GameFiles {
+    fn resource_to_gamefiles(&self, resource: &Resource, catalog_url: &str, prefix: &str) -> GameFiles {
         GameFiles {
             url: format!("{}/{}", catalog_url, resource.resource_path),
             path: format!("{}/{}", prefix, resource.resource_path),
@@ -234,6 +253,8 @@ impl CatalogParser {
 
     pub async fn process_catalogs(&self) -> Result<()> {
         let api_data: ApiData = load_json(&self.file_manager, "api_data.json").await?;
+        
+        info!("Processing catalogs...");
 
         match self.config.region {
             ServerRegion::Japan => {

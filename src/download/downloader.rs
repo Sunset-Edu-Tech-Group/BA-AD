@@ -4,7 +4,7 @@ use crate::helpers::{
 };
 use crate::utils::json::load_json;
 use crate::utils::FileManager;
-use crate::{error, info, success, warn};
+use crate::{debug, error, info, success, warn};
 
 use anyhow::Result;
 use std::path::{Path, PathBuf};
@@ -18,12 +18,12 @@ pub enum ResourceCategory {
     Tables,
     Media,
     All,
-    Multiple(Vec<Box<ResourceCategory>>),
+    Multiple(Vec<ResourceCategory>),
 }
 
 impl ResourceCategory {
     pub fn multiple(categories: Vec<ResourceCategory>) -> Self {
-        ResourceCategory::Multiple(categories.into_iter().map(Box::new).collect())
+        ResourceCategory::Multiple(categories)
     }
 }
 
@@ -58,7 +58,10 @@ impl ResourceDownloader {
             .await
             .error_context("Failed to load game resources - run CatalogParser first")?;
 
-        let collections = self.get_collections(&category, &game_resources);
+        let collections = Self::get_collections(&category, &game_resources);
+        
+        info!("Downloading Assets...");
+        debug!("Using catalog: <b><u><blue>{}</>", collections.len());
 
         let downloads: Vec<Download> = collections
             .into_iter()
@@ -89,17 +92,17 @@ impl ResourceDownloader {
             .collect();
 
         if downloads.is_empty() {
-            warn!("No files matched the filter criteria for category: {:?}", category);
+            warn!("No files matched the filter criteria for catalog: <b><u><yellow>{:?}</>", category);
             return Ok(());
         }
 
-        info!("Found {} files for download (category: {:?})", downloads.len(), category);
+        info!("Found <b><u><bright-blue>{}</> files for download (catalog: <b><u><blue>{:?}</>)", downloads.len(), category);
         self.downloader.download(&downloads).await;
 
         Ok(())
     }
 
-    fn get_collections<'a>(&self, category: &ResourceCategory, game_resources: &'a GameResources, ) -> Vec<&'a Vec<GameFiles>> {
+    fn get_collections<'a>(category: &ResourceCategory, game_resources: &'a GameResources, ) -> Vec<&'a Vec<GameFiles>> {
         match category {
             ResourceCategory::Assets => vec![&game_resources.asset_bundles],
             ResourceCategory::Tables => vec![&game_resources.table_bundles],
@@ -109,15 +112,15 @@ impl ResourceDownloader {
                 &game_resources.table_bundles,
                 &game_resources.media_resources,
             ],
-            
+
             ResourceCategory::Multiple(categories) => {
                 let mut collections = Vec::new();
-                
+
                 for cat in categories {
-                    let nested_collections = self.get_collections(cat, game_resources);
+                    let nested_collections = Self::get_collections(cat, game_resources);
                     collections.extend(nested_collections);
                 }
-                
+
                 collections.sort_by_key(|c| c.as_ptr());
                 collections.dedup_by_key(|c| c.as_ptr());
                 collections
