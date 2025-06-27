@@ -72,7 +72,7 @@ cargo build --features "logs,debug"
 baad = { git = "https://github.com/Deathemonic/BA-AD" }
 ```
 
-For more info check out [Library](.github/docs/library)
+For more info check out [Library](.github/docs/LIBRARY.md)
 
 ### Other Projects
 
