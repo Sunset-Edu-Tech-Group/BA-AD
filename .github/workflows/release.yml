@@ -16,19 +16,15 @@ jobs:
         include:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
-            artifact_name: target/release/baad
             asset_name: baad-linux-x86_64
           - target: x86_64-pc-windows-msvc
             os: windows-latest
-            artifact_name: target/release/baad.exe
             asset_name: baad-windows-x86_64
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            asset_name: baad-macos-x86_64
           - target: aarch64-apple-darwin
             os: macos-latest
-            artifact_name: target/release/baad
-            asset_name: baad-macos-aarch64
-          - target: aarch64-apple-darwin
-            os: macos-latest
-            artifact_name: target/release/baad
             asset_name: baad-macos-aarch64
 
     steps:
@@ -48,9 +44,6 @@ jobs:
             ~/.cargo/git
             target
           key: ${{ runner.os }}-cargo-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-${{ matrix.target }}-
-            ${{ runner.os }}-cargo-
 
       - name: Build release binary
         run: cargo build --features "logs,debug" --release --target ${{ matrix.target }}
@@ -59,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset_name }}
-          path: ${{ matrix.artifact_name }}
+          path: target/${{ matrix.target }}/release/baad${{ runner.os == 'Windows' && '.exe' || '' }}
 
   deploy:
     name: Deploy to Release
@@ -79,7 +72,6 @@ jobs:
 
       - name: Create release assets
         run: |
-          # Robustness check: fail if no artifacts were downloaded
           if [ ! -d "artifacts" ] || [ -z "$(ls -A artifacts)" ]; then
             echo "::error::No artifacts were found to package. Aborting."
             exit 1
@@ -87,13 +79,13 @@ jobs:
           
           cd artifacts
           for dir in */; do
-            # Check if it's a directory to avoid errors with empty globs
             if [ -d "$dir" ]; then
+              local_dir_name=${dir%/}
               cd "$dir"
-              if [[ "$dir" == *"windows"* ]]; then
-                zip "../${dir%/}.zip" ./*
+              if [[ "$local_dir_name" == *"windows"* ]]; then
+                zip "../${local_dir_name}.zip" ./*
               else
-                tar -czf "../${dir%/}.tar.gz" ./*
+                tar -czf "../${local_dir_name}.tar.gz" ./*
               fi
               cd ..
             fi
