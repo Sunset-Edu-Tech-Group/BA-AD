@@ -107,10 +107,14 @@ impl CommandHandler {
         Ok(should_extract || catalogs_empty)
     }
 
-    async fn handle_global(&self, file_manager: &Rc<FileManager>, _apk_fetcher: &ApkFetcher) -> Result<bool> {
+    async fn handle_global(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
         let catalogs_empty = file_manager.is_dir_empty("catalogs");
-        
-        Ok(catalogs_empty || self.args.update)
+
+        if catalogs_empty || self.args.update {
+            return Ok(true);
+        }
+
+        apk_fetcher.needs_catalog_update().await
     }
 
     async fn process_catalogs(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {

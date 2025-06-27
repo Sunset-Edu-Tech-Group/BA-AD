@@ -18,7 +18,7 @@ cargo install --git "https://github.com/Deathemonic/BA-AD" --locked
 ```
 
 ## Usage
-> WIP
+
 
 ```shell
 ...
