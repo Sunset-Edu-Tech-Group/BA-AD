@@ -27,4 +27,6 @@
 ### Misc
 - Removed extract mode
 - Removed search mode
+- Removed custom catalog url
+- Removed custom apk version
 - Moved crypto to `BA-CY`

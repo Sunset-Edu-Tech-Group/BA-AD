@@ -8,7 +8,7 @@ A tool and library that downloads the latest **Blue Archive** assets.
 ## Install
 
 ### Release
-You can download the latest pre-build binaries at [Releases]()
+You can download the latest pre-build binaries at [Releases](https://github.com/Deathemonic/BA-AD/releases)
 
 [Windows]() | [Linux]() | [MacOS]() 
 
@@ -19,10 +19,39 @@ cargo install --git "https://github.com/Deathemonic/BA-AD" --locked
 
 ## Usage
 
+Download all assets from `JP` server
+```shell
+baad download japan
+```
+
+Download all assets from `Global` server
+```shell
+baad download global
+```
+
+### Examples
 
 ```shell
-...
+# Force update the APK and fetches the latest catalogs
+baad --update
+
+# Downloads the TableBundles from JP server and save it in a folder named Downloads
+baad download japan --tables --output ./Downloads
+
+# Downloads the MediaResources from the Global server that contains CH0230 in it
+baad download global --media --filter "CH0230"
+
+# Downloads both AssetBundles and MediaResources from JP Server
+baad download japan --assets --media
+
+# Downloads the AssetBundles with a limit of 15 concurrent downloads
+baad download global --assets --limit 15 
+
+# Downloads all AssetBundles, TableBundles, and MediaResources from JP server that contains CH0069 in it using fuzzy search  
+baad download japan --filter "CH0069" --filter-method fuzzy 
 ```
+
+For more info check out [Usage](.github/docs/USAGE.md)
 
 
 ## Building
@@ -42,6 +71,8 @@ cargo build --features "logs,debug"
 ```toml
 baad = { git = "https://github.com/Deathemonic/BA-AD" }
 ```
+
+For more info check out [Library](.github/docs/library)
 
 ### Other Projects
 
