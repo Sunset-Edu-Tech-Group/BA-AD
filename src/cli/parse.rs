@@ -1,10 +1,10 @@
-use crate::apk::{ApkExtractor, ApkFetcher};
+use crate::apk::ApkFetcher;
 use crate::catalog::{CatalogFetcher, CatalogParser};
 use crate::cli::args::{Args, Commands, DownloadArgs, RegionCommands};
 use crate::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
 use crate::helpers::{ErrorContext, ServerConfig, ServerRegion};
 use crate::utils::FileManager;
-use crate::{error, info, success, warn};
+use crate::{error, info, success};
 
 use anyhow::Result;
 use std::rc::Rc;
@@ -70,7 +70,7 @@ impl CommandHandler {
         let apk_fetcher = ApkFetcher::new(file_manager.clone(), server_config.clone())?;
 
         let should_process_catalogs = match region {
-            ServerRegion::Japan => self.handle_japan(&file_manager, &apk_fetcher, &server_config).await?,
+            ServerRegion::Japan => self.handle_japan(&file_manager, &apk_fetcher).await?,
             ServerRegion::Global => self.handle_global(&file_manager, &apk_fetcher).await?,
         };
 
@@ -87,24 +87,15 @@ impl CommandHandler {
         Ok(())
     }
 
-    async fn handle_japan(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher, server_config: &Rc<ServerConfig>) -> Result<bool> {
+    async fn handle_japan(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
         let data_empty = file_manager.is_dir_empty("data");
         let catalogs_empty = file_manager.is_dir_empty("catalogs");
 
-        let (_, _, downloaded) = apk_fetcher.download_apk(self.args.update).await?;
-
-        let should_extract = data_empty || downloaded;
-        if should_extract {
-            info!("Extracting APK...");
-            let apk_extractor = ApkExtractor::new(file_manager.clone(), server_config.clone())?;
-            apk_extractor.extract_data()?;
+        if data_empty || catalogs_empty || self.args.update {
+            return Ok(true);
         }
 
-        if !should_extract {
-            warn!("Data exists and APK is up to date, skipping extraction");
-        }
-
-        Ok(should_extract || catalogs_empty)
+        apk_fetcher.needs_catalog_update().await
     }
 
     async fn handle_global(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
@@ -116,6 +107,7 @@ impl CommandHandler {
 
         apk_fetcher.needs_catalog_update().await
     }
+
 
     async fn process_catalogs(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
         let catalog_fetcher = CatalogFetcher::new(
