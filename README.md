@@ -10,7 +10,7 @@ A tool and library that downloads the latest **Blue Archive** assets.
 ### Release
 You can download the latest pre-build binaries at [Releases](https://github.com/Deathemonic/BA-AD/releases)
 
-[Windows]() | [Linux]() | [MacOS]() 
+[Windows](https://github.com/Deathemonic/BA-AD/releases/download/v2.0.0/baad-windows-x86_64.zip) | [Linux](https://github.com/Deathemonic/BA-AD/releases/download/v2.0.0/baad-linux-x86_64.zip) | [MacOS](https://github.com/Deathemonic/BA-AD/releases/download/v2.0.0/baad-macos-aarch64.zip) 
 
 ### Cargo
 ```shell
