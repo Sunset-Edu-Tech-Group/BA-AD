@@ -72,18 +72,24 @@ jobs:
 
       - name: Create release assets
         run: |
+          # This check ensures that the script doesn't fail if no artifacts were downloaded.
           if [ ! -d "artifacts" ] || [ -z "$(ls -A artifacts)" ]; then
             echo "::error::No artifacts were found to package. Aborting."
             exit 1
           fi
           
           cd artifacts
+          # This loop iterates over each downloaded artifact directory.
           for dir in */; do
+            # This check ensures we are only processing directories.
             if [ -d "$dir" ]; then
+              # This removes the trailing slash from the directory name.
               local_dir_name=${dir%/}
               cd "$dir"
+              # This checks if the artifact is for Windows and creates a .zip file.
               if [[ "$local_dir_name" == *"windows"* ]]; then
                 zip "../${local_dir_name}.zip" ./*
+              # Otherwise, it creates a .tar.gz file for Linux and macOS.
               else
                 tar -czf "../${local_dir_name}.tar.gz" ./*
               fi
