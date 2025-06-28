@@ -76,6 +76,7 @@ For more info check out [Library](.github/docs/LIBRARY.md)
 
 ### Other Projects
 
+- [BA-AX](https://github.com/Deathemonic/BA-AX): A tool and library that extracts Blue Archive assets
 - [BA-CY](https://github.com/Deathemonic/BA-CY): Library for handling **Blue Archive** catalogs, tables, serialization/deserialization, encryption, and hashing.
 
 
