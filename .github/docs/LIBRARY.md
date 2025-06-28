@@ -243,12 +243,12 @@ The library can be configured with feature flags in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-baad = { git = "https://github.com/your-repo/baad", features = ["logs", "debug"] }
+baad = { git = "https://github.com/your-repo/baad", features = ["no_logs", "no_debug", "no_error"] }
 ```
 
 Available features:
-- `logs`: Enable basic logging
-- `debug`: Enable debug logging (implies `logs`)
+- `no_logs`: Enable basic logging
+- `no_debug`: Enable debug messages
 - `no_error`: Disable error messages
 
 ## Logging

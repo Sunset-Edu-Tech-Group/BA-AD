@@ -1,6 +1,6 @@
 [package]
 name = "baad"
-version = "2.0.0"
+version = "2.0.1"
 edition = "2024"
 
 [lib]
@@ -10,12 +10,11 @@ path = "src/lib.rs"
 [[bin]]
 name = "baad"
 path = "src/main.rs"
-required-features = ["logs", "debug"]
 
 [features]
 default = []
-logs = []
-debug = ["logs"]
+no_logs = []
+no_debug = []
 no_error = []
 
 [dependencies]

@@ -14,7 +14,7 @@ You can download the latest pre-build binaries at [Releases](https://github.com/
 
 ### Cargo
 ```shell
-cargo install --git "https://github.com/Deathemonic/BA-AD" --locked --features "logs,debug" --release
+cargo install --git "https://github.com/Deathemonic/BA-AD" --locked --release
 ```
 
 ## Usage
@@ -64,7 +64,7 @@ cd BA-AD
 ```
 3. Build using `cargo`
 ```sh
-cargo build --features "logs,debug"
+cargo build
 ```
 
 ## Library
