@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-cargo-x86_64-unknown-linux-gnu-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build release binary
-        run: cargo build --features "logs,debug" --release --target x86_64-unknown-linux-gnu
+        run: cargo build --release --target x86_64-unknown-linux-gnu
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -60,7 +60,7 @@ jobs:
           key: ${{ runner.os }}-cargo-x86_64-pc-windows-msvc-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build release binary
-        run: cargo build --features "logs,debug" --release --target x86_64-pc-windows-msvc
+        run: cargo build --release --target x86_64-pc-windows-msvc
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -90,7 +90,7 @@ jobs:
           key: ${{ runner.os }}-cargo-x86_64-apple-darwin-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build release binary
-        run: cargo build --features "logs,debug" --release --target x86_64-apple-darwin
+        run: cargo build --release --target x86_64-apple-darwin
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -120,7 +120,7 @@ jobs:
           key: ${{ runner.os }}-cargo-aarch64-apple-darwin-${{ hashFiles('**/Cargo.lock') }}
 
       - name: Build release binary
-        run: cargo build --features "logs,debug" --release --target aarch64-apple-darwin
+        run: cargo build --release --target aarch64-apple-darwin
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
