@@ -21,7 +21,6 @@ pub struct ExtractionRule<'a> {
     pub output: PathBuf,
 }
 
-
 pub struct ApkExtractor {
     config: Rc<ServerConfig>,
     file_manager: Rc<FileManager>,

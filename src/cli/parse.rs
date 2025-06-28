@@ -62,8 +62,7 @@ impl CommandHandler {
         
         Ok(())
     }
-
-
+    
     async fn execute_download(&self, region: ServerRegion, args: &DownloadArgs) -> Result<()> {
         let server_config = ServerConfig::new(region)?;
         let file_manager = FileManager::new()?;

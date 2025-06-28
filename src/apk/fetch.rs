@@ -29,6 +29,7 @@ impl ApkFetcher {
             .headers(apk_headers())
             .use_range_for_content_length(true)
             .single_file_progress(true)
+            .overwrite(true)
             .build();
 
         Ok(Self {
