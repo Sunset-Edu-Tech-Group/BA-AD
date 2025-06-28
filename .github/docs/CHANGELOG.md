@@ -1,5 +1,17 @@
 # Changelogs
 
+## v2.0.3
+
+### Fixes
+- Fix where the apk doesn't download if it's outdated
+- Fix logs features not properly handled
+  - Removing logs in now opt in
+
+### Misc
+- Exposed paris module
+- Updated build ci
+
+
 ## v2.0.0
 
 ### Features
