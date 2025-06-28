@@ -1,12 +1,12 @@
-use crate::apk::{ApkFetcher, ApkExtractor};
+use crate::apk::{ApkExtractor, ApkFetcher};
 use crate::catalog::{CatalogFetcher, CatalogParser};
 use crate::cli::args::{Args, Commands, DownloadArgs, RegionCommands};
 use crate::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
-use crate::helpers::{ErrorContext, ServerConfig, ServerRegion};
+use crate::helpers::{ServerConfig, ServerRegion};
 use crate::utils::FileManager;
-use crate::{error, info, success};
 
 use anyhow::Result;
+use baad_core::{error, errors::ErrorContext, info, success};
 use std::rc::Rc;
 
 pub struct CommandHandler { args: Args }
@@ -62,7 +62,7 @@ impl CommandHandler {
         
         Ok(())
     }
-    
+
     async fn execute_download(&self, region: ServerRegion, args: &DownloadArgs) -> Result<()> {
         let server_config = ServerConfig::new(region)?;
         let file_manager = FileManager::new()?;

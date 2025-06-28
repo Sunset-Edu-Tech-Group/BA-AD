@@ -1,6 +1,5 @@
-use crate::helpers::{ErrorContext, ErrorExt};
-
 use anyhow::{Error, Result};
+use baad_core::errors::{ErrorContext, ErrorExt};
 use platform_dirs::AppDirs;
 use std::path::PathBuf;
 use std::rc::Rc;

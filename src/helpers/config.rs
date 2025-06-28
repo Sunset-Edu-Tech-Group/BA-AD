@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use anyhow::{Error, Result};
 use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};

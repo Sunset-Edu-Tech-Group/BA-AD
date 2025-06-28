@@ -1,7 +1,8 @@
-use crate::helpers::{ApiData, ErrorContext, ErrorExt, GlobalData, JapanData, API_FILENAME};
+use crate::helpers::{ApiData, GlobalData, JapanData, API_FILENAME};
 use crate::utils::FileManager;
 
 use anyhow::Result;
+use baad_core::errors::{ErrorContext, ErrorExt};
 use serde::{de::DeserializeOwned, Serialize};
 
 pub async fn load_json<T: DeserializeOwned>(file_manager: &FileManager, filename: &str) -> Result<T> {

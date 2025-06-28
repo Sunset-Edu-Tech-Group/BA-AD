@@ -1,5 +1,5 @@
 use baad::cli::{parse, Args};
-use baad::VERBOSE;
+use baad_core::VERBOSE;
 
 use anyhow::Result;
 use clap::Parser;
