@@ -1,9 +1,6 @@
 use crate::helpers::{
-    ServerConfig, ServerRegion, 
-    ASSET_APK, CONFIG_APK, DATA_PATH, 
-    DATA_PATTERN, GLOBAL_DATA_APK, JP_DATA_APK, 
-    LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, 
-    METADATA_PATTERN
+    ServerConfig, ServerRegion, ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN, GLOBAL_DATA_APK,
+    JP_DATA_APK, LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN,
 };
 use crate::utils::FileManager;
 
@@ -35,16 +32,14 @@ impl ApkExtractor {
             file_manager,
         })
     }
-    
+
     fn check_extract_support(&self) -> Result<bool> {
-        match &self.config.region { 
+        match &self.config.region {
             ServerRegion::Global => {
                 error!("Global server doesn't support APK extraction");
                 Ok(false)
             }
-            ServerRegion::Japan => {
-                Ok(true)
-            }
+            ServerRegion::Japan => Ok(true),
         }
     }
 
@@ -56,11 +51,9 @@ impl ApkExtractor {
         info!("Extracting apk...");
 
         let apk_path = self.file_manager.get_data_path(&self.config.apk_path);
-        let mut archive = ZipArchive::new(
-            File::open(&apk_path)
-                .handle_errors()?
-        ).handle_errors()?;
-        
+        let mut archive =
+            ZipArchive::new(File::open(&apk_path).handle_errors()?).handle_errors()?;
+
         let mut target_apk = archive.by_name(rule.apk).handle_errors()?;
 
         let mut buf = Vec::new();
@@ -74,10 +67,10 @@ impl ApkExtractor {
         for i in 0..inner_archive.len() {
             let mut file = inner_archive.by_index(i).handle_errors()?;
             let file_path = PathBuf::from(file.name());
-            
+
             if self.matches_rule(&file_path, &rule)? {
                 let out = rule.output.join(file_path.file_name().unwrap());
-                
+
                 let mut outfile = File::create(&out).handle_errors()?;
                 io::copy(&mut file, &mut outfile).handle_errors()?;
             }
@@ -87,7 +80,8 @@ impl ApkExtractor {
     }
 
     fn matches_rule(&self, file_path: &Path, rule: &ExtractionRule) -> Result<bool> {
-        let components: Vec<_> = file_path.components()
+        let components: Vec<_> = file_path
+            .components()
             .map(|c| c.as_os_str().to_string_lossy().to_string())
             .collect();
 
@@ -101,22 +95,20 @@ impl ApkExtractor {
             }
         }
 
-        let file_name = file_path.file_name()
-            .and_then(|n| n.to_str())
-            .unwrap_or("");
+        let file_name = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
         let pattern = Pattern::new(rule.pattern).handle_errors()?;
 
         Ok(pattern.matches(file_name))
     }
-    
+
     pub fn extract_data(&self) -> Result<()> {
         if !self.check_extract_support()? {
             return Ok(());
         }
 
         info!("Extracting game data...");
-        
+
         let rule = ExtractionRule {
             apk: match self.config.region {
                 ServerRegion::Global => GLOBAL_DATA_APK,
@@ -124,25 +116,29 @@ impl ApkExtractor {
             },
             path: DATA_PATH,
             pattern: DATA_PATTERN,
-            output: self.file_manager.get_data_path("data")
+            output: self.file_manager.get_data_path("data"),
         };
 
         self.extract(rule)
     }
-    
+
     pub fn extract_il2cpp(&self) -> Result<()> {
         if !self.check_extract_support()? {
             return Ok(());
         }
 
+        let il2cpp_path: PathBuf = match self.config.region {
+            ServerRegion::Global => self.file_manager.get_data_path("global/il2cpp"),
+            ServerRegion::Japan => self.file_manager.get_data_path("japan/il2cpp")
+        };
+
         info!("Extracting IL2CPP files...");
-        
-        
+
         let lib_rule = ExtractionRule {
             apk: CONFIG_APK,
             path: LIBIL2CPP_PATH,
             pattern: LIBIL2CPP_PATTERN,
-            output: self.file_manager.get_data_path("il2cpp"),
+            output: il2cpp_path.clone(),
         };
         self.extract(lib_rule)?;
 
@@ -153,7 +149,7 @@ impl ApkExtractor {
             },
             path: METADATA_PATH,
             pattern: METADATA_PATTERN,
-            output: self.file_manager.get_data_path("il2cpp"),
+            output: il2cpp_path,
         };
         self.extract(metadata_rule)?;
 
