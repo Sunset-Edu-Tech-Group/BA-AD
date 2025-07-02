@@ -1,9 +1,9 @@
 use crate::helpers::{
-    ServerConfig, ServerRegion,
-    ASSET_APK, CONFIG_APK, DATA_APK,
-    DATA_PATH, DATA_PATTERN,
-    LIBIL2CPP_PATH, LIBIL2CPP_PATTERN,
-    METADATA_PATH, METADATA_PATTERN
+    ServerConfig, ServerRegion, 
+    ASSET_APK, CONFIG_APK, DATA_PATH, 
+    DATA_PATTERN, GLOBAL_DATA_APK, JP_DATA_APK, 
+    LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, 
+    METADATA_PATTERN
 };
 use crate::utils::FileManager;
 
@@ -118,7 +118,10 @@ impl ApkExtractor {
         info!("Extracting game data...");
         
         let rule = ExtractionRule {
-            apk: ASSET_APK,
+            apk: match self.config.region {
+                ServerRegion::Global => GLOBAL_DATA_APK,
+                ServerRegion::Japan => ASSET_APK,
+            },
             path: DATA_PATH,
             pattern: DATA_PATTERN,
             output: self.file_manager.get_data_path("data")
@@ -144,7 +147,10 @@ impl ApkExtractor {
         self.extract(lib_rule)?;
 
         let metadata_rule = ExtractionRule {
-            apk: DATA_APK,
+            apk: match self.config.region {
+                ServerRegion::Global => GLOBAL_DATA_APK,
+                ServerRegion::Japan => JP_DATA_APK,
+            },
             path: METADATA_PATH,
             pattern: METADATA_PATTERN,
             output: self.file_manager.get_data_path("il2cpp"),
