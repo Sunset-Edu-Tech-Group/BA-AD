@@ -128,8 +128,8 @@ impl ApkExtractor {
         }
 
         let il2cpp_path: PathBuf = match self.config.region {
-            ServerRegion::Global => self.file_manager.get_data_path("global/il2cpp"),
-            ServerRegion::Japan => self.file_manager.get_data_path("japan/il2cpp")
+            ServerRegion::Global => self.file_manager.get_data_path("il2cpp/global"),
+            ServerRegion::Japan => self.file_manager.get_data_path("il2cpp/japan")
         };
 
         info!("Extracting IL2CPP files...");
