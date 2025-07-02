@@ -46,13 +46,13 @@ impl ServerConfig {
         let config = match server {
             ServerRegion::Global => Self {
                 region: server,
-                version_url: String::new(),
-                apk_path: String::new(),
+                version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive".to_string(),
+                apk_path: "apk/BlueArchiveGlobal.xapk".to_string(),
             },
             ServerRegion::Japan => Self {
                 region: server,
                 version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
-                apk_path: "apk/BlueArchive.xapk".to_string(),
+                apk_path: "apk/BlueArchiveJP.xapk".to_string(),
             },
         };
         Ok(Rc::new(config))

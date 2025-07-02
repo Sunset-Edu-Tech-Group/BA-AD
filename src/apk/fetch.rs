@@ -171,10 +171,6 @@ impl ApkFetcher {
     }
 
     pub async fn download_apk(&self, force: bool) -> Result<(String, PathBuf, bool)> {
-        if self.config.region == ServerRegion::Global {
-            return None.error_context("Global server APK download is not supported");
-        }
-
         let new_version = self.get_current_version().await?;
         debug!("Using version <b><u><yellow>{}</>", new_version);
 
