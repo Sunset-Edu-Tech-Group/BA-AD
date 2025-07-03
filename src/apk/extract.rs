@@ -33,21 +33,7 @@ impl ApkExtractor {
         })
     }
 
-    fn check_extract_support(&self) -> Result<bool> {
-        match &self.config.region {
-            ServerRegion::Global => {
-                error!("Global server doesn't support APK extraction");
-                Ok(false)
-            }
-            ServerRegion::Japan => Ok(true),
-        }
-    }
-
     pub fn extract(&self, rule: ExtractionRule) -> Result<()> {
-        if !self.check_extract_support()? {
-            return Ok(());
-        }
-
         info!("Extracting apk...");
 
         let apk_path = self.file_manager.get_data_path(&self.config.apk_path);
@@ -103,10 +89,6 @@ impl ApkExtractor {
     }
 
     pub fn extract_data(&self) -> Result<()> {
-        if !self.check_extract_support()? {
-            return Ok(());
-        }
-
         info!("Extracting game data...");
 
         let rule = ExtractionRule {
@@ -123,10 +105,6 @@ impl ApkExtractor {
     }
 
     pub fn extract_il2cpp(&self) -> Result<()> {
-        if !self.check_extract_support()? {
-            return Ok(());
-        }
-
         let il2cpp_path: PathBuf = match self.config.region {
             ServerRegion::Global => self.file_manager.get_data_path("il2cpp/global"),
             ServerRegion::Japan => self.file_manager.get_data_path("il2cpp/japan")
