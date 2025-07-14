@@ -4,8 +4,7 @@ use crate::helpers::{
     ServerConfig, ServerRegion,
     GAME_CONFIG_PATTERN, GLOBAL_API_URL
 };
-use crate::utils::json::{load_json, save_json, update_api_data};
-use crate::utils::FileManager;
+use crate::utils::{json, file};
 
 use anyhow::Result;
 use baad_core::{debug, errors::{ErrorContext, ErrorExt}, info, success};
@@ -21,23 +20,21 @@ pub struct CatalogFetcher {
     client: Client,
     apk_fetcher: Rc<ApkFetcher>,
     config: Rc<ServerConfig>,
-    file_manager: Rc<FileManager>,
 }
 
 impl CatalogFetcher {
-    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>, apk_fetcher: ApkFetcher) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>, apk_fetcher: ApkFetcher) -> Result<Self> {
         let client = Client::new();
 
         Ok(Self {
             client,
             apk_fetcher: Rc::new(apk_fetcher),
             config,
-            file_manager,
         })
     }
 
     pub fn find_game_config(&self) -> Result<Vec<u8>> {
-        let data = self.file_manager.get_data_path("data");
+        let data = file::get_data_path("data")?;
         
         info!("Searching for game config...");
 
@@ -108,15 +105,15 @@ impl CatalogFetcher {
             .json::<JapanAddressable>()
             .await
             .handle_errors()?;
-
-        save_json(
-            &self.file_manager,
-            "catalog/JapanAddressables.json",
-            &catalog,
+        
+        let addressable_path = file::get_data_path("catalog/JapanAddressables.json")?;
+        json::save_json(
+            &addressable_path,
+            &catalog
         )
         .await?;
 
-        update_api_data(&self.file_manager, |data| {
+        json::update_api_data(|data| {
             data.japan.addressable_url = api_url;
         })
         .await?;
@@ -129,8 +126,9 @@ impl CatalogFetcher {
     async fn japan_catalog(&self) -> Result<String> {
         self.japan_addressable().await?;
 
+        let addressable_path = file::get_data_path("catalog/JapanAddressables.json")?;
         let addressable: JapanAddressable =
-            load_json(&self.file_manager, "catalog/JapanAddressables.json").await?;
+            json::load_json(&addressable_path).await?;
 
         let catalog_url = addressable
             .connection_groups
@@ -139,7 +137,7 @@ impl CatalogFetcher {
             .map(|override_group| &override_group.addressables_catalog_url_root)
             .error_context("Second override connection group not found")?;
 
-        update_api_data(&self.file_manager, |data| {
+        json::update_api_data(|data| {
             data.japan.catalog_url = catalog_url.to_string();
         })
         .await?;
@@ -174,8 +172,8 @@ impl CatalogFetcher {
             .await
             .handle_errors()?;
 
-
-        save_json(&self.file_manager, "catalog/GlobalAddressables.json", &api).await?;
+        let addressable_path = file::get_data_path("catalog/GlobalAddressables.json")?;
+        json::save_json(&addressable_path, &api).await?;
         
         success!("Saved addressables info");
 
@@ -185,8 +183,9 @@ impl CatalogFetcher {
     async fn global_resources(&self) -> Result<String> {
         self.global_addressable().await?;
 
+        let addressable_path = file::get_data_path("catalog/GlobalAddressables.json")?;
         let addressable: GlobalAddressable =
-            load_json(&self.file_manager, "catalog/GlobalAddressables.json").await?;
+            json::load_json(&addressable_path).await?;
 
         let catalog = self
             .client
@@ -199,9 +198,10 @@ impl CatalogFetcher {
             .handle_errors()?;
 
 
-        save_json(&self.file_manager, "catalog/global/Resources.json", &catalog).await?;
+        let resources_path = file::get_data_path("catalog/global/Resources.json")?;
+        json::save_json(&resources_path, &catalog).await?;
 
-        update_api_data(&self.file_manager, |data| {
+        json::update_api_data(|data| {
             data.global.catalog_url = addressable.patch.resource_path;
         })
         .await?;

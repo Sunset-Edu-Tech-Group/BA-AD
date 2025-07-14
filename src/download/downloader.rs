@@ -1,7 +1,6 @@
 use crate::download::ResourceFilter;
 use crate::helpers::{GameFiles, GameResources, HashValue, ServerConfig, ServerRegion};
-use crate::utils::json::load_json;
-use crate::utils::FileManager;
+use crate::utils::{file, json};
 
 use anyhow::Result;
 use baad_core::{debug, error, errors::ErrorContext, info, success, warn};
@@ -28,22 +27,21 @@ impl ResourceCategory {
 pub struct ResourceDownloader {
     downloader: Downloader,
     config: Rc<ServerConfig>,
-    file_manager: Rc<FileManager>,
 }
 
 pub struct ResourceDownloadBuilder {
     output: Option<PathBuf>,
     retries: u32,
     limit: u64,
-    file_manager: Rc<FileManager>,
     config: Rc<ServerConfig>,
 }
 
 impl ResourceDownloader {
-    pub fn new(output: Option<PathBuf>, file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
-        ResourceDownloadBuilder::new(file_manager, config)?
+    pub async fn new(output: Option<PathBuf>, config: Rc<ServerConfig>) -> Result<Self> {
+        ResourceDownloadBuilder::new(config)?
             .output(output)
             .build()
+            .await
     }
 
     fn get_collections<'a>(category: &ResourceCategory, game_resources: &'a GameResources, ) -> Vec<&'a Vec<GameFiles>> {
@@ -74,11 +72,11 @@ impl ResourceDownloader {
 
     pub async fn download(&self, category: ResourceCategory, filter: Option<ResourceFilter>) -> Result<()> {
         let game_files_path = match &self.config.region {
-            ServerRegion::Global => "catalog/global/GameFiles.json",
-            ServerRegion::Japan => "catalog/japan/GameFiles.json",
+            ServerRegion::Global => file::get_data_path("catalog/global/GameFiles.json")?,
+            ServerRegion::Japan => file::get_data_path("catalog/japan/GameFiles.json")?,
         };
 
-        let game_resources: GameResources = load_json(&self.file_manager, game_files_path)
+        let game_resources: GameResources = json::load_json(&game_files_path)
             .await
             .error_context("Failed to load game resources - run CatalogParser first")?;
 
@@ -128,12 +126,11 @@ impl ResourceDownloader {
 }
 
 impl ResourceDownloadBuilder {
-    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
         Ok(Self {
             output: None,
             retries: 10,
             limit: 10,
-            file_manager,
             config,
         })
     }
@@ -153,7 +150,7 @@ impl ResourceDownloadBuilder {
         self
     }
 
-    pub fn build(self) -> Result<ResourceDownloader> {
+    pub async fn build(self) -> Result<ResourceDownloader> {
         if self.retries == 0 {
             return None.error_context("Retry count cannot be zero");
         }
@@ -165,7 +162,7 @@ impl ResourceDownloadBuilder {
         let style = StyleOptions::new(ProgressBarOpts::hidden(), ProgressBarOpts::hidden());
 
         let downloader = DownloaderBuilder::new()
-            .directory(FileManager::get_output_dir(self.output)?)
+            .directory(file::get_output_dir(self.output).await?)
             .concurrent_downloads(self.limit as usize)
             .retries(self.retries)
             .style_options(style)
@@ -201,7 +198,6 @@ impl ResourceDownloadBuilder {
         Ok(ResourceDownloader {
             downloader,
             config: self.config,
-            file_manager: self.file_manager,
         })
     }
 }

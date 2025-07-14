@@ -2,10 +2,10 @@ use crate::helpers::{
     ServerConfig, ServerRegion, ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN, GLOBAL_DATA_APK,
     JP_DATA_APK, LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN,
 };
-use crate::utils::FileManager;
+use crate::utils::file;
 
 use anyhow::Result;
-use baad_core::{error, errors::ErrorExt, info};
+use baad_core::{errors::ErrorExt, info};
 use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};
@@ -22,21 +22,19 @@ pub struct ExtractionRule<'a> {
 
 pub struct ApkExtractor {
     config: Rc<ServerConfig>,
-    file_manager: Rc<FileManager>,
 }
 
 impl ApkExtractor {
-    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
         Ok(Self {
             config,
-            file_manager,
         })
     }
 
     pub fn extract(&self, rule: ExtractionRule) -> Result<()> {
         info!("Extracting apk...");
 
-        let apk_path = self.file_manager.get_data_path(&self.config.apk_path);
+        let apk_path = file::get_data_path(&self.config.apk_path)?;
         let mut archive =
             ZipArchive::new(File::open(&apk_path).handle_errors()?).handle_errors()?;
 
@@ -98,7 +96,7 @@ impl ApkExtractor {
             },
             path: DATA_PATH,
             pattern: DATA_PATTERN,
-            output: self.file_manager.get_data_path("data"),
+            output: file::get_data_path("data")?,
         };
 
         self.extract(rule)
@@ -106,8 +104,8 @@ impl ApkExtractor {
 
     pub fn extract_il2cpp(&self) -> Result<()> {
         let il2cpp_path: PathBuf = match self.config.region {
-            ServerRegion::Global => self.file_manager.get_data_path("il2cpp/global"),
-            ServerRegion::Japan => self.file_manager.get_data_path("il2cpp/japan")
+            ServerRegion::Global => file::get_data_path("il2cpp/global")?,
+            ServerRegion::Japan => file::get_data_path("il2cpp/japan")?
         };
 
         info!("Extracting IL2CPP files...");

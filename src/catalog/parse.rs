@@ -4,8 +4,7 @@ use crate::helpers::{
     HashValue, MediaResources, Resource,
     ServerConfig, ServerRegion, TableResources
 };
-use crate::utils::json::{load_json, save_json};
-use crate::utils::FileManager;
+use crate::utils::{file, json};
 
 use anyhow::Result;
 use baad_core::{errors::{ErrorContext, ErrorExt}, info, success};
@@ -15,16 +14,14 @@ use std::rc::Rc;
 
 pub struct CatalogParser {
     client: Client,
-    file_manager: Rc<FileManager>,
     config: Rc<ServerConfig>,
 }
 
 impl CatalogParser {
-    pub fn new(file_manager: Rc<FileManager>, config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
         Ok(Self {
             client: Client::new(),
             config,
-            file_manager,
         })
     }
 
@@ -40,14 +37,36 @@ impl CatalogParser {
             .handle_errors()?;
 
 
-        save_json(
-            &self.file_manager,
-            "catalog/japan/bundleDownloadInfo.json",
-            &asset_data,
+        let assetbundle_path = file::get_data_path("catalog/japan/bundleDownloadInfo.json")?;
+        let tablebundle_path = file::get_data_path("catalog/japan/TableCatalog.json")?;
+        let mediaresources_path = file::get_data_path("catalog/japan/MediaCatalog.json")?;
+        
+        json::save_json(
+            &assetbundle_path,
+            &asset_data
         )
         .await?;
 
         success!("Saved AssetBundles catalog");
+
+        let table_bytes = self
+            .client
+            .get(format!("{}/TableBundles/TableCatalog.bytes", catalog_url))
+            .send()
+            .await
+            .handle_errors()?
+            .bytes()
+            .await
+            .handle_errors()?;
+        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).handle_errors()?;
+
+        json::save_json(
+            &tablebundle_path,
+            &table_data,
+        )
+            .await?;
+
+        success!("Saved TableBundles catalog");
 
         let media_bytes = self
             .client
@@ -63,45 +82,29 @@ impl CatalogParser {
             .handle_errors()?;
         let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url).handle_errors()?;
 
-        save_json(
-            &self.file_manager,
-            "catalog/japan/MediaCatalog.json",
+        json::save_json(
+            &mediaresources_path,
             &media_data,
         )
         .await?;
 
         success!("Saved MediaResources catalog");
 
-        let table_bytes = self
-            .client
-            .get(format!("{}/TableBundles/TableCatalog.bytes", catalog_url))
-            .send()
-            .await
-            .handle_errors()?
-            .bytes()
-            .await
-            .handle_errors()?;
-        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).handle_errors()?;
-
-        save_json(
-            &self.file_manager,
-            "catalog/japan/TableCatalog.json",
-            &table_data,
-        )
-        .await?;
-
-        success!("Saved TableBundles catalog");
-
         Ok(())
     }
 
     async fn japan_gamefiles(&self, catalog_url: &str) -> Result<()> {
+        let assetbundle_path = file::get_data_path("catalog/japan/bundleDownloadInfo.json")?;
+        let tablebundle_path = file::get_data_path("catalog/japan/TableCatalog.json")?;
+        let mediaresources_path = file::get_data_path("catalog/japan/MediaCatalog.json")?;
+        let gamefile_path = file::get_data_path("catalog/japan/GameFiles.json")?;
+        
         let bundle_info: BundleDownloadInfo =
-            load_json(&self.file_manager, "catalog/japan/bundleDownloadInfo.json").await?;
+            json::load_json(&assetbundle_path).await?;
         let table_catalog: TableCatalog =
-            load_json(&self.file_manager, "catalog/japan/TableCatalog.json").await?;
+            json::load_json(&tablebundle_path).await?;
         let media_catalog: MediaCatalog =
-            load_json(&self.file_manager, "catalog/japan/MediaCatalog.json").await?;
+            json::load_json(&mediaresources_path).await?;
 
         let game_resources = GameResources {
             asset_bundles: bundle_info
@@ -141,10 +144,9 @@ impl CatalogParser {
                 .collect(),
         };
 
-        save_json(
-            &self.file_manager,
-            "catalog/japan/GameFiles.json",
-            &game_resources,
+        json::save_json(
+            &gamefile_path,
+            &game_resources
         )
         .await?;
 
@@ -172,41 +174,42 @@ impl CatalogParser {
             .filter(|r| r.resource_path.contains("/TableBundles/"))
             .cloned()
             .collect();
+
+        let assetbundle_path = file::get_data_path("catalog/global/bundleDownloadInfo.json")?;
+        let tablebundle_path = file::get_data_path("catalog/global/TableCatalog.json")?;
+        let mediaresources_path = file::get_data_path("catalog/global/MediaCatalog.json")?;
         
         if !asset_bundles.is_empty() {
             let asset_data = AssetBundle { asset_bundles };
-            save_json(
-                &self.file_manager,
-                "catalog/global/bundleDownloadInfo.json",
-                &asset_data,
+            json::save_json(
+                &assetbundle_path,
+                &asset_data
             )
             .await?;
 
             success!("Saved AssetBundles catalog");
         }
 
-        if !media_resources.is_empty() {
-            let media_data = MediaResources { media_resources };
-            save_json(
-                &self.file_manager,
-                "catalog/global/MediaCatalog.json",
-                &media_data,
-            )
-            .await?;
-            
-            success!("Saved MediaResources catalog");
-        }
-
         if !table_bundles.is_empty() {
             let table_data = TableResources { table_bundles };
-            save_json(
-                &self.file_manager,
-                "catalog/global/TableCatalog.json",
-                &table_data,
+            json::save_json(
+                &tablebundle_path,
+                &table_data
             )
             .await?;
 
             success!("Saved TableBundles catalog");
+        }
+
+        if !media_resources.is_empty() {
+            let media_data = MediaResources { media_resources };
+            json::save_json(
+                &mediaresources_path,
+                &media_data
+            )
+                .await?;
+
+            success!("Saved MediaResources catalog");
         }
 
         Ok(())
@@ -233,10 +236,11 @@ impl CatalogParser {
                 .collect(),
         };
 
-        save_json(
-            &self.file_manager,
-            "catalog/global/GameFiles.json",
-            &game_resources,
+        let gamefile_path = file::get_data_path("catalog/global/GameFiles.json")?;
+
+        json::save_json(
+            &gamefile_path,
+            &game_resources
         ).await?;
 
         success!("Saved GameFiles");
@@ -254,7 +258,10 @@ impl CatalogParser {
     }
 
     pub async fn process_catalogs(&self) -> Result<()> {
-        let api_data: ApiData = load_json(&self.file_manager, "api_data.json").await?;
+        let api_data_path = file::get_data_path("api_data.json")?;
+        let resources_path = file::get_data_path("catalog/global/Resources.json")?;
+        
+        let api_data: ApiData = json::load_json(&api_data_path).await?;
         
         info!("Processing catalogs...");
 
@@ -271,7 +278,7 @@ impl CatalogParser {
             }
             ServerRegion::Global => {
                 let resources: GlobalCatalog =
-                    load_json(&self.file_manager, "catalog/global/Resources.json").await?;
+                    json::load_json(&resources_path).await?;
                 let catalog_url = &api_data
                     .global
                     .catalog_url

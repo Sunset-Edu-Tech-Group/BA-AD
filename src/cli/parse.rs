@@ -3,36 +3,38 @@ use crate::catalog::{CatalogFetcher, CatalogParser};
 use crate::cli::args::{Args, Commands, DownloadArgs, RegionCommands};
 use crate::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
 use crate::helpers::{ServerConfig, ServerRegion};
-use crate::utils::FileManager;
+use crate::utils::file;
 
 use anyhow::Result;
-use baad_core::{error, errors::ErrorContext, info, success};
+use baad_core::{errors::ErrorContext, info, success};
 use std::rc::Rc;
 
-pub struct CommandHandler { args: Args }
+pub struct CommandHandler {
+    args: Args,
+}
 
 impl CommandHandler {
-    pub fn new(args: Args) -> Result<Self> { Ok(Self { args }) }
+    pub fn new(args: Args) -> Result<Self> {
+        Ok(Self { args })
+    }
 
     pub async fn handle(&self) -> Result<()> {
         if self.args.clean {
             info!("Cleaning data...");
 
-            let file_manager = FileManager::new()?;
-            file_manager.clear_all()?;
+            let data_dir = file::data_dir()?;
+            file::clear_all(&data_dir).await?;
 
             success!("Data cleared");
         }
-        
+
         match &self.args.command {
-            Some(Commands::Download { region }) => {
-                self.handle_download(region).await
-            }
+            Some(Commands::Download { region }) => self.handle_download(region).await,
             None => {
                 if self.args.update {
                     self.handle_update().await?;
                 } else if !self.args.clean {
-                    error!("No command specified. Use --help for usage information.");
+                    info!("No command specified. Use --help for usage information.");
                 }
 
                 Ok(())
@@ -43,10 +45,12 @@ impl CommandHandler {
     async fn handle_download(&self, region: &RegionCommands) -> Result<()> {
         match region {
             RegionCommands::Global(download_args) => {
-                self.execute_download(ServerRegion::Global, download_args).await
+                self.execute_download(ServerRegion::Global, download_args)
+                    .await
             }
             RegionCommands::Japan(download_args) => {
-                self.execute_download(ServerRegion::Japan, download_args).await
+                self.execute_download(ServerRegion::Japan, download_args)
+                    .await
             }
         }
     }
@@ -55,52 +59,53 @@ impl CommandHandler {
         info!("Forcing update...");
 
         let server_config = ServerConfig::new(ServerRegion::Japan)?;
-        let file_manager = FileManager::new()?;
-        let apk_fetcher = ApkFetcher::new(file_manager.clone(), server_config.clone())?;
+        let apk_fetcher = ApkFetcher::new(server_config.clone())?;
 
         apk_fetcher.download_apk(true).await?;
-        
+
         Ok(())
     }
 
     async fn execute_download(&self, region: ServerRegion, args: &DownloadArgs) -> Result<()> {
         let server_config = ServerConfig::new(region)?;
-        let file_manager = FileManager::new()?;
-        let apk_fetcher = ApkFetcher::new(file_manager.clone(), server_config.clone())?;
+        let apk_fetcher = ApkFetcher::new(server_config.clone())?;
 
         let should_process_catalogs = match region {
             ServerRegion::Japan => {
-                let should_process = self.handle_japan(&file_manager, &apk_fetcher).await?;
+                let should_process = self.handle_japan(&apk_fetcher).await?;
 
                 if should_process {
                     apk_fetcher.download_apk(self.args.update).await?;
 
-                    let apk_extractor = ApkExtractor::new(file_manager.clone(), server_config.clone())?;
+                    let apk_extractor = ApkExtractor::new(server_config.clone())?;
                     apk_extractor.extract_data()?;
                 }
 
                 should_process
-            },
-            ServerRegion::Global => self.handle_global(&file_manager, &apk_fetcher).await?,
+            }
+            ServerRegion::Global => self.handle_global(&apk_fetcher).await?,
         };
 
         if should_process_catalogs {
             apk_fetcher.check_version().await?;
-            self.process_catalogs(&file_manager, &server_config, &apk_fetcher).await?;
+            self.process_catalogs(&server_config, &apk_fetcher).await?;
         }
 
         if !should_process_catalogs {
             info!("Catalog files exist and are up to date, skipping catalog processing");
         }
 
-        self.download_resources(&file_manager, &server_config, args).await?;
+        self.download_resources(&server_config, args).await?;
 
         Ok(())
     }
 
-    async fn handle_japan(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
-        let data_empty = file_manager.is_dir_empty("data");
-        let catalogs_empty = file_manager.is_dir_empty("catalog");
+    async fn handle_japan(&self, apk_fetcher: &ApkFetcher) -> Result<bool> {
+        let data_path = file::get_data_path("data")?;
+        let catalog_path = file::get_data_path("catalog")?;
+
+        let data_empty = file::is_dir_empty(&data_path).await?;
+        let catalogs_empty = file::is_dir_empty(&catalog_path).await?;
 
         if data_empty || catalogs_empty || self.args.update {
             return Ok(true);
@@ -109,8 +114,10 @@ impl CommandHandler {
         apk_fetcher.needs_catalog_update().await
     }
 
-    async fn handle_global(&self, file_manager: &Rc<FileManager>, apk_fetcher: &ApkFetcher) -> Result<bool> {
-        let catalogs_empty = file_manager.is_dir_empty("catalog");
+    async fn handle_global(&self, apk_fetcher: &ApkFetcher) -> Result<bool> {
+        let catalog_path = file::get_data_path("catalog")?;
+
+        let catalogs_empty = file::is_dir_empty(&catalog_path).await?;
 
         if catalogs_empty || self.args.update {
             return Ok(true);
@@ -119,13 +126,9 @@ impl CommandHandler {
         apk_fetcher.needs_catalog_update().await
     }
 
-    async fn process_catalogs(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
-        let catalog_fetcher = CatalogFetcher::new(
-            file_manager.clone(),
-            server_config.clone(),
-            apk_fetcher.clone(),
-        )?;
-        let catalog_parser = CatalogParser::new(file_manager.clone(), server_config.clone())?;
+    async fn process_catalogs(&self, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
+        let catalog_fetcher = CatalogFetcher::new(server_config.clone(), apk_fetcher.clone())?;
+        let catalog_parser = CatalogParser::new(server_config.clone())?;
 
         catalog_fetcher.get_addressable().await?;
         catalog_fetcher.get_catalogs().await?;
@@ -134,16 +137,19 @@ impl CommandHandler {
         Ok(())
     }
 
-    async fn download_resources(&self, file_manager: &Rc<FileManager>, server_config: &Rc<ServerConfig>, args: &DownloadArgs) -> Result<()> {
-        let resource_downloader = ResourceDownloadBuilder::new(file_manager.clone(), server_config.clone())?
+    async fn download_resources(&self, server_config: &Rc<ServerConfig>, args: &DownloadArgs) -> Result<()> {
+        let resource_downloader = ResourceDownloadBuilder::new(server_config.clone())?
             .limit(args.limit as u64)
             .retries(args.retries)
             .output(Some(args.output.clone().into()))
-            .build()?;
+            .build()
+            .await?;
 
         let resource_category = self.resource_category(args);
         let resource_filter = self.resource_filter(args)?;
-        resource_downloader.download(resource_category, resource_filter).await?;
+        resource_downloader
+            .download(resource_category, resource_filter)
+            .await?;
 
         Ok(())
     }
@@ -159,21 +165,18 @@ impl CommandHandler {
             (false, false, true) => ResourceCategory::Media,
             (true, true, true) => ResourceCategory::All,
             (false, false, false) => ResourceCategory::All,
-            (true, true, false) => ResourceCategory::multiple(vec![
-                ResourceCategory::Assets,
-                ResourceCategory::Tables
-            ]),
-            (true, false, true) => ResourceCategory::multiple(vec![
-                ResourceCategory::Assets,
-                ResourceCategory::Media
-            ]),
-            (false, true, true) => ResourceCategory::multiple(vec![
-                ResourceCategory::Tables,
-                ResourceCategory::Media
-            ]),
+            (true, true, false) => {
+                ResourceCategory::multiple(vec![ResourceCategory::Assets, ResourceCategory::Tables])
+            }
+            (true, false, true) => {
+                ResourceCategory::multiple(vec![ResourceCategory::Assets, ResourceCategory::Media])
+            }
+            (false, true, true) => {
+                ResourceCategory::multiple(vec![ResourceCategory::Tables, ResourceCategory::Media])
+            }
         }
     }
-    
+
     fn resource_filter(&self, args: &DownloadArgs) -> Result<Option<ResourceFilter>> {
         let Some(filter_pattern) = &args.filter else {
             if !matches!(args.filter_method, FilterMethod::Contains) {

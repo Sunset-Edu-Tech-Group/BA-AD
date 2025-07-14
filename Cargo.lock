@@ -137,6 +137,7 @@ dependencies = [
  "glob",
  "lazy-regex",
  "nucleo",
+ "once_cell",
  "platform-dirs",
  "reqwest",
  "serde",
