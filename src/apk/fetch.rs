@@ -140,7 +140,7 @@ impl ApkFetcher {
 
         let remote_size = network::get_content_length(&response);
         if remote_size == 0 || local_size != remote_size {
-            warn!("APK is outdated or incomplete");
+            debug!("APK is outdated or incomplete");
             return Ok(true);
         }
 
