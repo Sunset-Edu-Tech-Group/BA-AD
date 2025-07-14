@@ -51,8 +51,49 @@ baad download global --assets --limit 15
 baad download japan --filter "CH0069" --filter-method fuzzy 
 ```
 
-For more info check out [Usage](.github/docs/USAGE.md)
+<details>
+  <summary>Command Line</summary>
 
+### `baad --help`
+
+| Command/Option | Short | Description                                               |
+|----------------|-------|-----------------------------------------------------------|
+| `download`     |       | Download game files                                       |
+| `help`         |       | Print this message or the help of the given subcommand(s) |
+| `--update`     | `-u`  | Force update                                              |
+| `--clean`      | `-c`  | Cleans the cache                                          |
+| `--verbose`    | `-v`  | Enable verbose output                                     |
+| `--help`       | `-h`  | Print help                                                |
+| `--version`    | `-V`  | Print version                                             |
+
+---
+
+### `baad download --help`
+
+| Command  | Description                                               |
+|----------|-----------------------------------------------------------|
+| `global` | Download from Global server                               |
+| `japan`  | Download from Japan server                                |
+| `help`   | Print this message or the help of the given subcommand(s) |
+
+---
+
+### `baad download {japan|global} --help`
+
+| Option                            | Description                                   | Default    | Possible Values                                                                                   |
+|-----------------------------------|-----------------------------------------------|------------|---------------------------------------------------------------------------------------------------|
+| `--assets`                        | Download the assetbundles                     |            |                                                                                                   |
+| `--tables`                        | Download the tablebundles                     |            |                                                                                                   |
+| `--media`                         | Download the mediaresources                   |            |                                                                                                   |
+| `--output <OUTPUT>`               | Output directory for the downloaded files     | `./output` |                                                                                                   |
+| `--limit <LIMIT>`                 | Set a limit on the concurrent downloads       | `10`       |                                                                                                   |
+| `--retries <RETRIES>`             | Number of retry attempts for failed downloads | `10`       |                                                                                                   |
+| `--filter <FILTER>`               | Filter by name                                |            |                                                                                                   |
+| `--filter-method <FILTER_METHOD>` | Filter method to use                          | `contains` | `exact`, `contains`, `regex`, `fuzzy`, `glob`, `contains-ignore-case`, `starts-with`, `ends-with` |
+| `--help`                          | Print help                                    |            |                                                                                                   |
+
+
+</details>
 
 ## Building
 
