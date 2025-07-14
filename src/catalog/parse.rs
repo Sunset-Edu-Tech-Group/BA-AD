@@ -1,8 +1,9 @@
+use std::path::PathBuf;
 use crate::helpers::{
     ApiData, AssetBundle, BundleDownloadInfo,
     GameFiles, GameResources, GlobalCatalog,
     HashValue, MediaResources, Resource,
-    ServerConfig, ServerRegion, TableResources
+    ServerConfig, ServerRegion, TableResources,
 };
 use crate::utils::{file, json};
 
@@ -12,16 +13,41 @@ use bacy::{MediaCatalog, TableCatalog};
 use reqwest::Client;
 use std::rc::Rc;
 
+struct Paths {
+    asset_path: PathBuf,
+    table_path: PathBuf,
+    media_path: PathBuf,
+    game_path: PathBuf,
+    resource_path: PathBuf,
+    api_path: PathBuf
+}
+
 pub struct CatalogParser {
     client: Client,
     config: Rc<ServerConfig>,
+    paths: Paths
 }
 
 impl CatalogParser {
     pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
+        let data_dir = file::data_dir()?;
+        let api_path = data_dir.join("api_data.json");
+
+        let catalog_dir = match config.region {
+            ServerRegion::Global => data_dir.join("catalog/global"),
+            ServerRegion::Japan =>  data_dir.join("catalog/japan"),
+        };
+        
+        let asset_path = catalog_dir.join("bundleDownloadInfo.json");
+        let table_path = catalog_dir.join("TableCatalog.json");
+        let media_path = catalog_dir.join("MediaCatalog.json");
+        let game_path = catalog_dir.join("GameFiles.json");
+        let resource_path = catalog_dir.join("Resources.json");
+        
         Ok(Self {
             client: Client::new(),
             config,
+            paths: Paths { asset_path, table_path, media_path, game_path, resource_path, api_path }
         })
     }
 
@@ -35,14 +61,9 @@ impl CatalogParser {
             .json::<BundleDownloadInfo>()
             .await
             .handle_errors()?;
-
-
-        let assetbundle_path = file::get_data_path("catalog/japan/bundleDownloadInfo.json")?;
-        let tablebundle_path = file::get_data_path("catalog/japan/TableCatalog.json")?;
-        let mediaresources_path = file::get_data_path("catalog/japan/MediaCatalog.json")?;
         
         json::save_json(
-            &assetbundle_path,
+            &self.paths.asset_path,
             &asset_data
         )
         .await?;
@@ -61,7 +82,7 @@ impl CatalogParser {
         let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).handle_errors()?;
 
         json::save_json(
-            &tablebundle_path,
+            &self.paths.table_path,
             &table_data,
         )
             .await?;
@@ -83,7 +104,7 @@ impl CatalogParser {
         let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url).handle_errors()?;
 
         json::save_json(
-            &mediaresources_path,
+            &self.paths.media_path,
             &media_data,
         )
         .await?;
@@ -94,17 +115,12 @@ impl CatalogParser {
     }
 
     async fn japan_gamefiles(&self, catalog_url: &str) -> Result<()> {
-        let assetbundle_path = file::get_data_path("catalog/japan/bundleDownloadInfo.json")?;
-        let tablebundle_path = file::get_data_path("catalog/japan/TableCatalog.json")?;
-        let mediaresources_path = file::get_data_path("catalog/japan/MediaCatalog.json")?;
-        let gamefile_path = file::get_data_path("catalog/japan/GameFiles.json")?;
-        
         let bundle_info: BundleDownloadInfo =
-            json::load_json(&assetbundle_path).await?;
+            json::load_json(&self.paths.asset_path).await?;
         let table_catalog: TableCatalog =
-            json::load_json(&tablebundle_path).await?;
+            json::load_json(&self.paths.table_path).await?;
         let media_catalog: MediaCatalog =
-            json::load_json(&mediaresources_path).await?;
+            json::load_json(&self.paths.media_path).await?;
 
         let game_resources = GameResources {
             asset_bundles: bundle_info
@@ -145,7 +161,7 @@ impl CatalogParser {
         };
 
         json::save_json(
-            &gamefile_path,
+            &self.paths.game_path,
             &game_resources
         )
         .await?;
@@ -174,15 +190,11 @@ impl CatalogParser {
             .filter(|r| r.resource_path.contains("/TableBundles/"))
             .cloned()
             .collect();
-
-        let assetbundle_path = file::get_data_path("catalog/global/bundleDownloadInfo.json")?;
-        let tablebundle_path = file::get_data_path("catalog/global/TableCatalog.json")?;
-        let mediaresources_path = file::get_data_path("catalog/global/MediaCatalog.json")?;
         
         if !asset_bundles.is_empty() {
             let asset_data = AssetBundle { asset_bundles };
             json::save_json(
-                &assetbundle_path,
+                &self.paths.asset_path,
                 &asset_data
             )
             .await?;
@@ -193,7 +205,7 @@ impl CatalogParser {
         if !table_bundles.is_empty() {
             let table_data = TableResources { table_bundles };
             json::save_json(
-                &tablebundle_path,
+                &self.paths.table_path,
                 &table_data
             )
             .await?;
@@ -204,7 +216,7 @@ impl CatalogParser {
         if !media_resources.is_empty() {
             let media_data = MediaResources { media_resources };
             json::save_json(
-                &mediaresources_path,
+                &self.paths.media_path,
                 &media_data
             )
                 .await?;
@@ -236,10 +248,8 @@ impl CatalogParser {
                 .collect(),
         };
 
-        let gamefile_path = file::get_data_path("catalog/global/GameFiles.json")?;
-
         json::save_json(
-            &gamefile_path,
+            &self.paths.game_path,
             &game_resources
         ).await?;
 
@@ -258,10 +268,7 @@ impl CatalogParser {
     }
 
     pub async fn process_catalogs(&self) -> Result<()> {
-        let api_data_path = file::get_data_path("api_data.json")?;
-        let resources_path = file::get_data_path("catalog/global/Resources.json")?;
-        
-        let api_data: ApiData = json::load_json(&api_data_path).await?;
+        let api_data: ApiData = json::load_json(&self.paths.api_path).await?;
         
         info!("Processing catalogs...");
 
@@ -278,7 +285,7 @@ impl CatalogParser {
             }
             ServerRegion::Global => {
                 let resources: GlobalCatalog =
-                    json::load_json(&resources_path).await?;
+                    json::load_json(&self.paths.resource_path).await?;
                 let catalog_url = &api_data
                     .global
                     .catalog_url

@@ -14,11 +14,11 @@ pub struct CommandHandler {
 }
 
 impl CommandHandler {
-    pub fn new(args: Args) -> Result<Self> {
+    fn new(args: Args) -> Result<Self> {
         Ok(Self { args })
     }
 
-    pub async fn handle(&self) -> Result<()> {
+    async fn handle(&self) -> Result<()> {
         if self.args.clean {
             info!("Cleaning data...");
 
@@ -128,7 +128,7 @@ impl CommandHandler {
 
     async fn process_catalogs(&self, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
         let catalog_fetcher = CatalogFetcher::new(server_config.clone(), apk_fetcher.clone())?;
-        let catalog_parser = CatalogParser::new(server_config.clone())?;
+            let catalog_parser = CatalogParser::new(server_config.clone())?;
 
         catalog_fetcher.get_addressable().await?;
         catalog_fetcher.get_catalogs().await?;

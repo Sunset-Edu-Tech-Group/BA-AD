@@ -13,23 +13,37 @@ use base64::{engine::general_purpose, Engine};
 use reqwest::Client;
 use serde_json::{to_string_pretty, Value};
 use std::fs;
+use std::path::PathBuf;
 use std::rc::Rc;
 use walkdir::WalkDir;
+
+struct Paths {
+    addressable_path: PathBuf,
+    resources_path: PathBuf
+}
 
 pub struct CatalogFetcher {
     client: Client,
     apk_fetcher: Rc<ApkFetcher>,
     config: Rc<ServerConfig>,
+    paths: Paths
 }
 
 impl CatalogFetcher {
     pub fn new(config: Rc<ServerConfig>, apk_fetcher: ApkFetcher) -> Result<Self> {
+        let addressable_path = match config.region {
+            ServerRegion::Global => file::get_data_path("catalog/GlboalAddressables.json")?,
+            ServerRegion::Japan => file::get_data_path("catalog/JapanAddressables.json")?
+        };
+        let resources_path = file::get_data_path("catalog/global/Resources.json")?;
+        
         let client = Client::new();
 
         Ok(Self {
             client,
             apk_fetcher: Rc::new(apk_fetcher),
             config,
+            paths:  Paths { addressable_path, resources_path }
         })
     }
 
@@ -106,9 +120,8 @@ impl CatalogFetcher {
             .await
             .handle_errors()?;
         
-        let addressable_path = file::get_data_path("catalog/JapanAddressables.json")?;
         json::save_json(
-            &addressable_path,
+            &self.paths.addressable_path,
             &catalog
         )
         .await?;
@@ -126,9 +139,8 @@ impl CatalogFetcher {
     async fn japan_catalog(&self) -> Result<String> {
         self.japan_addressable().await?;
 
-        let addressable_path = file::get_data_path("catalog/JapanAddressables.json")?;
         let addressable: JapanAddressable =
-            json::load_json(&addressable_path).await?;
+            json::load_json(&self.paths.addressable_path).await?;
 
         let catalog_url = addressable
             .connection_groups
@@ -172,8 +184,7 @@ impl CatalogFetcher {
             .await
             .handle_errors()?;
 
-        let addressable_path = file::get_data_path("catalog/GlobalAddressables.json")?;
-        json::save_json(&addressable_path, &api).await?;
+        json::save_json(&self.paths.addressable_path, &api).await?;
         
         success!("Saved addressables info");
 
@@ -183,9 +194,8 @@ impl CatalogFetcher {
     async fn global_resources(&self) -> Result<String> {
         self.global_addressable().await?;
 
-        let addressable_path = file::get_data_path("catalog/GlobalAddressables.json")?;
         let addressable: GlobalAddressable =
-            json::load_json(&addressable_path).await?;
+            json::load_json(&self.paths.addressable_path).await?;
 
         let catalog = self
             .client
@@ -198,8 +208,7 @@ impl CatalogFetcher {
             .handle_errors()?;
 
 
-        let resources_path = file::get_data_path("catalog/global/Resources.json")?;
-        json::save_json(&resources_path, &catalog).await?;
+        json::save_json(&self.paths.resources_path, &catalog).await?;
 
         json::update_api_data(|data| {
             data.global.catalog_url = addressable.patch.resource_path;

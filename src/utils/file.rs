@@ -4,15 +4,33 @@ use std::env;
 use std::path::PathBuf;
 use platform_dirs::AppDirs;
 use tokio::fs;
-use once_cell::sync::Lazy;
+use once_cell::sync::{Lazy, OnceCell};
 
-const APP_NAME: &str = env!("CARGO_CRATE_NAME");
+static APP_NAME: OnceCell<String> = OnceCell::new();
+static DATA_DIR: OnceCell<PathBuf> = OnceCell::new();
+
+pub fn set_app_name(name: &str) -> Result<(), String> {
+    APP_NAME.set(name.to_string()).map_err(|s| format!("App name has already been set to: {}", s))
+}
+
+pub fn set_data_dir(path: PathBuf) -> Result<(), String> {
+    DATA_DIR.set(path).map_err(|p| format!("Data directory has already been set to: {:?}", p))
+}
+
+fn app_name() -> &'static str {
+    APP_NAME.get().map(|s| s.as_str()).unwrap_or(env!("CARGO_CRATE_NAME"))
+}
+
 static APP_DIRS: Lazy<Result<AppDirs>> = Lazy::new(|| {
-    AppDirs::new(Option::from(APP_NAME), true)
+    AppDirs::new(Some(app_name()), true)
         .error_context("Failed to create app directories with name")
 });
 
 pub fn data_dir() -> Result<PathBuf> {
+    if let Some(path) = DATA_DIR.get() {
+        return Ok(path.clone());
+    }
+
     (&*APP_DIRS)
         .as_ref()
         .map(|dirs| dirs.data_dir.clone())
