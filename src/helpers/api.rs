@@ -1,4 +1,3 @@
-use bacy::Asset;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -109,12 +108,6 @@ pub struct TableResources {
 #[serde(rename_all = "PascalCase")]
 pub struct JapanAddressable {
     pub connection_groups: Vec<ConnectionGroup>
-}
-
-#[derive(Serialize, Deserialize)]
-#[serde(rename_all = "PascalCase")]
-pub struct BundleDownloadInfo {
-    pub bundle_files: Vec<Asset>,
 }
 
 #[derive(Serialize, Deserialize)]

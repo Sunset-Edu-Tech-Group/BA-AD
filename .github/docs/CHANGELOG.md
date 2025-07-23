@@ -1,5 +1,23 @@
 # Changelogs
 
+## 2.2.0
+
+### Changes
+- Due to Blue Archive Japan changed how AssetBundle downloads, 
+it now downloads via Patch Packs aka zip files
+- Added the ability to download and extract Global apk
+- Updated the File Manager
+  - You don't need to pass `FileManager::new()` anymore
+
+### Fixes
+- Updated extraction method
+- Fixed error `Failed to decode response`
+- Fixed il2cpp path when extracting
+
+### Misc
+- Bump BA-CY to `1.3.5`
+- Remove redundant code
+
 ## v2.0.3
 
 ### Fixes

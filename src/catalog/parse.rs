@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use crate::helpers::{
-    ApiData, AssetBundle, BundleDownloadInfo,
+    ApiData, AssetBundle,
     GameFiles, GameResources, GlobalCatalog,
     HashValue, MediaResources, Resource,
     ServerConfig, ServerRegion, TableResources,
@@ -9,7 +9,7 @@ use crate::utils::{file, json};
 
 use anyhow::Result;
 use baad_core::{errors::{ErrorContext, ErrorExt}, info, success};
-use bacy::{MediaCatalog, TableCatalog};
+use bacy::{Packing, MediaCatalog, TableCatalog};
 use reqwest::Client;
 use std::rc::Rc;
 
@@ -38,7 +38,7 @@ impl CatalogParser {
             ServerRegion::Japan =>  data_dir.join("catalog/japan"),
         };
         
-        let asset_path = catalog_dir.join("bundleDownloadInfo.json");
+        let asset_path = catalog_dir.join("BundlePackingInfo.json");
         let table_path = catalog_dir.join("TableCatalog.json");
         let media_path = catalog_dir.join("MediaCatalog.json");
         let game_path = catalog_dir.join("GameFiles.json");
@@ -54,11 +54,11 @@ impl CatalogParser {
     async fn japan_data(&self, catalog_url: &str) -> Result<()> {
         let asset_data = self
             .client
-            .get(format!("{}/Android/bundleDownloadInfo.json", catalog_url))
+            .get(format!("{}/Android_PatchPack/BundlePackingInfo.json", catalog_url))
             .send()
             .await
             .handle_errors()?
-            .json::<BundleDownloadInfo>()
+            .json::<Packing>()
             .await
             .handle_errors()?;
         
@@ -115,7 +115,7 @@ impl CatalogParser {
     }
 
     async fn japan_gamefiles(&self, catalog_url: &str) -> Result<()> {
-        let bundle_info: BundleDownloadInfo =
+        let bundle_info: Packing =
             json::load_json(&self.paths.asset_path).await?;
         let table_catalog: TableCatalog =
             json::load_json(&self.paths.table_path).await?;
@@ -123,14 +123,13 @@ impl CatalogParser {
             json::load_json(&self.paths.media_path).await?;
 
         let game_resources = GameResources {
-            asset_bundles: bundle_info
-                .bundle_files
-                .into_iter()
-                .map(|bundle| GameFiles {
-                    url: format!("{}/Android/{}", catalog_url, bundle.name),
-                    path: format!("AssetBundles/{}", bundle.name),
-                    hash: HashValue::Crc(bundle.crc),
-                    size: bundle.size,
+            asset_bundles: bundle_info.full_patch_packs.iter()
+                .chain(bundle_info.update_packs.iter())
+                .map(|patch| GameFiles {
+                    url: format!("{}/Android_PatchPack/{}", catalog_url, patch.pack_name),
+                    path: format!("AssetBundles/{}", patch.pack_name),
+                    hash: HashValue::Crc(patch.crc),
+                    size: patch.pack_size,
                 })
                 .collect(),
 
