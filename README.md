@@ -35,6 +35,9 @@ baad download global
 # Force update the APK and fetches the latest catalogs
 baad --update
 
+# Cleans everything, can also use to fix any problems
+baad --clean
+
 # Downloads the TableBundles from JP server and save it in a folder named Downloads
 baad download japan --tables --output ./Downloads
 
