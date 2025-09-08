@@ -1,4 +1,6 @@
-use baad::cli::{parse, Args};
+mod cli;
+
+use cli::{parse, Args};
 use baad_core::VERBOSE;
 
 use anyhow::Result;

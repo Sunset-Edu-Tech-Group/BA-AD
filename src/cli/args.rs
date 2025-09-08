@@ -1,10 +1,10 @@
-use crate::download::FilterMethod;
+use baad::download::FilterMethod;
 
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(name = "baad")]
-#[command(about = "Blue Archive Asset Downloader")]
+#[command(about = "Blue Archive - Asset Downloader")]
 #[command(version)]
 pub struct Args {
     #[command(subcommand)]
@@ -35,13 +35,14 @@ pub enum Commands {
 #[derive(Subcommand)]
 pub enum RegionCommands {
     /// Download from Global server
-    Global(DownloadArgs),
+    Global(GlobalDownloadArgs),
+
     /// Download from Japan server
-    Japan(DownloadArgs),
+    Japan(JapanDownloadArgs),
 }
 
 #[derive(Parser)]
-pub struct DownloadArgs {
+pub struct BaseDownloadArgs {
     /// Download the assetbundles
     #[arg(long)]
     pub assets: bool,
@@ -73,4 +74,24 @@ pub struct DownloadArgs {
     /// Filter method to use
     #[arg(long, value_enum, default_value = "contains")]
     pub filter_method: FilterMethod,
+
+    /// Use Ios build instead of Android
+    #[arg(long)]
+    pub ios: bool,
+}
+
+#[derive(Parser)]
+pub struct GlobalDownloadArgs {
+    #[command(flatten)]
+    pub base: BaseDownloadArgs,
+
+    /// Download Teen assets
+    #[arg(long)]
+    pub teen: bool,
+}
+
+#[derive(Parser)]
+pub struct JapanDownloadArgs {
+    #[command(flatten)]
+    pub base: BaseDownloadArgs,
 }

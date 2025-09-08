@@ -71,14 +71,16 @@ impl ResourceDownloader {
     }
 
     pub async fn download(&self, category: ResourceCategory, filter: Option<ResourceFilter>) -> Result<()> {
-        let game_files_path = match &self.config.region {
-            ServerRegion::Global => file::get_data_path("catalog/global/GameFiles.json")?,
-            ServerRegion::Japan => file::get_data_path("catalog/japan/GameFiles.json")?,
-        };
-
-        let game_resources: GameResources = json::load_json(&game_files_path)
-            .await
-            .error_context("Failed to load game resources - run CatalogParser first")?;
+        let game_resources: GameResources = match &self.config.region {
+            ServerRegion::Global => {
+                let path = file::get_data_path("catalog/global/GameFiles.json")?;
+                json::load_json(&path).await
+            },
+            ServerRegion::Japan => {
+                let path = file::get_data_path("catalog/japan/GameFiles.json")?;
+                json::load_json(&path).await
+            },
+        }.error_context("Failed to load game resources - run CatalogParser first")?;
 
         let collections = Self::get_collections(&category, &game_resources);
 

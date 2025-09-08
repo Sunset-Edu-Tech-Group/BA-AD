@@ -1,5 +1,25 @@
 # Changelogs
 
+## v2.3.0
+
+### Features
+- Added `--ios` flag
+  - Downloads assets from iOS build instead of default Android build
+- Added `--teen` flag
+  - Downloads teen-rated assets (Global only)
+
+### API Changes
+- `ServerConfig::new()` now accepts optional `Platform` and `BuildType` parameters
+- Added `ServerConfig::get_market_config()` method for Global server market details
+- Updated path-related functions to use `&Path` instead of `&PathBuf` for better performance
+- Added platform and build type configuration system
+  - New `Platform` enum (Android, iOS)
+  - New `BuildType` enum (Standard, Teen)
+
+
+### Fixes
+- Improve path loading performance
+
 ## 2.2.0
 
 ### Changes

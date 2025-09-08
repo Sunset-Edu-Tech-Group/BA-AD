@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Error, Result};
 use baad_core::errors::{ErrorContext, ErrorExt};
 use std::env;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use platform_dirs::AppDirs;
 use tokio::fs;
 use once_cell::sync::{Lazy, OnceCell};
@@ -42,16 +42,16 @@ pub fn get_data_path(filename: &str) ->  Result<PathBuf> {
     Ok(data_dir.join(filename))
 }
 
-pub async fn load_file(path: &PathBuf) -> Result<Vec<u8>> {
+pub async fn load_file(path: &Path) -> Result<Vec<u8>> {
     fs::read(path).await.handle_errors()
 }
 
-pub async fn save_file(path: &PathBuf, content: &[u8]) -> Result<()> {
+pub async fn save_file(path: &Path, content: &[u8]) -> Result<()> {
     fs::write(path, content).await.handle_errors()?;
     Ok(())
 }
 
-pub async fn create_parent_dir(path: &PathBuf) -> Result<()> {
+pub async fn create_parent_dir(path: &Path) -> Result<()> {
     if let Some(parent) = path.parent() {
         fs::create_dir_all(parent).await.handle_errors()?;
     }
@@ -68,14 +68,14 @@ pub async fn get_output_dir(path: Option<PathBuf>) -> Result<PathBuf, Error> {
     Ok(output_dir)
 }
 
-pub async fn is_dir_empty(path: &PathBuf) -> Result<bool> {
+pub async fn is_dir_empty(path: &Path) -> Result<bool> {
     Ok(!path.exists()
         || path
         .read_dir()
         .map_or(true, |mut entries| entries.next().is_none()))
 }
 
-pub async fn clear_all(dir: &PathBuf) -> Result<()> {
+pub async fn clear_all(dir: &Path) -> Result<()> {
     if dir.exists() {
         fs::remove_dir_all(dir).await.handle_errors()?;
         fs::create_dir_all(dir).await.handle_errors()?;
