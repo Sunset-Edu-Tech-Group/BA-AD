@@ -16,7 +16,7 @@ use base64::{engine::general_purpose, Engine};
 use reqwest::Client;
 use serde_json::{to_string_pretty, Value};
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 use std::rc::Rc;
 use walkdir::WalkDir;
 
