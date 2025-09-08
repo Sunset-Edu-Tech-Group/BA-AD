@@ -1,31 +1,35 @@
-use std::path::PathBuf;
 use crate::helpers::{
     ApiData, AssetBundle,
-    GameFiles, GameResources, GlobalCatalog,
-    HashValue, MediaResources, Resource,
+    GameFiles, GameFilesBundles,
+    GlobalCatalog, GlobalGameResources,
+    HashValue, JapanGameResources,
+    MediaResources, Platform, Resource,
     ServerConfig, ServerRegion, TableResources,
 };
 use crate::utils::{file, json};
 
 use anyhow::Result;
 use baad_core::{errors::{ErrorContext, ErrorExt}, info, success};
-use bacy::{Packing, MediaCatalog, TableCatalog};
+use bacy::{MediaCatalog, Packing, TableCatalog};
 use reqwest::Client;
+use std::path::Path;
 use std::rc::Rc;
 
 struct Paths {
-    asset_path: PathBuf,
-    table_path: PathBuf,
-    media_path: PathBuf,
-    game_path: PathBuf,
-    resource_path: PathBuf,
-    api_path: PathBuf
+    asset_path: Box<Path>,
+    table_path: Box<Path>,
+    media_path: Box<Path>,
+    game_path: Box<Path>,
+    resource_path: Box<Path>,
+    api_path: Box<Path>,
+    patch_pack_path: &'static str,
+    platform_path: &'static str,
 }
 
 pub struct CatalogParser {
     client: Client,
     config: Rc<ServerConfig>,
-    paths: Paths
+    paths: Paths,
 }
 
 impl CatalogParser {
@@ -44,17 +48,36 @@ impl CatalogParser {
         let game_path = catalog_dir.join("GameFiles.json");
         let resource_path = catalog_dir.join("Resources.json");
         
+        let patch_pack_path = match config.platform {
+            Platform::Android => "Android_PatchPack",
+            Platform::Ios => "iOS_PatchPack",
+        };
+        
+        let platform_path = match config.platform {
+            Platform::Android => "/Android/",
+            Platform::Ios => "/iOS/",
+        };
+        
         Ok(Self {
             client: Client::new(),
             config,
-            paths: Paths { asset_path, table_path, media_path, game_path, resource_path, api_path }
+            paths: Paths { 
+                asset_path: asset_path.into_boxed_path(),
+                table_path: table_path.into_boxed_path(),
+                media_path: media_path.into_boxed_path(),
+                game_path: game_path.into_boxed_path(),
+                resource_path: resource_path.into_boxed_path(),
+                api_path: api_path.into_boxed_path(),
+                patch_pack_path, 
+                platform_path 
+            },
         })
     }
 
     async fn japan_data(&self, catalog_url: &str) -> Result<()> {
         let asset_data = self
             .client
-            .get(format!("{}/Android_PatchPack/BundlePackingInfo.json", catalog_url))
+            .get(format!("{}/{}/BundlePackingInfo.json", catalog_url, self.paths.patch_pack_path))
             .send()
             .await
             .handle_errors()?
@@ -122,14 +145,15 @@ impl CatalogParser {
         let media_catalog: MediaCatalog =
             json::load_json(&self.paths.media_path).await?;
 
-        let game_resources = GameResources {
+        let game_resources = JapanGameResources {
             asset_bundles: bundle_info.full_patch_packs.iter()
                 .chain(bundle_info.update_packs.iter())
-                .map(|patch| GameFiles {
-                    url: format!("{}/Android_PatchPack/{}", catalog_url, patch.pack_name),
+                .map(|patch| GameFilesBundles {
+                    url: format!("{}/{}/{}", catalog_url, self.paths.patch_pack_path, patch.pack_name),
                     path: format!("AssetBundles/{}", patch.pack_name),
                     hash: HashValue::Crc(patch.crc),
                     size: patch.pack_size,
+                    bundle_files: patch.bundle_files.iter().map(|bundle| bundle.name.clone()).collect(),
                 })
                 .collect(),
 
@@ -173,7 +197,7 @@ impl CatalogParser {
     async fn global_data(&self, resources: &[Resource]) -> Result<()> {
         let asset_bundles: Vec<Resource> = resources
             .iter()
-            .filter(|r| r.resource_path.contains("/Android/"))
+            .filter(|r| r.resource_path.contains(self.paths.platform_path))
             .cloned()
             .collect();
 
@@ -227,10 +251,10 @@ impl CatalogParser {
     }
 
     async fn global_gamefiles(&self, catalog_url: &str, resources: &[Resource]) -> Result<()> {
-        let game_resources = GameResources {
+        let game_resources = GlobalGameResources {
             asset_bundles: resources
                 .iter()
-                .filter(|r| r.resource_path.contains("/Android/"))
+                .filter(|r| r.resource_path.contains(self.paths.platform_path))
                 .map(|r| self.resource_to_gamefiles(r, catalog_url, "AssetBundles"))
                 .collect(),
 

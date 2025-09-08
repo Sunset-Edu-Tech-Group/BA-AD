@@ -17,7 +17,7 @@ pub struct ExtractionRule<'a> {
     pub apk: &'a str,
     pub path: &'a [&'a str],
     pub pattern: &'a str,
-    pub output: PathBuf,
+    pub output: Box<Path>,
 }
 
 pub struct ApkExtractor {
@@ -26,9 +26,7 @@ pub struct ApkExtractor {
 
 impl ApkExtractor {
     pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
-        Ok(Self {
-            config,
-        })
+        Ok(Self { config })
     }
 
     pub fn extract(&self, rule: ExtractionRule) -> Result<()> {
@@ -96,7 +94,7 @@ impl ApkExtractor {
             },
             path: DATA_PATH,
             pattern: DATA_PATTERN,
-            output: file::get_data_path("data")?,
+            output: file::get_data_path("data")?.into_boxed_path(),
         };
 
         self.extract(rule)
@@ -105,7 +103,7 @@ impl ApkExtractor {
     pub fn extract_il2cpp(&self) -> Result<()> {
         let il2cpp_path: PathBuf = match self.config.region {
             ServerRegion::Global => file::get_data_path("il2cpp/global")?,
-            ServerRegion::Japan => file::get_data_path("il2cpp/japan")?
+            ServerRegion::Japan => file::get_data_path("il2cpp/japan")?,
         };
 
         info!("Extracting IL2CPP files...");
@@ -114,7 +112,7 @@ impl ApkExtractor {
             apk: CONFIG_APK,
             path: LIBIL2CPP_PATH,
             pattern: LIBIL2CPP_PATTERN,
-            output: il2cpp_path.clone(),
+            output: il2cpp_path.clone().into_boxed_path(),
         };
         self.extract(lib_rule)?;
 
@@ -125,7 +123,7 @@ impl ApkExtractor {
             },
             path: METADATA_PATH,
             pattern: METADATA_PATTERN,
-            output: il2cpp_path,
+            output: il2cpp_path.into_boxed_path(),
         };
         self.extract(metadata_rule)?;
 
