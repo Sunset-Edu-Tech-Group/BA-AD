@@ -51,7 +51,13 @@ baad download japan --assets --media
 baad download global --assets --limit 15 
 
 # Downloads all AssetBundles, TableBundles, and MediaResources from JP server that contains CH0069 in it using fuzzy search  
-baad download japan --filter "CH0069" --filter-method fuzzy 
+baad download japan --filter "CH0069" --filter-method fuzzy
+
+# Downloads all teen AssetBundles from the Global server using iOS platform
+baad download global --assets --ios --teen
+
+# Downloads all AssetBundles from the JP server using iOS platform 
+baad download japan --assets --ios
 ```
 
 <details>
@@ -93,6 +99,8 @@ baad download japan --filter "CH0069" --filter-method fuzzy
 | `--retries <RETRIES>`             | Number of retry attempts for failed downloads | `10`       |                                                                                                   |
 | `--filter <FILTER>`               | Filter by name                                |            |                                                                                                   |
 | `--filter-method <FILTER_METHOD>` | Filter method to use                          | `contains` | `exact`, `contains`, `regex`, `fuzzy`, `glob`, `contains-ignore-case`, `starts-with`, `ends-with` |
+| `--ios`                           | Use Ios build instead of Android              |            |                                                                                                   | 
+| `--teen`                          | Download Teen assets (Global only)            |            |                                                                                                   | 
 | `--help`                          | Print help                                    |            |                                                                                                   |
 
 
