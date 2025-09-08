@@ -1,23 +1,37 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+fn default_platform() -> String {
+    "Android".to_string()
+}
+
+fn default_build_type() -> String {
+    "Standard".to_string()
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct JapanData {
     pub version: String,
     pub catalog_url: String,
-    pub addressable_url: String
+    pub addressable_url: String,
+    #[serde(default = "default_platform")]
+    pub platform: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct GlobalData {
     pub version: String,
-    pub catalog_url: String
+    pub catalog_url: String,
+    #[serde(default = "default_platform")]
+    pub platform: String,
+    #[serde(default = "default_build_type")]
+    pub build_type: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct ApiData {
     pub japan: JapanData,
-    pub global: GlobalData
+    pub global: GlobalData,
 }
 
 #[derive(Deserialize, Serialize)]
@@ -28,14 +42,14 @@ pub struct GlobalAddressable {
     pub latest_build_number: String,
     pub min_build_version: String,
     pub min_build_number: String,
-    pub patch: GlobalPatch
+    pub patch: GlobalPatch,
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct GlobalPatch {
     pub patch_version: i32,
     pub resource_path: String,
-    pub bdiff_path: Vec<HashMap<String, String>>
+    pub bdiff_path: Vec<HashMap<String, String>>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -61,7 +75,7 @@ pub struct GlobalCatalog {
     pub use_multi_resource: bool,
     pub category: Category,
     pub category_mapping: Vec<CategoryMapping>,
-    pub resources: Vec<Resource>
+    pub resources: Vec<Resource>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -69,13 +83,13 @@ pub struct Category {
     pub lang: Option<String>,
     pub texture_encode_type: Option<String>,
     pub texture_quality_level: Option<String>,
-    pub group: Vec<String>
+    pub group: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct CategoryMapping {
     pub group: String,
-    pub paths: Vec<String>
+    pub paths: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -83,31 +97,31 @@ pub struct Resource {
     pub group: String,
     pub resource_path: String,
     pub resource_size: i64,
-    pub resource_hash: String
+    pub resource_hash: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct AssetBundle {
     #[serde(rename = "AssetBundles")]
-    pub asset_bundles: Vec<Resource>
+    pub asset_bundles: Vec<Resource>,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct MediaResources {
     #[serde(rename = "MediaResources")]
-    pub media_resources: Vec<Resource>
+    pub media_resources: Vec<Resource>,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct TableResources {
     #[serde(rename = "TableBundles")]
-    pub table_bundles: Vec<Resource>
+    pub table_bundles: Vec<Resource>,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct JapanAddressable {
-    pub connection_groups: Vec<ConnectionGroup>
+    pub connection_groups: Vec<ConnectionGroup>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -123,14 +137,14 @@ pub struct ConnectionGroup {
     pub prohibited_word_white_list_uri: String,
     pub customer_service_url: String,
     pub override_connection_groups: Vec<OverrideConnectionGroup>,
-    pub bundle_version: String
+    pub bundle_version: String,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct OverrideConnectionGroup {
     pub name: String,
-    pub addressables_catalog_url_root: String
+    pub addressables_catalog_url_root: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -139,7 +153,7 @@ pub struct GameMainConfig {
     pub server_info_data_url: String,
     pub default_connection_group: String,
     pub skip_tutorial: String,
-    pub language: String
+    pub language: String,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -152,16 +166,36 @@ pub enum HashValue {
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-pub struct GameFiles {
+pub struct GameFilesBundles {
     pub url: String,
     pub path: String,
     pub hash: HashValue,
-    pub size: i64
+    pub size: i64,
+
+    #[serde(default)]
+    pub bundle_files: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "PascalCase")]
-pub struct GameResources {
+pub struct GameFiles {
+    pub url: String,
+    pub path: String,
+    pub hash: HashValue,
+    pub size: i64,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct JapanGameResources {
+    pub asset_bundles: Vec<GameFilesBundles>,
+    pub table_bundles: Vec<GameFiles>,
+    pub media_resources: Vec<GameFiles>,
+}
+
+#[derive(Serialize, Deserialize)]
+#[serde(rename_all = "PascalCase")]
+pub struct GlobalGameResources {
     pub asset_bundles: Vec<GameFiles>,
     pub table_bundles: Vec<GameFiles>,
     pub media_resources: Vec<GameFiles>,
