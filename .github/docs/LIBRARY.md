@@ -14,40 +14,50 @@ baad = { git = "https://github.com/Deathemonic/BA-AD" }
 Below are examples of common operations using the library:
 
 ```rust
-use baad::utils::FileManager;
 use baad::apk::{ApkFetcher, ApkExtractor};
-use baad::catalog::CatalogFetcher;
+use baad::catalog::{CatalogFetcher, CatalogParser};
 use baad::download::{ResourceDownloader, ResourceCategory, ResourceFilter};
-use baad::helpers::{ServerConfig, ServerRegion};
+use baad::helpers::{ServerConfig, ServerRegion, Platform, BuildType};
 
 use anyhow::Result;
 use std::path::PathBuf;
+use std::rc::Rc;
 
 async fn example() -> Result<()> {
-    // Configure for Japan or Global server
-    let config = ServerConfig::new(ServerRegion::Japan)?; 
+    // Configure for Japan server with default Android/Standard build
+    let config = ServerConfig::new(ServerRegion::Japan, None, None)?;
+    
+    // Configure for Global server with iOS and Teen build
+    let global_config = ServerConfig::new(
+        ServerRegion::Global, 
+        Some(Platform::Ios), 
+        Some(BuildType::Teen)
+    )?;
 
     // Check for APK updates and download if needed
-    let apk_fetcher = ApkFetcher::new(file_manager.clone(), config.clone())?;
-    let (version, apk_path, updated) = apk_fetcher.download_apk(false).await?;
-    println!("APK version: {}, updated: {}", version, updated);
+    let apk_fetcher = ApkFetcher::new(config.clone())?;
+    apk_fetcher.download_apk(false).await?;
 
-    // Extract data from APK
-    if updated {
+    // Extract data from APK (Japan only)
+    if config.region == ServerRegion::Japan {
         let extractor = ApkExtractor::new(config.clone())?;
         extractor.extract_data()?;
     }
 
     // Fetch game catalogs
-    let catalog_fetcher = CatalogFetcher::new(config.clone(), apk_fetcher.clone())?;
-    let catalog_data = catalog_fetcher.get_catalogs().await?;
+    let catalog_fetcher = CatalogFetcher::new(config.clone(), apk_fetcher)?;
+    catalog_fetcher.get_addressable().await?;
+    catalog_fetcher.get_catalogs().await?;
+    
+    // Process catalogs into downloadable resources
+    let catalog_parser = CatalogParser::new(config.clone())?;
+    catalog_parser.process_catalogs().await?;
 
     // Download resources
     let downloader = ResourceDownloader::new(
         Some(PathBuf::from("./output")), 
-        file_manager.clone(), 
         config.clone()
-    )?;
+    ).await?;
 
     // Download all asset bundles
     downloader.download(ResourceCategory::Assets, None).await?;
@@ -64,18 +74,53 @@ async fn example() -> Result<()> {
 
 ### ServerConfig
 
-Here you can set which server you want to download:
+Configure which server, platform, and build type you want to download:
 
 ```rust
-use baad::helpers::ServerConfig;
-use baad::helpers::ServerRegion;
+use baad::helpers::{ServerConfig, ServerRegion, Platform, BuildType};
 
-// JP server
-let japan_config = ServerConfig::new(ServerRegion::Japan)?;
+// Japan server with default Android/Standard build
+let japan_config = ServerConfig::new(ServerRegion::Japan, None, None)?;
 
-// Global server
-let global_config = ServerConfig::new(ServerRegion::Global)?;
+// Japan server with iOS build
+let japan_ios_config = ServerConfig::new(
+    ServerRegion::Japan, 
+    Some(Platform::Ios), 
+    None
+)?;
+
+// Global server with default Android/Standard build
+let global_config = ServerConfig::new(ServerRegion::Global, None, None)?;
+
+// Global server with iOS build
+let global_ios_config = ServerConfig::new(
+    ServerRegion::Global, 
+    Some(Platform::Ios), 
+    None
+)?;
+
+// Global server with Teen build (Android)
+let global_teen_config = ServerConfig::new(
+    ServerRegion::Global, 
+    None, 
+    Some(BuildType::Teen)
+)?;
+
+// Global server with iOS Teen build
+let global_ios_teen_config = ServerConfig::new(
+    ServerRegion::Global, 
+    Some(Platform::Ios), 
+    Some(BuildType::Teen)
+)?;
+
+// Get market configuration (Global only)
+if let Some(market_config) = global_config.get_market_config() {
+    println!("Market ID: {}", market_config.market_game_id);
+    println!("Market Code: {}", market_config.market_code);
+}
 ```
+
+**Note**: The `--teen` build type is only available for the Global server. Attempting to use `BuildType::Teen` with `ServerRegion::Japan` will return an error.
 
 ### ApkFetcher
 
@@ -94,26 +139,27 @@ if let Some(version) = new_version {
 }
 
 // Download APK (with force flag to override existing files)
-let (version, apk_path, updated) = apk_fetcher.download_apk(true).await?;
+apk_fetcher.download_apk(true).await?;
 ```
 
-### CatalogFetcher
+### CatalogFetcher & CatalogParser
 
 Fetch and process game catalogs containing asset information:
 
 ```rust
-use baad::catalog::CatalogFetcher;
+use baad::catalog::{CatalogFetcher, CatalogParser};
 
-let catalog_fetcher = CatalogFetcher::new(
-    config.clone(), 
-    apk_fetcher.clone()
-)?;
+let catalog_fetcher = CatalogFetcher::new(config.clone(), apk_fetcher)?;
+
+// Get addressable data first
+let addressable_json = catalog_fetcher.get_addressable().await?;
 
 // Get catalog data
 let catalog_json = catalog_fetcher.get_catalogs().await?;
 
-// Get addressable data
-let addressable_json = catalog_fetcher.get_addressable().await?;
+// Process catalogs into downloadable resources
+let catalog_parser = CatalogParser::new(config.clone())?;
+catalog_parser.process_catalogs().await?;
 ```
 
 ### ResourceDownloader
@@ -127,14 +173,15 @@ use baad::download::{ResourceDownloader, ResourceDownloadBuilder, ResourceCatego
 let downloader = ResourceDownloader::new(
     Some(PathBuf::from("./output")), 
     config.clone()
-)?;
+).await?;
 
 // Or use the builder pattern for more options
 let downloader = ResourceDownloadBuilder::new(config.clone())?
     .output(Some(PathBuf::from("./output")))
     .retries(5)
     .limit(10)
-    .build()?;
+    .build()
+    .await?;
 
 // Download different resource categories
 downloader.download(ResourceCategory::Assets, None).await?; // All assets
@@ -150,10 +197,12 @@ let categories = ResourceCategory::multiple(vec![
 downloader.download(categories, None).await?;
 
 // Apply filters
-let exact_filter = ResourceFilter::exact("CharacterData")?;
-let contains_filter = ResourceFilter::contains("sprite")?;
-let regex_filter = ResourceFilter::regex(r"character_\d+\.bundle")?;
-let glob_filter = ResourceFilter::glob("**/textures/*.png")?;
+use baad::download::FilterMethod;
+
+let exact_filter = ResourceFilter::new("CharacterData", FilterMethod::Exact)?;
+let contains_filter = ResourceFilter::new("sprite", FilterMethod::Contains)?;
+let regex_filter = ResourceFilter::new(r"character_\d+\.bundle", FilterMethod::Regex)?;
+let glob_filter = ResourceFilter::new("**/textures/*.png", FilterMethod::Glob)?;
 
 // Download with filter
 downloader.download(ResourceCategory::Assets, Some(contains_filter)).await?;
@@ -180,7 +229,7 @@ let rule = ExtractionRule {
     apk: "com.YostarJP.BlueArchive.apk",
     path: &["assets", "bin", "Data"],
     pattern: "globalgamemanagers",
-    output: PathBuf::from("./extracted"),
+    output: PathBuf::from("./extracted").into_boxed_path(),
 };
 extractor.extract(rule)?;
 ```

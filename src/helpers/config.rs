@@ -1,4 +1,5 @@
-use anyhow::{Error, Result};
+use anyhow::Result;
+use baad_core::errors::ErrorContext;
 use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};
 use std::rc::Rc;
@@ -36,27 +37,77 @@ pub enum ServerRegion {
     Japan,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Platform {
+    Android,
+    Ios,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BuildType {
+    Standard,
+    Teen,
+}
+
 pub struct ServerConfig {
     pub region: ServerRegion,
+    pub platform: Platform,
+    pub build_type: BuildType,
     pub version_url: String,
-    pub apk_path: String
+    pub apk_path: String,
+}
+
+pub struct MarketConfig {
+    pub market_game_id: String,
+    pub market_code: String,
 }
 
 impl ServerConfig {
-    pub fn new(server: ServerRegion) -> Result<Rc<Self>, Error> {
+    pub fn new(server: ServerRegion, platform: Option<Platform>, build_type: Option<BuildType>) -> Result<Rc<Self>> {
+        let platform = platform.unwrap_or(Platform::Android);
+        let build_type = build_type.unwrap_or(BuildType::Standard);
+        
+        if build_type == BuildType::Teen && server != ServerRegion::Global {
+            return None.error_context("Teen build is only available for Global server");
+        }
+
         let config = match server {
             ServerRegion::Global => Self {
                 region: server,
+                platform,
+                build_type,
                 version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive".to_string(),
                 apk_path: "apk/BlueArchiveGlobal.xapk".to_string(),
             },
             ServerRegion::Japan => Self {
                 region: server,
+                platform,
+                build_type,
                 version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
                 apk_path: "apk/BlueArchiveJP.xapk".to_string(),
             },
         };
+
         Ok(Rc::new(config))
+    }
+
+    pub fn get_market_config(&self) -> Option<MarketConfig> {
+        match self.region {
+            ServerRegion::Global => {
+                let (market_game_id, market_code) = match (self.platform, self.build_type) {
+                    (Platform::Android, BuildType::Standard) => ("com.nexon.bluearchive", "playstore"),
+                    (Platform::Android, BuildType::Teen) => ("com.nexon.bluearchiveteen", "playstore"),
+                    (Platform::Ios, BuildType::Standard) => ("1571873795", "appstore"),
+                    (Platform::Ios, BuildType::Teen) => ("6443698027", "appstore"),
+                };
+                
+                Some(MarketConfig {
+                    market_game_id: market_game_id.to_string(),
+                    market_code: market_code.to_string(),
+                })
+            },
+            ServerRegion::Japan => None,
+        }
     }
 }
 

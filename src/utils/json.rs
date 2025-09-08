@@ -4,9 +4,9 @@ use crate::utils::file;
 use anyhow::Result;
 use baad_core::errors::{ErrorContext, ErrorExt};
 use serde::{de::DeserializeOwned, Serialize};
-use std::path::PathBuf;
+use std::path::Path;
 
-pub async fn load_json<T: DeserializeOwned>(path: &PathBuf) -> Result<T> {
+pub async fn load_json<T: DeserializeOwned>(path: &Path) -> Result<T> {
     let bytes = file::load_file(path).await?;
 
     let json_data = String::from_utf8(bytes).error_context("Failed to convert file content to UTF-8")?;
@@ -14,7 +14,7 @@ pub async fn load_json<T: DeserializeOwned>(path: &PathBuf) -> Result<T> {
 }
 
 
-pub async fn save_json<T: Serialize>(path: &PathBuf, data: &T) -> Result<()> {
+pub async fn save_json<T: Serialize>(path: &Path, data: &T) -> Result<()> {
     let json_data = serde_json::to_string_pretty(data).handle_errors()?;
 
     file::create_parent_dir(&path).await?;

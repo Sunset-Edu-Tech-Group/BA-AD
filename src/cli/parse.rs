@@ -1,9 +1,11 @@
-use crate::apk::{ApkExtractor, ApkFetcher};
-use crate::catalog::{CatalogFetcher, CatalogParser};
-use crate::cli::args::{Args, Commands, DownloadArgs, RegionCommands};
-use crate::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
-use crate::helpers::{ServerConfig, ServerRegion};
-use crate::utils::file;
+use crate::cli::args::{
+    Args, BaseDownloadArgs, Commands, GlobalDownloadArgs, JapanDownloadArgs, RegionCommands,
+};
+use baad::apk::{ApkExtractor, ApkFetcher};
+use baad::catalog::{CatalogFetcher, CatalogParser};
+use baad::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
+use baad::helpers::{BuildType, Platform, ServerConfig, ServerRegion};
+use baad::utils::file;
 
 use anyhow::Result;
 use baad_core::{errors::ErrorContext, info, success};
@@ -45,12 +47,10 @@ impl CommandHandler {
     async fn handle_download(&self, region: &RegionCommands) -> Result<()> {
         match region {
             RegionCommands::Global(download_args) => {
-                self.execute_download(ServerRegion::Global, download_args)
-                    .await
+                self.execute_global_download(download_args).await
             }
             RegionCommands::Japan(download_args) => {
-                self.execute_download(ServerRegion::Japan, download_args)
-                    .await
+                self.execute_japan_download(download_args).await
             }
         }
     }
@@ -58,7 +58,7 @@ impl CommandHandler {
     async fn handle_update(&self) -> Result<()> {
         info!("Forcing update...");
 
-        let server_config = ServerConfig::new(ServerRegion::Japan)?;
+        let server_config = ServerConfig::new(ServerRegion::Japan, None, None)?;
         let apk_fetcher = ApkFetcher::new(server_config.clone())?;
 
         apk_fetcher.download_apk(true).await?;
@@ -66,24 +66,59 @@ impl CommandHandler {
         Ok(())
     }
 
-    async fn execute_download(&self, region: ServerRegion, args: &DownloadArgs) -> Result<()> {
-        let server_config = ServerConfig::new(region)?;
+    async fn execute_global_download(&self, args: &GlobalDownloadArgs) -> Result<()> {
+        let platform = if args.base.ios {
+            Some(Platform::Ios)
+        } else {
+            None
+        };
+        let build_type = if args.teen {
+            Some(BuildType::Teen)
+        } else {
+            None
+        };
+
+        let server_config = ServerConfig::new(ServerRegion::Global, platform, build_type)?;
         let apk_fetcher = ApkFetcher::new(server_config.clone())?;
 
-        let should_process_catalogs = match region {
-            ServerRegion::Japan => {
-                let should_process = self.handle_japan(&apk_fetcher).await?;
+        let should_process_catalogs = self.handle_global(&apk_fetcher).await?;
 
-                if should_process {
-                    apk_fetcher.download_apk(self.args.update).await?;
+        if should_process_catalogs {
+            apk_fetcher.check_version().await?;
+            self.process_catalogs(&server_config, &apk_fetcher).await?;
+        }
 
-                    let apk_extractor = ApkExtractor::new(server_config.clone())?;
-                    apk_extractor.extract_data()?;
-                }
+        if !should_process_catalogs {
+            info!("Catalog files exist and are up to date, skipping catalog processing");
+        }
 
-                should_process
+        self.download_resources(&server_config, &args.base).await?;
+
+        Ok(())
+    }
+
+    async fn execute_japan_download(&self, args: &JapanDownloadArgs) -> Result<()> {
+        let platform = if args.base.ios {
+            Some(Platform::Ios)
+        } else {
+            None
+        };
+        let build_type = None;
+
+        let server_config = ServerConfig::new(ServerRegion::Japan, platform, build_type)?;
+        let apk_fetcher = ApkFetcher::new(server_config.clone())?;
+
+        let should_process_catalogs = {
+            let should_process = self.handle_japan(&apk_fetcher).await?;
+
+            if should_process {
+                apk_fetcher.download_apk(self.args.update).await?;
+
+                let apk_extractor = ApkExtractor::new(server_config.clone())?;
+                apk_extractor.extract_data()?;
             }
-            ServerRegion::Global => self.handle_global(&apk_fetcher).await?,
+
+            should_process
         };
 
         if should_process_catalogs {
@@ -95,7 +130,7 @@ impl CommandHandler {
             info!("Catalog files exist and are up to date, skipping catalog processing");
         }
 
-        self.download_resources(&server_config, args).await?;
+        self.download_resources(&server_config, &args.base).await?;
 
         Ok(())
     }
@@ -126,9 +161,13 @@ impl CommandHandler {
         apk_fetcher.needs_catalog_update().await
     }
 
-    async fn process_catalogs(&self, server_config: &Rc<ServerConfig>, apk_fetcher: &ApkFetcher) -> Result<()> {
+    async fn process_catalogs(
+        &self,
+        server_config: &Rc<ServerConfig>,
+        apk_fetcher: &ApkFetcher,
+    ) -> Result<()> {
         let catalog_fetcher = CatalogFetcher::new(server_config.clone(), apk_fetcher.clone())?;
-            let catalog_parser = CatalogParser::new(server_config.clone())?;
+        let catalog_parser = CatalogParser::new(server_config.clone())?;
 
         catalog_fetcher.get_addressable().await?;
         catalog_fetcher.get_catalogs().await?;
@@ -137,7 +176,11 @@ impl CommandHandler {
         Ok(())
     }
 
-    async fn download_resources(&self, server_config: &Rc<ServerConfig>, args: &DownloadArgs) -> Result<()> {
+    async fn download_resources(
+        &self,
+        server_config: &Rc<ServerConfig>,
+        args: &BaseDownloadArgs,
+    ) -> Result<()> {
         let resource_downloader = ResourceDownloadBuilder::new(server_config.clone())?
             .limit(args.limit as u64)
             .retries(args.retries)
@@ -154,7 +197,7 @@ impl CommandHandler {
         Ok(())
     }
 
-    fn resource_category(&self, args: &DownloadArgs) -> ResourceCategory {
+    fn resource_category(&self, args: &BaseDownloadArgs) -> ResourceCategory {
         let has_assets = args.assets;
         let has_tables = args.tables;
         let has_media = args.media;
@@ -177,7 +220,7 @@ impl CommandHandler {
         }
     }
 
-    fn resource_filter(&self, args: &DownloadArgs) -> Result<Option<ResourceFilter>> {
+    fn resource_filter(&self, args: &BaseDownloadArgs) -> Result<Option<ResourceFilter>> {
         let Some(filter_pattern) = &args.filter else {
             if !matches!(args.filter_method, FilterMethod::Contains) {
                 let filter_method_name = format!("{:?}", args.filter_method).to_lowercase();

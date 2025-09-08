@@ -1,6 +1,6 @@
 use crate::helpers::{
-    ApiData, GLOBAL_REGEX_VERSION, GLOBAL_URL, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION, ServerConfig,
-    ServerRegion, apk_headers,
+    apk_headers, ApiData, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION, GLOBAL_URL,
+    JAPAN_REGEX_URL, JAPAN_REGEX_VERSION,
 };
 use crate::utils::{file, json, network};
 
@@ -11,7 +11,7 @@ use baad_core::{
     info, success, warn,
 };
 use reqwest::{Client, Url};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use tokio::fs;
 use trauma::download::Download;
@@ -114,7 +114,7 @@ impl ApkFetcher {
         Ok(Some(version))
     }
 
-    async fn check_apk(&self, download_url: &str, apk_path: &PathBuf) -> Result<bool> {
+    async fn check_apk(&self, download_url: &str, apk_path: &Path) -> Result<bool> {
         if !apk_path.exists() {
             return Ok(true);
         }
@@ -170,7 +170,7 @@ impl ApkFetcher {
         }
     }
 
-    pub async fn needs_update(&self, download_url: &str, apk_path: &PathBuf) -> Result<bool> {
+    pub async fn needs_update(&self, download_url: &str, apk_path: &Path) -> Result<bool> {
         let needs_download = self.check_apk(download_url, apk_path).await?;
 
         if !needs_download {
