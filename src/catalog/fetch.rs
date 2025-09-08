@@ -130,6 +130,7 @@ impl CatalogFetcher {
 
         json::update_api_data(|data| {
             data.japan.addressable_url = api_url;
+            data.japan.platform = format!("{:?}", self.config.platform);
         })
         .await?;
 
@@ -152,6 +153,7 @@ impl CatalogFetcher {
 
         json::update_api_data(|data| {
             data.japan.catalog_url = catalog_url.to_string();
+            data.japan.platform = format!("{:?}", self.config.platform);
         })
         .await?;
 
@@ -221,6 +223,8 @@ impl CatalogFetcher {
 
         json::update_api_data(|data| {
             data.global.catalog_url = addressable.patch.resource_path;
+            data.global.platform = format!("{:?}", self.config.platform);
+            data.global.build_type = format!("{:?}", self.config.build_type);
         })
         .await?;
 

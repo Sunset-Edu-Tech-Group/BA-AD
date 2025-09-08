@@ -1,17 +1,31 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+fn default_platform() -> String {
+    "Android".to_string()
+}
+
+fn default_build_type() -> String {
+    "Standard".to_string()
+}
+
 #[derive(Serialize, Deserialize)]
 pub struct JapanData {
     pub version: String,
     pub catalog_url: String,
-    pub addressable_url: String
+    pub addressable_url: String,
+    #[serde(default = "default_platform")]
+    pub platform: String,
 }
 
 #[derive(Serialize, Deserialize)]
 pub struct GlobalData {
     pub version: String,
-    pub catalog_url: String
+    pub catalog_url: String,
+    #[serde(default = "default_platform")]
+    pub platform: String,
+    #[serde(default = "default_build_type")]
+    pub build_type: String,
 }
 
 #[derive(Serialize, Deserialize)]

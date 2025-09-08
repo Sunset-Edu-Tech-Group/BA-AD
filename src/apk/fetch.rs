@@ -104,10 +104,19 @@ impl ApkFetcher {
 
     pub async fn check_version(&self) -> Result<Option<String>> {
         let version = self.get_version().await?;
+        let platform = format!("{:?}", self.config.platform);
+        let build_type = format!("{:?}", self.config.build_type);
 
         json::update_api_data(|data| match &self.config.region {
-            ServerRegion::Global => data.global.version = version.clone(),
-            ServerRegion::Japan => data.japan.version = version.clone(),
+            ServerRegion::Global => {
+                data.global.version = version.clone();
+                data.global.platform = platform.clone();
+                data.global.build_type = build_type.clone();
+            }
+            ServerRegion::Japan => {
+                data.japan.version = version.clone();
+                data.japan.platform = platform;
+            }
         })
         .await?;
 
@@ -156,16 +165,41 @@ impl ApkFetcher {
         let current_version = self.get_version().await?;
         let api_data: ApiData = json::load_json(&api_data_path).await?;
 
-        let cached_version = match &self.config.region {
-            ServerRegion::Global => &api_data.global.version,
-            ServerRegion::Japan => &api_data.japan.version,
+        let (cached_version, cached_platform, cached_build_type) = match &self.config.region {
+            ServerRegion::Global => (
+                &api_data.global.version,
+                &api_data.global.platform,
+                &api_data.global.build_type,
+            ),
+            ServerRegion::Japan => (
+                &api_data.japan.version,
+                &api_data.japan.platform,
+                &"Standard".to_string(),
+            ),
         };
+
+        let current_platform = format!("{:?}", self.config.platform);
+        let current_build_type = format!("{:?}", self.config.build_type);
 
         if current_version != *cached_version {
             info!("Version has changed, updating catalogs...");
             Ok(true)
+        } else if current_platform != *cached_platform {
+            info!(
+                "Platform has changed ({} -> {}), updating catalogs...",
+                cached_platform, current_platform
+            );
+            Ok(true)
+        } else if current_build_type != *cached_build_type {
+            info!(
+                "Build type has changed ({} -> {}), updating catalogs...",
+                cached_build_type, current_build_type
+            );
+            Ok(true)
         } else {
-            info!("Version is up to date, skipping catalog processing..");
+            info!(
+                "Version, platform, and build type are up to date, skipping catalog processing.."
+            );
             Ok(false)
         }
     }
