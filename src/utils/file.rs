@@ -31,7 +31,7 @@ pub fn data_dir() -> Result<PathBuf> {
         return Ok(path.clone());
     }
 
-    (&*APP_DIRS)
+    (*APP_DIRS)
         .as_ref()
         .map(|dirs| dirs.data_dir.clone())
         .map_err(|e| anyhow!(e.to_string()))

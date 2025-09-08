@@ -1,7 +1,9 @@
 use crate::helpers::{
     ApiData, AssetBundle,
-    GameFiles, GameResources, GlobalCatalog,
-    HashValue, MediaResources, Platform, Resource,
+    GameFiles, GameFilesBundles,
+    GlobalCatalog, GlobalGameResources,
+    HashValue, JapanGameResources,
+    MediaResources, Platform, Resource,
     ServerConfig, ServerRegion, TableResources,
 };
 use crate::utils::{file, json};
@@ -143,14 +145,15 @@ impl CatalogParser {
         let media_catalog: MediaCatalog =
             json::load_json(&self.paths.media_path).await?;
 
-        let game_resources = GameResources {
+        let game_resources = JapanGameResources {
             asset_bundles: bundle_info.full_patch_packs.iter()
                 .chain(bundle_info.update_packs.iter())
-                .map(|patch| GameFiles {
+                .map(|patch| GameFilesBundles {
                     url: format!("{}/{}/{}", catalog_url, self.paths.patch_pack_path, patch.pack_name),
                     path: format!("AssetBundles/{}", patch.pack_name),
                     hash: HashValue::Crc(patch.crc),
                     size: patch.pack_size,
+                    bundle_files: patch.bundle_files.iter().map(|bundle| bundle.name.clone()).collect(),
                 })
                 .collect(),
 
@@ -248,7 +251,7 @@ impl CatalogParser {
     }
 
     async fn global_gamefiles(&self, catalog_url: &str, resources: &[Resource]) -> Result<()> {
-        let game_resources = GameResources {
+        let game_resources = GlobalGameResources {
             asset_bundles: resources
                 .iter()
                 .filter(|r| r.resource_path.contains(self.paths.platform_path))

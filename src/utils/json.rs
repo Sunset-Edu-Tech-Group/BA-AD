@@ -17,7 +17,7 @@ pub async fn load_json<T: DeserializeOwned>(path: &Path) -> Result<T> {
 pub async fn save_json<T: Serialize>(path: &Path, data: &T) -> Result<()> {
     let json_data = serde_json::to_string_pretty(data).handle_errors()?;
 
-    file::create_parent_dir(&path).await?;
+    file::create_parent_dir(path).await?;
     file::save_file(path, json_data.as_bytes()).await?;
 
     Ok(())
