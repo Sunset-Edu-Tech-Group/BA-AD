@@ -148,7 +148,7 @@ jobs:
       - name: Create release assets
         run: |
           if [ ! -d "artifacts" ] || [ -z "$(ls -A artifacts)" ]; then
-            echo "::error::No artifacts were found to package. Aborting."
+            echo "Error: No artifacts were found to package. Aborting."
             exit 1
           fi
           
@@ -157,11 +157,7 @@ jobs:
             if [ -d "$dir" ]; then
               local_dir_name=${dir%/}
               cd "$dir"
-              if [[ "$local_dir_name" == *"windows"* ]]; then
-                zip "../${local_dir_name}.zip" ./*
-              else
-                tar -czf "../${local_dir_name}.tar.gz" ./*
-              fi
+              zip "../${local_dir_name}.zip" ./*
               cd ..
             fi
           done
