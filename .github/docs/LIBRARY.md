@@ -19,7 +19,7 @@ use baad::catalog::{CatalogFetcher, CatalogParser};
 use baad::download::{ResourceDownloader, ResourceCategory, ResourceFilter};
 use baad::helpers::{ServerConfig, ServerRegion, Platform, BuildType};
 
-use anyhow::Result;
+use eyre::Result;
 use std::path::PathBuf;
 use std::rc::Rc;
 
@@ -71,6 +71,49 @@ async fn example() -> Result<()> {
 ```
 
 ## Core Components
+
+### Logging
+
+The baad automatically initializes logging with default settings when loaded. No additional setup is required for basic usage.
+
+### Controlling Log Levels
+
+Library users have several ways to control logging:
+
+#### 1. Feature Flags (Recommended)
+```toml
+[dependencies]
+# Default: info level logging
+baad = { git = "https://github.com/Deathemonic/BA-AD" }
+
+# Enable error level logging
+baad = { git = "https://github.com/Deathemonic/BA-AD", features = ["no_error"] }
+
+# Disable logging entirely
+baad = { git = "https://github.com/Deathemonic/BA-AD", features = ["no_logs"] }
+
+# Disable debug messages only
+baad = { git = "https://github.com/Deathemonic/BA-AD", features = ["no_debug"] }
+```
+
+#### 2. Custom Logging Configuration
+
+For advanced use cases, you can initialize logging before using the library:
+
+```rust
+use baad::helpers::{LoggingConfig, init_logging};
+
+// Custom logging configuration - call this BEFORE using any library functions
+let config = LoggingConfig {
+    verbose_mode: true,
+    enable_console: true,
+    colored_output: true,
+    ..LoggingConfig::default()
+};
+
+init_logging(config)?;
+
+```
 
 ### ServerConfig
 

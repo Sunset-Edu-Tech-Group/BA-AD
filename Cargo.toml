@@ -1,6 +1,6 @@
 [package]
 name = "baad"
-version = "2.2.0"
+version = "2.4.0"
 edition = "2024"
 
 [lib]
@@ -13,26 +13,26 @@ path = "src/main.rs"
 
 [features]
 default = []
-no_logs = [ "baad-core/no_logs" ]
-no_debug = [ "baad-core/no_debug" ]
-no_error = [ "baad-core/no_error" ]
+no_logs = ["baad-core/no_logs"]
+no_debug = ["baad-core/no_debug"]
+no_error = ["baad-core/no_error"]
 
 [dependencies]
-reqwest = { version = "0.12.20", features = ["json"] }
-anyhow = "1.0.98"
-platform-dirs = "0.3.0"
-serde_json = { version = "1.0.140", features = ["preserve_order"] }
+reqwest = { version = "0.12.23", features = ["json"] }
+serde_json = { version = "1.0.143", features = ["preserve_order"] }
 serde = { version = "1.0.219", features = ["derive"] }
 tokio = { version = "1.45.1", features = ["full"] }
 walkdir = "2.5.0"
-zip = "4.1.0"
+eyre = "0.6.12"
+ctor = "0.5.0"
+zip = "5.0.1"
 base64 = "0.22.1"
 lazy-regex = "3.4.1"
-glob = "0.3.2"
+glob = "0.3.3"
 nucleo = "0.5.0"
-once_cell = "1.21.3"
-clap = { version = "4.5.40", features = ["derive"] }
+clap = { version = "4.5.47", features = ["derive"] }
 
 bacy = { git = "https://github.com/Deathemonic/BA-CY", version = "1.3.5" }
 trauma = { git = "https://github.com/RZinth/trauma", version = "2.6.0", features = ["rustls"] }  # Using a custom trauma
-baad-core = { git = "https://github.com/RZinth/BA-AD-Core", version = "0.0.2" }
+baad-core = { git = "https://github.com/RZinth/BA-AD-Core", version = "2.3.1" }
+

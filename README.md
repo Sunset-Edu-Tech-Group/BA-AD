@@ -99,7 +99,7 @@ baad download japan --assets --ios
 | `--retries <RETRIES>`             | Number of retry attempts for failed downloads | `10`       |                                                                                                   |
 | `--filter <FILTER>`               | Filter by name                                |            |                                                                                                   |
 | `--filter-method <FILTER_METHOD>` | Filter method to use                          | `contains` | `exact`, `contains`, `regex`, `fuzzy`, `glob`, `contains-ignore-case`, `starts-with`, `ends-with` |
-| `--ios`                           | Use Ios build instead of Android              |            |                                                                                                   | 
+| `--ios`                           | Use iOS build instead of Android              |            |                                                                                                   | 
 | `--teen`                          | Download Teen assets (Global only)            |            |                                                                                                   | 
 | `--help`                          | Print help                                    |            |                                                                                                   |
 

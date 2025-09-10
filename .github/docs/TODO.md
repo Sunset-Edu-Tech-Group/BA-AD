@@ -1,0 +1,9 @@
+- [x] iOS asset download support
+- [x] Teen asset download support
+- [x] Improve logging system
+- [ ] Improve download speed
+- [ ] China asset download support
+- [ ] Proxy support
+- [ ] Uniffi support
+- [ ] TUI written in Go, to showcase ffi support
+- [ ] {Concept} Steam client assets download support (Might have to port steamkit2 to rust)

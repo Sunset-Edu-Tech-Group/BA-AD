@@ -1,16 +1,13 @@
 use crate::helpers::{
-    ApiData, AssetBundle,
-    GameFiles, GameFilesBundles,
-    GlobalCatalog, GlobalGameResources,
-    HashValue, JapanGameResources,
-    MediaResources, Platform, Resource,
-    ServerConfig, ServerRegion, TableResources,
+    ApiData, AssetBundle, GameFiles, GameFilesBundles, GlobalCatalog, GlobalGameResources,
+    HashValue, JapanGameResources, MediaResources, Platform, Resource, ServerConfig, ServerRegion,
+    TableResources,
 };
-use crate::utils::{file, json};
+use crate::utils::json;
 
-use anyhow::Result;
-use baad_core::{errors::{ErrorContext, ErrorExt}, info, success};
+use baad_core::{file, info, AnyhowToEyre};
 use bacy::{MediaCatalog, Packing, TableCatalog};
+use eyre::{eyre, Result};
 use reqwest::Client;
 use std::path::Path;
 use std::rc::Rc;
@@ -39,37 +36,37 @@ impl CatalogParser {
 
         let catalog_dir = match config.region {
             ServerRegion::Global => data_dir.join("catalog/global"),
-            ServerRegion::Japan =>  data_dir.join("catalog/japan"),
+            ServerRegion::Japan => data_dir.join("catalog/japan"),
         };
-        
+
         let asset_path = catalog_dir.join("BundlePackingInfo.json");
         let table_path = catalog_dir.join("TableCatalog.json");
         let media_path = catalog_dir.join("MediaCatalog.json");
         let game_path = catalog_dir.join("GameFiles.json");
         let resource_path = catalog_dir.join("Resources.json");
-        
+
         let patch_pack_path = match config.platform {
             Platform::Android => "Android_PatchPack",
             Platform::Ios => "iOS_PatchPack",
         };
-        
+
         let platform_path = match config.platform {
             Platform::Android => "/Android/",
             Platform::Ios => "/iOS/",
         };
-        
+
         Ok(Self {
             client: Client::new(),
             config,
-            paths: Paths { 
+            paths: Paths {
                 asset_path: asset_path.into_boxed_path(),
                 table_path: table_path.into_boxed_path(),
                 media_path: media_path.into_boxed_path(),
                 game_path: game_path.into_boxed_path(),
                 resource_path: resource_path.into_boxed_path(),
                 api_path: api_path.into_boxed_path(),
-                patch_pack_path, 
-                platform_path 
+                patch_pack_path,
+                platform_path,
             },
         })
     }
@@ -77,40 +74,31 @@ impl CatalogParser {
     async fn japan_data(&self, catalog_url: &str) -> Result<()> {
         let asset_data = self
             .client
-            .get(format!("{}/{}/BundlePackingInfo.json", catalog_url, self.paths.patch_pack_path))
+            .get(format!(
+                "{}/{}/BundlePackingInfo.json",
+                catalog_url, self.paths.patch_pack_path
+            ))
             .send()
-            .await
-            .handle_errors()?
+            .await?
             .json::<Packing>()
-            .await
-            .handle_errors()?;
-        
-        json::save_json(
-            &self.paths.asset_path,
-            &asset_data
-        )
-        .await?;
+            .await?;
 
-        success!("Saved AssetBundles catalog");
+        json::save_json(&self.paths.asset_path, &asset_data).await?;
+
+        info!(success = true, "Saved AssetBundles catalog");
 
         let table_bytes = self
             .client
             .get(format!("{}/TableBundles/TableCatalog.bytes", catalog_url))
             .send()
-            .await
-            .handle_errors()?
+            .await?
             .bytes()
-            .await
-            .handle_errors()?;
-        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).handle_errors()?;
-
-        json::save_json(
-            &self.paths.table_path,
-            &table_data,
-        )
             .await?;
+        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).to_eyre()?;
 
-        success!("Saved TableBundles catalog");
+        json::save_json(&self.paths.table_path, &table_data).await?;
+
+        info!(success = true, "Saved TableBundles catalog");
 
         let media_bytes = self
             .client
@@ -119,41 +107,41 @@ impl CatalogParser {
                 catalog_url
             ))
             .send()
-            .await
-            .handle_errors()?
+            .await?
             .bytes()
-            .await
-            .handle_errors()?;
-        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url).handle_errors()?;
+            .await?;
+        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url).to_eyre()?;
 
-        json::save_json(
-            &self.paths.media_path,
-            &media_data,
-        )
-        .await?;
+        json::save_json(&self.paths.media_path, &media_data).await?;
 
-        success!("Saved MediaResources catalog");
+        info!(success = true, "Saved MediaResources catalog");
 
         Ok(())
     }
 
     async fn japan_gamefiles(&self, catalog_url: &str) -> Result<()> {
-        let bundle_info: Packing =
-            json::load_json(&self.paths.asset_path).await?;
-        let table_catalog: TableCatalog =
-            json::load_json(&self.paths.table_path).await?;
-        let media_catalog: MediaCatalog =
-            json::load_json(&self.paths.media_path).await?;
+        let bundle_info: Packing = json::load_json(&self.paths.asset_path).await?;
+        let table_catalog: TableCatalog = json::load_json(&self.paths.table_path).await?;
+        let media_catalog: MediaCatalog = json::load_json(&self.paths.media_path).await?;
 
         let game_resources = JapanGameResources {
-            asset_bundles: bundle_info.full_patch_packs.iter()
+            asset_bundles: bundle_info
+                .full_patch_packs
+                .iter()
                 .chain(bundle_info.update_packs.iter())
                 .map(|patch| GameFilesBundles {
-                    url: format!("{}/{}/{}", catalog_url, self.paths.patch_pack_path, patch.pack_name),
+                    url: format!(
+                        "{}/{}/{}",
+                        catalog_url, self.paths.patch_pack_path, patch.pack_name
+                    ),
                     path: format!("AssetBundles/{}", patch.pack_name),
                     hash: HashValue::Crc(patch.crc),
                     size: patch.pack_size,
-                    bundle_files: patch.bundle_files.iter().map(|bundle| bundle.name.clone()).collect(),
+                    bundle_files: patch
+                        .bundle_files
+                        .iter()
+                        .map(|bundle| bundle.name.clone())
+                        .collect(),
                 })
                 .collect(),
 
@@ -183,14 +171,10 @@ impl CatalogParser {
                 .collect(),
         };
 
-        json::save_json(
-            &self.paths.game_path,
-            &game_resources
-        )
-        .await?;
+        json::save_json(&self.paths.game_path, &game_resources).await?;
 
-        success!("Saved GameFiles");
-        
+        info!(success = true, "Saved GameFiles");
+
         Ok(())
     }
 
@@ -207,44 +191,31 @@ impl CatalogParser {
             .cloned()
             .collect();
 
-
         let table_bundles: Vec<Resource> = resources
             .iter()
             .filter(|r| r.resource_path.contains("/TableBundles/"))
             .cloned()
             .collect();
-        
+
         if !asset_bundles.is_empty() {
             let asset_data = AssetBundle { asset_bundles };
-            json::save_json(
-                &self.paths.asset_path,
-                &asset_data
-            )
-            .await?;
+            json::save_json(&self.paths.asset_path, &asset_data).await?;
 
-            success!("Saved AssetBundles catalog");
+            info!(success = true, "Saved AssetBundles catalog");
         }
 
         if !table_bundles.is_empty() {
             let table_data = TableResources { table_bundles };
-            json::save_json(
-                &self.paths.table_path,
-                &table_data
-            )
-            .await?;
+            json::save_json(&self.paths.table_path, &table_data).await?;
 
-            success!("Saved TableBundles catalog");
+            info!(success = true, "Saved TableBundles catalog");
         }
 
         if !media_resources.is_empty() {
             let media_data = MediaResources { media_resources };
-            json::save_json(
-                &self.paths.media_path,
-                &media_data
-            )
-                .await?;
+            json::save_json(&self.paths.media_path, &media_data).await?;
 
-            success!("Saved MediaResources catalog");
+            info!(success = true, "Saved MediaResources catalog");
         }
 
         Ok(())
@@ -271,17 +242,19 @@ impl CatalogParser {
                 .collect(),
         };
 
-        json::save_json(
-            &self.paths.game_path,
-            &game_resources
-        ).await?;
+        json::save_json(&self.paths.game_path, &game_resources).await?;
 
-        success!("Saved GameFiles");
-        
+        info!(success = true, "Saved GameFiles");
+
         Ok(())
     }
 
-    fn resource_to_gamefiles(&self, resource: &Resource, catalog_url: &str, prefix: &str) -> GameFiles {
+    fn resource_to_gamefiles(
+        &self,
+        resource: &Resource,
+        catalog_url: &str,
+        prefix: &str,
+    ) -> GameFiles {
         GameFiles {
             url: format!("{}/{}", catalog_url, resource.resource_path),
             path: format!("{}/{}", prefix, resource.resource_path),
@@ -292,7 +265,7 @@ impl CatalogParser {
 
     pub async fn process_catalogs(&self) -> Result<()> {
         let api_data: ApiData = json::load_json(&self.paths.api_path).await?;
-        
+
         info!("Processing catalogs...");
 
         match self.config.region {
@@ -300,22 +273,25 @@ impl CatalogParser {
                 let catalog_url = &api_data.japan.catalog_url;
 
                 if catalog_url.is_empty() {
-                    return None.error_context("Japan catalog URL is empty - run CatalogFetcher first");
+                    return Err(eyre!(
+                        "Japan catalog URL is empty - run CatalogFetcher first"
+                    ));
                 }
 
                 self.japan_data(catalog_url).await?;
                 self.japan_gamefiles(catalog_url).await?;
             }
             ServerRegion::Global => {
-                let resources: GlobalCatalog =
-                    json::load_json(&self.paths.resource_path).await?;
+                let resources: GlobalCatalog = json::load_json(&self.paths.resource_path).await?;
                 let catalog_url = &api_data
                     .global
                     .catalog_url
                     .trim_end_matches("/resource-data.json");
 
                 if catalog_url.is_empty() {
-                    return None.error_context("Global catalog URL is empty - run CatalogFetcher first");
+                    return Err(eyre!(
+                        "Global catalog URL is empty - run CatalogFetcher first"
+                    ));
                 }
 
                 self.global_data(&resources.resources).await?;

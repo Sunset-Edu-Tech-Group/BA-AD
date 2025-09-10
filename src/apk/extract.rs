@@ -2,10 +2,9 @@ use crate::helpers::{
     ServerConfig, ServerRegion, ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN, GLOBAL_DATA_APK,
     JP_DATA_APK, LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN,
 };
-use crate::utils::file;
 
-use anyhow::Result;
-use baad_core::{errors::ErrorExt, info};
+use baad_core::{file, info};
+use eyre::Result;
 use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};
@@ -33,28 +32,29 @@ impl ApkExtractor {
         info!("Extracting apk...");
 
         let apk_path = file::get_data_path(&self.config.apk_path)?;
-        let mut archive =
-            ZipArchive::new(File::open(&apk_path).handle_errors()?).handle_errors()?;
+        let mut archive = ZipArchive::new(File::open(&apk_path)?)?;
 
-        let mut target_apk = archive.by_name(rule.apk).handle_errors()?;
+        let mut target_apk = archive.by_name(rule.apk)?;
 
         let mut buf = Vec::new();
-        target_apk.read_to_end(&mut buf).handle_errors()?;
+        target_apk.read_to_end(&mut buf)?;
         let mut cursor = Cursor::new(buf);
 
-        let mut inner_archive = ZipArchive::new(&mut cursor).handle_errors()?;
+        let mut inner_archive = ZipArchive::new(&mut cursor)?;
 
         fs::create_dir_all(&rule.output)?;
 
         for i in 0..inner_archive.len() {
-            let mut file = inner_archive.by_index(i).handle_errors()?;
+            let mut file = inner_archive.by_index(i)?;
             let file_path = PathBuf::from(file.name());
 
-            if self.matches_rule(&file_path, &rule)? {
-                let out = rule.output.join(file_path.file_name().unwrap());
+            if self.matches_rule(&file_path, &rule)?
+                && let Some(file_name) = file_path.file_name()
+            {
+                let out = rule.output.join(file_name);
 
-                let mut outfile = File::create(&out).handle_errors()?;
-                io::copy(&mut file, &mut outfile).handle_errors()?;
+                let mut outfile = File::create(&out)?;
+                io::copy(&mut file, &mut outfile)?;
             }
         }
 
@@ -79,7 +79,7 @@ impl ApkExtractor {
 
         let file_name = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
-        let pattern = Pattern::new(rule.pattern).handle_errors()?;
+        let pattern = Pattern::new(rule.pattern)?;
 
         Ok(pattern.matches(file_name))
     }

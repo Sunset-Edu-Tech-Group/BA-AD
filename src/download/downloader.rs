@@ -2,10 +2,10 @@ use crate::download::ResourceFilter;
 use crate::helpers::{
     GameFiles, GlobalGameResources, HashValue, JapanGameResources, ServerConfig, ServerRegion,
 };
-use crate::utils::{file, json};
+use crate::utils::json;
 
-use anyhow::Result;
-use baad_core::{error, errors::ErrorContext, info, success, warn};
+use baad_core::{error, file, info, warn};
+use eyre::{eyre, Result, WrapErr};
 use std::mem::discriminant;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
@@ -107,7 +107,7 @@ impl ResourceDownloader {
                     let path = file::get_data_path("catalog/global/GameFiles.json")?;
                     json::load_json(&path).await
                 }
-                .error_context("Failed to load global game resources - run CatalogParser first")?;
+                .wrap_err_with(|| "Failed to load global game resources")?;
 
                 let collections = Self::get_collections(&category, &game_resources);
                 let downloads = self.process_global_files(collections, filter);
@@ -118,7 +118,7 @@ impl ResourceDownloader {
                     let path = file::get_data_path("catalog/japan/GameFiles.json")?;
                     json::load_json(&path).await
                 }
-                .error_context("Failed to load japan game resources - run CatalogParser first")?;
+                .wrap_err_with(|| "Failed to load japan game resources")?;
 
                 let downloads = self.process_japan_files(&game_resources, &category, filter);
                 self.execute_downloads(downloads, category).await
@@ -157,9 +157,7 @@ impl ResourceDownloader {
         files
             .iter()
             .filter(|file| {
-                filter.is_none_or(|f| {
-                    Self::matches_filter(f, get_path(file), get_bundles(file))
-                })
+                filter.is_none_or(|f| Self::matches_filter(f, get_path(file), get_bundles(file)))
             })
             .filter_map(|file| Self::create_download(get_url(file), get_path(file), get_hash(file)))
             .collect()
@@ -187,7 +185,9 @@ impl ResourceDownloader {
         }
 
         let mut downloads = Vec::new();
-        process_category!(downloads, Assets, &game_resources.asset_bundles, |f| Some(&f.bundle_files));
+        process_category!(downloads, Assets, &game_resources.asset_bundles, |f| Some(
+            &f.bundle_files
+        ));
         process_category!(downloads, Tables, &game_resources.table_bundles, |_| None);
         process_category!(downloads, Media, &game_resources.media_resources, |_| None);
         downloads
@@ -226,17 +226,13 @@ impl ResourceDownloader {
     ) -> Result<()> {
         if downloads.is_empty() {
             warn!(
-                "No files matched the filter criteria for catalog: <b><u><yellow>{:?}</>",
-                category
+                ?category,
+                "No files matched the filter criteria for catalog"
             );
             return Ok(());
         }
 
-        info!(
-            "Found <b><u><bright-blue>{}</> files for download (catalog: <b><u><blue>{:?}</>)",
-            downloads.len(),
-            category
-        );
+        info!(?category, "Found {} files for download", downloads.len());
         self.downloader.download(&downloads).await;
         Ok(())
     }
@@ -269,11 +265,11 @@ impl ResourceDownloadBuilder {
 
     pub async fn build(self) -> Result<ResourceDownloader> {
         if self.retries == 0 {
-            return None.error_context("Retry count cannot be zero");
+            return Err(eyre!("Retry count cannot be zero"));
         }
 
         if self.limit == 0 {
-            return None.error_context("Download limit cannot be zero");
+            return Err(eyre!("Download limit cannot be zero"));
         }
 
         let style = StyleOptions::new(ProgressBarOpts::hidden(), ProgressBarOpts::hidden());
@@ -291,22 +287,19 @@ impl ResourceDownloadBuilder {
 
                 match summary.status() {
                     Status::Success => {
-                        success!("Downloaded <u><green>{}</>", filename);
+                        info!(success = true, filename = filename, "Downloaded");
                     }
                     Status::Fail(error) => {
-                        error!(
-                            "Failed to download <u><red>{}</> Error: {}",
-                            filename, error
-                        );
+                        error!(cause = error, filename = filename, "Failed to download");
                     }
-                    Status::Skipped(_reason) => {
-                        warn!("Skipped <u><yellow>{}</> - {}", filename, _reason);
+                    Status::Skipped(reason) => {
+                        warn!(cause = reason, filename = filename, "Skipped");
                     }
                     Status::NotStarted => {
-                        info!("Downloading <u><blue>{}</>", filename);
+                        info!(filename, "Downloading");
                     }
-                    Status::HashMismatch(_reason) => {
-                        warn!("Outdated <u><yellow>{}</> - {}", filename, _reason);
+                    Status::HashMismatch(reason) => {
+                        warn!(cause = reason, filename = filename, "Outdated");
                     }
                 }
             })
