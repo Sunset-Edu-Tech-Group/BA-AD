@@ -245,7 +245,6 @@ use baad::download::FilterMethod;
 let exact_filter = ResourceFilter::new("CharacterData", FilterMethod::Exact)?;
 let contains_filter = ResourceFilter::new("sprite", FilterMethod::Contains)?;
 let regex_filter = ResourceFilter::new(r"character_\d+\.bundle", FilterMethod::Regex)?;
-let glob_filter = ResourceFilter::new("**/textures/*.png", FilterMethod::Glob)?;
 
 // Download with filter
 downloader.download(ResourceCategory::Assets, Some(contains_filter)).await?;
