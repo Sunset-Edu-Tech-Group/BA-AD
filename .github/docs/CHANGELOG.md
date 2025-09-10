@@ -1,5 +1,19 @@
 # Changelogs
 
+## v2.4.0
+
+### Features
+- Updated logging
+  - Now uses `tracing` under the hood
+
+### API Changes
+- Now uses `eyre` for error handling
+- Added logging configuration
+
+### Fixes
+- Remove the unnecessary panics 
+
+
 ## v2.3.1
 
 ### Features

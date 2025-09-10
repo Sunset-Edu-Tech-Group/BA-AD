@@ -5,10 +5,9 @@ use baad::apk::{ApkExtractor, ApkFetcher};
 use baad::catalog::{CatalogFetcher, CatalogParser};
 use baad::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
 use baad::helpers::{BuildType, Platform, ServerConfig, ServerRegion};
-use baad::utils::file;
 
-use anyhow::Result;
-use baad_core::{errors::ErrorContext, info, success};
+use baad_core::{file, info};
+use eyre::{eyre, Result};
 use std::rc::Rc;
 
 pub struct CommandHandler {
@@ -27,7 +26,7 @@ impl CommandHandler {
             let data_dir = file::data_dir()?;
             file::clear_all(&data_dir).await?;
 
-            success!("Data cleared");
+            info!(success = true, "Data cleared");
         }
 
         match &self.args.command {
@@ -89,7 +88,7 @@ impl CommandHandler {
         }
 
         if !should_process_catalogs {
-            info!("Catalog files exist and are up to date, skipping catalog processing");
+            info!("Catalog files exist and are up to date, skipping catalog processing...");
         }
 
         self.download_resources(&server_config, &args.base).await?;
@@ -127,7 +126,7 @@ impl CommandHandler {
         }
 
         if !should_process_catalogs {
-            info!("Catalog files exist and are up to date, skipping catalog processing");
+            info!("Catalog files exist and are up to date, skipping catalog processing...");
         }
 
         self.download_resources(&server_config, &args.base).await?;
@@ -224,11 +223,12 @@ impl CommandHandler {
         let Some(filter_pattern) = &args.filter else {
             if !matches!(args.filter_method, FilterMethod::Contains) {
                 let filter_method_name = format!("{:?}", args.filter_method).to_lowercase();
-                return None.error_context(&format!(
+                return Err(eyre!(format!(
                     "Filter method '{}' specified but no filter pattern provided. Use --filter to specify a pattern.",
                     filter_method_name
-                ));
+                )));
             }
+
             return Ok(None);
         };
 

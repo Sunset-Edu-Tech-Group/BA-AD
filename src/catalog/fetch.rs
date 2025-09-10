@@ -3,16 +3,12 @@ use crate::helpers::{
     GlobalAddressable, GlobalCatalog, JapanAddressable, ServerConfig, ServerRegion,
     GAME_CONFIG_PATTERN, GLOBAL_API_URL,
 };
-use crate::utils::{file, json};
+use crate::utils::json;
 
-use anyhow::Result;
-use baad_core::{
-    debug,
-    errors::{ErrorContext, ErrorExt},
-    info, success,
-};
+use baad_core::{debug, file, info, AnyhowToEyre};
 use bacy::table_encryption_service::{convert_string, create_key, new_encrypt_string};
 use base64::{engine::general_purpose, Engine};
+use eyre::{eyre, ContextCompat, Result};
 use reqwest::Client;
 use serde_json::{to_string_pretty, Value};
 use std::fs;
@@ -35,7 +31,7 @@ pub struct CatalogFetcher {
 impl CatalogFetcher {
     pub fn new(config: Rc<ServerConfig>, apk_fetcher: ApkFetcher) -> Result<Self> {
         let addressable_path = match config.region {
-            ServerRegion::Global => file::get_data_path("catalog/GlboalAddressables.json")?,
+            ServerRegion::Global => file::get_data_path("catalog/GlobalAddressables.json")?,
             ServerRegion::Japan => file::get_data_path("catalog/JapanAddressables.json")?,
         };
         let resources_path = file::get_data_path("catalog/global/Resources.json")?;
@@ -58,12 +54,12 @@ impl CatalogFetcher {
 
         let data_path = file::get_data_path("data")?;
         for entry in WalkDir::new(&data_path) {
-            let entry = entry.handle_errors()?;
+            let entry = entry?;
             if !entry.file_type().is_file() {
                 continue;
             }
 
-            let buffer = fs::read(entry.path()).handle_errors()?;
+            let buffer = fs::read(entry.path())?;
 
             if let Some(pos) = buffer
                 .windows(GAME_CONFIG_PATTERN.len())
@@ -78,53 +74,51 @@ impl CatalogFetcher {
             }
         }
 
-        None.error_context("Game config not found")
+        Err(eyre!("Game config not found"))
     }
 
     pub fn decrypt_game_config(&self, data: &[u8]) -> Result<String> {
         info!("Decrypting game config...");
 
         let encoded_data = general_purpose::STANDARD.encode(data);
-        debug!("Encoded data: <b><u><blue>{}</>", encoded_data);
+        debug!(encoded_data, "Encoded data");
 
         let game_config = create_key(b"GameMainConfig");
-        debug!("Game config: <b><u><blue>{:?}</>", game_config);
+        debug!(?game_config, "Game config");
 
         let server_data = create_key(b"ServerInfoDataUrl");
-        debug!("Server data: <b><u><blue>{:?}</>", server_data);
+        debug!(?server_data, "Server data");
 
-        let decrypted_data = convert_string(&encoded_data, &game_config).handle_errors()?;
-        debug!("Decrypted data: <b><u><blue>{}</>", decrypted_data);
+        let decrypted_data = convert_string(&encoded_data, &game_config).to_eyre()?;
+        debug!(decrypted_data, "Decrypted data");
 
-        let loaded_data: Value = serde_json::from_str(&decrypted_data).handle_errors()?;
-        debug!("Loaded data: <b><u><blue>{:?}</>", loaded_data);
+        let loaded_data: Value = serde_json::from_str(&decrypted_data)?;
+        debug!(?loaded_data, "Loaded data");
 
-        let decrypted_key =
-            new_encrypt_string("ServerInfoDataUrl", &server_data).handle_errors()?;
-        debug!("Decrypted key: <b><u><blue>{}</>", decrypted_key);
+        let decrypted_key = new_encrypt_string("ServerInfoDataUrl", &server_data).to_eyre()?;
+        debug!(decrypted_key, "Decrypted key");
 
         let decrypted_value = loaded_data
             .get(&decrypted_key)
             .and_then(|v| v.as_str())
-            .error_context(&format!("Key '{}' not found in JSON", decrypted_key))?;
-        debug!("Decrypted value: <b><u><blue>{}</>", decrypted_value);
+            .wrap_err_with(|| format!("Key '{}' not found in JSON", decrypted_key))?;
+        debug!(decrypted_value, "Decrypted value");
 
-        convert_string(decrypted_value, &server_data).handle_errors()
+        let converted = convert_string(decrypted_value, &server_data).to_eyre()?;
+        Ok(converted)
     }
 
     async fn japan_addressable(&self) -> Result<String> {
         let api_url = self.decrypt_game_config(self.find_game_config()?.as_slice())?;
-        debug!("API URL: <b><u><bright-blue>{}</>", api_url);
+        debug!(api_url, "API URL");
 
         let catalog = self
             .client
             .get(&api_url)
             .send()
-            .await
-            .handle_errors()?
+            .await?
             .json::<JapanAddressable>()
-            .await
-            .handle_errors()?;
+            .await?;
 
         json::save_json(&self.paths.addressable_path, &catalog).await?;
 
@@ -134,9 +128,9 @@ impl CatalogFetcher {
         })
         .await?;
 
-        success!("Saved addressables info");
+        info!(success = true, "Saved addressables info");
 
-        to_string_pretty(&catalog).handle_errors()
+        Ok(to_string_pretty(&catalog)?)
     }
 
     async fn japan_catalog(&self) -> Result<String> {
@@ -149,7 +143,7 @@ impl CatalogFetcher {
             .first()
             .and_then(|group| group.override_connection_groups.get(1))
             .map(|override_group| &override_group.addressables_catalog_url_root)
-            .error_context("Second override connection group not found")?;
+            .wrap_err_with(|| "Second override connection group not found")?;
 
         json::update_api_data(|data| {
             data.japan.catalog_url = catalog_url.to_string();
@@ -157,7 +151,7 @@ impl CatalogFetcher {
         })
         .await?;
 
-        success!("Saved catalog info");
+        info!(success = true, "Saved catalog info");
 
         Ok(catalog_url.to_string())
     }
@@ -167,19 +161,19 @@ impl CatalogFetcher {
             .apk_fetcher
             .check_version()
             .await?
-            .error_context("Failed to get version")?;
-        debug!("Version: <b><u><yellow>{}</>", version);
+            .wrap_err_with(|| "Failed to get version")?;
+        debug!(version, "Version");
 
         let build_number = version
             .split('.')
             .next_back()
-            .error_context("Invalid version format - missing build number")?;
-        debug!("Build number: <b><u><yellow>{}</>", build_number);
+            .wrap_err_with(|| "Invalid version format - missing build number")?;
+        debug!(build_number, "Build number");
 
         let market_config = self
             .config
             .get_market_config()
-            .error_context("Market config should be available for Global server")?;
+            .wrap_err_with(|| "Market config should be available for Global server")?;
 
         let api = self
             .client
@@ -191,17 +185,15 @@ impl CatalogFetcher {
                 "curr_build_number": build_number
             }))
             .send()
-            .await
-            .handle_errors()?
+            .await?
             .json::<GlobalAddressable>()
-            .await
-            .handle_errors()?;
+            .await?;
 
         json::save_json(&self.paths.addressable_path, &api).await?;
 
-        success!("Saved addressables info");
+        info!(success = true, "Saved addressables info");
 
-        to_string_pretty(&api).handle_errors()
+        Ok(to_string_pretty(&api)?)
     }
 
     async fn global_resources(&self) -> Result<String> {
@@ -213,11 +205,9 @@ impl CatalogFetcher {
             .client
             .get(&addressable.patch.resource_path)
             .send()
-            .await
-            .handle_errors()?
+            .await?
             .json::<GlobalCatalog>()
-            .await
-            .handle_errors()?;
+            .await?;
 
         json::save_json(&self.paths.resources_path, &catalog).await?;
 
@@ -228,9 +218,9 @@ impl CatalogFetcher {
         })
         .await?;
 
-        success!("Saved catalogs info");
+        info!(success = true, "Saved catalogs info");
 
-        to_string_pretty(&catalog).handle_errors()
+        Ok(to_string_pretty(&catalog)?)
     }
 
     pub async fn get_catalogs(&self) -> Result<String> {

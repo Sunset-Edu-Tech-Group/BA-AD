@@ -1,21 +1,21 @@
-use crate::helpers::{ApiData, GlobalData, JapanData, API_FILENAME};
-use crate::utils::file;
+use crate::helpers::{API_FILENAME, ApiData, GlobalData, JapanData};
 
-use anyhow::Result;
-use baad_core::errors::{ErrorContext, ErrorExt};
-use serde::{de::DeserializeOwned, Serialize};
+use baad_core::file;
+use eyre::{Result, WrapErr};
+use serde::{Serialize, de::DeserializeOwned};
 use std::path::Path;
 
 pub async fn load_json<T: DeserializeOwned>(path: &Path) -> Result<T> {
     let bytes = file::load_file(path).await?;
 
-    let json_data = String::from_utf8(bytes).error_context("Failed to convert file content to UTF-8")?;
-    serde_json::from_str(&json_data).handle_errors()
+    let json_data =
+        String::from_utf8(bytes).wrap_err_with(|| "Failed to convert file content to UTF-8")?;
+
+    Ok(serde_json::from_str(&json_data)?)
 }
 
-
 pub async fn save_json<T: Serialize>(path: &Path, data: &T) -> Result<()> {
-    let json_data = serde_json::to_string_pretty(data).handle_errors()?;
+    let json_data = serde_json::to_string_pretty(data)?;
 
     file::create_parent_dir(path).await?;
     file::save_file(path, json_data.as_bytes()).await?;

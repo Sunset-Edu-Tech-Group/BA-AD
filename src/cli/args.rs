@@ -75,7 +75,7 @@ pub struct BaseDownloadArgs {
     #[arg(long, value_enum, default_value = "contains")]
     pub filter_method: FilterMethod,
 
-    /// Use Ios build instead of Android
+    /// Use iOS build instead of Android
     #[arg(long)]
     pub ios: bool,
 }

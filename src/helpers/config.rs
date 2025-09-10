@@ -1,22 +1,36 @@
-use anyhow::Result;
-use baad_core::errors::ErrorContext;
+use baad_core::config::{init_logging, init_logging_default, LoggingConfig};
+use ctor::ctor;
+use eyre::{eyre, Result};
 use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};
+use std::env;
 use std::rc::Rc;
 
-pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))");
-pub static JAPAN_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)");
+pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(
+    r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))"
+);
+pub static JAPAN_REGEX_VERSION: Lazy<Regex> =
+    lazy_regex!(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)");
 pub static GLOBAL_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d{1}\.\d{2}\.\d{6}");
 
 pub const GLOBAL_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
 pub const GLOBAL_API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
 
+pub const GLOBAL_VERSION_URL: &str = "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive";
+pub const JAPAN_VERSION_URL: &str = "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
+pub const GLOBAL_APK_PATH: &str = "apk/BlueArchiveGlobal.xapk";
+pub const JAPAN_APK_PATH: &str = "apk/BlueArchiveJP.xapk";
+
+pub const GLOBAL_ANDROID_STANDARD_ID: &str = "com.nexon.bluearchive";
+pub const GLOBAL_ANDROID_TEEN_ID: &str = "com.nexon.bluearchiveteen";
+pub const GLOBAL_IOS_STANDARD_ID: &str = "1571873795";
+pub const GLOBAL_IOS_TEEN_ID: &str = "6443698027";
+pub const PLAYSTORE_CODE: &str = "playstore";
+pub const APPSTORE_CODE: &str = "appstore";
+
 pub const API_FILENAME: &str = "api_data.json";
 pub const GAME_CONFIG_PATTERN: &[u8] = &[
-    0x47, 0x61, 0x6D, 0x65,
-    0x4D, 0x61, 0x69, 0x6E,
-    0x43, 0x6F, 0x6E, 0x66,
-    0x69, 0x67, 0x00, 0x00,
+    0x47, 0x61, 0x6D, 0x65, 0x4D, 0x61, 0x69, 0x6E, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67, 0x00, 0x00,
     0x92, 0x03, 0x00, 0x00,
 ];
 
@@ -63,12 +77,16 @@ pub struct MarketConfig {
 }
 
 impl ServerConfig {
-    pub fn new(server: ServerRegion, platform: Option<Platform>, build_type: Option<BuildType>) -> Result<Rc<Self>> {
+    pub fn new(
+        server: ServerRegion,
+        platform: Option<Platform>,
+        build_type: Option<BuildType>,
+    ) -> Result<Rc<Self>> {
         let platform = platform.unwrap_or(Platform::Android);
         let build_type = build_type.unwrap_or(BuildType::Standard);
-        
+
         if build_type == BuildType::Teen && server != ServerRegion::Global {
-            return None.error_context("Teen build is only available for Global server");
+            return Err(eyre!("Teen build is only available for Global server"));
         }
 
         let config = match server {
@@ -76,15 +94,15 @@ impl ServerConfig {
                 region: server,
                 platform,
                 build_type,
-                version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive".to_string(),
-                apk_path: "apk/BlueArchiveGlobal.xapk".to_string(),
+                version_url: GLOBAL_VERSION_URL.to_string(),
+                apk_path: GLOBAL_APK_PATH.to_string(),
             },
             ServerRegion::Japan => Self {
                 region: server,
                 platform,
                 build_type,
-                version_url: "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive".to_string(),
-                apk_path: "apk/BlueArchiveJP.xapk".to_string(),
+                version_url: JAPAN_VERSION_URL.to_string(),
+                apk_path: JAPAN_APK_PATH.to_string(),
             },
         };
 
@@ -95,17 +113,21 @@ impl ServerConfig {
         match self.region {
             ServerRegion::Global => {
                 let (market_game_id, market_code) = match (self.platform, self.build_type) {
-                    (Platform::Android, BuildType::Standard) => ("com.nexon.bluearchive", "playstore"),
-                    (Platform::Android, BuildType::Teen) => ("com.nexon.bluearchiveteen", "playstore"),
-                    (Platform::Ios, BuildType::Standard) => ("1571873795", "appstore"),
-                    (Platform::Ios, BuildType::Teen) => ("6443698027", "appstore"),
+                    (Platform::Android, BuildType::Standard) => {
+                        (GLOBAL_ANDROID_STANDARD_ID, PLAYSTORE_CODE)
+                    }
+                    (Platform::Android, BuildType::Teen) => {
+                        (GLOBAL_ANDROID_TEEN_ID, PLAYSTORE_CODE)
+                    }
+                    (Platform::Ios, BuildType::Standard) => (GLOBAL_IOS_STANDARD_ID, APPSTORE_CODE),
+                    (Platform::Ios, BuildType::Teen) => (GLOBAL_IOS_TEEN_ID, APPSTORE_CODE),
                 };
-                
+
                 Some(MarketConfig {
                     market_game_id: market_game_id.to_string(),
                     market_code: market_code.to_string(),
                 })
-            },
+            }
             ServerRegion::Japan => None,
         }
     }
@@ -121,4 +143,29 @@ pub fn apk_headers() -> HeaderMap {
     );
     headers.insert("x-gp", HeaderValue::from_static("1"));
     headers
+}
+
+pub fn init_log(verbose: bool) -> Result<()> {
+    let config = LoggingConfig {
+        verbose_mode: verbose,
+        enable_debug: verbose,
+        ..LoggingConfig::default()
+    };
+
+    init_logging(config)
+}
+
+#[ctor]
+fn auto_init_logging() {
+    let arg0 = env::args().next();
+    let is_cli = arg0
+        .as_ref()
+        .map(|arg0| arg0.ends_with("baad") || arg0.ends_with("baad.exe"))
+        .unwrap_or(false);
+    
+    if is_cli {
+        return;
+    }
+
+    let _ = init_logging_default();
 }
