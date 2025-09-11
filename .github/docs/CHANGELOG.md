@@ -1,5 +1,10 @@
 # Changelogs
 
+## v2.4.1
+
+### Fixes
+- Changed the cache path from `baad_core` to `baad`
+
 ## v2.4.0
 
 ### Features
