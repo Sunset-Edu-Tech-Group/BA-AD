@@ -1,13 +1,12 @@
 use crate::helpers::{
-    ApiData, AssetBundle, GameFiles, GameFilesBundles, GlobalCatalog, GlobalGameResources,
-    HashValue, JapanGameResources, MediaResources, Platform, Resource, ServerConfig, ServerRegion,
-    TableResources,
+    ApiData, AssetBundle, CatalogError, GameFiles, GameFilesBundles, GlobalCatalog,
+    GlobalGameResources, HashValue, JapanGameResources, MediaResources, Platform, Resource,
+    ServerConfig, ServerRegion, TableResources,
 };
 use crate::utils::json;
 
-use baad_core::{file, info, AnyhowToEyre};
-use bacy::{MediaCatalog, Packing, TableCatalog};
-use eyre::{eyre, Result};
+use baad_core::{file, info};
+use bacy::catalog::{MediaCatalog, Packing, TableCatalog};
 use reqwest::Client;
 use std::path::Path;
 use std::rc::Rc;
@@ -30,7 +29,7 @@ pub struct CatalogParser {
 }
 
 impl CatalogParser {
-    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self, CatalogError> {
         let data_dir = file::data_dir()?;
         let api_path = data_dir.join("api_data.json");
 
@@ -71,7 +70,7 @@ impl CatalogParser {
         })
     }
 
-    async fn japan_data(&self, catalog_url: &str) -> Result<()> {
+    async fn japan_data(&self, catalog_url: &str) -> Result<(), CatalogError> {
         let asset_data = self
             .client
             .get(format!(
@@ -94,7 +93,9 @@ impl CatalogParser {
             .await?
             .bytes()
             .await?;
-        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url).to_eyre()?;
+
+        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url)
+            .map_err(|_| CatalogError::DeserializationFailed)?;
 
         json::save_json(&self.paths.table_path, &table_data).await?;
 
@@ -110,7 +111,9 @@ impl CatalogParser {
             .await?
             .bytes()
             .await?;
-        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url).to_eyre()?;
+
+        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url)
+            .map_err(|_| CatalogError::DeserializationFailed)?;
 
         json::save_json(&self.paths.media_path, &media_data).await?;
 
@@ -119,7 +122,7 @@ impl CatalogParser {
         Ok(())
     }
 
-    async fn japan_gamefiles(&self, catalog_url: &str) -> Result<()> {
+    async fn japan_gamefiles(&self, catalog_url: &str) -> Result<(), CatalogError> {
         let bundle_info: Packing = json::load_json(&self.paths.asset_path).await?;
         let table_catalog: TableCatalog = json::load_json(&self.paths.table_path).await?;
         let media_catalog: MediaCatalog = json::load_json(&self.paths.media_path).await?;
@@ -178,7 +181,7 @@ impl CatalogParser {
         Ok(())
     }
 
-    async fn global_data(&self, resources: &[Resource]) -> Result<()> {
+    async fn global_data(&self, resources: &[Resource]) -> Result<(), CatalogError> {
         let asset_bundles: Vec<Resource> = resources
             .iter()
             .filter(|r| r.resource_path.contains(self.paths.platform_path))
@@ -221,7 +224,11 @@ impl CatalogParser {
         Ok(())
     }
 
-    async fn global_gamefiles(&self, catalog_url: &str, resources: &[Resource]) -> Result<()> {
+    async fn global_gamefiles(
+        &self,
+        catalog_url: &str,
+        resources: &[Resource],
+    ) -> Result<(), CatalogError> {
         let game_resources = GlobalGameResources {
             asset_bundles: resources
                 .iter()
@@ -263,7 +270,7 @@ impl CatalogParser {
         }
     }
 
-    pub async fn process_catalogs(&self) -> Result<()> {
+    pub async fn process_catalogs(&self) -> Result<(), CatalogError> {
         let api_data: ApiData = json::load_json(&self.paths.api_path).await?;
 
         info!("Processing catalogs...");
@@ -273,9 +280,9 @@ impl CatalogParser {
                 let catalog_url = &api_data.japan.catalog_url;
 
                 if catalog_url.is_empty() {
-                    return Err(eyre!(
-                        "Japan catalog URL is empty - run CatalogFetcher first"
-                    ));
+                    return Err(CatalogError::EmptyCatalogUrl {
+                        region: "Japan".into(),
+                    });
                 }
 
                 self.japan_data(catalog_url).await?;
@@ -289,9 +296,9 @@ impl CatalogParser {
                     .trim_end_matches("/resource-data.json");
 
                 if catalog_url.is_empty() {
-                    return Err(eyre!(
-                        "Global catalog URL is empty - run CatalogFetcher first"
-                    ));
+                    return Err(CatalogError::EmptyCatalogUrl {
+                        region: "Global".into(),
+                    });
                 }
 
                 self.global_data(&resources.resources).await?;

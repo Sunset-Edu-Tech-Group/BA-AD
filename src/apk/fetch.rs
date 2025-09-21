@@ -1,11 +1,10 @@
 use crate::helpers::{
-    apk_headers, ApiData, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION, GLOBAL_URL,
+    apk_headers, ApiData, ApkError, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION, GLOBAL_URL,
     JAPAN_REGEX_URL, JAPAN_REGEX_VERSION,
 };
 use crate::utils::{json, network};
 
 use baad_core::{debug, file, info, warn};
-use eyre::{eyre, ContextCompat, Result};
 use reqwest::{Client, Url};
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
@@ -21,7 +20,7 @@ pub struct ApkFetcher {
 }
 
 impl ApkFetcher {
-    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self, ApkError> {
         let client = Client::builder().default_headers(apk_headers()).build()?;
 
         let downloader = DownloaderBuilder::new()
@@ -39,37 +38,37 @@ impl ApkFetcher {
         })
     }
 
-    pub async fn get_current_version(&self) -> Result<String> {
+    pub async fn get_current_version(&self) -> Result<String, ApkError> {
         let response = self.client.get(&self.config.version_url).send().await?;
         let body: String = response.text().await?;
         self.extract_version(&body)
     }
 
-    fn extract_version(&self, body: &str) -> Result<String> {
+    fn extract_version(&self, body: &str) -> Result<String, ApkError> {
         JAPAN_REGEX_VERSION
             .find(body)
             .map(|m| m.as_str().to_string())
-            .wrap_err_with(|| "Failed to extract version from server response")
+            .ok_or(ApkError::VersionExtractionFailed)
     }
 
-    fn extract_url(&self, body: &str) -> Result<String> {
+    fn extract_url(&self, body: &str) -> Result<String, ApkError> {
         match JAPAN_REGEX_URL.captures(body) {
             Some(caps) if caps.len() >= 3 => {
                 caps.get(2)
                     .map(|m| m.as_str().to_string())
-                    .ok_or_else(|| eyre!("Failed to get download url"))
+                    .ok_or(ApkError::DownloadUrlExtractionFailed)
             }
-            _ => Err(eyre!("Failed to get download url")),
+            _ => Err(ApkError::DownloadUrlExtractionFailed),
         }
     }
 
-    pub async fn get_version(&self) -> Result<String> {
+    pub async fn get_version(&self) -> Result<String, ApkError> {
         match &self.config.region {
             ServerRegion::Global => {
                 let re_url = self.client.get(GLOBAL_URL).send().await?.text().await?;
                 Ok(GLOBAL_REGEX_VERSION
                     .find(&re_url)
-                    .wrap_err_with(|| "Failed to get version")?
+                    .ok_or(ApkError::VersionExtractionFailed)?
                     .as_str()
                     .to_string())
             }
@@ -81,7 +80,7 @@ impl ApkFetcher {
         }
     }
 
-    pub async fn check_version(&self) -> Result<Option<String>> {
+    pub async fn check_version(&self) -> Result<Option<String>, ApkError> {
         let version = self.get_version().await?;
         let platform = format!("{:?}", self.config.platform);
         let build_type = format!("{:?}", self.config.build_type);
@@ -102,7 +101,7 @@ impl ApkFetcher {
         Ok(Some(version))
     }
 
-    async fn check_apk(&self, download_url: &str, apk_path: &Path) -> Result<bool> {
+    async fn check_apk(&self, download_url: &str, apk_path: &Path) -> Result<bool, ApkError> {
         if !apk_path.exists() {
             return Ok(true);
         }
@@ -122,7 +121,7 @@ impl ApkFetcher {
         if !response.status().is_success()
             && response.status() != reqwest::StatusCode::PARTIAL_CONTENT
         {
-            return Err(eyre!("Failed to get APK info"));
+            return Err(ApkError::ApkInfoFailed);
         }
 
         let remote_size = network::get_content_length(&response);
@@ -134,7 +133,7 @@ impl ApkFetcher {
         Ok(false)
     }
 
-    pub async fn needs_catalog_update(&self) -> Result<bool> {
+    pub async fn needs_catalog_update(&self) -> Result<bool, ApkError> {
         let api_data_path = file::get_data_path("api_data.json")?;
         if !api_data_path.exists() {
             return Ok(true);
@@ -178,7 +177,7 @@ impl ApkFetcher {
         }
     }
 
-    pub async fn needs_update(&self, download_url: &str, apk_path: &Path) -> Result<bool> {
+    pub async fn needs_update(&self, download_url: &str, apk_path: &Path) -> Result<bool, ApkError> {
         let needs_download = self.check_apk(download_url, apk_path).await?;
 
         if !needs_download {
@@ -195,7 +194,7 @@ impl ApkFetcher {
         Ok(true)
     }
 
-    pub async fn download_apk(&self, force: bool) -> Result<(String, PathBuf, bool)> {
+    pub async fn download_apk(&self, force: bool) -> Result<(String, PathBuf, bool), ApkError> {
         let new_version = self.get_current_version().await?;
         debug!(new_version, "Using version");
 

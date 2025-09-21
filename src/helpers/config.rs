@@ -1,10 +1,7 @@
-use baad_core::config::{init_logging, init_logging_default, LoggingConfig};
-use ctor::ctor;
-use eyre::{eyre, Result};
+use crate::helpers::error::ServerConfigError;
+
 use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};
-use std::env;
-use std::path::Path;
 use std::rc::Rc;
 
 pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(
@@ -86,12 +83,12 @@ impl ServerConfig {
         server: ServerRegion,
         platform: Option<Platform>,
         build_type: Option<BuildType>,
-    ) -> Result<Rc<Self>> {
+    ) -> Result<Rc<Self>, ServerConfigError> {
         let platform = platform.unwrap_or(Platform::Android);
         let build_type = build_type.unwrap_or(BuildType::Standard);
 
         if build_type == BuildType::Teen && server != ServerRegion::Global {
-            return Err(eyre!("Teen build is only available for Global server"));
+            return Err(ServerConfigError::TeenNotAvailable);
         }
 
         let config = match server {
@@ -148,55 +145,4 @@ pub fn apk_headers() -> HeaderMap {
     );
     headers.insert("x-gp", HeaderValue::from_static("1"));
     headers
-}
-
-pub fn init_log(verbose: bool) -> Result<()> {
-    let config = LoggingConfig {
-        verbose_mode: verbose,
-        enable_debug: verbose,
-        ..LoggingConfig::default()
-    };
-
-    init_logging(config)
-}
-
-#[cfg(not(feature = "no_auto_logging"))]
-#[ctor]
-fn auto_init_logging() {
-    let is_cli = env::args()
-        .next()
-        .and_then(|arg0| {
-            Path::new(&arg0)
-                .file_stem()
-                .and_then(|s| s.to_str())
-                .map(|name| {
-                    let name_lower = name.to_lowercase();
-                    name_lower == EXECUTABLE_NAME
-                        || name_lower.starts_with(EXECUTABLE_NAME)
-                        || name_lower.contains(EXECUTABLE_NAME)
-                })
-        })
-        .unwrap_or(false);
-
-    let is_main = if !is_cli {
-        env::current_exe()
-            .ok()
-            .and_then(|path| {
-                path.file_stem().and_then(|stem| stem.to_str()).map(|name| {
-                    let name_lower = name.to_lowercase();
-                    name_lower == EXECUTABLE_NAME || name_lower.starts_with(EXECUTABLE_NAME)
-                })
-            })
-            .unwrap_or(false)
-    } else {
-        false
-    };
-
-    let is_test = env::var("CARGO").is_ok() || env::args().any(|arg| arg.contains("test"));
-
-    if is_cli || is_main || is_test {
-        return;
-    }
-
-    let _ = init_logging_default();
 }

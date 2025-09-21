@@ -1,16 +1,17 @@
 use crate::download::ResourceFilter;
 use crate::helpers::{
-    GameFiles, GlobalGameResources, HashValue, JapanGameResources, ServerConfig, ServerRegion,
+    DownloadError, GameFiles, GlobalGameResources, HashValue, JapanGameResources, ServerConfig,
+    ServerRegion,
 };
 use crate::utils::json;
 
 use baad_core::{error, file, info, warn};
-use eyre::{eyre, Result, WrapErr};
 use std::mem::discriminant;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use trauma::download::{Download, Status};
-use trauma::downloader::{Downloader, DownloaderBuilder, ProgressBarOpts, StyleOptions};
+use trauma::downloader::{Downloader, DownloaderBuilder};
+use trauma::progress::{ProgressBarOpts, StyleOptions};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ResourceCategory {
@@ -40,7 +41,10 @@ pub struct ResourceDownloadBuilder {
 }
 
 impl ResourceDownloader {
-    pub async fn new(output: Option<PathBuf>, config: Rc<ServerConfig>) -> Result<Self> {
+    pub async fn new(
+        output: Option<PathBuf>,
+        config: Rc<ServerConfig>,
+    ) -> Result<Self, DownloadError> {
         ResourceDownloadBuilder::new(config)?
             .output(output)
             .build()
@@ -100,14 +104,13 @@ impl ResourceDownloader {
         &self,
         category: ResourceCategory,
         filter: Option<ResourceFilter>,
-    ) -> Result<()> {
+    ) -> Result<(), DownloadError> {
         match &self.config.region {
             ServerRegion::Global => {
                 let game_resources: GlobalGameResources = {
                     let path = file::get_data_path("catalog/global/GameFiles.json")?;
-                    json::load_json(&path).await
-                }
-                .wrap_err_with(|| "Failed to load global game resources")?;
+                    json::load_json(&path).await?
+                };
 
                 let collections = Self::get_collections(&category, &game_resources);
                 let downloads = self.process_global_files(collections, filter);
@@ -116,9 +119,8 @@ impl ResourceDownloader {
             ServerRegion::Japan => {
                 let game_resources: JapanGameResources = {
                     let path = file::get_data_path("catalog/japan/GameFiles.json")?;
-                    json::load_json(&path).await
-                }
-                .wrap_err_with(|| "Failed to load japan game resources")?;
+                    json::load_json(&path).await?
+                };
 
                 let downloads = self.process_japan_files(&game_resources, &category, filter);
                 self.execute_downloads(downloads, category).await
@@ -223,13 +225,13 @@ impl ResourceDownloader {
         &self,
         downloads: Vec<Download>,
         category: ResourceCategory,
-    ) -> Result<()> {
+    ) -> Result<(), DownloadError> {
         if downloads.is_empty() {
             warn!(
                 ?category,
                 "No files matched the filter criteria for catalog"
             );
-            return Ok(());
+            return Err(DownloadError::NoFilesMatched);
         }
 
         info!(?category, "Found {} files for download", downloads.len());
@@ -239,7 +241,7 @@ impl ResourceDownloader {
 }
 
 impl ResourceDownloadBuilder {
-    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self, DownloadError> {
         Ok(Self {
             output: None,
             retries: 10,
@@ -263,13 +265,13 @@ impl ResourceDownloadBuilder {
         self
     }
 
-    pub async fn build(self) -> Result<ResourceDownloader> {
+    pub async fn build(self) -> Result<ResourceDownloader, DownloadError> {
         if self.retries == 0 {
-            return Err(eyre!("Retry count cannot be zero"));
+            return Err(DownloadError::RetryCountZero);
         }
 
         if self.limit == 0 {
-            return Err(eyre!("Download limit cannot be zero"));
+            return Err(DownloadError::DownloadLimitZero);
         }
 
         let style = StyleOptions::new(ProgressBarOpts::hidden(), ProgressBarOpts::hidden());
