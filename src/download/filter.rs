@@ -1,5 +1,6 @@
+use crate::helpers::error::FilterError;
+
 use clap::ValueEnum;
-use eyre::{Result, WrapErr};
 use glob::Pattern as GlobPattern;
 use lazy_regex::Regex;
 use nucleo::{Config, Matcher, Utf32Str};
@@ -27,7 +28,7 @@ pub struct ResourceFilter {
 }
 
 impl ResourceFilter {
-    pub fn new(pattern: &str, method: FilterMethod) -> Result<Self> {
+    pub fn new(pattern: &str, method: FilterMethod) -> Result<Self, FilterError> {
         let mut filter = Self {
             pattern: pattern.to_string(),
             method: method.clone(),
@@ -37,17 +38,18 @@ impl ResourceFilter {
 
         match method {
             FilterMethod::Regex => {
-                filter.compiled_regex = Some(
-                    Regex::new(pattern)
-                        .wrap_err_with(|| format!("Invalid regex pattern: '{}'", pattern))?,
-                );
+                filter.compiled_regex =
+                    Some(Regex::new(pattern).map_err(|_| FilterError::InvalidRegex {
+                        pattern: pattern.into(),
+                    })?);
             }
             FilterMethod::Fuzzy => {
                 filter.fuzzy_matcher = Some(Matcher::new(Config::DEFAULT));
             }
             FilterMethod::Glob => {
-                GlobPattern::new(pattern)
-                    .wrap_err_with(|| format!("Invalid glob pattern: '{}'", pattern))?;
+                GlobPattern::new(pattern).map_err(|_| FilterError::InvalidGlob {
+                    pattern: pattern.into(),
+                })?;
             }
             _ => {}
         }
@@ -117,35 +119,35 @@ impl ResourceFilter {
 }
 
 impl ResourceFilter {
-    pub fn glob(pattern: &str) -> Result<Self> {
+    pub fn glob(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::Glob)
     }
 
-    pub fn regex(pattern: &str) -> Result<Self> {
+    pub fn regex(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::Regex)
     }
 
-    pub fn contains(pattern: &str) -> Result<Self> {
+    pub fn contains(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::Contains)
     }
 
-    pub fn exact(pattern: &str) -> Result<Self> {
+    pub fn exact(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::Exact)
     }
 
-    pub fn starts_with(pattern: &str) -> Result<Self> {
+    pub fn starts_with(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::StartsWith)
     }
 
-    pub fn ends_with(pattern: &str) -> Result<Self> {
+    pub fn ends_with(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::EndsWith)
     }
 
-    pub fn contains_ignore_case(pattern: &str) -> Result<Self> {
+    pub fn contains_ignore_case(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::ContainsIgnoreCase)
     }
 
-    pub fn fuzzy(pattern: &str) -> Result<Self> {
+    pub fn fuzzy(pattern: &str) -> Result<Self, FilterError> {
         Self::new(pattern, FilterMethod::Fuzzy)
     }
 }

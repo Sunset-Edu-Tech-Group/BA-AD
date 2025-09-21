@@ -1,10 +1,11 @@
 use crate::cli::args::{
     Args, BaseDownloadArgs, Commands, GlobalDownloadArgs, JapanDownloadArgs, RegionCommands,
 };
+
 use baad::apk::{ApkExtractor, ApkFetcher};
 use baad::catalog::{CatalogFetcher, CatalogParser};
 use baad::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
-use baad::helpers::{BuildType, Platform, ServerConfig, ServerRegion};
+use baad::helpers::{ApkError, BuildType, Platform, ServerConfig, ServerRegion};
 
 use baad_core::{file, info};
 use eyre::{eyre, Result};
@@ -134,7 +135,7 @@ impl CommandHandler {
         Ok(())
     }
 
-    async fn handle_japan(&self, apk_fetcher: &ApkFetcher) -> Result<bool> {
+    async fn handle_japan(&self, apk_fetcher: &ApkFetcher) -> Result<bool, ApkError> {
         let data_path = file::get_data_path("data")?;
         let catalog_path = file::get_data_path("catalog")?;
 
@@ -148,7 +149,7 @@ impl CommandHandler {
         apk_fetcher.needs_catalog_update().await
     }
 
-    async fn handle_global(&self, apk_fetcher: &ApkFetcher) -> Result<bool> {
+    async fn handle_global(&self, apk_fetcher: &ApkFetcher) -> Result<bool, ApkError> {
         let catalog_path = file::get_data_path("catalog")?;
 
         let catalogs_empty = file::is_dir_empty(&catalog_path).await?;

@@ -1,10 +1,9 @@
 use crate::helpers::{
-    ServerConfig, ServerRegion, ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN, GLOBAL_DATA_APK,
-    JP_DATA_APK, LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN,
+    ApkError, ServerConfig, ServerRegion, ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN,
+    GLOBAL_DATA_APK, JP_DATA_APK, LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN,
 };
 
 use baad_core::{file, info};
-use eyre::Result;
 use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, Cursor, Read};
@@ -24,11 +23,11 @@ pub struct ApkExtractor {
 }
 
 impl ApkExtractor {
-    pub fn new(config: Rc<ServerConfig>) -> Result<Self> {
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self, ApkError> {
         Ok(Self { config })
     }
 
-    pub fn extract(&self, rule: ExtractionRule) -> Result<()> {
+    pub fn extract(&self, rule: ExtractionRule) -> Result<(), ApkError> {
         info!("Extracting apk...");
 
         let apk_path = file::get_data_path(&self.config.apk_path)?;
@@ -61,7 +60,7 @@ impl ApkExtractor {
         Ok(())
     }
 
-    fn matches_rule(&self, file_path: &Path, rule: &ExtractionRule) -> Result<bool> {
+    fn matches_rule(&self, file_path: &Path, rule: &ExtractionRule) -> Result<bool, ApkError> {
         let components: Vec<_> = file_path
             .components()
             .map(|c| c.as_os_str().to_string_lossy().to_string())
@@ -84,7 +83,7 @@ impl ApkExtractor {
         Ok(pattern.matches(file_name))
     }
 
-    pub fn extract_data(&self) -> Result<()> {
+    pub fn extract_data(&self) -> Result<(), ApkError> {
         info!("Extracting game data...");
 
         let rule = ExtractionRule {
@@ -100,7 +99,7 @@ impl ApkExtractor {
         self.extract(rule)
     }
 
-    pub fn extract_il2cpp(&self) -> Result<()> {
+    pub fn extract_il2cpp(&self) -> Result<(), ApkError> {
         let il2cpp_path: PathBuf = match self.config.region {
             ServerRegion::Global => file::get_data_path("il2cpp/global")?,
             ServerRegion::Japan => file::get_data_path("il2cpp/japan")?,

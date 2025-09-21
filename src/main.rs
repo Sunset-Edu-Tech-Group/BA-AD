@@ -1,16 +1,21 @@
 mod cli;
 
 use cli::{parse, Args};
-use baad::helpers::config::init_log;
 
-use eyre::Result;
+use baad_core::config::{init_logging, LoggingConfig};
 use clap::Parser;
+use eyre::Result;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
-    
-    init_log(args.verbose)?;
-    
+
+    let config = LoggingConfig {
+        verbose_mode: args.verbose,
+        enable_debug: args.verbose,
+        ..LoggingConfig::default()
+    };
+    init_logging(config)?;
+
     parse::run(args).await
 }
