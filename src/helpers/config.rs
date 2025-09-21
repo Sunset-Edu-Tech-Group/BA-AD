@@ -4,6 +4,7 @@ use eyre::{eyre, Result};
 use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};
 use std::env;
+use std::path::Path;
 use std::rc::Rc;
 
 pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(
@@ -16,8 +17,10 @@ pub static GLOBAL_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d{1}\.\d{2}\.\d{6}
 pub const GLOBAL_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
 pub const GLOBAL_API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
 
-pub const GLOBAL_VERSION_URL: &str = "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive";
-pub const JAPAN_VERSION_URL: &str = "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
+pub const GLOBAL_VERSION_URL: &str =
+    "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive";
+pub const JAPAN_VERSION_URL: &str =
+    "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
 pub const GLOBAL_APK_PATH: &str = "apk/BlueArchiveGlobal.xapk";
 pub const JAPAN_APK_PATH: &str = "apk/BlueArchiveJP.xapk";
 
@@ -44,6 +47,8 @@ pub const DATA_PATH: &[&str] = &["assets", "bin", "Data"];
 pub const METADATA_PATH: &[&str] = &["assets", "bin", "Data", "Managed", "Metadata"];
 pub const DATA_PATTERN: &str = "*";
 pub const METADATA_PATTERN: &str = "global-metadata.dat";
+
+pub const EXECUTABLE_NAME: &str = "baad";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServerRegion {
@@ -155,15 +160,41 @@ pub fn init_log(verbose: bool) -> Result<()> {
     init_logging(config)
 }
 
+#[cfg(not(feature = "no_auto_logging"))]
 #[ctor]
 fn auto_init_logging() {
-    let arg0 = env::args().next();
-    let is_cli = arg0
-        .as_ref()
-        .map(|arg0| arg0.ends_with("baad") || arg0.ends_with("baad.exe"))
+    let is_cli = env::args()
+        .next()
+        .and_then(|arg0| {
+            Path::new(&arg0)
+                .file_stem()
+                .and_then(|s| s.to_str())
+                .map(|name| {
+                    let name_lower = name.to_lowercase();
+                    name_lower == EXECUTABLE_NAME
+                        || name_lower.starts_with(EXECUTABLE_NAME)
+                        || name_lower.contains(EXECUTABLE_NAME)
+                })
+        })
         .unwrap_or(false);
-    
-    if is_cli {
+
+    let is_main = if !is_cli {
+        env::current_exe()
+            .ok()
+            .and_then(|path| {
+                path.file_stem().and_then(|stem| stem.to_str()).map(|name| {
+                    let name_lower = name.to_lowercase();
+                    name_lower == EXECUTABLE_NAME || name_lower.starts_with(EXECUTABLE_NAME)
+                })
+            })
+            .unwrap_or(false)
+    } else {
+        false
+    };
+
+    let is_test = env::var("CARGO").is_ok() || env::args().any(|arg| arg.contains("test"));
+
+    if is_cli || is_main || is_test {
         return;
     }
 

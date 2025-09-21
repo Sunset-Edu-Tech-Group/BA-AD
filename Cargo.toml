@@ -1,6 +1,6 @@
 [package]
 name = "baad"
-version = "2.4.1"
+version = "2.4.2"
 edition = "2024"
 
 [lib]
@@ -13,9 +13,10 @@ path = "src/main.rs"
 
 [features]
 default = []
-no_logs = ["baad-core/no_logs"]
-no_debug = ["baad-core/no_debug"]
-no_error = ["baad-core/no_error"]
+no_auto_logging = []
+no_logs = [ "baad-core/no_logs" ]
+no_debug = [ "baad-core/no_debug" ]
+no_error = [ "baad-core/no_error" ]
 
 [dependencies]
 reqwest = { version = "0.12.23", features = ["json"] }
