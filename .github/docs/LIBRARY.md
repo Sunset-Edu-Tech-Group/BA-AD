@@ -86,6 +86,9 @@ Library users have several ways to control logging:
 # Default: info level logging
 baad = { git = "https://github.com/Deathemonic/BA-AD" }
 
+# Disable automatic initialization logging
+baad = { git = "https://github.com/Deathemonic/BA-AD", features = ["no_auto_logging"] }
+
 # Disable error level logging
 baad = { git = "https://github.com/Deathemonic/BA-AD", features = ["no_error"] }
 
