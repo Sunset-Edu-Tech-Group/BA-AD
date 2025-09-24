@@ -1,11 +1,12 @@
 use crate::download::ResourceFilter;
 use crate::helpers::{
-    DownloadError, GameFiles, GlobalGameResources, HashValue, JapanGameResources, ServerConfig,
-    ServerRegion,
+    DownloadError, GameFiles, GameFilesBundles, GlobalGameResources, HashValue, JapanGameResources,
+    ServerConfig, ServerRegion,
 };
-use crate::utils::json;
+use crate::utils::{json, network};
 
 use baad_core::{error, file, info, warn};
+use reqwest::Url;
 use std::mem::discriminant;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
@@ -31,6 +32,7 @@ impl ResourceCategory {
 pub struct ResourceDownloader {
     downloader: Downloader,
     config: Rc<ServerConfig>,
+    proxy: Option<String>,
 }
 
 pub struct ResourceDownloadBuilder {
@@ -38,6 +40,7 @@ pub struct ResourceDownloadBuilder {
     retries: u32,
     limit: u64,
     config: Rc<ServerConfig>,
+    proxy: Option<String>,
 }
 
 impl ResourceDownloader {
@@ -161,7 +164,9 @@ impl ResourceDownloader {
             .filter(|file| {
                 filter.is_none_or(|f| Self::matches_filter(f, get_path(file), get_bundles(file)))
             })
-            .filter_map(|file| Self::create_download(get_url(file), get_path(file), get_hash(file)))
+            .filter_map(|file| {
+                Self::create_download(get_url(file), get_path(file), get_hash(file), None)
+            })
             .collect()
     }
 
@@ -171,27 +176,37 @@ impl ResourceDownloader {
         _category: &ResourceCategory,
         _filter: Option<ResourceFilter>,
     ) -> Vec<Download> {
-        macro_rules! process_category {
-            ($downloads:expr, $cat:ident, $files:expr, $bundles:expr) => {
-                if self.should_include_category(_category, ResourceCategory::$cat) {
-                    $downloads.extend(Self::process_files_with_bundles(
-                        $files,
-                        _filter.as_ref(),
-                        |f| &f.url,
-                        |f| &f.path,
-                        |f| &f.hash,
-                        $bundles,
-                    ));
-                }
-            };
+        let mut downloads = Vec::new();
+
+        if self.should_include_category(_category, ResourceCategory::Assets) {
+            downloads.extend(Self::process_japan_assets(
+                &game_resources.asset_bundles,
+                _filter.as_ref(),
+            ));
         }
 
-        let mut downloads = Vec::new();
-        process_category!(downloads, Assets, &game_resources.asset_bundles, |f| Some(
-            &f.bundle_files
-        ));
-        process_category!(downloads, Tables, &game_resources.table_bundles, |_| None);
-        process_category!(downloads, Media, &game_resources.media_resources, |_| None);
+        if self.should_include_category(_category, ResourceCategory::Tables) {
+            downloads.extend(Self::process_files_with_bundles(
+                &game_resources.table_bundles,
+                _filter.as_ref(),
+                |f| &f.url,
+                |f| &f.path,
+                |f| &f.hash,
+                |_| None,
+            ));
+        }
+
+        if self.should_include_category(_category, ResourceCategory::Media) {
+            downloads.extend(Self::process_files_with_bundles(
+                &game_resources.media_resources,
+                _filter.as_ref(),
+                |f| &f.url,
+                |f| &f.path,
+                |f| &f.hash,
+                |_| None,
+            ));
+        }
+
         downloads
     }
 
@@ -208,17 +223,75 @@ impl ResourceDownloader {
         }
     }
 
-    fn create_download(url: &str, path: &str, hash: &HashValue) -> Option<Download> {
-        Download::try_from(url)
-            .map(|mut download| {
-                download.filename = path.to_string();
-                download.hash = Some(match hash {
-                    HashValue::Crc(crc) => crc.to_string(),
-                    HashValue::Md5(md5) => md5.clone(),
-                });
-                download
+    fn convert_path_to_bundle(zip_path: &str, bundle_filename: &str) -> String {
+        if let Some(last_slash) = zip_path.rfind('/') {
+            format!("{}/{}", &zip_path[..last_slash], bundle_filename)
+        } else {
+            bundle_filename.to_string()
+        }
+    }
+
+    fn process_japan_assets(
+        files: &[GameFilesBundles],
+        filter: Option<&ResourceFilter>,
+    ) -> Vec<Download> {
+        files
+            .iter()
+            .filter_map(|file| {
+                if let Some(f) = filter {
+                    let filename = Path::new(&file.path)
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .unwrap_or(&file.path);
+
+                    if f.matches(filename) {
+                        return Self::create_download(&file.url, &file.path, &file.hash, None);
+                    }
+
+                    if let Some(matched_bundle) = file
+                        .bundle_files
+                        .iter()
+                        .find(|bundle_name| f.matches(bundle_name))
+                    {
+                        return Self::create_download(
+                            &file.url,
+                            &file.path,
+                            &file.hash,
+                            Some(matched_bundle),
+                        );
+                    }
+
+                    None
+                } else {
+                    Self::create_download(&file.url, &file.path, &file.hash, None)
+                }
             })
-            .ok()
+            .collect()
+    }
+
+    fn create_download(
+        url: &str,
+        path: &str,
+        hash: &HashValue,
+        target: Option<&str>,
+    ) -> Option<Download> {
+        let parsed_url = Url::parse(url).ok()?;
+
+        let final_path = if let Some(bundle_filename) = target {
+            Self::convert_path_to_bundle(path, bundle_filename)
+        } else {
+            path.to_string()
+        };
+
+        Some(Download {
+            url: parsed_url,
+            filename: final_path.clone(),
+            target_file: Some(final_path),
+            hash: Some(match hash {
+                HashValue::Crc(crc) => crc.to_string(),
+                HashValue::Md5(md5) => md5.clone(),
+            }),
+        })
     }
 
     async fn execute_downloads(
@@ -235,7 +308,10 @@ impl ResourceDownloader {
         }
 
         info!(?category, "Found {} files for download", downloads.len());
-        self.downloader.download(&downloads).await;
+
+        let proxy = network::create_proxy(self.proxy.as_deref()).map_err(DownloadError::Network)?;
+        self.downloader.download(&downloads, proxy).await;
+
         Ok(())
     }
 }
@@ -247,6 +323,7 @@ impl ResourceDownloadBuilder {
             retries: 10,
             limit: 10,
             config,
+            proxy: None,
         })
     }
 
@@ -262,6 +339,11 @@ impl ResourceDownloadBuilder {
 
     pub fn limit(mut self, limit: u64) -> Self {
         self.limit = limit;
+        self
+    }
+
+    pub fn proxy(mut self, proxy: Option<String>) -> Self {
+        self.proxy = proxy;
         self
     }
 
@@ -310,6 +392,7 @@ impl ResourceDownloadBuilder {
         Ok(ResourceDownloader {
             downloader,
             config: self.config,
+            proxy: self.proxy,
         })
     }
 }
