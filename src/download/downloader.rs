@@ -7,9 +7,11 @@ use crate::utils::{json, network};
 
 use baad_core::{error, file, info, warn};
 use reqwest::Url;
+use std::collections::HashSet;
 use std::mem::discriminant;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::sync::{Arc, Mutex};
 use trauma::download::{Download, Status};
 use trauma::downloader::{Downloader, DownloaderBuilder};
 use trauma::progress::{ProgressBarOpts, StyleOptions};
@@ -357,33 +359,43 @@ impl ResourceDownloadBuilder {
         }
 
         let style = StyleOptions::new(ProgressBarOpts::hidden(), ProgressBarOpts::hidden());
+        let logged_files = Arc::new(Mutex::new(HashSet::new()));
 
         let downloader = DownloaderBuilder::new()
             .directory(file::get_output_dir(self.output).await?)
             .concurrent_downloads(self.limit as usize)
             .retries(self.retries)
             .style_options(style)
-            .on_complete(|summary| {
-                let filename = Path::new(&summary.download().filename)
-                    .file_name()
-                    .and_then(|name| name.to_str())
-                    .unwrap_or(&summary.download().filename);
+            .on_complete({
+                let logged_files = Arc::clone(&logged_files);
+                move |summary| {
+                    let filename = Path::new(&summary.download().filename)
+                        .file_name()
+                        .and_then(|name| name.to_str())
+                        .unwrap_or(&summary.download().filename);
 
-                match summary.status() {
-                    Status::Success => {
-                        info!(success = true, filename = filename, "Downloaded");
-                    }
-                    Status::Fail(error) => {
-                        error!(cause = error, filename = filename, "Failed to download");
-                    }
-                    Status::Skipped(reason) => {
-                        warn!(cause = reason, filename = filename, "Skipped");
-                    }
-                    Status::NotStarted => {
+                    if let Ok(mut logged) = logged_files.lock()
+                        && logged.insert(filename.to_string())
+                    {
                         info!(filename, "Downloading");
                     }
-                    Status::HashMismatch(reason) => {
-                        warn!(cause = reason, filename = filename, "Outdated");
+
+                    match summary.status() {
+                        Status::Success => {
+                            info!(success = true, filename = filename, "Downloaded");
+                        }
+                        Status::Fail(error) => {
+                            error!(cause = error, filename = filename, "Failed to download");
+                        }
+                        Status::Skipped(reason) => {
+                            warn!(cause = reason, filename = filename, "Skipped");
+                        }
+                        Status::HashMismatch(reason) => {
+                            warn!(cause = reason, filename = filename, "Outdated");
+                        }
+                        Status::NotStarted => {
+                            // Ignore
+                        }
                     }
                 }
             })
