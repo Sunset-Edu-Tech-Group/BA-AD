@@ -178,7 +178,7 @@ checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
 name = "baad"
-version = "2.5.0"
+version = "2.6.0"
 dependencies = [
  "baad-core",
  "bacy",
@@ -2856,10 +2856,11 @@ dependencies = [
 
 [[package]]
 name = "trauma"
-version = "3.1.2"
-source = "git+https://github.com/RZinth/trauma#22510afe8a75ebf70e9af9356aee6daa2e1deab7"
+version = "3.2.0"
+source = "git+https://github.com/RZinth/trauma#f9c9baa4766d32b2ff88bb96baede5b608edabd0"
 dependencies = [
  "bacy",
+ "flate2",
  "form_urlencoded",
  "futures",
  "indicatif",

@@ -79,7 +79,7 @@ impl CommandHandler {
         };
 
         let server_config = ServerConfig::new(ServerRegion::Global, platform, build_type)?;
-        let apk_fetcher = ApkFetcher::new(server_config.clone())?;
+        let apk_fetcher = ApkFetcher::with_proxy(server_config.clone(), args.base.proxy.clone())?;
 
         let should_process_catalogs = self.handle_global(&apk_fetcher).await?;
 
@@ -106,7 +106,7 @@ impl CommandHandler {
         let build_type = None;
 
         let server_config = ServerConfig::new(ServerRegion::Japan, platform, build_type)?;
-        let apk_fetcher = ApkFetcher::new(server_config.clone())?;
+        let apk_fetcher = ApkFetcher::with_proxy(server_config.clone(), args.base.proxy.clone())?;
 
         let should_process_catalogs = {
             let should_process = self.handle_japan(&apk_fetcher).await?;
@@ -185,6 +185,7 @@ impl CommandHandler {
             .limit(args.limit as u64)
             .retries(args.retries)
             .output(Some(args.output.clone().into()))
+            .proxy(args.proxy.clone())
             .build()
             .await?;
 

@@ -12,7 +12,7 @@ pub enum ServerConfigError {
 #[derive(Error, Debug)]
 pub enum NetworkError {
     #[error("{0}")]
-    Reqwest(#[from] reqwest::Error),
+    Reqwest(#[from] reqwest::Error)
 }
 
 #[derive(Error, Debug)]
@@ -49,6 +49,9 @@ pub enum DownloadError {
 
     #[error("{0}")]
     File(#[from] baad_core::error::FileError),
+
+    #[error("{0}")]
+    Network(#[from] NetworkError),
 
     #[error("Retry count cannot be zero")]
     RetryCountZero,

@@ -1,6 +1,6 @@
 use crate::helpers::{
-    apk_headers, ApiData, ApkError, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION, GLOBAL_URL,
-    JAPAN_REGEX_URL, JAPAN_REGEX_VERSION,
+    apk_headers, ApiData, ApkError, ServerConfig, ServerRegion, GLOBAL_REGEX_VERSION,
+    GLOBAL_URL, JAPAN_REGEX_URL, JAPAN_REGEX_VERSION,
 };
 use crate::utils::{json, network};
 
@@ -17,10 +17,15 @@ pub struct ApkFetcher {
     client: Client,
     config: Rc<ServerConfig>,
     downloader: Downloader,
+    proxy: Option<String>,
 }
 
 impl ApkFetcher {
     pub fn new(config: Rc<ServerConfig>) -> Result<Self, ApkError> {
+        Self::with_proxy(config, None)
+    }
+
+    pub fn with_proxy(config: Rc<ServerConfig>, proxy: Option<String>) -> Result<Self, ApkError> {
         let client = Client::builder().default_headers(apk_headers()).build()?;
 
         let downloader = DownloaderBuilder::new()
@@ -35,6 +40,7 @@ impl ApkFetcher {
             client,
             config,
             downloader,
+            proxy,
         })
     }
 
@@ -53,11 +59,10 @@ impl ApkFetcher {
 
     fn extract_url(&self, body: &str) -> Result<String, ApkError> {
         match JAPAN_REGEX_URL.captures(body) {
-            Some(caps) if caps.len() >= 3 => {
-                caps.get(2)
-                    .map(|m| m.as_str().to_string())
-                    .ok_or(ApkError::DownloadUrlExtractionFailed)
-            }
+            Some(caps) if caps.len() >= 3 => caps
+                .get(2)
+                .map(|m| m.as_str().to_string())
+                .ok_or(ApkError::DownloadUrlExtractionFailed),
             _ => Err(ApkError::DownloadUrlExtractionFailed),
         }
     }
@@ -170,14 +175,16 @@ impl ApkFetcher {
             debug!(current_build_type, "Using build");
             Ok(true)
         } else {
-            info!(
-                "Version type are up to date"
-            );
+            info!("Version type are up to date");
             Ok(false)
         }
     }
 
-    pub async fn needs_update(&self, download_url: &str, apk_path: &Path) -> Result<bool, ApkError> {
+    pub async fn needs_update(
+        &self,
+        download_url: &str,
+        apk_path: &Path,
+    ) -> Result<bool, ApkError> {
         let needs_download = self.check_apk(download_url, apk_path).await?;
 
         if !needs_download {
@@ -214,9 +221,12 @@ impl ApkFetcher {
         let apk = vec![Download {
             url: Url::parse(download_url.as_str())?,
             filename: self.config.apk_path.clone(),
+            target_file: None,
             hash: None,
         }];
-        self.downloader.download(&apk).await;
+
+        let proxy = network::create_proxy(self.proxy.as_deref()).map_err(ApkError::Network)?;
+        self.downloader.download(&apk, proxy).await;
 
         info!(success = true, "APK downloaded");
 

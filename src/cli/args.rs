@@ -11,15 +11,15 @@ pub struct Args {
     pub command: Option<Commands>,
 
     /// Force update
-    #[arg(short, long)]
+    #[arg(short, long, global = true)]
     pub update: bool,
 
     /// Cleans the cache
-    #[arg(short, long)]
+    #[arg(short, long, global = true)]
     pub clean: bool,
 
     /// Enable verbose output
-    #[arg(short, long)]
+    #[arg(short, long, global = true)]
     pub verbose: bool,
 }
 
@@ -74,6 +74,10 @@ pub struct BaseDownloadArgs {
     /// Filter method to use
     #[arg(long, value_enum, default_value = "contains")]
     pub filter_method: FilterMethod,
+
+    /// Proxy URL for downloads
+    #[arg(long)]
+    pub proxy: Option<String>,
 
     /// Use iOS build instead of Android
     #[arg(long)]
