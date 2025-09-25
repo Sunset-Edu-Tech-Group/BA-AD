@@ -8,6 +8,7 @@ use baad::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, Re
 use baad::helpers::{ApkError, BuildType, Platform, ServerConfig, ServerRegion};
 
 use baad_core::{file, info};
+use clap::CommandFactory;
 use eyre::{eyre, Result};
 use std::rc::Rc;
 
@@ -35,10 +36,7 @@ impl CommandHandler {
             None => {
                 if self.args.update {
                     self.handle_update().await?;
-                } else if !self.args.clean {
-                    info!("No command specified. Use --help for usage information.");
                 }
-
                 Ok(())
             }
         }
@@ -240,6 +238,11 @@ impl CommandHandler {
 }
 
 pub async fn run(args: Args) -> Result<()> {
+    if args.command.is_none() && !args.update && !args.clean {
+        Args::command().print_help()?;
+        std::process::exit(0);
+    }
+
     let handler = CommandHandler::new(args)?;
     handler.handle().await
 }

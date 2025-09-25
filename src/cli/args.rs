@@ -11,15 +11,15 @@ pub struct Args {
     pub command: Option<Commands>,
 
     /// Force update
-    #[arg(short, long, global = true)]
+    #[arg(short, long)]
     pub update: bool,
 
     /// Cleans the cache
-    #[arg(short, long, global = true)]
+    #[arg(short, long)]
     pub clean: bool,
 
     /// Enable verbose output
-    #[arg(short, long, global = true)]
+    #[arg(short, long)]
     pub verbose: bool,
 }
 
