@@ -7,11 +7,9 @@ use crate::utils::{json, network};
 
 use baad_core::{error, file, info, warn};
 use reqwest::Url;
-use std::collections::HashSet;
 use std::mem::discriminant;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
-use std::sync::{Arc, Mutex};
 use trauma::download::{Download, Status};
 use trauma::downloader::{Downloader, DownloaderBuilder};
 use trauma::progress::{ProgressBarOpts, StyleOptions};
@@ -278,17 +276,22 @@ impl ResourceDownloader {
         target: Option<&str>,
     ) -> Option<Download> {
         let parsed_url = Url::parse(url).ok()?;
-
+    
         let final_path = if let Some(bundle_filename) = target {
             Self::convert_path_to_bundle(path, bundle_filename)
         } else {
             path.to_string()
         };
+    
+        let target_filename = Path::new(&final_path)
+            .file_name()?
+            .to_str()?
+            .to_string();
 
         Some(Download {
             url: parsed_url,
-            filename: final_path.clone(),
-            target_file: Some(final_path),
+            filename: final_path,
+            target_file: Some(target_filename),
             hash: Some(match hash {
                 HashValue::Crc(crc) => crc.to_string(),
                 HashValue::Md5(md5) => md5.clone(),
@@ -310,6 +313,7 @@ impl ResourceDownloader {
         }
 
         info!(?category, "Found {} files for download", downloads.len());
+        info!("Downloading...");
 
         let proxy = network::create_proxy(self.proxy.as_deref()).map_err(DownloadError::Network)?;
         self.downloader.download(&downloads, proxy).await;
@@ -359,7 +363,6 @@ impl ResourceDownloadBuilder {
         }
 
         let style = StyleOptions::new(ProgressBarOpts::hidden(), ProgressBarOpts::hidden());
-        let logged_files = Arc::new(Mutex::new(HashSet::new()));
 
         let downloader = DownloaderBuilder::new()
             .directory(file::get_output_dir(self.output).await?)
@@ -367,19 +370,11 @@ impl ResourceDownloadBuilder {
             .retries(self.retries)
             .style_options(style)
             .on_complete({
-                let logged_files = Arc::clone(&logged_files);
                 move |summary| {
                     let filename = Path::new(&summary.download().filename)
                         .file_name()
                         .and_then(|name| name.to_str())
                         .unwrap_or(&summary.download().filename);
-
-                    if let Ok(mut logged) = logged_files.lock()
-                        && logged.insert(filename.to_string())
-                    {
-                        info!(filename, "Downloading");
-                    }
-
                     match summary.status() {
                         Status::Success => {
                             info!(success = true, filename = filename, "Downloaded");
