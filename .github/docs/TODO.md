@@ -5,5 +5,5 @@
 - [ ] China asset download support
 - [x] Proxy support
 - [ ] Uniffi support
-- [ ] TUI written in Go, to showcase ffi support
-- [ ] {Concept} Steam client assets download support (Might have to port steamkit2 to rust)
+- [ ] {Concept} TUI written in Go, to showcase ffi support
+- [ ] {Concept} Steam client assets download support (Make a C# extension for BA-AD)
