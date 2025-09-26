@@ -81,10 +81,10 @@ use baad::helpers::{LoggingConfig, init_logging};
 
 // Custom logging configuration
 let config = LoggingConfig {
-verbose_mode: true,
-enable_console: true,
-colored_output: true,
-..LoggingConfig::default ()
+    verbose_mode: true,
+    enable_console: true,
+    colored_output: true,
+    ..LoggingConfig::default ()
 };
 
 init_logging(config) ?;
@@ -103,39 +103,39 @@ let japan_config = ServerConfig::new(ServerRegion::Japan, None, None) ?;
 
 // Japan server with iOS build
 let japan_ios_config = ServerConfig::new(
-ServerRegion::Japan,
-Some(Platform::Ios),
-None
-) ?;
+    ServerRegion::Japan,
+    Some(Platform::Ios),
+    None
+)?;
 
 // Global server with default Android/Standard build
 let global_config = ServerConfig::new(ServerRegion::Global, None, None) ?;
 
 // Global server with iOS build
 let global_ios_config = ServerConfig::new(
-ServerRegion::Global,
-Some(Platform::Ios),
-None
-) ?;
+    ServerRegion::Global,
+    Some(Platform::Ios),
+    None
+)?;
 
 // Global server with Teen build (Android)
 let global_teen_config = ServerConfig::new(
-ServerRegion::Global,
-None,
-Some(BuildType::Teen)
-) ?;
+    ServerRegion::Global,
+    None,
+    Some(BuildType::Teen)
+)?;
 
 // Global server with iOS Teen build
 let global_ios_teen_config = ServerConfig::new(
-ServerRegion::Global,
-Some(Platform::Ios),
-Some(BuildType::Teen)
-) ?;
+    ServerRegion::Global,
+    Some(Platform::Ios),
+    Some(BuildType::Teen)
+)?;
 
 // Get market configuration (Global only)
 if let Some(market_config) = global_config.get_market_config() {
-println ! ("Market ID: {}", market_config.market_game_id);
-println ! ("Market Code: {}", market_config.market_code);
+    println ! ("Market ID: {}", market_config.market_game_id);
+    println ! ("Market Code: {}", market_config.market_code);
 }
 ```
 
@@ -155,7 +155,7 @@ let apk_fetcher = ApkFetcher::new(config.clone()) ?;
 // Check for updates
 let new_version = apk_fetcher.check_version().await?;
 if let Some(version) = new_version {
-println!("New version available: {}", version);
+    println!("New version available: {}", version);
 }
 
 // Download APK (with force flag to override existing files)
@@ -191,17 +191,17 @@ use baad::download::{ResourceDownloader, ResourceDownloadBuilder, ResourceCatego
 
 // Basic downloader
 let downloader = ResourceDownloader::new(
-Some(PathBuf::from("./output")),
-config.clone()
+    Some(PathBuf::from("./output")),
+    config.clone()
 ).await?;
 
 // Or use the builder pattern for more options
 let downloader = ResourceDownloadBuilder::new(config.clone()) ?
-.output(Some(PathBuf::from("./output")))
-.retries(5)
-.limit(10)
-.build()
-.await?;
+    .output(Some(PathBuf::from("./output")))
+    .retries(5)
+    .limit(10)
+    .build()
+    .await?;
 
 // Download different resource categories
 downloader.download(ResourceCategory::Assets, None).await?; // All assets
@@ -245,10 +245,10 @@ extractor.extract_il2cpp() ?;
 
 // Custom extraction
 let rule = ExtractionRule {
-apk: "com.YostarJP.BlueArchive.apk",
-path: & ["assets", "bin", "Data"],
-pattern: "globalgamemanagers",
-output: PathBuf::from("./extracted").into_boxed_path(),
+    apk: "com.YostarJP.BlueArchive.apk",
+    path: & ["assets", "bin", "Data"],
+    pattern: "globalgamemanagers",
+    output: PathBuf::from("./extracted").into_boxed_path(),
 };
 extractor.extract(rule) ?;
 ```
