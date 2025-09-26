@@ -276,17 +276,16 @@ impl ResourceDownloader {
         target: Option<&str>,
     ) -> Option<Download> {
         let parsed_url = Url::parse(url).ok()?;
+        debug!(?parsed_url, "URL");
 
         let final_path = if let Some(bundle_filename) = target {
             Self::convert_path_to_bundle(path, bundle_filename)
         } else {
             path.to_string()
         };
+        debug!(?final_path, "Path");
 
         let target_filename = Path::new(&final_path).file_name()?.to_str()?.to_string();
-
-        debug!(?parsed_url, "URL");
-        debug!(?final_path, "Path");
         debug!(?target_filename, "Target");
 
         Some(Download {
