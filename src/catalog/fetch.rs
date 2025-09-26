@@ -128,7 +128,7 @@ impl CatalogFetcher {
 
         json::update_api_data(|data| {
             data.japan.addressable_url = api_url;
-            data.japan.platform = format!("{:?}", self.config.platform);
+            data.japan.platform = self.config.platform.as_str().into();
         })
         .await?;
 
@@ -150,14 +150,14 @@ impl CatalogFetcher {
             .ok_or(CatalogError::DeserializationFailed)?;
 
         json::update_api_data(|data| {
-            data.japan.catalog_url = catalog_url.to_string();
-            data.japan.platform = format!("{:?}", self.config.platform);
+            data.japan.catalog_url = catalog_url.into();
+            data.japan.platform = self.config.platform.as_str().into();
         })
         .await?;
 
         info!(success = true, "Saved catalog info");
 
-        Ok(catalog_url.to_string())
+        Ok(catalog_url.into())
     }
 
     async fn global_addressable(&self) -> Result<String, CatalogError> {
@@ -217,8 +217,8 @@ impl CatalogFetcher {
 
         json::update_api_data(|data| {
             data.global.catalog_url = addressable.patch.resource_path;
-            data.global.platform = format!("{:?}", self.config.platform);
-            data.global.build_type = format!("{:?}", self.config.build_type);
+            data.global.platform = self.config.platform.as_str().into();
+            data.global.build_type = self.config.build_type.as_str().into();
         })
         .await?;
 

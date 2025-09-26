@@ -133,7 +133,7 @@ impl ApkFetcher {
             ServerRegion::Japan => (
                 &api_data.japan.version,
                 &api_data.japan.platform,
-                &"Standard".to_string(),
+                &"Standard".into(),
             ),
         };
 

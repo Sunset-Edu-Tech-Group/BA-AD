@@ -1,12 +1,13 @@
+use std::borrow::Cow;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-fn default_platform() -> String {
-    "Android".to_string()
+fn default_platform() -> Cow<'static, str> {
+    Cow::Borrowed("Android")
 }
 
-fn default_build_type() -> String {
-    "Standard".to_string()
+fn default_build_type() -> Cow<'static, str> {
+    Cow::Borrowed("Standard")
 }
 
 #[derive(Serialize, Deserialize)]
@@ -15,7 +16,7 @@ pub struct JapanData {
     pub catalog_url: String,
     pub addressable_url: String,
     #[serde(default = "default_platform")]
-    pub platform: String,
+    pub platform: Cow<'static, str>,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -23,9 +24,9 @@ pub struct GlobalData {
     pub version: String,
     pub catalog_url: String,
     #[serde(default = "default_platform")]
-    pub platform: String,
+    pub platform: Cow<'static, str>,
     #[serde(default = "default_build_type")]
-    pub build_type: String,
+    pub build_type: Cow<'static, str>,
 }
 
 #[derive(Serialize, Deserialize)]
