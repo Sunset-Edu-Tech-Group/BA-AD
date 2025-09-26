@@ -2,22 +2,22 @@ use crate::helpers::error::ServerConfigError;
 
 use lazy_regex::{lazy_regex, Lazy, Regex};
 use reqwest::header::{HeaderMap, HeaderValue};
+use std::borrow::Cow;
 use std::rc::Rc;
 
 pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(
     r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))"
 );
-pub static JAPAN_REGEX_VERSION: Lazy<Regex> =
-    lazy_regex!(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)");
-pub static GLOBAL_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d{1}\.\d{2}\.\d{6}");
-
-pub const GLOBAL_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
 pub const GLOBAL_API_URL: &str = "https://api-pub.nexon.com/patch/v1.1/version-check";
+
+pub static REGEX_VERSION: Lazy<Regex> =
+    lazy_regex!(r"(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)");
 
 pub const GLOBAL_VERSION_URL: &str =
     "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.nexon.bluearchive";
 pub const JAPAN_VERSION_URL: &str =
     "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
+
 pub const GLOBAL_APK_PATH: &str = "apk/BlueArchiveGlobal.xapk";
 pub const JAPAN_APK_PATH: &str = "apk/BlueArchiveJP.xapk";
 
@@ -69,13 +69,31 @@ pub struct ServerConfig {
     pub region: ServerRegion,
     pub platform: Platform,
     pub build_type: BuildType,
-    pub version_url: String,
-    pub apk_path: String,
+    pub version_url: Cow<'static, str>,
+    pub apk_path: Cow<'static, str>,
 }
 
 pub struct MarketConfig {
-    pub market_game_id: String,
-    pub market_code: String,
+    pub market_game_id: Cow<'static, str>,
+    pub market_code: Cow<'static, str>,
+}
+
+impl Platform {
+    pub const fn as_str(&self) -> &'static str {
+        match self {
+            Platform::Android => "Android",
+            Platform::Ios => "Ios",
+        }
+    }
+}
+
+impl BuildType {
+    pub const fn as_str(&self) -> &'static str {
+        match self {
+            BuildType::Standard => "Standard",
+            BuildType::Teen => "Teen",
+        }
+    }
 }
 
 impl ServerConfig {
@@ -96,15 +114,15 @@ impl ServerConfig {
                 region: server,
                 platform,
                 build_type,
-                version_url: GLOBAL_VERSION_URL.to_string(),
-                apk_path: GLOBAL_APK_PATH.to_string(),
+                version_url: GLOBAL_VERSION_URL.into(),
+                apk_path: GLOBAL_APK_PATH.into(),
             },
             ServerRegion::Japan => Self {
                 region: server,
                 platform,
                 build_type,
-                version_url: JAPAN_VERSION_URL.to_string(),
-                apk_path: JAPAN_APK_PATH.to_string(),
+                version_url: JAPAN_VERSION_URL.into(),
+                apk_path: JAPAN_APK_PATH.into(),
             },
         };
 
@@ -126,8 +144,8 @@ impl ServerConfig {
                 };
 
                 Some(MarketConfig {
-                    market_game_id: market_game_id.to_string(),
-                    market_code: market_code.to_string(),
+                    market_game_id: market_game_id.into(),
+                    market_code: market_code.into(),
                 })
             }
             ServerRegion::Japan => None,
