@@ -5,7 +5,7 @@ use crate::helpers::{
 };
 use crate::utils::{json, network};
 
-use baad_core::{error, file, info, warn};
+use baad_core::{debug, error, file, info, warn};
 use reqwest::Url;
 use std::mem::discriminant;
 use std::path::{Path, PathBuf};
@@ -276,17 +276,18 @@ impl ResourceDownloader {
         target: Option<&str>,
     ) -> Option<Download> {
         let parsed_url = Url::parse(url).ok()?;
-    
+
         let final_path = if let Some(bundle_filename) = target {
             Self::convert_path_to_bundle(path, bundle_filename)
         } else {
             path.to_string()
         };
-    
-        let target_filename = Path::new(&final_path)
-            .file_name()?
-            .to_str()?
-            .to_string();
+
+        let target_filename = Path::new(&final_path).file_name()?.to_str()?.to_string();
+
+        debug!(?parsed_url, "URL");
+        debug!(?final_path, "Path");
+        debug!(?target_filename, "Target");
 
         Some(Download {
             url: parsed_url,
