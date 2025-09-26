@@ -291,7 +291,7 @@ impl ResourceDownloader {
         Some(Download {
             url: parsed_url,
             filename: final_path,
-            target_file: Some(target_filename),
+            target_file: target.map(|_| target_filename),
             hash: Some(match hash {
                 HashValue::Crc(crc) => crc.to_string(),
                 HashValue::Md5(md5) => md5.clone(),
