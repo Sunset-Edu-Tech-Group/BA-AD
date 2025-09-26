@@ -46,13 +46,13 @@ pub fn create_default_api_data() -> ApiData {
             version: String::new(),
             catalog_url: String::new(),
             addressable_url: String::new(),
-            platform: "Android".to_string(),
+            platform: "Android".into(),
         },
         global: GlobalData {
             version: String::new(),
             catalog_url: String::new(),
-            platform: "Android".to_string(),
-            build_type: "Standard".to_string(),
+            platform: "Android".into(),
+            build_type: "Standard".into(),
         },
     }
 }

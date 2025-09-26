@@ -29,22 +29,18 @@ pub struct ResourceFilter {
 
 impl ResourceFilter {
     pub fn new(pattern: &str, method: FilterMethod) -> Result<Self, FilterError> {
-        let mut filter = Self {
-            pattern: pattern.to_string(),
-            method: method.clone(),
-            compiled_regex: None,
-            fuzzy_matcher: None,
-        };
+        let mut compiled_regex = None;
+        let mut fuzzy_matcher = None;
 
         match method {
             FilterMethod::Regex => {
-                filter.compiled_regex =
+                compiled_regex =
                     Some(Regex::new(pattern).map_err(|_| FilterError::InvalidRegex {
                         pattern: pattern.into(),
                     })?);
             }
             FilterMethod::Fuzzy => {
-                filter.fuzzy_matcher = Some(Matcher::new(Config::DEFAULT));
+                fuzzy_matcher = Some(Matcher::new(Config::DEFAULT));
             }
             FilterMethod::Glob => {
                 GlobPattern::new(pattern).map_err(|_| FilterError::InvalidGlob {
@@ -54,7 +50,12 @@ impl ResourceFilter {
             _ => {}
         }
 
-        Ok(filter)
+        Ok(Self {
+            pattern: pattern.into(),
+            method,
+            compiled_regex,
+            fuzzy_matcher,
+        })
     }
 
     fn match_exact(&self, path: &str) -> bool {
@@ -85,7 +86,8 @@ impl ResourceFilter {
     }
 
     fn match_fuzzy(&self, path: &str) -> bool {
-        if let Some(mut matcher) = self.fuzzy_matcher.clone() {
+        if let Some(matcher) = &self.fuzzy_matcher {
+            let mut matcher = matcher.clone();
             let mut pattern_buf = Vec::new();
             let mut haystack_buf = Vec::new();
 
