@@ -1,5 +1,17 @@
 # Changelogs
 
+## 2.7.5
+
+### API Changes
+- Fix `baad_core::utils::file` exports redirecting to `baad::utils::json`
+- Export `debug, error, file, info, warn, trace`
+
+
+### Fixes
+- It will download the rest of the files
+    - Before it will just downloads the first found file not it will downloads the rest in JP
+
+
 ## 2.7.2
 
 ### Features
