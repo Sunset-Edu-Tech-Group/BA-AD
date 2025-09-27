@@ -235,38 +235,45 @@ impl ResourceDownloader {
         files: &[GameFilesBundles],
         filter: Option<&ResourceFilter>,
     ) -> Vec<Download> {
-        files
-            .iter()
-            .filter_map(|file| {
-                if let Some(f) = filter {
-                    let filename = Path::new(&file.path)
-                        .file_name()
-                        .and_then(|name| name.to_str())
-                        .unwrap_or(&file.path);
+        let Some(f) = filter else {
+            return files
+                .iter()
+                .filter_map(|file| Self::create_download(&file.url, &file.path, &file.hash, None))
+                .collect();
+        };
 
-                    if f.matches(filename) {
-                        return Self::create_download(&file.url, &file.path, &file.hash, None);
-                    }
+        let mut downloads = Vec::new();
+        
+        for file in files {
+            let filename = Path::new(&file.path)
+                .file_name()
+                .and_then(|name| name.to_str())
+                .unwrap_or(&file.path);
 
-                    if let Some(matched_bundle) = file
-                        .bundle_files
-                        .iter()
-                        .find(|bundle_name| f.matches(bundle_name))
-                    {
-                        return Self::create_download(
-                            &file.url,
-                            &file.path,
-                            &file.hash,
-                            Some(matched_bundle),
-                        );
-                    }
-
-                    None
-                } else {
+            if f.matches(filename) {
+                Self::add_download(
+                    &mut downloads,
                     Self::create_download(&file.url, &file.path, &file.hash, None)
+                );
+            }
+
+            for bundle_name in &file.bundle_files {
+                if f.matches(bundle_name) {
+                    Self::add_download(
+                        &mut downloads,
+                        Self::create_download(&file.url, &file.path, &file.hash, Some(bundle_name))
+                    );
                 }
-            })
-            .collect()
+            }
+        }
+        
+        downloads
+    }
+
+    fn add_download(downloads: &mut Vec<Download>, download: Option<Download>) {
+        if let Some(download) = download {
+            downloads.push(download);
+        }
     }
 
     fn create_download(
