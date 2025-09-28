@@ -1,13 +1,12 @@
 use crate::download::ResourceFilter;
 use crate::helpers::{
-    DownloadError, GameFiles, GameFilesBundles, GlobalGameResources, HashValue, JapanGameResources,
+    DownloadError, GameFilesBundles, HashValue,
     ServerConfig, ServerRegion,
 };
-use crate::utils::{json, network};
+use crate::utils::{catalog::load_resources, network};
 
 use baad_core::{debug, error, file, info, warn};
 use reqwest::Url;
-use std::mem::discriminant;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use trauma::download::{Download, Status};
@@ -77,81 +76,22 @@ impl ResourceDownloader {
         false
     }
 
-    fn get_collections<'a>(
-        category: &ResourceCategory,
-        game_resources: &'a GlobalGameResources,
-    ) -> Vec<&'a Vec<GameFiles>> {
-        match category {
-            ResourceCategory::Assets => vec![&game_resources.asset_bundles],
-            ResourceCategory::Tables => vec![&game_resources.table_bundles],
-            ResourceCategory::Media => vec![&game_resources.media_resources],
-            ResourceCategory::All => vec![
-                &game_resources.asset_bundles,
-                &game_resources.table_bundles,
-                &game_resources.media_resources,
-            ],
-            ResourceCategory::Multiple(categories) => {
-                let mut collections = Vec::new();
-                for cat in categories {
-                    let nested_collections = Self::get_collections(cat, game_resources);
-                    collections.extend(nested_collections);
-                }
-                collections.sort_by_key(|c| c.as_ptr());
-                collections.dedup_by_key(|c| c.as_ptr());
-                collections
-            }
-        }
-    }
-
     pub async fn download(
         &self,
         category: ResourceCategory,
         filter: Option<ResourceFilter>,
     ) -> Result<(), DownloadError> {
-        match &self.config.region {
-            ServerRegion::Global => {
-                let game_resources: GlobalGameResources = {
-                    let path = file::get_data_path("catalog/global/GameFiles.json")?;
-                    json::load_json(&path).await?
-                };
+        let path = match self.config.region {
+            ServerRegion::Global => file::get_data_path("catalog/global/GameFiles.json")?,
+            ServerRegion::Japan => file::get_data_path("catalog/japan/GameFiles.json")?,
+        };
 
-                let collections = Self::get_collections(&category, &game_resources);
-                let downloads = self.process_global_files(collections, filter);
-                self.execute_downloads(downloads, category).await
-            }
-            ServerRegion::Japan => {
-                let game_resources: JapanGameResources = {
-                    let path = file::get_data_path("catalog/japan/GameFiles.json")?;
-                    json::load_json(&path).await?
-                };
-
-                let downloads = self.process_japan_files(&game_resources, &category, filter);
-                self.execute_downloads(downloads, category).await
-            }
-        }
+        let resources = load_resources(&self.config.region, &path).await?;
+        let downloads = resources.get_downloads(&category, filter.as_ref());
+        self.execute_downloads(downloads, category).await
     }
 
-    fn process_global_files(
-        &self,
-        collections: Vec<&Vec<GameFiles>>,
-        filter: Option<ResourceFilter>,
-    ) -> Vec<Download> {
-        collections
-            .into_iter()
-            .flat_map(|v| {
-                Self::process_files_with_bundles(
-                    v,
-                    filter.as_ref(),
-                    |f| &f.url,
-                    |f| &f.path,
-                    |f| &f.hash,
-                    |_| None,
-                )
-            })
-            .collect()
-    }
-
-    fn process_files_with_bundles<T>(
+    pub(crate) fn process_files<T>(
         files: &[T],
         filter: Option<&ResourceFilter>,
         get_url: impl Fn(&T) -> &str,
@@ -170,59 +110,6 @@ impl ResourceDownloader {
             .collect()
     }
 
-    fn process_japan_files(
-        &self,
-        game_resources: &JapanGameResources,
-        _category: &ResourceCategory,
-        _filter: Option<ResourceFilter>,
-    ) -> Vec<Download> {
-        let mut downloads = Vec::new();
-
-        if self.should_include_category(_category, ResourceCategory::Assets) {
-            downloads.extend(Self::process_japan_assets(
-                &game_resources.asset_bundles,
-                _filter.as_ref(),
-            ));
-        }
-
-        if self.should_include_category(_category, ResourceCategory::Tables) {
-            downloads.extend(Self::process_files_with_bundles(
-                &game_resources.table_bundles,
-                _filter.as_ref(),
-                |f| &f.url,
-                |f| &f.path,
-                |f| &f.hash,
-                |_| None,
-            ));
-        }
-
-        if self.should_include_category(_category, ResourceCategory::Media) {
-            downloads.extend(Self::process_files_with_bundles(
-                &game_resources.media_resources,
-                _filter.as_ref(),
-                |f| &f.url,
-                |f| &f.path,
-                |f| &f.hash,
-                |_| None,
-            ));
-        }
-
-        downloads
-    }
-
-    fn should_include_category(
-        &self,
-        selected: &ResourceCategory,
-        target: ResourceCategory,
-    ) -> bool {
-        match selected {
-            ResourceCategory::All => true,
-            cat if discriminant(cat) == discriminant(&target) => true,
-            ResourceCategory::Multiple(cats) => cats.contains(&target),
-            _ => false,
-        }
-    }
-
     fn convert_path_to_bundle(zip_path: &str, bundle_filename: &str) -> String {
         if let Some(last_slash) = zip_path.rfind('/') {
             format!("{}/{}", &zip_path[..last_slash], bundle_filename)
@@ -231,7 +118,7 @@ impl ResourceDownloader {
         }
     }
 
-    fn process_japan_assets(
+    pub(crate) fn process_japan_assets(
         files: &[GameFilesBundles],
         filter: Option<&ResourceFilter>,
     ) -> Vec<Download> {
@@ -243,7 +130,7 @@ impl ResourceDownloader {
         };
 
         let mut downloads = Vec::new();
-        
+
         for file in files {
             let filename = Path::new(&file.path)
                 .file_name()
@@ -253,7 +140,7 @@ impl ResourceDownloader {
             if f.matches(filename) {
                 Self::add_download(
                     &mut downloads,
-                    Self::create_download(&file.url, &file.path, &file.hash, None)
+                    Self::create_download(&file.url, &file.path, &file.hash, None),
                 );
             }
 
@@ -261,12 +148,12 @@ impl ResourceDownloader {
                 if f.matches(bundle_name) {
                     Self::add_download(
                         &mut downloads,
-                        Self::create_download(&file.url, &file.path, &file.hash, Some(bundle_name))
+                        Self::create_download(&file.url, &file.path, &file.hash, Some(bundle_name)),
                     );
                 }
             }
         }
-        
+
         downloads
     }
 

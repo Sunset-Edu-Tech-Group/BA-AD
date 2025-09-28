@@ -53,6 +53,9 @@ pub enum DownloadError {
     #[error("{0}")]
     Network(#[from] NetworkError),
 
+    #[error("{0}")]
+    Catalog(#[from] CatalogError),
+
     #[error("Retry count cannot be zero")]
     RetryCountZero,
 
