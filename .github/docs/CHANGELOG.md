@@ -1,5 +1,20 @@
 # Changelogs
 
+## 2.8.0
+
+### Features
+
+- Improve performance on catalog parsing side
+
+### API Changes
+
+- Added `list_assets` helper to easily print or get the asset names
+- Refactored codebase and remove redundant code
+
+### Fixes
+- Fix colors on certain terminals
+  - Added a color detecting logic on `baad_core` to prevent weird characters on `ansi` terminals (e.g command prompt)
+
 ## 2.7.5
 
 ### API Changes
