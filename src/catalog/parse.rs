@@ -1,9 +1,13 @@
+use crate::download::ResourceCategory;
 use crate::helpers::{
     ApiData, AssetBundle, CatalogError, GameFiles, GameFilesBundles, GlobalCatalog,
     GlobalGameResources, HashValue, JapanGameResources, MediaResources, Platform, Resource,
     ServerConfig, ServerRegion, TableResources,
 };
-use crate::utils::json;
+use crate::utils::{
+    catalog::{combine_categories, extract_filenames, load_resources, sort_and_dedup},
+    json,
+};
 
 use baad_core::{file, info};
 use bacy::catalog::{MediaCatalog, Packing, TableCatalog};
@@ -309,4 +313,48 @@ impl CatalogParser {
 
         Ok(())
     }
+
+    pub async fn list_assets(
+        &self,
+        category: &ResourceCategory,
+    ) -> Result<Vec<String>, CatalogError> {
+        let mut file_names = Vec::new();
+        let resources = load_resources(&self.config.region, &self.paths.game_path).await?;
+
+        match category {
+            ResourceCategory::Assets => {
+                resources.get_asset_bundles(&mut file_names)?;
+                sort_and_dedup(&mut file_names);
+            }
+            ResourceCategory::Tables => {
+                extract_filenames(&mut file_names, resources.get_table_bundles());
+            }
+            ResourceCategory::Media => {
+                extract_filenames(&mut file_names, resources.get_media_resources());
+            }
+            ResourceCategory::All => {
+                combine_categories(
+                    &mut file_names,
+                    |cat| Box::pin(self.list_assets(cat)),
+                    &[
+                        ResourceCategory::Assets,
+                        ResourceCategory::Tables,
+                        ResourceCategory::Media,
+                    ],
+                )
+                .await?;
+            }
+            ResourceCategory::Multiple(categories) => {
+                combine_categories(
+                    &mut file_names,
+                    |cat| Box::pin(self.list_assets(cat)),
+                    categories.as_ref(),
+                )
+                .await?;
+            }
+        }
+
+        Ok(file_names)
+    }
 }
+    
