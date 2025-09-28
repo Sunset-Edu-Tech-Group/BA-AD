@@ -2,8 +2,8 @@ use crate::download::{ResourceCategory, ResourceDownloader, ResourceFilter};
 use crate::helpers::{
     CatalogError, GameFiles, GlobalGameResources, JapanGameResources, ServerRegion,
 };
-
 use crate::utils::json;
+
 use std::future::Future;
 use std::path::Path;
 use trauma::Download;
