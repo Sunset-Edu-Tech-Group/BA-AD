@@ -135,7 +135,7 @@ impl CommandHandler {
 
     async fn handle_japan(&self, apk_fetcher: &ApkFetcher) -> Result<bool, ApkError> {
         let data_path = file::get_data_path("data")?;
-        let catalog_path = file::get_data_path("catalog")?;
+        let catalog_path = file::get_data_path("catalog/japan")?;
 
         let data_empty = file::is_dir_empty(&data_path).await?;
         let catalogs_empty = file::is_dir_empty(&catalog_path).await?;
@@ -148,7 +148,7 @@ impl CommandHandler {
     }
 
     async fn handle_global(&self, apk_fetcher: &ApkFetcher) -> Result<bool, ApkError> {
-        let catalog_path = file::get_data_path("catalog")?;
+        let catalog_path = file::get_data_path("catalog/global")?;
 
         let catalogs_empty = file::is_dir_empty(&catalog_path).await?;
 
