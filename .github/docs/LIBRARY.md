@@ -87,7 +87,7 @@ let config = LoggingConfig {
     ..LoggingConfig::default ()
 };
 
-init_logging(config) ?;
+init_logging(config)?;
 
 ```
 
@@ -99,7 +99,7 @@ Configure which server, platform, and build type you want to download:
 use baad::helpers::{ServerConfig, ServerRegion, Platform, BuildType};
 
 // Japan server with default Android/Standard build
-let japan_config = ServerConfig::new(ServerRegion::Japan, None, None) ?;
+let japan_config = ServerConfig::new(ServerRegion::Japan, None, None)?;
 
 // Japan server with iOS build
 let japan_ios_config = ServerConfig::new(
@@ -109,7 +109,7 @@ let japan_ios_config = ServerConfig::new(
 )?;
 
 // Global server with default Android/Standard build
-let global_config = ServerConfig::new(ServerRegion::Global, None, None) ?;
+let global_config = ServerConfig::new(ServerRegion::Global, None, None)?;
 
 // Global server with iOS build
 let global_ios_config = ServerConfig::new(
@@ -150,7 +150,7 @@ Check for updates and download the APK:
 use baad::apk::ApkFetcher;
 
 // Initialize fetcher
-let apk_fetcher = ApkFetcher::new(config.clone()) ?;
+let apk_fetcher = ApkFetcher::new(config.clone())?;
 
 // Check for updates
 let new_version = apk_fetcher.check_version().await?;
@@ -168,8 +168,9 @@ Fetch and process game catalogs containing asset information:
 
 ```rust
 use baad::catalog::{CatalogFetcher, CatalogParser};
+use baad::download::ResourceCategory;
 
-let catalog_fetcher = CatalogFetcher::new(config.clone(), apk_fetcher) ?;
+let catalog_fetcher = CatalogFetcher::new(config.clone(), apk_fetcher)?;
 
 // Get addressable data first
 let addressable_json = catalog_fetcher.get_addressable().await?;
@@ -178,8 +179,12 @@ let addressable_json = catalog_fetcher.get_addressable().await?;
 let catalog_json = catalog_fetcher.get_catalogs().await?;
 
 // Process catalogs into downloadable resources
-let catalog_parser = CatalogParser::new(config.clone()) ?;
+let catalog_parser = CatalogParser::new(config.clone())?;
 catalog_parser.process_catalogs().await?;
+
+// List all the assets 
+catalog_parser.list_assets(ResourceCategory::Assets).await?;
+
 ```
 
 ### ResourceDownloader
@@ -196,7 +201,7 @@ let downloader = ResourceDownloader::new(
 ).await?;
 
 // Or use the builder pattern for more options
-let downloader = ResourceDownloadBuilder::new(config.clone()) ?
+let downloader = ResourceDownloadBuilder::new(config.clone())?
     .output(Some(PathBuf::from("./output")))
     .retries(5)
     .limit(10)
@@ -235,13 +240,13 @@ Extract specific files from APKs:
 use baad::apk::{ApkExtractor, ExtractionRule};
 use std::path::PathBuf;
 
-let extractor = ApkExtractor::new(config.clone()) ?;
+let extractor = ApkExtractor::new(config.clone())?;
 
 // Extract data files
-extractor.extract_data() ?;
+extractor.extract_data()?;
 
 // Extract libil2cpp.so and metadata.dat
-extractor.extract_il2cpp() ?;
+extractor.extract_il2cpp()?;
 
 // Custom extraction
 let rule = ExtractionRule {
@@ -252,3 +257,6 @@ let rule = ExtractionRule {
 };
 extractor.extract(rule) ?;
 ```
+
+
+See [parse.rs](../../src/cli/parse.rs) as a guide or reference on how to use the API.
