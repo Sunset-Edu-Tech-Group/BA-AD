@@ -1,5 +1,11 @@
 # Changelogs
 
+## 2.8.1
+
+### Fixes
+
+- Fixed `needs_catalog_update` logic on cli
+
 ## 2.8.0
 
 ### Features
@@ -12,17 +18,20 @@
 - Refactored codebase and remove redundant code
 
 ### Fixes
+
 - Fix colors on certain terminals
   - Added a color detecting logic on `baad_core` to prevent weird characters on `ansi` terminals (e.g command prompt)
 
 ## 2.7.5
 
 ### API Changes
+
 - Fix `baad_core::utils::file` exports redirecting to `baad::utils::json`
 - Export `debug, error, file, info, warn, trace`
 
 
 ### Fixes
+
 - It will download the rest of the files
     - Before it will just downloads the first found file not it will downloads the rest in JP
 
