@@ -42,7 +42,7 @@ baad --clean
 baad download japan --tables --output ./Downloads
 
 # Downloads the MediaResources from the Global server that contains CH0230 in it
-baad download global --media --filter "CH0230"
+baad download global --media --filter "ch0230"
 
 # Downloads both AssetBundles and MediaResources from JP Server
 baad download japan --assets --media
@@ -50,8 +50,11 @@ baad download japan --assets --media
 # Downloads the AssetBundles with a limit of 15 concurrent downloads
 baad download global --assets --limit 15 
 
-# Downloads all AssetBundles, TableBundles, and MediaResources from JP server that contains CH0069 in it using fuzzy search  
-baad download japan --filter "CH0069" --filter-method fuzzy
+# Downloads the AssetBundles from JP server that contains CH0230 in it using contains but ignore case 
+baad download japan --assets --filter "CH0230" --filter-method contains-ignore-case
+
+# Downloads all AssetBundles, TableBundles, and MediaResources from JP server that contains ch0069 in it using fuzzy search  
+baad download japan --filter "ch0069" --filter-method fuzzy
 
 # Downloads all teen AssetBundles from the Global server using iOS platform
 baad download global --assets --ios --teen
@@ -99,6 +102,7 @@ baad download japan --assets --ios
 | `--retries <RETRIES>`             | Number of retry attempts for failed downloads | `10`       |                                                                                                   |
 | `--filter <FILTER>`               | Filter by name                                |            |                                                                                                   |
 | `--filter-method <FILTER_METHOD>` | Filter method to use                          | `contains` | `exact`, `contains`, `regex`, `fuzzy`, `glob`, `contains-ignore-case`, `starts-with`, `ends-with` |
+| `--proxy <PROXY>`                 | Proxy URL for downloads                       |            |                                                                                                   |
 | `--ios`                           | Use iOS build instead of Android              |            |                                                                                                   | 
 | `--teen`                          | Download Teen assets (Global only)            |            |                                                                                                   | 
 | `--help`                          | Print help                                    |            |                                                                                                   |
