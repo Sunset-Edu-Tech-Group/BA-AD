@@ -28,7 +28,7 @@ impl ApkFetcher {
         let client = Client::builder().default_headers(apk_headers()).build()?;
 
         let downloader = DownloaderBuilder::new()
-            .directory(file::data_dir()?)
+            .directory(file::data_dir()?.into())
             .headers(apk_headers())
             .use_range_for_content_length(true)
             .single_file_progress(true)
