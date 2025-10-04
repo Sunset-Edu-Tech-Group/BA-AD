@@ -34,7 +34,9 @@ pub struct CatalogParser {
 
 impl CatalogParser {
     pub fn new(config: Rc<ServerConfig>) -> Result<Self, CatalogError> {
+        let client = Client::new();
         let data_dir = file::data_dir()?;
+
         let api_path = data_dir.join("api_data.json");
 
         let catalog_dir = match config.region {
@@ -59,7 +61,7 @@ impl CatalogParser {
         };
 
         Ok(Self {
-            client: Client::new(),
+            client,
             config,
             paths: Paths {
                 asset_path: asset_path.into_boxed_path(),
@@ -317,7 +319,7 @@ impl CatalogParser {
     pub async fn list_assets(
         &self,
         category: &ResourceCategory,
-    ) -> Result<Vec<String>, CatalogError> {
+    ) -> Result<Vec<Rc<str>>, CatalogError> {
         let mut file_names = Vec::new();
         let resources = load_resources(&self.config.region, &self.paths.game_path).await?;
 
@@ -342,7 +344,7 @@ impl CatalogParser {
                         ResourceCategory::Media,
                     ],
                 )
-                .await?;
+                    .await?;
             }
             ResourceCategory::Multiple(categories) => {
                 combine_categories(
@@ -350,11 +352,10 @@ impl CatalogParser {
                     |cat| Box::pin(self.list_assets(cat)),
                     categories.as_ref(),
                 )
-                .await?;
+                    .await?;
             }
         }
 
         Ok(file_names)
     }
 }
-    

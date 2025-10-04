@@ -11,19 +11,19 @@ pub enum ServerConfigError {
 
 #[derive(Error, Debug)]
 pub enum NetworkError {
-    #[error("{0}")]
+    #[error(transparent)]
     Reqwest(#[from] reqwest::Error)
 }
 
 #[derive(Error, Debug)]
 pub enum JsonError {
-    #[error("{0}")]
+    #[error(transparent)]
     SerdeJson(#[from] serde_json::Error),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Io(#[from] std::io::Error),
 
-    #[error("{0}")]
+    #[error(transparent)]
     File(#[from] baad_core::error::FileError),
 
     #[error("Failed to convert file content to UTF-8")]
@@ -44,16 +44,16 @@ pub enum FilterError {
 
 #[derive(Error, Debug)]
 pub enum DownloadError {
-    #[error("{0}")]
+    #[error(transparent)]
     Json(#[from] JsonError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     File(#[from] baad_core::error::FileError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Network(#[from] NetworkError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Catalog(#[from] CatalogError),
 
     #[error("Retry count cannot be zero")]
@@ -68,28 +68,28 @@ pub enum DownloadError {
 
 #[derive(Error, Debug)]
 pub enum CatalogError {
-    #[error("{0}")]
+    #[error(transparent)]
     Json(#[from] JsonError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     File(#[from] baad_core::error::FileError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Apk(#[from] ApkError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Reqwest(#[from] reqwest::Error),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Network(#[from] NetworkError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     SerdeJson(#[from] serde_json::Error),
 
-    #[error("{0}")]
+    #[error(transparent)]
     WalkDir(#[from] walkdir::Error),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Io(#[from] std::io::Error),
 
     #[error("Catalog URL is empty for {region} region")]
@@ -101,28 +101,28 @@ pub enum CatalogError {
 
 #[derive(Error, Debug)]
 pub enum ApkError {
-    #[error("{0}")]
+    #[error(transparent)]
     Json(#[from] JsonError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     File(#[from] baad_core::error::FileError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Network(#[from] NetworkError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Reqwest(#[from] reqwest::Error),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Url(#[from] url::ParseError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Zip(#[from] zip::result::ZipError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Glob(#[from] glob::PatternError),
 
-    #[error("{0}")]
+    #[error(transparent)]
     Io(#[from] std::io::Error),
 
     #[error("Failed to extract version from server response")]
