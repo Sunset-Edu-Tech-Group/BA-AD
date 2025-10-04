@@ -1,5 +1,22 @@
 # Changelogs
 
+## 2.8.4
+
+### Features
+
+- Improve performance on catalog parsing side
+- Improve color support checking
+
+### API Changes
+
+- From error will use transparent instead of `"{0}"`
+- Added `Proxy` error
+
+### Fixes
+
+- Properly add proxy on version checking
+- Cached contains ignore case filter method
+
 ## 2.8.2
 
 ### Fixes
