@@ -139,7 +139,7 @@ For more info check out [Library](.github/docs/LIBRARY.md)
 
 
 ### Contributing
-Don't like my [shitty code](https://www.reddit.com/r/programminghorror) and what to change it? Feel free to contribute by submitting a pull request or issue. Always appreciate the help.
+Don't like my [shitty code](https://www.reddit.com/r/programminghorror) and what to change it? Feel free to contribute by submitting a **pull request** or **issue**. Always appreciate the help.
 
 
 ### Acknowledgement
