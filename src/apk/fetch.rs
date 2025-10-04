@@ -1,5 +1,6 @@
 use crate::helpers::{
-    apk_headers, ApiData, ApkError, ServerConfig, ServerRegion, JAPAN_REGEX_URL, REGEX_VERSION,
+    apk_headers, ApiData, ApkError, NetworkError, ServerConfig, ServerRegion, JAPAN_REGEX_URL,
+    REGEX_VERSION,
 };
 use crate::utils::{json, network};
 
@@ -25,7 +26,16 @@ impl ApkFetcher {
     }
 
     pub fn with_proxy(config: Rc<ServerConfig>, proxy: Option<String>) -> Result<Self, ApkError> {
-        let client = Client::builder().default_headers(apk_headers()).build()?;
+        let mut client_builder = Client::builder().default_headers(apk_headers());
+
+        if let Some(ref proxy_url) = proxy {
+            let proxy = network::create_proxy(Some(proxy_url))
+                .map_err(ApkError::Network)?
+                .ok_or(NetworkError::Proxy)?;
+            client_builder = client_builder.proxy(proxy);
+        }
+
+        let client = client_builder.build()?;
 
         let downloader = DownloaderBuilder::new()
             .directory(file::data_dir()?.into())

@@ -56,20 +56,16 @@ impl GameResources {
             ResourceCategory::Assets => self.process_assets(filter),
             ResourceCategory::Tables => self.process_tables(filter),
             ResourceCategory::Media => self.process_media(filter),
-            ResourceCategory::All => {
-                let mut downloads = Vec::new();
-                downloads.extend(self.process_assets(filter));
-                downloads.extend(self.process_tables(filter));
-                downloads.extend(self.process_media(filter));
-                downloads
-            }
-            ResourceCategory::Multiple(cats) => {
-                let mut downloads = Vec::new();
-                for cat in cats {
-                    downloads.extend(self.get_downloads(cat, filter));
-                }
-                downloads
-            }
+            ResourceCategory::All => self
+                .process_assets(filter)
+                .into_iter()
+                .chain(self.process_tables(filter))
+                .chain(self.process_media(filter))
+                .collect(),
+            ResourceCategory::Multiple(cats) => cats
+                .iter()
+                .flat_map(|cat| self.get_downloads(cat, filter))
+                .collect(),
         }
     }
 
