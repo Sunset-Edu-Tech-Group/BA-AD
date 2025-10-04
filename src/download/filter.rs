@@ -25,12 +25,14 @@ pub struct ResourceFilter {
     method: FilterMethod,
     compiled_regex: Option<Regex>,
     fuzzy_matcher: Option<Matcher>,
+    lowercase_pattern: Option<String>,
 }
 
 impl ResourceFilter {
     pub fn new(pattern: &str, method: FilterMethod) -> Result<Self, FilterError> {
         let mut compiled_regex = None;
         let mut fuzzy_matcher = None;
+        let mut lowercase_pattern = None;
 
         match method {
             FilterMethod::Regex => {
@@ -47,6 +49,9 @@ impl ResourceFilter {
                     pattern: pattern.into(),
                 })?;
             }
+            FilterMethod::ContainsIgnoreCase => {
+                lowercase_pattern = Some(pattern.to_lowercase());
+            }
             _ => {}
         }
 
@@ -55,6 +60,7 @@ impl ResourceFilter {
             method,
             compiled_regex,
             fuzzy_matcher,
+            lowercase_pattern
         })
     }
 
@@ -67,7 +73,11 @@ impl ResourceFilter {
     }
 
     fn match_contains_ignore_case(&self, path: &str) -> bool {
-        path.to_lowercase().contains(&self.pattern.to_lowercase())
+        if let Some(ref lower_pattern) = self.lowercase_pattern {
+            path.to_lowercase().contains(lower_pattern)
+        } else {
+            false
+        }
     }
 
     fn match_starts_with(&self, path: &str) -> bool {

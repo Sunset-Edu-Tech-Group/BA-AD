@@ -12,7 +12,10 @@ pub enum ServerConfigError {
 #[derive(Error, Debug)]
 pub enum NetworkError {
     #[error(transparent)]
-    Reqwest(#[from] reqwest::Error)
+    Reqwest(#[from] reqwest::Error),
+
+    #[error("Unable to set proxy")]
+    Proxy
 }
 
 #[derive(Error, Debug)]

@@ -136,8 +136,8 @@ impl CatalogParser {
         let game_resources = JapanGameResources {
             asset_bundles: bundle_info
                 .full_patch_packs
-                .iter()
-                .chain(bundle_info.update_packs.iter())
+                .into_iter()
+                .chain(bundle_info.update_packs)
                 .map(|patch| GameFilesBundles {
                     url: format!(
                         "{}/{}/{}",
@@ -148,8 +148,8 @@ impl CatalogParser {
                     size: patch.pack_size,
                     bundle_files: patch
                         .bundle_files
-                        .iter()
-                        .map(|bundle| bundle.name.clone())
+                        .into_iter()
+                        .map(|bundle| bundle.name)
                         .collect(),
                 })
                 .collect(),
@@ -188,23 +188,23 @@ impl CatalogParser {
     }
 
     async fn global_data(&self, resources: &[Resource]) -> Result<(), CatalogError> {
-        let asset_bundles: Vec<Resource> = resources
-            .iter()
-            .filter(|r| r.resource_path.contains(self.paths.platform_path))
-            .cloned()
-            .collect();
+        let mut asset_bundles = Vec::new();
+        let mut media_resources = Vec::new();
+        let mut table_bundles = Vec::new();
 
-        let media_resources: Vec<Resource> = resources
-            .iter()
-            .filter(|r| r.resource_path.contains("/MediaResources/"))
-            .cloned()
-            .collect();
+        for resource in resources {
+            if resource.resource_path.contains(self.paths.platform_path) {
+                asset_bundles.push(resource.clone());
+            }
 
-        let table_bundles: Vec<Resource> = resources
-            .iter()
-            .filter(|r| r.resource_path.contains("/TableBundles/"))
-            .cloned()
-            .collect();
+            if resource.resource_path.contains("/MediaResources/") {
+                media_resources.push(resource.clone());
+            }
+
+            if resource.resource_path.contains("/TableBundles/") {
+                table_bundles.push(resource.clone());
+            }
+        }
 
         if !asset_bundles.is_empty() {
             let asset_data = AssetBundle { asset_bundles };
@@ -344,7 +344,7 @@ impl CatalogParser {
                         ResourceCategory::Media,
                     ],
                 )
-                    .await?;
+                .await?;
             }
             ResourceCategory::Multiple(categories) => {
                 combine_categories(
@@ -352,7 +352,7 @@ impl CatalogParser {
                     |cat| Box::pin(self.list_assets(cat)),
                     categories.as_ref(),
                 )
-                    .await?;
+                .await?;
             }
         }
 
