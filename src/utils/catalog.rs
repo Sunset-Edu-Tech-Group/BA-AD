@@ -4,6 +4,7 @@ use crate::helpers::{
 };
 use crate::utils::json;
 
+use hashbrown::HashSet;
 use std::future::Future;
 use std::path::Path;
 use std::rc::Rc;
@@ -17,7 +18,7 @@ pub(crate) enum GameResources {
 impl GameResources {
     pub(crate) fn get_asset_bundles(
         &self,
-        file_names: &mut Vec<Rc<str>>,
+        file_names: &mut HashSet<Rc<str>>,
     ) -> Result<(), CatalogError> {
         match self {
             GameResources::Japan(res) => {
@@ -124,39 +125,33 @@ pub(crate) async fn load_resources(
     }
 }
 
-pub(crate) fn add_filename(file_names: &mut Vec<Rc<str>>, path: &str) {
+pub(crate) fn add_filename(file_names: &mut HashSet<Rc<str>>, path: &str) {
     if let Some(filename) = Path::new(path).file_name()
         && let Some(name_str) = filename.to_str()
     {
-        file_names.push(Rc::from(name_str));
+        file_names.insert(Rc::from(name_str));
     }
 }
 
-pub(crate) fn extract_filenames(file_names: &mut Vec<Rc<str>>, items: &[GameFiles]) {
+pub(crate) fn extract_filenames(file_names: &mut HashSet<Rc<str>>, items: &[GameFiles]) {
     for item in items {
         add_filename(file_names, &item.path);
     }
 }
 
-pub(crate) fn sort_and_dedup(file_names: &mut Vec<Rc<str>>) {
-    file_names.sort_unstable();
-    file_names.dedup();
-}
-
 pub(crate) async fn combine_categories<'a, F, Fut>(
-    file_names: &mut Vec<Rc<str>>,
+    file_names: &mut HashSet<Rc<str>>,
     list_assets_fn: F,
     categories: &'a [ResourceCategory],
 ) -> Result<(), CatalogError>
 where
     F: Fn(&'a ResourceCategory) -> Fut,
-    Fut: Future<Output = Result<Vec<Rc<str>>, CatalogError>>,
+    Fut: Future<Output = Result<HashSet<Rc<str>>, CatalogError>>,
 {
     for category in categories {
         let cat_files = list_assets_fn(category).await?;
         file_names.extend(cat_files);
     }
 
-    sort_and_dedup(file_names);
     Ok(())
 }
