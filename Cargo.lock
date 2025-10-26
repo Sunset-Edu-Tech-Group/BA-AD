@@ -202,8 +202,8 @@ dependencies = [
 
 [[package]]
 name = "bacy"
-version = "2.5.0"
-source = "git+https://github.com/Deathemonic/BA-CY#1d7ad2c34028d6367951a62e9c1c2c7b89f08b91"
+version = "2.5.5"
+source = "git+https://github.com/Deathemonic/BA-CY#d485d37b0907205ade3c7668d960d97142b4c6ec"
 dependencies = [
  "base64",
  "byteorder",
