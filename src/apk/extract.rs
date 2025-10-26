@@ -1,12 +1,12 @@
 use crate::helpers::{
-    ApkError, ServerConfig, ServerRegion, ASSET_APK, CONFIG_APK, DATA_PATH, DATA_PATTERN,
-    GLOBAL_DATA_APK, JP_DATA_APK, LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN,
+    ASSET_APK, ApkError, CONFIG_APK, DATA_PATH, DATA_PATTERN, GLOBAL_DATA_APK, JP_DATA_APK,
+    LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN, ServerConfig, ServerRegion,
 };
 
 use baad_core::{file, info};
 use glob::Pattern;
 use std::fs::{self, File};
-use std::io::{self, Cursor, Read};
+use std::io::{self, BufWriter, Cursor, Read};
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use zip::ZipArchive;
@@ -29,17 +29,18 @@ impl ApkExtractor {
 
     pub fn extract(&self, rule: ExtractionRule) -> Result<(), ApkError> {
         info!("Extracting apk...");
-
         let apk_path = file::get_data_path(&self.config.apk_path)?;
-        let mut archive = ZipArchive::new(File::open(&apk_path)?)?;
+
+        let file = File::open(&apk_path)?;
+        let mut archive = ZipArchive::new(file)?;
 
         let mut target_apk = archive.by_name(rule.apk)?;
-
-        let mut buf = Vec::new();
+        let size_hint = target_apk.size() as usize;
+        let mut buf = Vec::with_capacity(size_hint);
         target_apk.read_to_end(&mut buf)?;
-        let mut cursor = Cursor::new(buf);
 
-        let mut inner_archive = ZipArchive::new(&mut cursor)?;
+        let cursor = Cursor::new(buf);
+        let mut inner_archive = ZipArchive::new(cursor)?;
 
         fs::create_dir_all(&rule.output)?;
 
@@ -52,8 +53,9 @@ impl ApkExtractor {
             {
                 let out = rule.output.join(file_name);
 
-                let mut outfile = File::create(&out)?;
-                io::copy(&mut file, &mut outfile)?;
+                let outfile = File::create(&out)?;
+                let mut writer = BufWriter::with_capacity(64 * 1024, outfile);
+                io::copy(&mut file, &mut writer)?;
             }
         }
 
@@ -61,25 +63,21 @@ impl ApkExtractor {
     }
 
     fn matches_rule(&self, file_path: &Path, rule: &ExtractionRule) -> Result<bool, ApkError> {
-        let components: Vec<_> = file_path
-            .components()
-            .map(|c| c.as_os_str().to_string_lossy().to_string())
-            .collect();
+        let mut components = file_path.components();
 
-        if components.len() < rule.path.len() {
-            return Ok(false);
-        }
-
-        for (i, target) in rule.path.iter().enumerate() {
-            if &components[i] != target {
-                return Ok(false);
+        for target in rule.path {
+            match components.next() {
+                Some(component) => {
+                    if component.as_os_str().to_string_lossy() != *target {
+                        return Ok(false);
+                    }
+                }
+                None => return Ok(false),
             }
         }
 
         let file_name = file_path.file_name().and_then(|n| n.to_str()).unwrap_or("");
-
         let pattern = Pattern::new(rule.pattern)?;
-
         Ok(pattern.matches(file_name))
     }
 
