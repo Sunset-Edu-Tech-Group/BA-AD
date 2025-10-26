@@ -1,5 +1,28 @@
 # Changelogs
 
+## 2.9.0
+
+### Features
+
+- Improve performance on
+  - Extract - pre determine capacity
+  - Fetching catalogs - directly deserialize
+  - Looking game config - uses `memchr` and `rayon` with sorting to boost search
+
+### API Changes
+
+- Bump `BA-CY` to v2.5.5
+  - Added new `memorypack` crate
+  - Simplified `Media` and `Table` catalogs
+  - Inlined some function
+  - Improve performance
+- Improve performance on `list_assets` - uses `HashMaps` instead of `Vec`
+
+### Fixes
+
+- Fixed apk won't extract when updating to newer version
+- Added debug message on `find_game_config`
+
 ## 2.8.4
 
 ### Features
