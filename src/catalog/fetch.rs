@@ -1,17 +1,17 @@
 use crate::apk::ApkFetcher;
 use crate::helpers::{
-    CatalogError, GlobalAddressable, GlobalCatalog, JapanAddressable,
-    ServerConfig, ServerRegion, GAME_CONFIG_PATTERN, GLOBAL_API_URL,
+    CatalogError, GAME_CONFIG_PATTERN, GLOBAL_API_URL, GlobalAddressable, GlobalCatalog,
+    JapanAddressable, ServerConfig, ServerRegion,
 };
 use crate::utils::json;
 
 use baad_core::{debug, file, info};
-use bacy::table_encryption::table_encryption_service::{
-    convert_string, create_key, new_encrypt_string,
-};
-use base64::{engine::general_purpose, Engine};
+use bacy::table_encryption::{convert_string, create_key, encrypt_string};
+use base64::{Engine, engine::general_purpose};
+use memchr::memmem::Finder;
+use rayon::prelude::*;
 use reqwest::Client;
-use serde_json::{to_string_pretty, Value};
+use serde_json::{Value, to_string_pretty};
 use std::fs;
 use std::path::Path;
 use std::rc::Rc;
@@ -52,30 +52,36 @@ impl CatalogFetcher {
 
     pub fn find_game_config(&self) -> Result<Vec<u8>, CatalogError> {
         info!("Searching for game config...");
-
         let data_path = file::get_data_path("data")?;
-        for entry in WalkDir::new(&data_path) {
-            let entry = entry?;
-            if !entry.file_type().is_file() {
-                continue;
-            }
 
-            let buffer = fs::read(entry.path())?;
+        let mut files: Vec<_> = WalkDir::new(&data_path)
+            .into_iter()
+            .filter_map(|e| e.ok())
+            .filter(|e| e.file_type().is_file())
+            .collect();
 
-            if let Some(pos) = buffer
-                .windows(GAME_CONFIG_PATTERN.len())
-                .position(|window| window == GAME_CONFIG_PATTERN)
-            {
+        files.sort_by_key(|e| e.metadata().map(|m| m.len()).unwrap_or(u64::MAX));
+
+        let files: Vec<_> = files.into_iter().map(|e| e.into_path()).collect();
+        let finder = Finder::new(GAME_CONFIG_PATTERN);
+
+        files
+            .par_iter()
+            .find_map_any(|path| {
+                let buffer = fs::read(path).ok()?;
+                let pos = finder.find(&buffer)?;
+
                 let data_start = pos + GAME_CONFIG_PATTERN.len();
                 let data = &buffer[data_start..];
 
                 if data.len() >= 2 {
-                    return Ok(data[..data.len() - 2].to_vec());
+                    info!("Found game config in: {:?}", path);
+                    Some(data[..data.len() - 2].to_vec())
+                } else {
+                    None
                 }
-            }
-        }
-
-        Err(CatalogError::DeserializationFailed)
+            })
+            .ok_or(CatalogError::DeserializationFailed)
     }
 
     pub fn decrypt_game_config(&self, data: &[u8]) -> Result<String, CatalogError> {
@@ -97,7 +103,7 @@ impl CatalogFetcher {
         let loaded_data: Value = serde_json::from_str(&decrypted_data)?;
         debug!(?loaded_data, "Loaded data");
 
-        let decrypted_key = new_encrypt_string("ServerInfoDataUrl", &server_data)
+        let decrypted_key = encrypt_string("ServerInfoDataUrl", &server_data)
             .map_err(|_| CatalogError::DeserializationFailed)?;
         debug!(decrypted_key, "Decrypted key");
 

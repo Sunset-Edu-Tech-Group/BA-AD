@@ -5,12 +5,13 @@ use crate::helpers::{
     ServerConfig, ServerRegion, TableResources,
 };
 use crate::utils::{
-    catalog::{combine_categories, extract_filenames, load_resources, sort_and_dedup},
+    catalog::{combine_categories, extract_filenames, load_resources},
     json,
 };
 
 use baad_core::{file, info};
 use bacy::catalog::{MediaCatalog, Packing, TableCatalog};
+use hashbrown::HashSet;
 use reqwest::Client;
 use std::path::Path;
 use std::rc::Rc;
@@ -319,14 +320,13 @@ impl CatalogParser {
     pub async fn list_assets(
         &self,
         category: &ResourceCategory,
-    ) -> Result<Vec<Rc<str>>, CatalogError> {
-        let mut file_names = Vec::new();
+    ) -> Result<HashSet<Rc<str>>, CatalogError> {
+        let mut file_names = HashSet::new();
         let resources = load_resources(&self.config.region, &self.paths.game_path).await?;
 
         match category {
             ResourceCategory::Assets => {
                 resources.get_asset_bundles(&mut file_names)?;
-                sort_and_dedup(&mut file_names);
             }
             ResourceCategory::Tables => {
                 extract_filenames(&mut file_names, resources.get_table_bundles());
