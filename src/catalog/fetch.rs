@@ -75,7 +75,7 @@ impl CatalogFetcher {
                 let data = &buffer[data_start..];
 
                 if data.len() >= 2 {
-                    info!("Found game config in: {:?}", path);
+                    debug!(?path, "Found game config");
                     Some(data[..data.len() - 2].to_vec())
                 } else {
                     None
