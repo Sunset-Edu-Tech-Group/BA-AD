@@ -30,6 +30,6 @@ hashbrown = "0.16.0"
 rayon = "1.11.0"
 memchr = "2.7.6"
 
-bacy = { git = "https://github.com/Deathemonic/BA-CY", version = "2.5.0" }
+bacy = { git = "https://github.com/Deathemonic/BA-CY", version = "2.5.5" }
 trauma = { git = "https://github.com/RZinth/trauma", version = "3.3.1", features = ["rustls"] }  # Using a custom trauma
 baad-core = { git = "https://github.com/RZinth/BA-AD-Core", version = "2.6.0" }

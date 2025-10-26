@@ -78,6 +78,9 @@ pub enum CatalogError {
     File(#[from] baad_core::error::FileError),
 
     #[error(transparent)]
+    Catalog(#[from] bacy::error::CatalogError),
+
+    #[error(transparent)]
     Apk(#[from] ApkError),
 
     #[error(transparent)]

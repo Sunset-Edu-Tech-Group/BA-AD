@@ -10,7 +10,7 @@ use crate::utils::{
 };
 
 use baad_core::{file, info};
-use bacy::catalog::{MediaCatalog, Packing, TableCatalog};
+use bacy::catalog::{MediaCatalog, Packing, TableCatalog, deserialize_table_catalog, deserialize_media_catalog};
 use hashbrown::HashSet;
 use reqwest::Client;
 use std::path::Path;
@@ -101,27 +101,20 @@ impl CatalogParser {
             .bytes()
             .await?;
 
-        let table_data = TableCatalog::deserialize(&table_bytes, catalog_url)
-            .map_err(|_| CatalogError::DeserializationFailed)?;
-
+        let table_data = deserialize_table_catalog(&table_bytes)?;
         json::save_json(&self.paths.table_path, &table_data).await?;
 
         info!(success = true, "Saved TableBundles catalog");
 
         let media_bytes = self
             .client
-            .get(format!(
-                "{}/MediaResources/Catalog/MediaCatalog.bytes",
-                catalog_url
-            ))
+            .get(format!("{}/MediaResources/Catalog/MediaCatalog.bytes", catalog_url))
             .send()
             .await?
             .bytes()
             .await?;
 
-        let media_data = MediaCatalog::deserialize(&media_bytes, catalog_url)
-            .map_err(|_| CatalogError::DeserializationFailed)?;
-
+        let media_data = deserialize_media_catalog(&media_bytes)?;
         json::save_json(&self.paths.media_path, &media_data).await?;
 
         info!(success = true, "Saved MediaResources catalog");
