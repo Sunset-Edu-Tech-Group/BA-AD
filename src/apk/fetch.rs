@@ -204,6 +204,11 @@ impl ApkFetcher {
             return Ok((new_version, apk_path, false));
         }
 
+        if apk_path.exists() {
+            fs::remove_file(&apk_path).await?;
+            info!(success = true, "Removed old APK");
+        }
+
         info!("Downloading APK...");
         let apk = vec![Download {
             url: Url::parse(download_url.as_str())?,
