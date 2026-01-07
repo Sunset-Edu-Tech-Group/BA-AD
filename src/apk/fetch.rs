@@ -1,6 +1,6 @@
 use crate::helpers::{
     apk_headers, ApiData, ApkError, NetworkError, ServerConfig, ServerRegion, JAPAN_REGEX_URL,
-    REGEX_VERSION,
+    PLAYSTORE_REGEX_VERSION, REGEX_VERSION,
 };
 use crate::utils::{json, network};
 
@@ -66,7 +66,13 @@ impl ApkFetcher {
     pub async fn get_version(&self) -> Result<String, ApkError> {
         let response = self.client.get(&*self.config.version_url).send().await?;
         let body = response.text().await?;
-        REGEX_VERSION
+
+        let regex = match self.config.region {
+            ServerRegion::Global => &*PLAYSTORE_REGEX_VERSION,
+            ServerRegion::Japan => &*REGEX_VERSION,
+        };
+
+        regex
             .find(&body)
             .map(|m| m.as_str().to_string())
             .ok_or(ApkError::VersionExtractionFailed)

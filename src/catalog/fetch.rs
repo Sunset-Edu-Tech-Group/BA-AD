@@ -185,19 +185,25 @@ impl CatalogFetcher {
             .get_market_config()
             .ok_or(CatalogError::DeserializationFailed)?;
 
-        let api = self
+        let request_body = serde_json::json!({
+            "market_game_id": market_config.market_game_id,
+            "market_code": market_config.market_code,
+            "curr_build_version": version,
+            "curr_build_number": build_number
+        });
+        debug!(%request_body, "Request body");
+
+        let response = self
             .client
             .post(GLOBAL_API_URL)
-            .json(&serde_json::json!({
-                "market_game_id": market_config.market_game_id,
-                "market_code": market_config.market_code,
-                "curr_build_version": version,
-                "curr_build_number": build_number
-            }))
+            .json(&request_body)
             .send()
-            .await?
-            .json::<GlobalAddressable>()
             .await?;
+
+        let response_text = response.text().await?;
+        debug!(%response_text, "API Response");
+
+        let api: GlobalAddressable = serde_json::from_str(&response_text)?;
 
         json::save_json(&self.paths.addressable_path, &api).await?;
 
