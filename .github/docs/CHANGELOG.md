@@ -1,5 +1,13 @@
 # Changelogs
 
+## 2.9.2
+
+### Fixes
+
+- Fixed logging not outputing anything
+- Global android not downloading anything
+
+
 ## 2.9.0
 
 ### Features
