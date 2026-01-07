@@ -13,6 +13,7 @@ async fn main() -> Result<()> {
     let config = LoggingConfig {
         verbose_mode: args.verbose,
         enable_debug: args.verbose,
+        enable_async_writer: false,
         ..LoggingConfig::default()
     };
     init_logging(config)?;

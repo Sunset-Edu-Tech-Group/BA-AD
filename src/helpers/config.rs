@@ -18,6 +18,9 @@ pub const GLOBAL_VERSION_URL: &str =
 pub const JAPAN_VERSION_URL: &str =
     "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
 
+pub const PLAYSTORE_VERSION_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
+pub static PLAYSTORE_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d\.\d{2}\.\d{6}");
+
 pub const GLOBAL_APK_PATH: &str = "apk/BlueArchiveGlobal.xapk";
 pub const JAPAN_APK_PATH: &str = "apk/BlueArchiveJP.xapk";
 
@@ -114,7 +117,7 @@ impl ServerConfig {
                 region: server,
                 platform,
                 build_type,
-                version_url: GLOBAL_VERSION_URL.into(),
+                version_url: PLAYSTORE_VERSION_URL.into(),
                 apk_path: GLOBAL_APK_PATH.into(),
             },
             ServerRegion::Japan => Self {
