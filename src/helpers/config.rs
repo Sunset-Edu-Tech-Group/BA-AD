@@ -19,9 +19,9 @@ pub const GLOBAL_VERSION_URL: &str =
 pub const JAPAN_VERSION_URL: &str =
     "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
 
-pub const PLAYSTORE_VERSION_URL: &str =
-    "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
-pub static PLAYSTORE_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d\.\d{2}\.\d{6}");
+// pub const PLAYSTORE_VERSION_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
+pub const PLAYSTORE_VERSION_URL: &str = "https://apptopia.com/google-play/app/com.nexon.bluearchive/about";
+pub static PLAYSTORE_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d+\.\d+\.\d+");
 
 pub const GLOBAL_APK_PATH: &str = "apk/BlueArchiveGlobal.xapk";
 pub const JAPAN_APK_PATH: &str = "apk/BlueArchiveJP.xapk";
