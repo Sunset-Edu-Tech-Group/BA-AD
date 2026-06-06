@@ -6,7 +6,7 @@ pub enum ServerConfigError {
     TeenNotAvailable,
 
     #[error("Unsupported platform and build type combination")]
-    UnsupportedCombination,
+    UnsupportedCombination
 }
 
 #[derive(Error, Debug)]
@@ -33,7 +33,7 @@ pub enum JsonError {
     InvalidUtf8,
 
     #[error("Failed to get file path")]
-    PathError,
+    PathError
 }
 
 #[derive(Error, Debug)]
@@ -42,7 +42,7 @@ pub enum FilterError {
     InvalidRegex { pattern: Box<str> },
 
     #[error("Invalid glob pattern: {pattern}")]
-    InvalidGlob { pattern: Box<str> },
+    InvalidGlob { pattern: Box<str> }
 }
 
 #[derive(Error, Debug)]
@@ -66,7 +66,7 @@ pub enum DownloadError {
     DownloadLimitZero,
 
     #[error("No files matched filter criteria")]
-    NoFilesMatched,
+    NoFilesMatched
 }
 
 #[derive(Error, Debug)]
@@ -102,7 +102,7 @@ pub enum CatalogError {
     EmptyCatalogUrl { region: Box<str> },
 
     #[error("Failed to deserialize catalog data")]
-    DeserializationFailed,
+    DeserializationFailed
 }
 
 #[derive(Error, Debug)]
@@ -138,5 +138,5 @@ pub enum ApkError {
     DownloadUrlExtractionFailed,
 
     #[error("Failed to get APK info")]
-    ApkInfoFailed,
+    ApkInfoFailed
 }

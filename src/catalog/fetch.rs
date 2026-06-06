@@ -1,39 +1,47 @@
-use crate::apk::ApkFetcher;
-use crate::helpers::{
-    CatalogError, GAME_CONFIG_PATTERN, GLOBAL_API_URL, GlobalAddressable, GlobalCatalog,
-    JapanAddressable, ServerConfig, ServerRegion,
-};
-use crate::utils::json;
+use std::fs;
+use std::path::Path;
+use std::rc::Rc;
 
 use baad_core::{debug, file, info};
 use bacy::table_encryption::{convert_string, create_key, encrypt_string};
-use base64::{Engine, engine::general_purpose};
+use base64::Engine;
+use base64::engine::general_purpose;
 use memchr::memmem::Finder;
 use rayon::prelude::*;
 use reqwest::Client;
 use serde_json::{Value, to_string_pretty};
-use std::fs;
-use std::path::Path;
-use std::rc::Rc;
 use walkdir::WalkDir;
+
+use crate::apk::ApkFetcher;
+use crate::helpers::{
+    CatalogError,
+    GAME_CONFIG_PATTERN,
+    GLOBAL_API_URL,
+    GlobalAddressable,
+    GlobalCatalog,
+    JapanAddressable,
+    ServerConfig,
+    ServerRegion
+};
+use crate::utils::json;
 
 struct Paths {
     addressable_path: Box<Path>,
-    resources_path: Box<Path>,
+    resources_path: Box<Path>
 }
 
 pub struct CatalogFetcher {
     client: Client,
     apk_fetcher: Rc<ApkFetcher>,
     config: Rc<ServerConfig>,
-    paths: Paths,
+    paths: Paths
 }
 
 impl CatalogFetcher {
     pub fn new(config: Rc<ServerConfig>, apk_fetcher: ApkFetcher) -> Result<Self, CatalogError> {
         let addressable_path = match config.region {
             ServerRegion::Global => file::get_data_path("catalog/GlobalAddressables.json")?,
-            ServerRegion::Japan => file::get_data_path("catalog/JapanAddressables.json")?,
+            ServerRegion::Japan => file::get_data_path("catalog/JapanAddressables.json")?
         };
         let resources_path = file::get_data_path("catalog/global/Resources.json")?;
 
@@ -45,8 +53,8 @@ impl CatalogFetcher {
             config,
             paths: Paths {
                 addressable_path: addressable_path.into_boxed_path(),
-                resources_path: resources_path.into_boxed_path(),
-            },
+                resources_path: resources_path.into_boxed_path()
+            }
         })
     }
 
@@ -122,13 +130,7 @@ impl CatalogFetcher {
         let api_url = self.decrypt_game_config(self.find_game_config()?.as_slice())?;
         debug!(api_url, "API URL");
 
-        let catalog = self
-            .client
-            .get(&api_url)
-            .send()
-            .await?
-            .json::<JapanAddressable>()
-            .await?;
+        let catalog = self.client.get(&api_url).send().await?.json::<JapanAddressable>().await?;
 
         json::save_json(&self.paths.addressable_path, &catalog).await?;
 
@@ -167,23 +169,16 @@ impl CatalogFetcher {
     }
 
     async fn global_addressable(&self) -> Result<String, CatalogError> {
-        let version = self
-            .apk_fetcher
-            .check_version()
-            .await?
-            .ok_or(CatalogError::DeserializationFailed)?;
+        let version =
+            self.apk_fetcher.check_version().await?.ok_or(CatalogError::DeserializationFailed)?;
         debug!(version, "Version");
 
-        let build_number = version
-            .split('.')
-            .next_back()
-            .ok_or(CatalogError::DeserializationFailed)?;
+        let build_number =
+            version.split('.').next_back().ok_or(CatalogError::DeserializationFailed)?;
         debug!(build_number, "Build number");
 
-        let market_config = self
-            .config
-            .get_market_config()
-            .ok_or(CatalogError::DeserializationFailed)?;
+        let market_config =
+            self.config.get_market_config().ok_or(CatalogError::DeserializationFailed)?;
 
         let request_body = serde_json::json!({
             "market_game_id": market_config.market_game_id,
@@ -193,12 +188,7 @@ impl CatalogFetcher {
         });
         debug!(%request_body, "Request body");
 
-        let response = self
-            .client
-            .post(GLOBAL_API_URL)
-            .json(&request_body)
-            .send()
-            .await?;
+        let response = self.client.post(GLOBAL_API_URL).json(&request_body).send().await?;
 
         let response_text = response.text().await?;
         debug!(%response_text, "API Response");
@@ -244,7 +234,7 @@ impl CatalogFetcher {
 
         match &self.config.region {
             ServerRegion::Japan => Ok(self.japan_catalog().await?),
-            ServerRegion::Global => Ok(self.global_resources().await?),
+            ServerRegion::Global => Ok(self.global_resources().await?)
         }
     }
 
@@ -253,7 +243,7 @@ impl CatalogFetcher {
 
         match &self.config.region {
             ServerRegion::Japan => Ok(self.japan_addressable().await?),
-            ServerRegion::Global => Ok(self.global_addressable().await?),
+            ServerRegion::Global => Ok(self.global_addressable().await?)
         }
     }
 }

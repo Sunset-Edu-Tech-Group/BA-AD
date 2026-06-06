@@ -1,24 +1,29 @@
-use crate::download::{ResourceCategory, ResourceDownloader, ResourceFilter};
-use crate::helpers::{
-    CatalogError, GameFiles, GlobalGameResources, JapanGameResources, ServerRegion,
-};
-use crate::utils::json;
-
-use hashbrown::HashSet;
 use std::future::Future;
 use std::path::Path;
 use std::rc::Rc;
+
+use hashbrown::HashSet;
 use trauma::Download;
+
+use crate::download::{ResourceCategory, ResourceDownloader, ResourceFilter};
+use crate::helpers::{
+    CatalogError,
+    GameFiles,
+    GlobalGameResources,
+    JapanGameResources,
+    ServerRegion
+};
+use crate::utils::json;
 
 pub(crate) enum GameResources {
     Japan(JapanGameResources),
-    Global(GlobalGameResources),
+    Global(GlobalGameResources)
 }
 
 impl GameResources {
     pub(crate) fn get_asset_bundles(
         &self,
-        file_names: &mut HashSet<Rc<str>>,
+        file_names: &mut HashSet<Rc<str>>
     ) -> Result<(), CatalogError> {
         match self {
             GameResources::Japan(res) => {
@@ -37,21 +42,21 @@ impl GameResources {
     pub(crate) fn get_table_bundles(&self) -> &[GameFiles] {
         match self {
             GameResources::Japan(res) => &res.table_bundles,
-            GameResources::Global(res) => &res.table_bundles,
+            GameResources::Global(res) => &res.table_bundles
         }
     }
 
     pub(crate) fn get_media_resources(&self) -> &[GameFiles] {
         match self {
             GameResources::Japan(res) => &res.media_resources,
-            GameResources::Global(res) => &res.media_resources,
+            GameResources::Global(res) => &res.media_resources
         }
     }
 
     pub(crate) fn get_downloads(
         &self,
         category: &ResourceCategory,
-        filter: Option<&ResourceFilter>,
+        filter: Option<&ResourceFilter>
     ) -> Vec<Download> {
         match category {
             ResourceCategory::Assets => self.process_assets(filter),
@@ -63,10 +68,9 @@ impl GameResources {
                 .chain(self.process_tables(filter))
                 .chain(self.process_media(filter))
                 .collect(),
-            ResourceCategory::Multiple(cats) => cats
-                .iter()
-                .flat_map(|cat| self.get_downloads(cat, filter))
-                .collect(),
+            ResourceCategory::Multiple(cats) => {
+                cats.iter().flat_map(|cat| self.get_downloads(cat, filter)).collect()
+            }
         }
     }
 
@@ -81,8 +85,8 @@ impl GameResources {
                 |f| &f.url,
                 |f| &f.path,
                 |f| &f.hash,
-                |_| None,
-            ),
+                |_| None
+            )
         }
     }
 
@@ -93,7 +97,7 @@ impl GameResources {
             |f| &f.url,
             |f| &f.path,
             |f| &f.hash,
-            |_| None,
+            |_| None
         )
     }
 
@@ -104,14 +108,14 @@ impl GameResources {
             |f| &f.url,
             |f| &f.path,
             |f| &f.hash,
-            |_| None,
+            |_| None
         )
     }
 }
 
 pub(crate) async fn load_resources(
     region: &ServerRegion,
-    path: &Path,
+    path: &Path
 ) -> Result<GameResources, CatalogError> {
     match region {
         ServerRegion::Japan => {
@@ -142,11 +146,11 @@ pub(crate) fn extract_filenames(file_names: &mut HashSet<Rc<str>>, items: &[Game
 pub(crate) async fn combine_categories<'a, F, Fut>(
     file_names: &mut HashSet<Rc<str>>,
     list_assets_fn: F,
-    categories: &'a [ResourceCategory],
+    categories: &'a [ResourceCategory]
 ) -> Result<(), CatalogError>
 where
     F: Fn(&'a ResourceCategory) -> Fut,
-    Fut: Future<Output = Result<HashSet<Rc<str>>, CatalogError>>,
+    Fut: Future<Output = Result<HashSet<Rc<str>>, CatalogError>>
 {
     for category in categories {
         let cat_files = list_assets_fn(category).await?;

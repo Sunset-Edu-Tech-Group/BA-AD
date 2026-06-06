@@ -1,31 +1,41 @@
-use crate::helpers::{
-    ASSET_APK, ApkError, CONFIG_APK, DATA_PATH, DATA_PATTERN, GLOBAL_DATA_APK, JP_DATA_APK,
-    LIBIL2CPP_PATH, LIBIL2CPP_PATTERN, METADATA_PATH, METADATA_PATTERN, ServerConfig, ServerRegion,
-};
-
-use baad_core::{file, info};
-use glob::Pattern;
 use std::fs::{self, File};
 use std::io::{self, BufWriter, Cursor, Read};
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+
+use baad_core::{file, info};
+use glob::Pattern;
 use zip::ZipArchive;
+
+use crate::helpers::{
+    ASSET_APK,
+    ApkError,
+    CONFIG_APK,
+    DATA_PATH,
+    DATA_PATTERN,
+    GLOBAL_DATA_APK,
+    JP_DATA_APK,
+    LIBIL2CPP_PATH,
+    LIBIL2CPP_PATTERN,
+    METADATA_PATH,
+    METADATA_PATTERN,
+    ServerConfig,
+    ServerRegion
+};
 
 pub struct ExtractionRule<'a> {
     pub apk: &'a str,
     pub path: &'a [&'a str],
     pub pattern: &'a str,
-    pub output: Box<Path>,
+    pub output: Box<Path>
 }
 
 pub struct ApkExtractor {
-    config: Rc<ServerConfig>,
+    config: Rc<ServerConfig>
 }
 
 impl ApkExtractor {
-    pub fn new(config: Rc<ServerConfig>) -> Result<Self, ApkError> {
-        Ok(Self { config })
-    }
+    pub fn new(config: Rc<ServerConfig>) -> Result<Self, ApkError> { Ok(Self { config }) }
 
     pub fn extract(&self, rule: ExtractionRule) -> Result<(), ApkError> {
         info!("Extracting apk...");
@@ -72,7 +82,7 @@ impl ApkExtractor {
                         return Ok(false);
                     }
                 }
-                None => return Ok(false),
+                None => return Ok(false)
             }
         }
 
@@ -87,11 +97,11 @@ impl ApkExtractor {
         let rule = ExtractionRule {
             apk: match self.config.region {
                 ServerRegion::Global => GLOBAL_DATA_APK,
-                ServerRegion::Japan => ASSET_APK,
+                ServerRegion::Japan => ASSET_APK
             },
             path: DATA_PATH,
             pattern: DATA_PATTERN,
-            output: file::get_data_path("data")?.into_boxed_path(),
+            output: file::get_data_path("data")?.into_boxed_path()
         };
 
         self.extract(rule)
@@ -100,7 +110,7 @@ impl ApkExtractor {
     pub fn extract_il2cpp(&self) -> Result<(), ApkError> {
         let il2cpp_path: PathBuf = match self.config.region {
             ServerRegion::Global => file::get_data_path("il2cpp/global")?,
-            ServerRegion::Japan => file::get_data_path("il2cpp/japan")?,
+            ServerRegion::Japan => file::get_data_path("il2cpp/japan")?
         };
 
         info!("Extracting IL2CPP files...");
@@ -109,18 +119,18 @@ impl ApkExtractor {
             apk: CONFIG_APK,
             path: LIBIL2CPP_PATH,
             pattern: LIBIL2CPP_PATTERN,
-            output: il2cpp_path.clone().into_boxed_path(),
+            output: il2cpp_path.clone().into_boxed_path()
         };
         self.extract(lib_rule)?;
 
         let metadata_rule = ExtractionRule {
             apk: match self.config.region {
                 ServerRegion::Global => GLOBAL_DATA_APK,
-                ServerRegion::Japan => JP_DATA_APK,
+                ServerRegion::Japan => JP_DATA_APK
             },
             path: METADATA_PATH,
             pattern: METADATA_PATTERN,
-            output: il2cpp_path.into_boxed_path(),
+            output: il2cpp_path.into_boxed_path()
         };
         self.extract(metadata_rule)?;
 

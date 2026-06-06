@@ -1,9 +1,8 @@
 mod cli;
 
-use cli::{parse, Args};
-
-use baad_core::config::{init_logging, LoggingConfig};
+use baad_core::config::{LoggingConfig, init_logging};
 use clap::Parser;
+use cli::{Args, parse};
 use eyre::Result;
 
 #[tokio::main]

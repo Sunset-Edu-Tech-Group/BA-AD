@@ -1,20 +1,37 @@
-use crate::download::ResourceCategory;
-use crate::helpers::{
-    ApiData, AssetBundle, CatalogError, GameFiles, GameFilesBundles, GlobalCatalog,
-    GlobalGameResources, HashValue, JapanGameResources, MediaResources, Platform, Resource,
-    ServerConfig, ServerRegion, TableResources,
-};
-use crate::utils::{
-    catalog::{combine_categories, extract_filenames, load_resources},
-    json,
-};
-
-use baad_core::{file, info};
-use bacy::catalog::{MediaCatalog, Packing, TableCatalog, deserialize_table_catalog, deserialize_media_catalog};
-use hashbrown::HashSet;
-use reqwest::Client;
 use std::path::Path;
 use std::rc::Rc;
+
+use baad_core::{file, info};
+use bacy::catalog::{
+    MediaCatalog,
+    Packing,
+    TableCatalog,
+    deserialize_media_catalog,
+    deserialize_table_catalog
+};
+use hashbrown::HashSet;
+use reqwest::Client;
+
+use crate::download::ResourceCategory;
+use crate::helpers::{
+    ApiData,
+    AssetBundle,
+    CatalogError,
+    GameFiles,
+    GameFilesBundles,
+    GlobalCatalog,
+    GlobalGameResources,
+    HashValue,
+    JapanGameResources,
+    MediaResources,
+    Platform,
+    Resource,
+    ServerConfig,
+    ServerRegion,
+    TableResources
+};
+use crate::utils::catalog::{combine_categories, extract_filenames, load_resources};
+use crate::utils::json;
 
 struct Paths {
     asset_path: Box<Path>,
@@ -24,13 +41,13 @@ struct Paths {
     resource_path: Box<Path>,
     api_path: Box<Path>,
     patch_pack_path: &'static str,
-    platform_path: &'static str,
+    platform_path: &'static str
 }
 
 pub struct CatalogParser {
     client: Client,
     config: Rc<ServerConfig>,
-    paths: Paths,
+    paths: Paths
 }
 
 impl CatalogParser {
@@ -42,7 +59,7 @@ impl CatalogParser {
 
         let catalog_dir = match config.region {
             ServerRegion::Global => data_dir.join("catalog/global"),
-            ServerRegion::Japan => data_dir.join("catalog/japan"),
+            ServerRegion::Japan => data_dir.join("catalog/japan")
         };
 
         let asset_path = catalog_dir.join("BundlePackingInfo.json");
@@ -53,12 +70,12 @@ impl CatalogParser {
 
         let patch_pack_path = match config.platform {
             Platform::Android => "Android_PatchPack",
-            Platform::Ios => "iOS_PatchPack",
+            Platform::Ios => "iOS_PatchPack"
         };
 
         let platform_path = match config.platform {
             Platform::Android => "/Android/",
-            Platform::Ios => "/iOS/",
+            Platform::Ios => "/iOS/"
         };
 
         Ok(Self {
@@ -72,18 +89,15 @@ impl CatalogParser {
                 resource_path: resource_path.into_boxed_path(),
                 api_path: api_path.into_boxed_path(),
                 patch_pack_path,
-                platform_path,
-            },
+                platform_path
+            }
         })
     }
 
     async fn japan_data(&self, catalog_url: &str) -> Result<(), CatalogError> {
         let asset_data = self
             .client
-            .get(format!(
-                "{}/{}/BundlePackingInfo.json",
-                catalog_url, self.paths.patch_pack_path
-            ))
+            .get(format!("{}/{}/BundlePackingInfo.json", catalog_url, self.paths.patch_pack_path))
             .send()
             .await?
             .json::<Packing>()
@@ -144,7 +158,7 @@ impl CatalogParser {
                         .bundle_files
                         .into_iter()
                         .map(|bundle| bundle.name)
-                        .collect(),
+                        .collect()
                 })
                 .collect(),
 
@@ -155,7 +169,7 @@ impl CatalogParser {
                     url: format!("{}/TableBundles/{}", catalog_url, entry.name),
                     path: format!("TableBundles/{}", entry.name),
                     hash: HashValue::Crc(entry.crc),
-                    size: entry.size,
+                    size: entry.size
                 })
                 .collect(),
 
@@ -168,10 +182,10 @@ impl CatalogParser {
                         url: format!("{}/MediaResources/{}", catalog_url, path),
                         path: format!("MediaResources/{}", path),
                         hash: HashValue::Crc(entry.crc),
-                        size: entry.bytes,
+                        size: entry.bytes
                     }
                 })
-                .collect(),
+                .collect()
         };
 
         json::save_json(&self.paths.game_path, &game_resources).await?;
@@ -227,7 +241,7 @@ impl CatalogParser {
     async fn global_gamefiles(
         &self,
         catalog_url: &str,
-        resources: &[Resource],
+        resources: &[Resource]
     ) -> Result<(), CatalogError> {
         let game_resources = GlobalGameResources {
             asset_bundles: resources
@@ -246,7 +260,7 @@ impl CatalogParser {
                 .iter()
                 .filter(|r| r.resource_path.contains("/MediaResources/"))
                 .map(|r| self.resource_to_gamefiles(r, catalog_url, "MediaResources"))
-                .collect(),
+                .collect()
         };
 
         json::save_json(&self.paths.game_path, &game_resources).await?;
@@ -260,13 +274,13 @@ impl CatalogParser {
         &self,
         resource: &Resource,
         catalog_url: &str,
-        prefix: &str,
+        prefix: &str
     ) -> GameFiles {
         GameFiles {
             url: format!("{}/{}", catalog_url, resource.resource_path),
             path: format!("{}/{}", prefix, resource.resource_path),
             hash: HashValue::Md5(resource.resource_hash.clone()),
-            size: resource.resource_size,
+            size: resource.resource_size
         }
     }
 
@@ -280,9 +294,7 @@ impl CatalogParser {
                 let catalog_url = &api_data.japan.catalog_url;
 
                 if catalog_url.is_empty() {
-                    return Err(CatalogError::EmptyCatalogUrl {
-                        region: "Japan".into(),
-                    });
+                    return Err(CatalogError::EmptyCatalogUrl { region: "Japan".into() });
                 }
 
                 self.japan_data(catalog_url).await?;
@@ -290,20 +302,15 @@ impl CatalogParser {
             }
             ServerRegion::Global => {
                 let resources: GlobalCatalog = json::load_json(&self.paths.resource_path).await?;
-                let catalog_url = &api_data
-                    .global
-                    .catalog_url
-                    .trim_end_matches("/resource-data.json");
+                let catalog_url =
+                    &api_data.global.catalog_url.trim_end_matches("/resource-data.json");
 
                 if catalog_url.is_empty() {
-                    return Err(CatalogError::EmptyCatalogUrl {
-                        region: "Global".into(),
-                    });
+                    return Err(CatalogError::EmptyCatalogUrl { region: "Global".into() });
                 }
 
                 self.global_data(&resources.resources).await?;
-                self.global_gamefiles(catalog_url, &resources.resources)
-                    .await?;
+                self.global_gamefiles(catalog_url, &resources.resources).await?;
             }
         }
 
@@ -312,7 +319,7 @@ impl CatalogParser {
 
     pub async fn list_assets(
         &self,
-        category: &ResourceCategory,
+        category: &ResourceCategory
     ) -> Result<HashSet<Rc<str>>, CatalogError> {
         let mut file_names = HashSet::new();
         let resources = load_resources(&self.config.region, &self.paths.game_path).await?;
@@ -328,22 +335,18 @@ impl CatalogParser {
                 extract_filenames(&mut file_names, resources.get_media_resources());
             }
             ResourceCategory::All => {
-                combine_categories(
-                    &mut file_names,
-                    |cat| Box::pin(self.list_assets(cat)),
-                    &[
-                        ResourceCategory::Assets,
-                        ResourceCategory::Tables,
-                        ResourceCategory::Media,
-                    ],
-                )
+                combine_categories(&mut file_names, |cat| Box::pin(self.list_assets(cat)), &[
+                    ResourceCategory::Assets,
+                    ResourceCategory::Tables,
+                    ResourceCategory::Media
+                ])
                 .await?;
             }
             ResourceCategory::Multiple(categories) => {
                 combine_categories(
                     &mut file_names,
                     |cat| Box::pin(self.list_assets(cat)),
-                    categories.as_ref(),
+                    categories.as_ref()
                 )
                 .await?;
             }

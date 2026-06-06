@@ -1,25 +1,28 @@
-use crate::cli::args::{
-    Args, BaseDownloadArgs, Commands, GlobalDownloadArgs, JapanDownloadArgs, RegionCommands,
-};
+use std::rc::Rc;
 
 use baad::apk::{ApkExtractor, ApkFetcher};
 use baad::catalog::{CatalogFetcher, CatalogParser};
 use baad::download::{FilterMethod, ResourceCategory, ResourceDownloadBuilder, ResourceFilter};
 use baad::helpers::{ApkError, BuildType, Platform, ServerConfig, ServerRegion};
-
 use baad_core::{file, info};
 use clap::CommandFactory;
-use eyre::{eyre, Result};
-use std::rc::Rc;
+use eyre::{Result, eyre};
+
+use crate::cli::args::{
+    Args,
+    BaseDownloadArgs,
+    Commands,
+    GlobalDownloadArgs,
+    JapanDownloadArgs,
+    RegionCommands
+};
 
 pub struct CommandHandler {
-    args: Args,
+    args: Args
 }
 
 impl CommandHandler {
-    fn new(args: Args) -> Result<Self> {
-        Ok(Self { args })
-    }
+    fn new(args: Args) -> Result<Self> { Ok(Self { args }) }
 
     async fn handle(&self) -> Result<()> {
         if self.args.clean {
@@ -47,9 +50,7 @@ impl CommandHandler {
             RegionCommands::Global(download_args) => {
                 self.execute_global_download(download_args).await
             }
-            RegionCommands::Japan(download_args) => {
-                self.execute_japan_download(download_args).await
-            }
+            RegionCommands::Japan(download_args) => self.execute_japan_download(download_args).await
         }
     }
 
@@ -65,16 +66,8 @@ impl CommandHandler {
     }
 
     async fn execute_global_download(&self, args: &GlobalDownloadArgs) -> Result<()> {
-        let platform = if args.base.ios {
-            Some(Platform::Ios)
-        } else {
-            None
-        };
-        let build_type = if args.teen {
-            Some(BuildType::Teen)
-        } else {
-            None
-        };
+        let platform = if args.base.ios { Some(Platform::Ios) } else { None };
+        let build_type = if args.teen { Some(BuildType::Teen) } else { None };
 
         let server_config = ServerConfig::new(ServerRegion::Global, platform, build_type)?;
         let apk_fetcher = ApkFetcher::with_proxy(server_config.clone(), args.base.proxy.clone())?;
@@ -96,11 +89,7 @@ impl CommandHandler {
     }
 
     async fn execute_japan_download(&self, args: &JapanDownloadArgs) -> Result<()> {
-        let platform = if args.base.ios {
-            Some(Platform::Ios)
-        } else {
-            None
-        };
+        let platform = if args.base.ios { Some(Platform::Ios) } else { None };
         let build_type = None;
 
         let server_config = ServerConfig::new(ServerRegion::Japan, platform, build_type)?;
@@ -162,7 +151,7 @@ impl CommandHandler {
     async fn process_catalogs(
         &self,
         server_config: &Rc<ServerConfig>,
-        apk_fetcher: &ApkFetcher,
+        apk_fetcher: &ApkFetcher
     ) -> Result<()> {
         let catalog_fetcher = CatalogFetcher::new(server_config.clone(), apk_fetcher.clone())?;
         let catalog_parser = CatalogParser::new(server_config.clone())?;
@@ -177,7 +166,7 @@ impl CommandHandler {
     async fn download_resources(
         &self,
         server_config: &Rc<ServerConfig>,
-        args: &BaseDownloadArgs,
+        args: &BaseDownloadArgs
     ) -> Result<()> {
         let resource_downloader = ResourceDownloadBuilder::new(server_config.clone())?
             .limit(args.limit as u64)
@@ -189,9 +178,7 @@ impl CommandHandler {
 
         let resource_category = self.resource_category(args);
         let resource_filter = self.resource_filter(args)?;
-        resource_downloader
-            .download(resource_category, resource_filter)
-            .await?;
+        resource_downloader.download(resource_category, resource_filter).await?;
 
         Ok(())
     }

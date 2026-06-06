@@ -1,5 +1,4 @@
 use baad::download::FilterMethod;
-
 use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
@@ -20,7 +19,7 @@ pub struct Args {
 
     /// Enable verbose output
     #[arg(short, long)]
-    pub verbose: bool,
+    pub verbose: bool
 }
 
 #[derive(Subcommand)]
@@ -28,8 +27,8 @@ pub enum Commands {
     /// Download game files
     Download {
         #[command(subcommand)]
-        region: RegionCommands,
-    },
+        region: RegionCommands
+    }
 }
 
 #[derive(Subcommand)]
@@ -38,7 +37,7 @@ pub enum RegionCommands {
     Global(GlobalDownloadArgs),
 
     /// Download from Japan server
-    Japan(JapanDownloadArgs),
+    Japan(JapanDownloadArgs)
 }
 
 #[derive(Parser)]
@@ -81,7 +80,7 @@ pub struct BaseDownloadArgs {
 
     /// Use iOS build instead of Android
     #[arg(long)]
-    pub ios: bool,
+    pub ios: bool
 }
 
 #[derive(Parser)]
@@ -91,11 +90,11 @@ pub struct GlobalDownloadArgs {
 
     /// Download Teen assets
     #[arg(long)]
-    pub teen: bool,
+    pub teen: bool
 }
 
 #[derive(Parser)]
 pub struct JapanDownloadArgs {
     #[command(flatten)]
-    pub base: BaseDownloadArgs,
+    pub base: BaseDownloadArgs
 }

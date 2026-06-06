@@ -1,9 +1,10 @@
-use crate::helpers::error::ServerConfigError;
-
-use lazy_regex::{lazy_regex, Lazy, Regex};
-use reqwest::header::{HeaderMap, HeaderValue};
 use std::borrow::Cow;
 use std::rc::Rc;
+
+use lazy_regex::{Lazy, Regex, lazy_regex};
+use reqwest::header::{HeaderMap, HeaderValue};
+
+use crate::helpers::error::ServerConfigError;
 
 pub static JAPAN_REGEX_URL: Lazy<Regex> = lazy_regex!(
     r"(X?APKJ)..(https?://(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*))"
@@ -18,7 +19,8 @@ pub const GLOBAL_VERSION_URL: &str =
 pub const JAPAN_VERSION_URL: &str =
     "https://api.pureapk.com/m/v3/cms/app_version?hl=en-US&package_name=com.YostarJP.BlueArchive";
 
-pub const PLAYSTORE_VERSION_URL: &str = "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
+pub const PLAYSTORE_VERSION_URL: &str =
+    "https://play.google.com/store/apps/details?id=com.nexon.bluearchive";
 pub static PLAYSTORE_REGEX_VERSION: Lazy<Regex> = lazy_regex!(r"\d\.\d{2}\.\d{6}");
 
 pub const GLOBAL_APK_PATH: &str = "apk/BlueArchiveGlobal.xapk";
@@ -34,7 +36,7 @@ pub const APPSTORE_CODE: &str = "appstore";
 pub const API_FILENAME: &str = "api_data.json";
 pub const GAME_CONFIG_PATTERN: &[u8] = &[
     0x47, 0x61, 0x6D, 0x65, 0x4D, 0x61, 0x69, 0x6E, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67, 0x00, 0x00,
-    0x92, 0x03, 0x00, 0x00,
+    0x92, 0x03, 0x00, 0x00
 ];
 
 pub const CONFIG_APK: &str = "config.arm64_v8a.apk";
@@ -53,19 +55,19 @@ pub const EXECUTABLE_NAME: &str = "baad";
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ServerRegion {
     Global,
-    Japan,
+    Japan
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Platform {
     Android,
-    Ios,
+    Ios
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BuildType {
     Standard,
-    Teen,
+    Teen
 }
 
 pub struct ServerConfig {
@@ -73,19 +75,19 @@ pub struct ServerConfig {
     pub platform: Platform,
     pub build_type: BuildType,
     pub version_url: Cow<'static, str>,
-    pub apk_path: Cow<'static, str>,
+    pub apk_path: Cow<'static, str>
 }
 
 pub struct MarketConfig {
     pub market_game_id: Cow<'static, str>,
-    pub market_code: Cow<'static, str>,
+    pub market_code: Cow<'static, str>
 }
 
 impl Platform {
     pub const fn as_str(&self) -> &'static str {
         match self {
             Platform::Android => "Android",
-            Platform::Ios => "Ios",
+            Platform::Ios => "Ios"
         }
     }
 }
@@ -94,7 +96,7 @@ impl BuildType {
     pub const fn as_str(&self) -> &'static str {
         match self {
             BuildType::Standard => "Standard",
-            BuildType::Teen => "Teen",
+            BuildType::Teen => "Teen"
         }
     }
 }
@@ -103,7 +105,7 @@ impl ServerConfig {
     pub fn new(
         server: ServerRegion,
         platform: Option<Platform>,
-        build_type: Option<BuildType>,
+        build_type: Option<BuildType>
     ) -> Result<Rc<Self>, ServerConfigError> {
         let platform = platform.unwrap_or(Platform::Android);
         let build_type = build_type.unwrap_or(BuildType::Standard);
@@ -118,15 +120,15 @@ impl ServerConfig {
                 platform,
                 build_type,
                 version_url: PLAYSTORE_VERSION_URL.into(),
-                apk_path: GLOBAL_APK_PATH.into(),
+                apk_path: GLOBAL_APK_PATH.into()
             },
             ServerRegion::Japan => Self {
                 region: server,
                 platform,
                 build_type,
                 version_url: JAPAN_VERSION_URL.into(),
-                apk_path: JAPAN_APK_PATH.into(),
-            },
+                apk_path: JAPAN_APK_PATH.into()
+            }
         };
 
         Ok(Rc::new(config))
@@ -143,15 +145,15 @@ impl ServerConfig {
                         (GLOBAL_ANDROID_TEEN_ID, PLAYSTORE_CODE)
                     }
                     (Platform::Ios, BuildType::Standard) => (GLOBAL_IOS_STANDARD_ID, APPSTORE_CODE),
-                    (Platform::Ios, BuildType::Teen) => (GLOBAL_IOS_TEEN_ID, APPSTORE_CODE),
+                    (Platform::Ios, BuildType::Teen) => (GLOBAL_IOS_TEEN_ID, APPSTORE_CODE)
                 };
 
                 Some(MarketConfig {
                     market_game_id: market_game_id.into(),
-                    market_code: market_code.into(),
+                    market_code: market_code.into()
                 })
             }
-            ServerRegion::Japan => None,
+            ServerRegion::Japan => None
         }
     }
 }
@@ -160,10 +162,7 @@ pub fn apk_headers() -> HeaderMap {
     let mut headers: HeaderMap = HeaderMap::new();
     headers.insert("x-cv", HeaderValue::from_static("3172501"));
     headers.insert("x-sv", HeaderValue::from_static("29"));
-    headers.insert(
-        "x-abis",
-        HeaderValue::from_static("arm64-v8a,armeabi-v7a,armeabi"),
-    );
+    headers.insert("x-abis", HeaderValue::from_static("arm64-v8a,armeabi-v7a,armeabi"));
     headers.insert("x-gp", HeaderValue::from_static("1"));
     headers
 }

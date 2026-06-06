@@ -1,8 +1,10 @@
-use crate::helpers::{API_FILENAME, ApiData, GlobalData, JapanData, JsonError};
+use std::path::Path;
 
 use baad_core::file;
-use serde::{Serialize, de::DeserializeOwned};
-use std::path::Path;
+use serde::Serialize;
+use serde::de::DeserializeOwned;
+
+use crate::helpers::{API_FILENAME, ApiData, GlobalData, JapanData, JsonError};
 
 pub async fn load_json<T: DeserializeOwned>(path: &Path) -> Result<T, JsonError> {
     let bytes = file::load_file(path).await?;
@@ -22,7 +24,7 @@ pub async fn get_api_data() -> Result<ApiData, JsonError> {
 
     match api_path.exists() {
         true => load_json(&api_path).await,
-        false => Ok(create_default_api_data()),
+        false => Ok(create_default_api_data())
     }
 }
 
@@ -33,7 +35,7 @@ pub async fn save_api_data(api_data: &ApiData) -> Result<(), JsonError> {
 
 pub async fn update_api_data<F>(updater: F) -> Result<(), JsonError>
 where
-    F: FnOnce(&mut ApiData),
+    F: FnOnce(&mut ApiData)
 {
     let mut api_data = get_api_data().await?;
     updater(&mut api_data);
@@ -46,13 +48,13 @@ pub fn create_default_api_data() -> ApiData {
             version: String::new(),
             catalog_url: String::new(),
             addressable_url: String::new(),
-            platform: "Android".into(),
+            platform: "Android".into()
         },
         global: GlobalData {
             version: String::new(),
             catalog_url: String::new(),
             platform: "Android".into(),
-            build_type: "Standard".into(),
-        },
+            build_type: "Standard".into()
+        }
     }
 }

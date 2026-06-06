@@ -1,17 +1,16 @@
-use crate::download::ResourceFilter;
-use crate::helpers::{
-    DownloadError, GameFilesBundles, HashValue,
-    ServerConfig, ServerRegion,
-};
-use crate::utils::{catalog::load_resources, network};
+use std::path::{Path, PathBuf};
+use std::rc::Rc;
 
 use baad_core::{debug, error, file, info, warn};
 use reqwest::Url;
-use std::path::{Path, PathBuf};
-use std::rc::Rc;
 use trauma::download::{Download, Status};
 use trauma::downloader::{Downloader, DownloaderBuilder};
 use trauma::progress::{ProgressBarOpts, StyleOptions};
+
+use crate::download::ResourceFilter;
+use crate::helpers::{DownloadError, GameFilesBundles, HashValue, ServerConfig, ServerRegion};
+use crate::utils::catalog::load_resources;
+use crate::utils::network;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum ResourceCategory {
@@ -19,7 +18,7 @@ pub enum ResourceCategory {
     Tables,
     Media,
     All,
-    Multiple(Vec<ResourceCategory>),
+    Multiple(Vec<ResourceCategory>)
 }
 
 impl ResourceCategory {
@@ -31,7 +30,7 @@ impl ResourceCategory {
 pub struct ResourceDownloader {
     downloader: Downloader,
     config: Rc<ServerConfig>,
-    proxy: Option<String>,
+    proxy: Option<String>
 }
 
 pub struct ResourceDownloadBuilder {
@@ -39,38 +38,30 @@ pub struct ResourceDownloadBuilder {
     retries: u32,
     limit: u64,
     config: Rc<ServerConfig>,
-    proxy: Option<String>,
+    proxy: Option<String>
 }
 
 impl ResourceDownloader {
     pub async fn new(
         output: Option<PathBuf>,
-        config: Rc<ServerConfig>,
+        config: Rc<ServerConfig>
     ) -> Result<Self, DownloadError> {
-        ResourceDownloadBuilder::new(config)?
-            .output(output)
-            .build()
-            .await
+        ResourceDownloadBuilder::new(config)?.output(output).build().await
     }
 
     fn matches_filter(
         filter: &ResourceFilter,
         path: &str,
-        bundle_files: Option<&[String]>,
+        bundle_files: Option<&[String]>
     ) -> bool {
-        let filename = Path::new(path)
-            .file_name()
-            .and_then(|name| name.to_str())
-            .unwrap_or(path);
+        let filename = Path::new(path).file_name().and_then(|name| name.to_str()).unwrap_or(path);
 
         if filter.matches(filename) {
             return true;
         }
 
         if let Some(bundles) = bundle_files {
-            return bundles
-                .iter()
-                .any(|bundle_name| filter.matches(bundle_name));
+            return bundles.iter().any(|bundle_name| filter.matches(bundle_name));
         }
 
         false
@@ -79,11 +70,11 @@ impl ResourceDownloader {
     pub async fn download(
         &self,
         category: ResourceCategory,
-        filter: Option<ResourceFilter>,
+        filter: Option<ResourceFilter>
     ) -> Result<(), DownloadError> {
         let path = match self.config.region {
             ServerRegion::Global => file::get_data_path("catalog/global/GameFiles.json")?,
-            ServerRegion::Japan => file::get_data_path("catalog/japan/GameFiles.json")?,
+            ServerRegion::Japan => file::get_data_path("catalog/japan/GameFiles.json")?
         };
 
         let resources = load_resources(&self.config.region, &path).await?;
@@ -97,7 +88,7 @@ impl ResourceDownloader {
         get_url: impl Fn(&T) -> &str,
         get_path: impl Fn(&T) -> &str,
         get_hash: impl Fn(&T) -> &HashValue,
-        get_bundles: impl Fn(&T) -> Option<&[String]>,
+        get_bundles: impl Fn(&T) -> Option<&[String]>
     ) -> Vec<Download> {
         files
             .iter()
@@ -120,7 +111,7 @@ impl ResourceDownloader {
 
     pub(crate) fn process_japan_assets(
         files: &[GameFilesBundles],
-        filter: Option<&ResourceFilter>,
+        filter: Option<&ResourceFilter>
     ) -> Vec<Download> {
         let Some(f) = filter else {
             return files
@@ -140,7 +131,7 @@ impl ResourceDownloader {
             if f.matches(filename) {
                 Self::add_download(
                     &mut downloads,
-                    Self::create_download(&file.url, &file.path, &file.hash, None),
+                    Self::create_download(&file.url, &file.path, &file.hash, None)
                 );
             }
 
@@ -148,7 +139,7 @@ impl ResourceDownloader {
                 if f.matches(bundle_name) {
                     Self::add_download(
                         &mut downloads,
-                        Self::create_download(&file.url, &file.path, &file.hash, Some(bundle_name)),
+                        Self::create_download(&file.url, &file.path, &file.hash, Some(bundle_name))
                     );
                 }
             }
@@ -167,7 +158,7 @@ impl ResourceDownloader {
         url: &str,
         path: &str,
         hash: &HashValue,
-        target: Option<&str>,
+        target: Option<&str>
     ) -> Option<Download> {
         let parsed_url = Url::parse(url).ok()?;
         debug!(?parsed_url, "URL");
@@ -188,21 +179,18 @@ impl ResourceDownloader {
             target_file: target.map(|_| target_filename),
             hash: Some(match hash {
                 HashValue::Crc(crc) => crc.to_string(),
-                HashValue::Md5(md5) => md5.clone(),
-            }),
+                HashValue::Md5(md5) => md5.clone()
+            })
         })
     }
 
     async fn execute_downloads(
         &self,
         downloads: Vec<Download>,
-        category: ResourceCategory,
+        category: ResourceCategory
     ) -> Result<(), DownloadError> {
         if downloads.is_empty() {
-            warn!(
-                ?category,
-                "No files matched the filter criteria for catalog"
-            );
+            warn!(?category, "No files matched the filter criteria for catalog");
             return Err(DownloadError::NoFilesMatched);
         }
 
@@ -223,7 +211,7 @@ impl ResourceDownloadBuilder {
             retries: 10,
             limit: 10,
             config,
-            proxy: None,
+            proxy: None
         })
     }
 
@@ -293,7 +281,7 @@ impl ResourceDownloadBuilder {
         Ok(ResourceDownloader {
             downloader,
             config: self.config,
-            proxy: self.proxy,
+            proxy: self.proxy
         })
     }
 }

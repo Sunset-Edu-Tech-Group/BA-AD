@@ -1,23 +1,31 @@
-use crate::helpers::{
-    apk_headers, ApiData, ApkError, NetworkError, ServerConfig, ServerRegion, JAPAN_REGEX_URL,
-    PLAYSTORE_REGEX_VERSION, REGEX_VERSION,
-};
-use crate::utils::{json, network};
+use std::path::{Path, PathBuf};
+use std::rc::Rc;
 
 use baad_core::{debug, file, info, warn};
 use reqwest::{Client, Url};
-use std::path::{Path, PathBuf};
-use std::rc::Rc;
 use tokio::fs;
 use trauma::download::Download;
 use trauma::downloader::{Downloader, DownloaderBuilder};
+
+use crate::helpers::{
+    ApiData,
+    ApkError,
+    JAPAN_REGEX_URL,
+    NetworkError,
+    PLAYSTORE_REGEX_VERSION,
+    REGEX_VERSION,
+    ServerConfig,
+    ServerRegion,
+    apk_headers
+};
+use crate::utils::{json, network};
 
 #[derive(Clone)]
 pub struct ApkFetcher {
     client: Client,
     config: Rc<ServerConfig>,
     downloader: Downloader,
-    proxy: Option<String>,
+    proxy: Option<String>
 }
 
 impl ApkFetcher {
@@ -49,7 +57,7 @@ impl ApkFetcher {
             client,
             config,
             downloader,
-            proxy,
+            proxy
         })
     }
 
@@ -59,7 +67,7 @@ impl ApkFetcher {
                 .get(2)
                 .map(|m| m.as_str().to_string())
                 .ok_or(ApkError::DownloadUrlExtractionFailed),
-            _ => Err(ApkError::DownloadUrlExtractionFailed),
+            _ => Err(ApkError::DownloadUrlExtractionFailed)
         }
     }
 
@@ -69,13 +77,10 @@ impl ApkFetcher {
 
         let regex = match self.config.region {
             ServerRegion::Global => &*PLAYSTORE_REGEX_VERSION,
-            ServerRegion::Japan => &*REGEX_VERSION,
+            ServerRegion::Japan => &*REGEX_VERSION
         };
 
-        regex
-            .find(&body)
-            .map(|m| m.as_str().to_string())
-            .ok_or(ApkError::VersionExtractionFailed)
+        regex.find(&body).map(|m| m.as_str().to_string()).ok_or(ApkError::VersionExtractionFailed)
     }
 
     pub async fn check_version(&self) -> Result<Option<String>, ApkError> {
@@ -106,15 +111,10 @@ impl ApkFetcher {
 
         let local_size = match fs::metadata(apk_path).await {
             Ok(metadata) => metadata.len(),
-            Err(_) => return Ok(true),
+            Err(_) => return Ok(true)
         };
 
-        let response = self
-            .client
-            .get(download_url)
-            .header("Range", "bytes=0-0")
-            .send()
-            .await?;
+        let response = self.client.get(download_url).header("Range", "bytes=0-0").send().await?;
 
         if !response.status().is_success()
             && response.status() != reqwest::StatusCode::PARTIAL_CONTENT
@@ -141,16 +141,12 @@ impl ApkFetcher {
         let api_data: ApiData = json::load_json(&api_data_path).await?;
 
         let (cached_version, cached_platform, cached_build_type) = match &self.config.region {
-            ServerRegion::Global => (
-                &api_data.global.version,
-                &api_data.global.platform,
-                &api_data.global.build_type,
-            ),
-            ServerRegion::Japan => (
-                &api_data.japan.version,
-                &api_data.japan.platform,
-                &"Standard".into(),
-            ),
+            ServerRegion::Global => {
+                (&api_data.global.version, &api_data.global.platform, &api_data.global.build_type)
+            }
+            ServerRegion::Japan => {
+                (&api_data.japan.version, &api_data.japan.platform, &"Standard".into())
+            }
         };
 
         let current_platform = self.config.platform.as_str();
@@ -176,7 +172,7 @@ impl ApkFetcher {
     pub async fn needs_update(
         &self,
         download_url: &str,
-        apk_path: &Path,
+        apk_path: &Path
     ) -> Result<bool, ApkError> {
         let needs_download = self.check_apk(download_url, apk_path).await?;
 
@@ -220,7 +216,7 @@ impl ApkFetcher {
             url: Url::parse(download_url.as_str())?,
             filename: self.config.apk_path.to_string(),
             target_file: None,
-            hash: None,
+            hash: None
         }];
 
         let proxy = network::create_proxy(self.proxy.as_deref()).map_err(ApkError::Network)?;
